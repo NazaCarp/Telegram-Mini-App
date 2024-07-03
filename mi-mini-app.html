@@ -225,73 +225,73 @@
   </style>
 </head>
 <body>
-      <div class="user-info" id="user-info"></div>
-    <div class="section active" id="home">
-      <div class="container">
-        <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="bitcoin-image" id="bitcoinImage">
-      </div>
-      <div class="counter" id="counter">0</div>
-      <div class="counter" id="secondaryCounter">
-        <iconify-icon icon="mdi:lightning-bolt"></iconify-icon>
-        <span id="secondaryCounterValue">0 / 1000</span>
-      </div>
+  <div class="user-info" id="user-info"></div>
+  <div class="section active" id="home">
+    <div class="container">
+      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="bitcoin-image" id="bitcoinImage">
     </div>
-    <div class="section" id="exchange">
-      <h1>Exchange</h1>
+    <div class="counter" id="counter">0</div>
+    <div class="counter" id="secondaryCounter">
+      <iconify-icon icon="mdi:lightning-bolt"></iconify-icon>
+      <span id="secondaryCounterValue">0 / 1000</span>
     </div>
-    <div class="section" id="mine">
-      <h1>Mine</h1>
-    </div>
-    <div class="section" id="friends">
-      <p style="font-size: 20px; top: 5px;">Invite Friends!</p>
-      <p>You and your friend will receive bonuses</p>
-      <div class="rounded-square">
-        <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
-        <p class="large-text">Invite a friend</p>
-        <p class="bonus" style="color: yellow">
-          <iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +5000 <span style="color: white;">for you and your friend</span>
-        </p>
-      </div>
-      <div class="rounded-square">
-        <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
-        <p class="large-text">Invite a friend with Telegram Premium</p>
-        <p class="bonus" style="color: yellow">
-          <iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +25000 <span style="color: white;">for you and your friend</span>
-        </p>
-      </div>
-      <div class="rounded-square"></div>
-      <p class="large-text" style="color: rgb(0, 204, 255); margin-left: 0px">
-        <span>More Bonuses</span>
+  </div>
+  <div class="section" id="exchange">
+    <h1>Exchange</h1>
+  </div>
+  <div class="section" id="mine">
+    <h1>Mine</h1>
+  </div>
+  <div class="section" id="friends">
+    <p style="font-size: 20px; top: 5px;">Invite Friends!</p>
+    <p>You and your friend will receive bonuses</p>
+    <div class="rounded-square">
+      <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
+      <p class="large-text">Invite a friend</p>
+      <p class="bonus" style="color: yellow">
+        <iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +5000 <span style="color: white;">for you and your friend</span>
       </p>
     </div>
-    <div class="section" id="earn">
-      <h1>Earn</h1>
+    <div class="rounded-square">
+      <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
+      <p class="large-text">Invite a friend with Telegram Premium</p>
+      <p class="bonus" style="color: yellow">
+        <iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +25000 <span style="color: white;">for you and your friend</span>
+      </p>
     </div>
-    <div class="section" id="airdrop">
-      <h1>Airdrop</h1>
-    </div>
-    <div class="navbar">
-      <a href="#" id="exchangeNav" class="active">
-        <iconify-icon icon="simple-icons:binance"></iconify-icon>
-        <span>Exchange</span>
-      </a>
-      <a href="#" id="mineNav">
-        <iconify-icon icon="mdi:pickaxe"></iconify-icon>
-        <span>Mine</span>
-      </a>
-      <a href="#" id="friendsNav">
-        <iconify-icon icon="clarity:group-solid"></iconify-icon>
-        <span>Friends</span>
-      </a>
-      <a href="#" id="earnNav">
-        <iconify-icon icon="fa6-solid:coins"></iconify-icon>
-        <span>Earn</span>
-      </a>
-      <a href="#" id="airdropNav">
-        <iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon>
-        <span>Airdrop</span>
-      </a>
-    </div>
+    <div class="rounded-square"></div>
+    <p class="large-text" style="color: rgb(0, 204, 255); margin-left: 0px">
+      <span>More Bonuses</span>
+    </p>
+  </div>
+  <div class="section" id="earn">
+    <h1>Earn</h1>
+  </div>
+  <div class="section" id="airdrop">
+    <h1>Airdrop</h1>
+  </div>
+  <div class="navbar">
+    <a href="#" id="exchangeNav" class="active">
+      <iconify-icon icon="simple-icons:binance"></iconify-icon>
+      <span>Exchange</span>
+    </a>
+    <a href="#" id="mineNav">
+      <iconify-icon icon="mdi:pickaxe"></iconify-icon>
+      <span>Mine</span>
+    </a>
+    <a href="#" id="friendsNav">
+      <iconify-icon icon="clarity:group-solid"></iconify-icon>
+      <span>Friends</span>
+    </a>
+    <a href="#" id="earnNav">
+      <iconify-icon icon="fa6-solid:coins"></iconify-icon>
+      <span>Earn</span>
+    </a>
+    <a href="#" id="airdropNav">
+      <iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon>
+      <span>Airdrop</span>
+    </a>
+  </div>
   <script>
     // Configura Firebase con tus credenciales
     const firebaseConfig = {
@@ -319,17 +319,17 @@
       const secondaryCountRef = database.ref(`counts/${userId}/secondaryCount`);
       const timestampRef = database.ref(`counts/${userId}/timestamp`);
 
-      countRef.once('value', (snapshot) => {
+      countRef.once('value').then(snapshot => {
         count = snapshot.val() || 0;
         document.getElementById('counter').textContent = count;
       });
 
-      secondaryCountRef.once('value', (snapshot) => {
+      secondaryCountRef.once('value').then(snapshot => {
         secondaryCount = snapshot.val() || 0;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
       });
 
-      timestampRef.once('value', (snapshot) => {
+      timestampRef.once('value').then(snapshot => {
         lastTimestamp = snapshot.val() || Date.now();
       });
     }
@@ -403,7 +403,7 @@
     document.getElementById('bitcoinImage').addEventListener('click', handleClick);
 
     // Mostrar el nombre del usuario
-    window.onload = function() {
+    document.addEventListener('DOMContentLoaded', () => {
       const user = Telegram.WebApp.initDataUnsafe.user;
       if (user) {
         const userInfo = document.getElementById('user-info');
@@ -412,7 +412,7 @@
         userInfo.appendChild(userName);
       }
       loadCounts();
-    };
+    });
 
     // Agregar eventos de clic a los íconos de la barra de navegación
     const navbarItems = document.querySelectorAll('.navbar a');
