@@ -233,7 +233,7 @@
     <div class="counter" id="counter">0</div>
     <div class="counter" id="secondaryCounter">
       <iconify-icon icon="mdi:lightning-bolt"></iconify-icon>
-      <span id="secondaryCounterValue">0 / 100000000 Leoooooo</span>
+      <span id="secondaryCounterValue">0 / 1000</span>
     </div>
   </div>
   <div class="section" id="exchange">
@@ -348,7 +348,7 @@
       if (secondaryCount < 1000) {
         secondaryCount += 1;
         lastTimestamp = Date.now();
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 10000000 Nazaaaa`;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
         saveCounts();
       }
     }
