@@ -5,6 +5,8 @@
   <title>Mi Mini App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
   <style>
     body {
       background: radial-gradient(circle, #0047ab, #002357, #000000);
@@ -17,6 +19,7 @@
       color: white;
       transition: filter 0.3s;
     }
+
     .container {
       display: flex;
       justify-content: center;
@@ -24,19 +27,29 @@
       height: 100vh;
       position: relative;
     }
+
     .counter {
       font-weight: bold;
       text-align: center;
-      margin-top: -25%; /* Ajusta este valor según sea necesario */
+      margin-top: -25%;
+      /* Ajusta este valor según sea necesario */
     }
+
     #counter {
-      font-size: 48px; /* Ajusta el tamaño del número según sea necesario */
-      position: absolute; /* Añade esta línea */
-      top: 30%; /* Ajusta este valor según sea necesario */
-      left: 50%; /* Ajusta este valor según sea necesario */
-      transform: translate(-50%, -50%); /* Añade esta línea */
-      z-index: 1; /* Añade esta línea para asegurarte de que esté encima de la imagen */
+      font-size: 48px;
+      /* Ajusta el tamaño del número según sea necesario */
+      position: absolute;
+      /* Añade esta línea */
+      top: 30%;
+      /* Ajusta este valor según sea necesario */
+      left: 50%;
+      /* Ajusta este valor según sea necesario */
+      transform: translate(-50%, -50%);
+      /* Añade esta línea */
+      z-index: 1;
+      /* Añade esta línea para asegurarte de que esté encima de la imagen */
     }
+
     .user-info {
       display: flex;
       align-items: center;
@@ -44,14 +57,19 @@
       top: 10px;
       left: 10px;
     }
+
     .bitcoin-image {
-      width: 350px; /* Ajusta el tamaño de la imagen según sea necesario */
+      width: 350px;
+      /* Ajusta el tamaño de la imagen según sea necesario */
       height: auto;
       cursor: pointer;
       position: relative;
-      user-select: none; /* Evita que la imagen sea seleccionable */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+      user-select: none;
+      /* Evita que la imagen sea seleccionable */
+      -webkit-tap-highlight-color: transparent;
+      /* Deshabilita el resaltado en dispositivos Android */
     }
+
     .plus-one {
       position: absolute;
       font-size: 45px;
@@ -60,28 +78,34 @@
       pointer-events: none;
       animation: moveUp 1s forwards;
     }
+
     @keyframes moveUp {
       from {
         transform: translateY(0);
         opacity: 1;
       }
+
       to {
         transform: translateY(-150px);
         opacity: 0;
       }
     }
+
     .navbar {
       display: flex;
       justify-content: space-around;
       align-items: center;
       width: 100%;
       height: 60px;
-      border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
-      margin: 0 auto; /* Centra la barra de navegación */
+      border-radius: 50px;
+      /* Ajusta el valor del radio según sea necesario */
+      margin: 0 auto;
+      /* Centra la barra de navegación */
       background-color: #222222;
       position: fixed;
       bottom: 10px;
     }
+
     .navbar a {
       color: gray;
       text-decoration: none;
@@ -90,36 +114,55 @@
       align-items: center;
       font-size: 14px;
       position: relative;
-      user-select: none; /* Evita que la imagen sea seleccionable */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+      user-select: none;
+      /* Evita que la imagen sea seleccionable */
+      -webkit-tap-highlight-color: transparent;
+      /* Deshabilita el resaltado en dispositivos Android */
     }
-    .navbar a.active span, .navbar a.active iconify-icon {
+
+    .navbar a.active span,
+    .navbar a.active iconify-icon {
       color: white;
     }
+
     .navbar a iconify-icon {
       font-size: 24px;
     }
+
     .navbar a.active::before {
       content: '';
       position: absolute;
-      top: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
-      left: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
-      right: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
-      bottom: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
-      border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
-      background-color: rgba(0, 0, 0, 0.267); /* Color del relleno */
+      top: -7px;
+      /* Ajusta el valor para aumentar el tamaño vertical */
+      left: -14px;
+      /* Ajusta el valor para aumentar el tamaño horizontal */
+      right: -14px;
+      /* Ajusta el valor para aumentar el tamaño horizontal */
+      bottom: -7px;
+      /* Ajusta el valor para aumentar el tamaño vertical */
+      border-radius: 50px;
+      /* Ajusta el valor del radio según sea necesario */
+      background-color: rgba(0, 0, 0, 0.267);
+      /* Color del relleno */
       z-index: -1;
     }
+
     #secondaryCounter {
-      font-size: 20px; /* Ajusta el tamaño del número según sea necesario */
+      font-size: 20px;
+      /* Ajusta el tamaño del número según sea necesario */
       position: absolute;
-      bottom: 75px; /* Ajusta este valor según sea necesario */
-      left: 10px; /* Alinea a la izquierda */
+      bottom: 75px;
+      /* Ajusta este valor según sea necesario */
+      left: 10px;
+      /* Alinea a la izquierda */
       display: flex;
       align-items: center;
-      user-select: none; /* Evita que la imagen sea seleccionable */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+      user-select: none;
+      /* Evita que la imagen sea seleccionable */
+      -webkit-tap-highlight-color: transparent;
+      /* Deshabilita el resaltado en dispositivos Android */
     }
+
     #secondaryCounter iconify-icon {
       font-size: 30px;
       color: orange;
@@ -145,120 +188,159 @@
       border-radius: 50px;
       margin: 10px;
       width: 80%;
-      text-align: left; /* Alinea el contenido a la izquierda */
-      padding: 20px; /* Añade espacio interno */
-      position: relative; /* Permite posicionar el ícono */
+      text-align: left;
+      /* Alinea el contenido a la izquierda */
+      padding: 20px;
+      /* Añade espacio interno */
+      position: relative;
+      /* Permite posicionar el ícono */
     }
 
     .large-icon {
-      font-size: 60px; /* Ajusta el tamaño del ícono según sea necesario */
-      position: absolute; /* Posiciona el ícono de forma absoluta */
-      top: 50%; /* Centra el ícono verticalmente */
-      left: 20px; /* Ajusta la distancia desde el borde izquierdo */
-      transform: translateY(-50%); /* Centra el ícono verticalmente */
+      font-size: 60px;
+      /* Ajusta el tamaño del ícono según sea necesario */
+      position: absolute;
+      /* Posiciona el ícono de forma absoluta */
+      top: 50%;
+      /* Centra el ícono verticalmente */
+      left: 20px;
+      /* Ajusta la distancia desde el borde izquierdo */
+      transform: translateY(-50%);
+      /* Centra el ícono verticalmente */
     }
 
-    .large-text, .bonus {
-      font-size: 15px; /* Ajusta el tamaño de la fuente según sea necesario */
+    .large-text,
+    .bonus {
+      font-size: 15px;
+      /* Ajusta el tamaño de la fuente según sea necesario */
       font-weight: bold;
-      margin-left: 70px; /* Ajusta el margen izquierdo para evitar que el texto se superponga con el ícono */
+      margin-left: 70px;
+      /* Ajusta el margen izquierdo para evitar que el texto se superponga con el ícono */
     }
-    
+
     .bonus-text {
-      vertical-align: middle; /* Alinea el texto verticalmente con el ícono */
+      vertical-align: middle;
+      /* Alinea el texto verticalmente con el ícono */
     }
   </style>
 </head>
 <body>
-  <div class="user-info" id="user-info"></div>
-  <div class="section active" id="home">
-    <div class="container">
-      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="bitcoin-image" id="bitcoinImage">
+      <div class="user-info" id="user-info"></div>
+    <div class="section active" id="home">
+      <div class="container">
+        <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="bitcoin-image" id="bitcoinImage">
+      </div>
+      <div class="counter" id="counter">0</div>
+      <div class="counter" id="secondaryCounter">
+        <iconify-icon icon="mdi:lightning-bolt"></iconify-icon>
+        <span id="secondaryCounterValue">0 / 1000</span>
+      </div>
     </div>
-    <div class="counter" id="counter">0</div>
-    <div class="counter" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
-  </div>
-  <div class="section" id="exchange">
-    <h1>Exchange</h1>
-  </div>
-  <div class="section" id="mine">
-    <h1>Mine</h1>
-  </div>
-  <div class="section" id="friends">
-    <p style="font-size: 20px; top: 5px;">Invite Friends!</p>
-    <p>You and your friend will receive bonuses</p>
-    <div class="rounded-square">
-      <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
-      <p class="large-text">Invite a friend</p>
-      <p class="bonus" style="color: yellow"><iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +5000 <span style="color: white;">for you and your friend</span></p>
+    <div class="section" id="exchange">
+      <h1>Exchange</h1>
     </div>
-    <div class="rounded-square">
-      <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
-      <p class="large-text">Invite a friend with Telegram Premium</p>
-      <p class="bonus" style="color: yellow"><iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +25000 <span style="color: white;">for you and your friend</span></p>
+    <div class="section" id="mine">
+      <h1>Mine</h1>
     </div>
-    <div class="rounded-square">
+    <div class="section" id="friends">
+      <p style="font-size: 20px; top: 5px;">Invite Friends!</p>
+      <p>You and your friend will receive bonuses</p>
+      <div class="rounded-square">
+        <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
+        <p class="large-text">Invite a friend</p>
+        <p class="bonus" style="color: yellow">
+          <iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +5000 <span style="color: white;">for you and your friend</span>
+        </p>
+      </div>
+      <div class="rounded-square">
+        <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
+        <p class="large-text">Invite a friend with Telegram Premium</p>
+        <p class="bonus" style="color: yellow">
+          <iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +25000 <span style="color: white;">for you and your friend</span>
+        </p>
+      </div>
+      <div class="rounded-square"></div>
+      <p class="large-text" style="color: rgb(0, 204, 255); margin-left: 0px">
+        <span>More Bonuses</span>
+      </p>
     </div>
-    <p class="large-text" style="color: rgb(0, 204, 255); margin-left: 0px"><span>More Bonuses</span></p>
-  </div>
-  <div class="section" id="earn">
-    <h1>Earn</h1>
-  </div>
-  <div class="section" id="airdrop">
-    <h1>Airdrop</h1>
-  </div>
-
-  <div class="navbar">
-    <a href="#" id="exchangeNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-    <a href="#" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
-    <a href="#" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-    <a href="#" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
-    <a href="#" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
-  </div>
-
+    <div class="section" id="earn">
+      <h1>Earn</h1>
+    </div>
+    <div class="section" id="airdrop">
+      <h1>Airdrop</h1>
+    </div>
+    <div class="navbar">
+      <a href="#" id="exchangeNav" class="active">
+        <iconify-icon icon="simple-icons:binance"></iconify-icon>
+        <span>Exchange</span>
+      </a>
+      <a href="#" id="mineNav">
+        <iconify-icon icon="mdi:pickaxe"></iconify-icon>
+        <span>Mine</span>
+      </a>
+      <a href="#" id="friendsNav">
+        <iconify-icon icon="clarity:group-solid"></iconify-icon>
+        <span>Friends</span>
+      </a>
+      <a href="#" id="earnNav">
+        <iconify-icon icon="fa6-solid:coins"></iconify-icon>
+        <span>Earn</span>
+      </a>
+      <a href="#" id="airdropNav">
+        <iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon>
+        <span>Airdrop</span>
+      </a>
+    </div>
   <script>
+    // Configura Firebase con tus credenciales
+    const firebaseConfig = {
+      apiKey: "AIzaSyB9-yVMH6ZE8mOoPBKRW2Nf32Tq4sQIDzo",
+      authDomain: "mini-app-telegram-bot.firebaseapp.com",
+      projectId: "mini-app-telegram-bot",
+      storageBucket: "mini-app-telegram-bot.appspot.com",
+      messagingSenderId: "513567176914",
+      appId: "1:513567176914:web:ab80b5595b563d9e61550b",
+      measurementId: "G-HBBWNHC56G"
+    };
+
+    // Inicializa Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
     let count = 0;
     let secondaryCount = 0;
     let lastTimestamp = 0;
     const userId = Telegram.WebApp.initDataUnsafe.user.id;
 
-    // Función para cargar los contadores del localStorage
+    // Función para cargar los contadores de Firebase
     function loadCounts() {
-      const storedCount = localStorage.getItem(`count_${userId}`);
-      const storedSecondaryCount = localStorage.getItem(`secondaryCount_${userId}`);
-      const storedTimestamp = localStorage.getItem(`timestamp_${userId}`);
-      if (storedCount !== null && storedSecondaryCount !== null && storedTimestamp !== null) {
-        count = parseInt(storedCount, 10);
-        secondaryCount = parseInt(storedSecondaryCount, 10);
-        lastTimestamp = parseInt(storedTimestamp, 10);
-        if (isNaN(count)) {
-          count = 0;
-        }
-        if (isNaN(secondaryCount)) {
-          secondaryCount = 1000;
-        }
-        if (isNaN(lastTimestamp)) {
-          lastTimestamp = Date.now();
-        }
-        const now = Date.now();
-        const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
-        secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
+      const countRef = database.ref(`counts/${userId}/count`);
+      const secondaryCountRef = database.ref(`counts/${userId}/secondaryCount`);
+      const timestampRef = database.ref(`counts/${userId}/timestamp`);
+
+      countRef.once('value', (snapshot) => {
+        count = snapshot.val() || 0;
         document.getElementById('counter').textContent = count;
+      });
+
+      secondaryCountRef.once('value', (snapshot) => {
+        secondaryCount = snapshot.val() || 0;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-      } else {
-        count = 0;
-        secondaryCount = 0;
-        lastTimestamp = Date.now();
-        document.getElementById('counter').textContent = count;
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-      }
+      });
+
+      timestampRef.once('value', (snapshot) => {
+        lastTimestamp = snapshot.val() || Date.now();
+      });
     }
 
-    // Función para guardar los contadores en el localStorage
+    // Función para guardar los contadores en Firebase
     function saveCounts() {
-      localStorage.setItem(`count_${userId}`, count.toString());
-      localStorage.setItem(`secondaryCount_${userId}`, secondaryCount.toString());
-      localStorage.setItem(`timestamp_${userId}`, lastTimestamp.toString());
+      database.ref(`counts/${userId}`).set({
+        count: count,
+        secondaryCount: secondaryCount,
+        timestamp: lastTimestamp
+      });
     }
 
     // Función para incrementar el contador secundario cada segundo
