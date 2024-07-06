@@ -1,59 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Compartir en Telegram</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <h1>Welcome to the Mini App</h1>
-        <input type="number" id="numberInput" placeholder="Enter a number">
-        <button id="saveButton">Save Number</button>
-        <p id="numberDisplay"></p>
-    </div>
+    <button onclick="compartirEnTelegram()">Compartir en Telegram</button>
+
     <script>
-        const tg = window.Telegram.WebApp;
-
-        function saveNumber(number) {
-            tg.CloudStorage.setItem('userNumber', number, (error, success) => {
-                if (error) {
-                    console.error('Error saving number:', error);
-                } else {
-                    console.log('Number saved successfully:', success);
-                    displayNumber();
-                }
-            });
+        function compartirEnTelegram() {
+            const texto = "Hola soy Naza el hacker";
+            const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
         }
-
-        function displayNumber() {
-            tg.CloudStorage.getItem('userNumber', (error, number) => {
-                if (error) {
-                    console.error('Error retrieving number:', error);
-                } else {
-                    const numberDisplay = document.getElementById('numberDisplay');
-                    if (number) {
-                        numberDisplay.textContent = `Your saved number is: ${number}`;
-                    } else {
-                        numberDisplay.textContent = 'No number saved yet.';
-                    }
-                }
-            });
-        }
-
-        document.getElementById('saveButton').addEventListener('click', () => {
-            const numberInput = document.getElementById('numberInput');
-            const number = numberInput.value;
-            if (number) {
-                saveNumber(number);
-            } else {
-                alert('Please enter a number.');
-            }
-        });
-
-        tg.ready();
-        displayNumber();
     </script>
 </body>
 </html>
