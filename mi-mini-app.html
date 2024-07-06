@@ -1,36 +1,247 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compartir en Telegram</title>
+    <title>Invite Friends!</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
             font-family: Arial, sans-serif;
+            background: radial-gradient(circle at center, #0047ab, #002357, #000000);
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        button {
-            padding: 10px 20px;
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .subtitle {
             font-size: 16px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        .rectangles {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .rectangle {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 50px;
+            width: 90%;
+            margin-bottom: 10px;
+        }
+        .icon {
+            margin-right: 10px;
+            font-size: 52px;
+        }
+        .text {
+            display: flex;
+            flex-direction: column;
+        }
+        .bold-text {
+            font-weight: bold;
+        }
+        .small-text {
+            font-size: 14px;
+        }
+        .yellow-text {
+            color: yellow;
+        }
+        .white-text {
+            color: white;
+        }
+        .bonus-text {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .blue-text {
+            color: rgb(0, 204, 255);
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .reload-icon {
             cursor: pointer;
+            transition: transform 0.5s ease-in-out;
             position: absolute;
-            bottom: 20px;
+            right: 20px;
+        }
+        .reload-icon.rotate {
+            transform: rotate(360deg);
+        }
+        .bottom-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: fixed;
+            bottom: 10px;
+        }
+        .bottom-rectangle {
+            background-color: rgb(11, 62, 121);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            flex: 1;
+            animation: zoom 0.5s infinite alternate;
+        }
+        .square-button {
+            background-color: rgb(11, 62, 121);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px;
+            cursor: pointer;
+            height: 42px;
+            width: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @keyframes zoom {
+            0% {
+                transform: scale(0.98);
+            }
+            100% {
+                transform: scale(0.94);
+            }
+        }
+        .scrollable-content {
+            max-height: 100px; /* Ajusta la altura máxima según sea necesario */
+            overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        .scrollable-content::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
         }
     </style>
 </head>
 <body>
-    <button onclick="compartirEnTelegram()">Compartir en Telegram</button>
-
+    <div class="container">
+        <div class="title">Invite Friends!</div>
+        <div class="subtitle">You and your friend will receive bonuses</div>
+        <div class="rectangles">
+            <div class="rectangle">
+                <div class="icon" style="margin-top: 10px;">
+                    <iconify-icon icon="noto:wrapped-gift"></iconify-icon>
+                </div>
+                <div class="text">
+                    <span class="bold-text">Invite a friend</span>
+                    <div class="bonus-text">
+                        <span class="small-text yellow-text">+5000</span>
+                        <span class="small-text white-text">&nbsp;for you and your friend</span>
+                    </div>
+                </div>
+            </div>
+            <div class="rectangle">
+                <div class="icon" style="margin-top: 10px;">
+                    <iconify-icon icon="noto:wrapped-gift"></iconify-icon>
+                </div>
+                <div class="text">
+                    <span class="bold-text">Invite a friend with Premium</span>
+                    <div class="bonus-text">
+                        <span class="small-text yellow-text">+25000</span>
+                        <span class="small-text white-text">&nbsp;for you and your friend</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="blue-text">More Bonuses</div>
+        <div style="display: flex; align-items: center; width: 90%; margin-top: 10px;">
+            <span id="friends-list-text" class="bold-text" style="flex: 1;">List of your friends</span>
+            <iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon>
+        </div>
+        <div class="rectangles" style="margin-top: 8px; border-radius: 10px;">
+            <div class="rectangle" style="border-radius: 20px;" id="scrollable-rectangle">
+                <div class="text">
+                    <div class="scrollable-content" id="scrollable-content"></div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-buttons">
+            <div class="bottom-rectangle" id="share-button">
+                <span class="bold-text">Share on Telegram</span>
+            </div>
+            <button class="square-button" id="copy-button"><iconify-icon icon="bitcoin-icons:copy-outline" style="font-size:35px;"></iconify-icon></button>
+        </div>
+    </div>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
-        function compartirEnTelegram() {
-            const texto = "Hola soy Naza el hacker";
-            const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
-            window.open(url, '_blank');
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const reloadIcon = document.querySelector('.reload-icon');
+            const scrollableContent = document.getElementById('scrollable-content');
+            const scrollableRectangle = document.getElementById('scrollable-rectangle');
+            const copyButton = document.getElementById('copy-button');
+            const shareButton = document.getElementById('share-button');
+
+            reloadIcon.addEventListener('click', function() {
+                this.classList.add('rotate');
+                setTimeout(() => {
+                    this.classList.remove('rotate');
+                }, 500);
+            });
+
+            for (let i = 0; i < 10; i++) {
+                const referralName = document.createElement('span');
+                referralName.className = 'bold-text';
+                referralName.textContent = 'Referral\'s Name';
+
+                const bonusText = document.createElement('div');
+                bonusText.className = 'bonus-text';
+
+                const smallText = document.createElement('span');
+                smallText.className = 'small-text white-text';
+                smallText.textContent = 'Referral\'s info';
+
+                if (i < 9) {
+                    smallText.style.marginBottom = '20px';
+                }
+
+                bonusText.appendChild(smallText);
+
+                scrollableContent.appendChild(referralName);
+                scrollableContent.appendChild(bonusText);
+            }
+
+            scrollableRectangle.addEventListener('wheel', function(event) {
+                event.preventDefault();
+                scrollableContent.scrollTop += event.deltaY;
+            });
+
+            copyButton.addEventListener('click', async function() {
+                try {
+                    await navigator.clipboard.writeText('Ola k acé?');
+                    console.log('Texto copiado al portapapeles');
+                } catch (err) {
+                    console.error('Error al copiar el texto: ', err);
+                }
+            });
+
+            shareButton.addEventListener('click', function() {
+                const texto = "Hola soy Naza el hacker";
+                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
+            });
+        });
     </script>
 </body>
 </html>
