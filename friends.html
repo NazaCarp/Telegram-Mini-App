@@ -222,9 +222,18 @@
                 scrollableContent.appendChild(bonusText);
             }
 
-            scrollableRectangle.addEventListener('wheel', function(event) {
+            let startY = 0;
+
+            scrollableRectangle.addEventListener('touchstart', function(event) {
+                startY = event.touches[0].clientY;
+            });
+
+            scrollableRectangle.addEventListener('touchmove', function(event) {
                 event.preventDefault();
-                scrollableContent.scrollTop += event.deltaY;
+                const touchY = event.touches[0].clientY;
+                const deltaY = startY - touchY;
+                scrollableContent.scrollTop += deltaY;
+                startY = touchY;
             });
 
             copyButton.addEventListener('click', async function() {
