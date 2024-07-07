@@ -343,7 +343,10 @@
 
     // Manejar el evento popstate para volver al home
     window.addEventListener('popstate', (event) => {
-      history.pushState({ section: 'home' }, '', `#home`);
+      const sectionId = event.state ? event.state.section : 'home';
+      if (sectionId !== 'home') {
+        history.pushState({ section: 'home' }, '', `#home`);
+      }
       sections.forEach(section => {
         if (section.id === 'home') {
           section.classList.add('active');
