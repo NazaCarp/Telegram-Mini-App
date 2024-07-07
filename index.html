@@ -341,11 +341,11 @@
       });
     });
 
-    // Manejar el evento popstate para volver a la sección anterior
+    // Manejar el evento popstate para volver al home
     window.addEventListener('popstate', (event) => {
-      const sectionId = event.state ? event.state.section : 'home';
+      history.pushState({ section: 'home' }, '', `#home`);
       sections.forEach(section => {
-        if (section.id === sectionId) {
+        if (section.id === 'home') {
           section.classList.add('active');
         } else {
           section.classList.remove('active');
@@ -353,7 +353,7 @@
       });
 
       navbarItems.forEach(item => {
-        if (item.id.replace('Nav', '') === sectionId) {
+        if (item.id.replace('Nav', '') === 'home') {
           item.classList.add('active');
         } else {
           item.classList.remove('active');
