@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <style>
+    body {
+      background: radial-gradient(circle, #0047ab, #002357, #000000);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100vh;
+      margin: 0;
+      align-items: center;
+      color: white;
+      transition: filter 0.3s;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+    .counter {
+      font-weight: bold;
+      text-align: center;
+      margin-top: -25%; /* Ajusta este valor según sea necesario */
+    }
+    #counter {
+      font-size: 48px; /* Ajusta el tamaño del número según sea necesario */
+      position: absolute; /* Añade esta línea */
+      top: 30%; /* Ajusta este valor según sea necesario */
+      left: 50%; /* Ajusta este valor según sea necesario */
+      transform: translate(-50%, -50%); /* Añade esta línea */
+      z-index: 1; /* Añade esta línea para asegurarte de que esté encima de la imagen */
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    .bitcoin-image {
+      width: 350px; /* Ajusta el tamaño de la imagen según sea necesario */
+      height: auto;
+      cursor: pointer;
+      position: relative;
+      user-select: none; /* Evita que la imagen sea seleccionable */
+      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+    }
+    .plus-one {
+      position: absolute;
+      font-size: 45px;
+      font-weight: bold;
+      color: white;
+      pointer-events: none;
+      animation: moveUp 1s forwards;
+    }
+    @keyframes moveUp {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-150px);
+        opacity: 0;
+      }
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      height: 60px;
+      border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
+      margin: 0 auto; /* Centra la barra de navegación */
+      background-color: #222222;
+      position: fixed;
+      bottom: 10px;
+    }
+    .navbar a {
+      color: gray;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 14px;
+      position: relative;
+      user-select: none; /* Evita que la imagen sea seleccionable */
+      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+    }
+    .navbar a.active span, .navbar a.active iconify-icon {
+      color: white;
+    }
+    .navbar a iconify-icon {
+      font-size: 24px;
+    }
+    .navbar a.active::before {
+      content: '';
+      position: absolute;
+      top: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
+      left: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
+      right: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
+      bottom: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
+      border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
+      background-color: rgba(0, 0, 0, 0.267); /* Color del relleno */
+      z-index: -1;
+    }
+    #secondaryCounter {
+      font-size: 20px; /* Ajusta el tamaño del número según sea necesario */
+      position: absolute;
+      bottom: 75px; /* Ajusta este valor según sea necesario */
+      left: 10px; /* Alinea a la izquierda */
+      display: flex;
+      align-items: center;
+      user-select: none; /* Evita que la imagen sea seleccionable */
+      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+    }
+    #secondaryCounter iconify-icon {
+      font-size: 30px;
+      color: orange;
+      transform: rotate(15deg);
+    }
+
+    /* Estilos para las secciones */
+    .section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    .section.active {
+      display: flex;
+    }
+
+    .rounded-square {
+      background-color: #333;
+      border-radius: 50px;
+      margin: 10px;
+      width: 80%;
+      text-align: left; /* Alinea el contenido a la izquierda */
+      padding: 20px; /* Añade espacio interno */
+      position: relative; /* Permite posicionar el ícono */
+    }
+
+    .large-icon {
+      font-size: 60px; /* Ajusta el tamaño del ícono según sea necesario */
+      position: absolute; /* Posiciona el ícono de forma absoluta */
+      top: 50%; /* Centra el ícono verticalmente */
+      left: 20px; /* Ajusta la distancia desde el borde izquierdo */
+      transform: translateY(-50%); /* Centra el ícono verticalmente */
+    }
+
+    .large-text, .bonus {
+      font-size: 15px; /* Ajusta el tamaño de la fuente según sea necesario */
+      font-weight: bold;
+      margin-left: 70px; /* Ajusta el margen izquierdo para evitar que el texto se superponga con el ícono */
+    }
+    
+    .bonus-text {
+      vertical-align: middle; /* Alinea el texto verticalmente con el ícono */
+    }
+  </style>
+</head>
+<body>
+  <div class="user-info" id="user-info"></div>
+  <div class="section active" id="home">
+    <div class="container">
+      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="bitcoin-image" id="bitcoinImage">
+    </div>
+    <div class="counter" id="counter">0</div>
+    <div class="counter" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
+  </div>
+  <div class="section" id="exchange">
+    <h1>Exchange</h1>
+  </div>
+  <div class="section" id="mine">
+    <h1>Mine</h1>
+  </div>
+  <div class="section" id="friends">
+    <p style="font-size: 20px; top: 5px;">Invite Friends!</p>
+    <p>You and your friend will receive bonuses</p>
+    <div class="rounded-square">
+      <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
+      <p class="large-text">Invite a friend</p>
+      <p class="bonus" style="color: yellow"><iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +5000 <span style="color: white;">for you and your friend</span></p>
+    </div>
+    <div class="rounded-square">
+      <iconify-icon class="large-icon" icon="noto:wrapped-gift"></iconify-icon>
+      <p class="large-text">Invite a friend with Telegram Premium</p>
+      <p class="bonus" style="color: yellow"><iconify-icon icon="streamline:subscription-cashflow-solid"></iconify-icon> +25000 <span style="color: white;">for you and your friend</span></p>
+    </div>
+    <div class="rounded-square">
+    </div>
+    <p class="large-text" style="color: rgb(0, 204, 255); margin-left: 0px"><span>More Bonuses</span></p>
+  </div>
+  <div class="section" id="earn">
+    <h1>Earn</h1>
+  </div>
+  <div class="section" id="airdrop">
+    <h1>Airdrop</h1>
+  </div>
+
+  <div class="navbar">
+    <a href="#" id="exchangeNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+    <a href="#" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+    <a href="#" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+    <a href="#" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+    <a href="#" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
+  </div>
+
+  <script>
+    let count = 0;
+    let secondaryCount = 0;
+    let lastTimestamp = 0;
+    const userId = Telegram.WebApp.initDataUnsafe.user.id;
+
+    // Función para cargar los contadores del localStorage
+    function loadCounts() {
+      const storedCount = localStorage.getItem(`count_${userId}`);
+      const storedSecondaryCount = localStorage.getItem(`secondaryCount_${userId}`);
+      const storedTimestamp = localStorage.getItem(`timestamp_${userId}`);
+      if (storedCount !== null && storedSecondaryCount !== null && storedTimestamp !== null) {
+        count = parseInt(storedCount, 10);
+        secondaryCount = parseInt(storedSecondaryCount, 10);
+        lastTimestamp = parseInt(storedTimestamp, 10);
+        if (isNaN(count)) {
+          count = 0;
+        }
+        if (isNaN(secondaryCount)) {
+          secondaryCount = 1000;
+        }
+        if (isNaN(lastTimestamp)) {
+          lastTimestamp = Date.now();
+        }
+        const now = Date.now();
+        const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
+        secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
+        document.getElementById('counter').textContent = count;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+      } else {
+        count = 0;
+        secondaryCount = 0;
+        lastTimestamp = Date.now();
+        document.getElementById('counter').textContent = count;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+      }
+    }
+
+    // Función para guardar los contadores en el localStorage
+    function saveCounts() {
+      localStorage.setItem(`count_${userId}`, count.toString());
+      localStorage.setItem(`secondaryCount_${userId}`, secondaryCount.toString());
+      localStorage.setItem(`timestamp_${userId}`, lastTimestamp.toString());
+    }
+
+    // Función para incrementar el contador secundario cada segundo
+    function incrementSecondaryCounter() {
+      if (secondaryCount < 1000) {
+        secondaryCount += 1;
+        lastTimestamp = Date.now();
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        saveCounts();
+      }
+    }
+
+    // Iniciar el intervalo para incrementar el contador secundario cada segundo
+    setInterval(incrementSecondaryCounter, 1000);
+
+    function handleTouch(event) {
+      event.preventDefault(); // Evita el comportamiento predeterminado del evento touch
+      let touchCount = event.touches.length; // Obtiene el número de toques simultáneos
+      for (let i = 0; i < touchCount; i++) {
+        let touch = event.touches[i];
+        handleClick(touch);
+      }
+    }
+
+    function handleClick(event) {
+      if (secondaryCount > 0) {
+        count += 1;
+        secondaryCount -= 1;
+        lastTimestamp = Date.now();
+        document.getElementById('counter').textContent = count;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        saveCounts();
+
+        // Mostrar "+1" en el lugar del clic
+        let plusOne = document.createElement('div');
+        plusOne.className = 'plus-one';
+        plusOne.textContent = '+1';
+        plusOne.style.left = `${event.clientX - 10}px`; // Ajusta la posición según sea necesario
+        plusOne.style.top = `${event.clientY - 20}px`; // Ajusta la posición según sea necesario
+        document.body.appendChild(plusOne);
+
+        // Ocultar el "+1" después de 1 segundo
+        setTimeout(() => {
+          plusOne.remove();
+        }, 1000);
+
+        // Cambiar el tamaño de la imagen
+        let image = document.getElementById('bitcoinImage');
+        image.style.transition = 'transform 0.5s';
+        image.style.transform = 'scale(0.8)';
+
+        // Volver al tamaño original después de 0.5 segundos
+        setTimeout(() => {
+          image.style.transform = 'scale(1)';
+        }, 500);
+      }
+    }
+
+    document.getElementById('bitcoinImage').addEventListener('touchstart', handleTouch, { passive: false });
+    document.getElementById('bitcoinImage').addEventListener('click', handleClick);
+
+    // Mostrar el nombre del usuario
+    window.onload = function() {
+      const user = Telegram.WebApp.initDataUnsafe.user;
+      if (user) {
+        const userInfo = document.getElementById('user-info');
+        const userName = document.createElement('span');
+        userName.textContent = user.first_name + ' ' + (user.last_name || '');
+        userInfo.appendChild(userName);
+      }
+      loadCounts();
+    };
+
+    // Agregar eventos de clic a los íconos de la barra de navegación
+    const navbarItems = document.querySelectorAll('.navbar a');
+    const sections = document.querySelectorAll('.section');
+
+    navbarItems.forEach(item => {
+      item.addEventListener('click', (event) => {
+        event.preventDefault();
+        navbarItems.forEach(navItem => navItem.classList.remove('active'));
+        item.classList.add('active');
+
+        const targetId = item.id.replace('Nav', '');
+        if (targetId === 'exchange') {
+          sections.forEach(section => {
+            if (section.id === 'home') {
+              section.classList.add('active');
+            } else {
+              section.classList.remove('active');
+            }
+          });
+        } else {
+          sections.forEach(section => {
+            if (section.id === targetId) {
+              section.classList.add('active');
+            } else {
+              section.classList.remove('active');
+            }
+          });
+        }
+
+        // Agregar la sección al historial del navegador
+        if (targetId !== 'home') {
+          history.pushState({ section: targetId }, '', `#${targetId}`);
+        } else {
+          history.pushState({ section: 'home' }, '', `#home`);
+        }
+      });
+    });
+
+    // Manejar el evento popstate para volver a la sección anterior
+    window.addEventListener('popstate', (event) => {
+      const sectionId = event.state ? event.state.section : 'home';
+      sections.forEach(section => {
+        if (section.id === sectionId) {
+          section.classList.add('active');
+        } else {
+          section.classList.remove('active');
+        }
+      });
+
+      navbarItems.forEach(item => {
+        if (item.id.replace('Nav', '') === sectionId) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
