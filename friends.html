@@ -21,6 +21,8 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
         .title {
             font-size: 24px;
@@ -114,6 +116,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+
         }
         @keyframes zoom {
             0% {
@@ -233,6 +236,13 @@
             const copyButton = document.getElementById('copy-button');
             const shareButton = document.getElementById('share-button');
             const alertContainer = document.getElementById('alert-container');
+            const friendsNav = document.getElementById('friendsNav');
+
+            friendsNav.addEventListener('click', function(event) {
+                if (window.location.pathname.includes('friends.html')) {
+                    event.preventDefault();
+                }
+            });
 
             reloadIcon.addEventListener('click', function() {
                 this.classList.add('rotate');
