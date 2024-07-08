@@ -23,6 +23,8 @@
       align-items: center;
       height: 100vh;
       position: relative;
+      user-select: none; /* Evita que la imagen sea seleccionable */
+      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
     .counter {
       font-weight: bold;
@@ -49,8 +51,6 @@
       height: auto;
       cursor: pointer;
       position: relative;
-      user-select: none; /* Evita que la imagen sea seleccionable */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
     .plus-one {
       position: absolute;
@@ -90,8 +90,6 @@
       align-items: center;
       font-size: 14px;
       position: relative;
-      user-select: none; /* Evita que la imagen sea seleccionable */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
     .navbar a.active span, .navbar a.active iconify-icon {
       color: white;
