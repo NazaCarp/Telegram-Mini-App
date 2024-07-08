@@ -175,6 +175,7 @@
     </style>
 </head>
 <body>
+    <div id="alert-container" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000;">Texto copiado ✅</div>
     <div class="container">
         <div class="title">Invite Friends!</div>
         <div class="subtitle">You and your friend will receive bonuses</div>
@@ -210,7 +211,7 @@
             <iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon>
         </div>
         <div class="rectangles" style="margin-top: 8px; border-radius: 10px;">
-            <div class="rectangle" style="border-radius: 20px; height: auto;" id="scrollable-rectangle">
+            <div class="rectangle" style="border-radius: 20px;" id="scrollable-rectangle">
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content"></div>
                 </div>
@@ -231,6 +232,7 @@
             const scrollableRectangle = document.getElementById('scrollable-rectangle');
             const copyButton = document.getElementById('copy-button');
             const shareButton = document.getElementById('share-button');
+            const alertContainer = document.getElementById('alert-container');
 
             reloadIcon.addEventListener('click', function() {
                 this.classList.add('rotate');
@@ -279,6 +281,10 @@
                 try {
                     await navigator.clipboard.writeText('Ola k acé?');
                     console.log('Texto copiado al portapapeles');
+                    alertContainer.style.display = 'block';
+                    setTimeout(() => {
+                        alertContainer.style.display = 'none';
+                    }, 3000);
                 } catch (err) {
                     console.error('Error al copiar el texto: ', err);
                 }
