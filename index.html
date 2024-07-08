@@ -331,33 +331,6 @@
             }
           });
         }
-
-        // Agregar la sección al historial del navegador
-        if (targetId !== 'home') {
-          history.pushState({ section: targetId }, '', `#${targetId}`);
-        } else {
-          history.pushState({ section: 'home' }, '', `#home`);
-        }
-      });
-    });
-
-    // Manejar el evento popstate para volver a la sección "Mine"
-    window.addEventListener('popstate', (event) => {
-      const sectionId = 'mine'; // Siempre redirigir a la sección "Mine"
-      sections.forEach(section => {
-        if (section.id === sectionId) {
-          section.classList.add('active');
-        } else {
-          section.classList.remove('active');
-        }
-      });
-
-      navbarItems.forEach(item => {
-        if (item.id.replace('Nav', '') === sectionId) {
-          item.classList.add('active');
-        } else {
-          item.classList.remove('active');
-        }
       });
     });
 
