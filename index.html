@@ -179,54 +179,33 @@
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
       tg.CloudStorage.getItem('count', (error, storedCount) => {
-        if (error) {
-          console.error('Error retrieving count:', error);
-        } else {
-          count = parseInt(storedCount, 10) || 0;
-          document.getElementById('counter').textContent = count;
-        }
+        count = parseInt(storedCount, 10) || 0;
+        document.getElementById('counter').textContent = count;
       });
 
       tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
-        if (error) {
-          console.error('Error retrieving secondaryCount:', error);
-        } else {
-          secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
-          document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-        }
+        secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
       });
 
       tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
-        if (error) {
-          console.error('Error retrieving timestamp:', error);
-        } else {
-          lastTimestamp = parseInt(storedTimestamp, 10) || Date.now();
-          const now = Date.now();
-          const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
-          secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
-          document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-        }
+        lastTimestamp = parseInt(storedTimestamp, 10) || Date.now();
+        const now = Date.now();
+        const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
+        secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
       });
     }
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
       tg.CloudStorage.setItem('count', count.toString(), (error, success) => {
-        if (error) {
-          console.error('Error saving count:', error);
-        }
       });
 
       tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), (error, success) => {
-        if (error) {
-          console.error('Error saving secondaryCount:', error);
-        }
       });
 
       tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), (error, success) => {
-        if (error) {
-          console.error('Error saving timestamp:', error);
-        }
       });
     }
 
