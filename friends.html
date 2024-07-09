@@ -10,11 +10,17 @@
             background: radial-gradient(circle at center, #0047ab, #002357, #000000);
             color: white;
             margin: 0;
-            padding: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+        * {
+            margin: 0px;
+        }
+        h4{
+            margin: 10px;
+            margin-bottom: 20px;
         }
         .container {
             display: flex;
@@ -23,16 +29,6 @@
             width: 100%;
             user-select: none; /* Evita que la imagen sea seleccionable */
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
-        }
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-        .subtitle {
-            font-size: 16px;
-            color: #ccc;
-            margin-bottom: 20px;
         }
         .rectangles {
             display: flex;
@@ -44,40 +40,14 @@
             display: flex;
             align-items: center;
             background-color: #333;
-            padding: 10px;
             border-radius: 50px;
-            width: 90%;
-            margin-bottom: 10px;
+            width: 95%;
+            margin: 5px;
+            padding: 5px;
         }
         .icon {
-            margin-right: 10px;
+            margin: 10px;
             font-size: 52px;
-        }
-        .text {
-            display: flex;
-            flex-direction: column;
-        }
-        .bold-text {
-            font-weight: bold;
-        }
-        .small-text {
-            font-size: 14px;
-        }
-        .yellow-text {
-            color: yellow;
-        }
-        .white-text {
-            color: white;
-        }
-        .bonus-text {
-            display: flex;
-            align-items: center;
-            margin-top: 5px;
-        }
-        .blue-text {
-            color: rgb(0, 204, 255);
-            font-size: 20px;
-            font-weight: bold;
         }
         .reload-icon {
             cursor: pointer;
@@ -180,40 +150,34 @@
 <body>
     <div id="alert-container" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000;">Texto copiado ✅</div>
     <div class="container">
-        <div class="title">Invite Friends!</div>
-        <div class="subtitle">You and your friend will receive bonuses</div>
+        <h1>Invite Friends!</h1>
+        <h4>You and your friend will receive bonuses</h4>
         <div class="rectangles">
             <div class="rectangle">
-                <div class="icon" style="margin-top: 10px;">
+                <div class="icon">
                     <iconify-icon icon="noto:wrapped-gift"></iconify-icon>
                 </div>
                 <div class="text">
-                    <span class="bold-text">Invite a friend</span>
-                    <div class="bonus-text">
-                        <span class="small-text yellow-text">+5000</span>
-                        <span class="small-text white-text">&nbsp;for you and your friend</span>
+                    <h3>Invite a friend</h3>
+                    <p><span style="color: yellow;">+5000</span> for you and your friend</p>
                     </div>
                 </div>
             </div>
             <div class="rectangle">
-                <div class="icon" style="margin-top: 10px;">
+                <div class="icon">
                     <iconify-icon icon="noto:wrapped-gift"></iconify-icon>
                 </div>
                 <div class="text">
-                    <span class="bold-text">Invite a friend with Premium</span>
-                    <div class="bonus-text">
-                        <span class="small-text yellow-text">+25000</span>
-                        <span class="small-text white-text">&nbsp;for you and your friend</span>
+                    <h3>Invite a friend with Premium</h3>
+                    <p><span style="color: yellow">+25000</span> for you and your friend</span></p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="blue-text">More Bonuses</div>
-        <div style="display: flex; align-items: center; width: 90%; margin-top: 10px;">
-            <span id="friends-list-text" class="bold-text" style="flex: 1;">List of your friends</span>
-            <iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon>
+        <h2 style="color: rgb(0, 204, 255);">More Bonuses</h3>
+        <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon></h4>
         </div>
-        <div class="rectangles" style="margin-top: 8px; border-radius: 10px;">
+        <div class="rectangles">
             <div class="rectangle" style="border-radius: 20px;" id="scrollable-rectangle">
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content"></div>
@@ -222,7 +186,7 @@
         </div>
         <div class="bottom-buttons">
             <div class="bottom-rectangle" id="share-button">
-                <span class="bold-text">Share on Telegram</span>
+                <p>Share on Telegram</p>
             </div>
             <button class="square-button" id="copy-button"><iconify-icon icon="bitcoin-icons:copy-outline" style="font-size:35px;"></iconify-icon></button>
         </div>
@@ -252,20 +216,15 @@
             });
 
             for (let i = 0; i < 10; i++) {
-                const referralName = document.createElement('span');
-                referralName.className = 'bold-text';
+                const referralName = document.createElement('h4');
+                referralName.style = 'margin: 10px'
                 referralName.textContent = 'Referral\'s Name';
 
                 const bonusText = document.createElement('div');
-                bonusText.className = 'bonus-text';
 
-                const smallText = document.createElement('span');
-                smallText.className = 'small-text white-text';
+                const smallText = document.createElement('p');
+                smallText.style = 'margin-left: 15px; margin-bottom: 25px'
                 smallText.textContent = 'Referral\'s info';
-
-                if (i < 9) {
-                    smallText.style.marginBottom = '20px';
-                }
 
                 bonusText.appendChild(smallText);
 
