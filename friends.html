@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invite Friends!</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +19,7 @@
         * {
             margin: 0px;
         }
-        h4{
+        h4 {
             margin: 10px;
             margin-bottom: 20px;
         }
@@ -194,6 +195,7 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const tg = window.Telegram.WebApp;
             const reloadIcon = document.querySelector('.reload-icon');
             const scrollableContent = document.getElementById('scrollable-content');
             const scrollableRectangle = document.getElementById('scrollable-rectangle');
@@ -264,6 +266,12 @@
                 const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
                 window.open(url, '_blank');
             });
+
+            tg.onEvent('backButtonClicked', () => {
+                window.location.href = 'index.html';
+            });
+
+            tg.ready();
         });
     </script>
     <div class="navbar">
