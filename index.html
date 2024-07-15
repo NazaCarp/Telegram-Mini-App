@@ -308,6 +308,13 @@
             }
           });
         }
+
+        // Manejo del botón de retroceso
+        if (targetId === 'home') {
+          tg.BackButton.hide();
+        } else {
+          tg.BackButton.show();
+        }
       });
     });
 
@@ -315,6 +322,29 @@
       event.preventDefault();
       window.location.href = 'friends.html'; // Redirige a la nueva página
     });
+
+    tg.onEvent('backButtonClicked', () => {
+      const activeSection = document.querySelector('.section.active');
+      if (activeSection && activeSection.id !== 'home') {
+        navigateTo('home');
+      }
+    });
+
+    function navigateTo(sectionId) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+
+      const targetSection = document.getElementById(sectionId);
+      targetSection.classList.add('active');
+
+      if (sectionId === 'home') {
+        tg.BackButton.hide();
+      } else {
+        tg.BackButton.show();
+      }
+    }
+
+    tg.ready();
   </script>
 </body>
 </html>
