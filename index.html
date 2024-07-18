@@ -188,31 +188,14 @@
 
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
-      tg.CloudStorage.getItem('count', (error, storedCount) => {
-        count = parseInt(storedCount, 10) || 0;
-        document.getElementById('counter').textContent = count;
-      });
-
-      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
-        secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-      });
-
-      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
-        lastTimestamp = parseInt(storedTimestamp, 10) || Date.now();
-        const now = Date.now();
-        const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
-        secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-        updateCloudStorageValues();
-      });
+      updateCloudStorageValues();
     }
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
       tg.CloudStorage.setItem('count', count.toString(), updateCloudStorageValues);
-      //tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), updateCloudStorageValues);
-      //tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), updateCloudStorageValues);
     }
 
     // Función para actualizar los valores mostrados en la pantalla
