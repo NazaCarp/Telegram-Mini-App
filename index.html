@@ -46,7 +46,7 @@
       top: 10px;
       left: 10px;
     }
-    .coin-image {
+    .bitcoin-image {
       width: 350px; /* Ajusta el tamaño de la imagen según sea necesario */
       height: auto;
       cursor: pointer;
@@ -151,7 +151,7 @@
   <div class="user-info" id="user-info"></div>
   <div class="section active" id="home">
     <div class="container">
-      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="coin Image" class="coin-image" id="coinImage">
+      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="bitcoin-image" id="bitcoinImage">
     </div>
     <div class="counter" id="counter">0</div>
     <div class="counter" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
@@ -191,11 +191,13 @@
       tg.CloudStorage.getItem('count', (error, storedCount) => {
         count = parseInt(storedCount, 10) || 0;
         document.getElementById('counter').textContent = count;
+        updateCloudStorageValues();
       });
 
       tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
         secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        updateCloudStorageValues();
       });
 
       tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
@@ -204,25 +206,38 @@
         const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
         secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        updateCloudStorageValues();
       });
     }
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('count', count.toString());
-      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString());
-      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString());
+      tg.CloudStorage.setItem('count', count.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), updateCloudStorageValues);
+    }
 
-      tg.CloudStorage.getKeys().then((keys) => {
-        const cloudStorageValues = document.getElementById('cloudStorageValues');
-        cloudStorageValues.innerHTML = '';
-        keys.forEach(key => {
-          tg.CloudStorage.getItem(key, (error, value) => {
-            const div = document.createElement('div');
-            div.textContent = `${key}: ${value}`;
-            cloudStorageValues.appendChild(div);
-          });
-        });
+    // Función para actualizar los valores mostrados en la pantalla
+    function updateCloudStorageValues() {
+      const cloudStorageValues = document.getElementById('cloudStorageValues');
+      cloudStorageValues.innerHTML = '';
+
+      tg.CloudStorage.getItem('count', (error, storedCount) => {
+        const countValue = document.createElement('div');
+        countValue.textContent = `count: ${storedCount}`;
+        cloudStorageValues.appendChild(countValue);
+      });
+
+      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
+        const secondaryCountValue = document.createElement('div');
+        secondaryCountValue.textContent = `secondaryCount: ${storedSecondaryCount}`;
+        cloudStorageValues.appendChild(secondaryCountValue);
+      });
+
+      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
+        const timestampValue = document.createElement('div');
+        timestampValue.textContent = `timestamp: ${storedTimestamp}`;
+        cloudStorageValues.appendChild(timestampValue);
       });
     }
 
@@ -270,7 +285,7 @@
         }, 1000);
 
         // Cambiar el tamaño de la imagen
-        let image = document.getElementById('coinImage');
+        let image = document.getElementById('bitcoinImage');
         image.style.transition = 'transform 0.5s';
         image.style.transform = 'scale(0.8)';
 
@@ -278,11 +293,13 @@
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
+
+        saveCounts();
       }
     }
 
-    document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
-    document.getElementById('coinImage').addEventListener('click', handleClick);
+    document.getElementById('bitcoinImage').addEventListener('touchstart', handleTouch, { passive: false });
+    document.getElementById('bitcoinImage').addEventListener('click', handleClick);
 
     // Mostrar el nombre del usuario
     window.onload = function() {
