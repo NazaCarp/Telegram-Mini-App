@@ -210,9 +210,10 @@
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('count', count.toString(), updateCloudStorageValues);
-      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), updateCloudStorageValues);
-      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('count', count.toString());
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString());
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString());
+      updateCloudStorageValues();
     }
 
     // Función para actualizar los valores mostrados en la pantalla
