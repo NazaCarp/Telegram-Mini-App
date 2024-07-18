@@ -70,14 +70,6 @@
         opacity: 0;
       }
     }
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-      }
-    }
     .navbar {
       display: flex;
       justify-content: space-around;
@@ -159,7 +151,7 @@
   <div class="user-info" id="user-info"></div>
   <div class="section active" id="home">
     <div class="container">
-      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="coin-image" id="coinImage">
+      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="coin Image" class="coin-image" id="coinImage">
     </div>
     <div class="counter" id="counter">0</div>
     <div class="counter" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
@@ -196,56 +188,39 @@
 
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
-      updateCloudStorageValues();
-      showHelloMessage();
+      tg.CloudStorage.getItem('count', (error, storedCount) => {
+        count = parseInt(storedCount, 10) || 0;
+        document.getElementById('counter').textContent = count;
+      });
+
+      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
+        secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+      });
+
+      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
+        lastTimestamp = parseInt(storedTimestamp, 10) || Date.now();
+        const now = Date.now();
+        const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
+        secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+      });
     }
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('count', count.toString(), () => {
-        showHelloMessage();
-        updateCloudStorageValues();
-      });
-      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), () => {
-        showHelloMessage();
-        updateCloudStorageValues();
-      });
-      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), () => {
-        showHelloMessage();
-        updateCloudStorageValues();
-      });
-    }
-
-    function showHelloMessage() {
-      const helloMessage = document.createElement('div');
-      helloMessage.textContent = 'HOLA';
-      helloMessage.style.position = 'absolute';
-      helloMessage.style.top = '50%';
-      helloMessage.style.left = '50%';
-      helloMessage.style.transform = 'translate(-50%, -50%)';
-      helloMessage.style.fontSize = '48px';
-      helloMessage.style.color = 'white';
-      helloMessage.style.zIndex = '1000';
-      helloMessage.style.animation = 'fadeOut 1s forwards';
-      helloMessage.style.animationDelay = '1s';
-      document.body.appendChild(helloMessage);
-
-      setTimeout(() => {
-        helloMessage.remove();
-      }, 2000);
-    }
-
-    // Función para actualizar los valores mostrados en la pantalla
-    function updateCloudStorageValues() {
-      const cloudStorageValues = document.getElementById('cloudStorageValues');
-      cloudStorageValues.innerHTML = '';
+      tg.CloudStorage.setItem('count', count.toString());
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString());
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString());
 
       tg.CloudStorage.getKeys().then((keys) => {
-        keys.forEach((key) => {
-          tg.CloudStorage.getItem(key).then((value) => {
-            const keyValuePair = document.createElement('div');
-            keyValuePair.textContent = `${key}: ${value}`;
-            cloudStorageValues.appendChild(keyValuePair);
+        const cloudStorageValues = document.getElementById('cloudStorageValues');
+        cloudStorageValues.innerHTML = '';
+        keys.forEach(key => {
+          tg.CloudStorage.getItem(key, (error, value) => {
+            const div = document.createElement('div');
+            div.textContent = `${key}: ${value}`;
+            cloudStorageValues.appendChild(div);
           });
         });
       });
@@ -303,8 +278,6 @@
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
-
-        saveCounts();
       }
     }
 
