@@ -200,6 +200,7 @@
 
     // Función para actualizar los valores mostrados en la pantalla
     function updateCloudStorageValues() {
+      keyValuePair.textContent = `Hola`;
       const cloudStorageValues = document.getElementById('cloudStorageValues');
       cloudStorageValues.innerHTML = '';
 
@@ -207,7 +208,7 @@
         keys.forEach((key) => {
           tg.CloudStorage.getItem(key).then((value) => {
             const keyValuePair = document.createElement('div');
-            keyValuePair.textContent = `${key}: ${value}`;
+            keyValuePair.textContent = `Hola`;
             cloudStorageValues.appendChild(keyValuePair);
           });
         });
