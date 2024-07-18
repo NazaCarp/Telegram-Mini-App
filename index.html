@@ -1,3 +1,4 @@
+Tengo este código:
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -46,7 +47,7 @@
       top: 10px;
       left: 10px;
     }
-    .Coin-image {
+    .coin-image {
       width: 350px; /* Ajusta el tamaño de la imagen según sea necesario */
       height: auto;
       cursor: pointer;
@@ -135,23 +136,13 @@
     .section.active {
       display: flex;
     }
-
-    #cloudStorageValues {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 14px;
-    }
   </style>
 </head>
 <body>
   <div class="user-info" id="user-info"></div>
   <div class="section active" id="home">
     <div class="container">
-      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Coin Image" class="Coin-image" id="CoinImage">
+      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="coin Image" class="coin-image" id="coinImage">
     </div>
     <div class="score" id="score">0</div>
     <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
@@ -177,64 +168,39 @@
     <a href="#" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
   </div>
 
-  <div id="cloudStorageValues"></div>
-
   <script>
     const tg = window.Telegram.WebApp;
+    let score = 0;
+    let secondaryCount = 0;
+    let lastTimestamp = 0;
     const userId = tg.initDataUnsafe.user.id;
 
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
       tg.CloudStorage.getItem('score', (error, score) => {
-        score = score;
+        score = parseInt(score, 10) || 0;
         document.getElementById('score').textContent = score;
       });
 
       tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
-        secondaryCount = storedSecondaryCount;
+        secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
       });
 
       tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
-        lastTimestamp = storedTimestamp;
+        lastTimestamp = parseInt(storedTimestamp, 10) || Date.now();
         const now = Date.now();
         const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
         secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
       });
-      updateCloudStorageValues();
     }
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('score', score);
-      tg.CloudStorage.setItem('secondaryCount', secondaryCount);
-      tg.CloudStorage.setItem('timestamp', lastTimestamp);
-      updateCloudStorageValues();
-    }
-
-    // Función para actualizar los valores mostrados en la pantalla
-    function updateCloudStorageValues() {
-      const cloudStorageValues = document.getElementById('cloudStorageValues');
-      cloudStorageValues.innerHTML = '';
-
-      tg.CloudStorage.getItem('score', (error, storedCount) => {
-        const countValue = document.createElement('div');
-        countValue.textContent = `score: ${storedCount}`;
-        cloudStorageValues.appendChild(countValue);
-      });
-
-      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
-        const secondaryCountValue = document.createElement('div');
-        secondaryCountValue.textContent = `secondaryCount: ${storedSecondaryCount}`;
-        cloudStorageValues.appendChild(secondaryCountValue);
-      });
-
-      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
-        const timestampValue = document.createElement('div');
-        timestampValue.textContent = `timestamp: ${storedTimestamp}`;
-        cloudStorageValues.appendChild(timestampValue);
-      });
+      tg.CloudStorage.setItem('score', score.toString())
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString())
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString())
     }
 
     // Función para incrementar el contador secundario cada segundo
@@ -281,7 +247,7 @@
         }, 1000);
 
         // Cambiar el tamaño de la imagen
-        let image = document.getElementById('CoinImage');
+        let image = document.getElementById('coinImage');
         image.style.transition = 'transform 0.5s';
         image.style.transform = 'scale(0.8)';
 
@@ -289,13 +255,11 @@
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
-
-        saveCounts();
       }
     }
 
-    document.getElementById('CoinImage').addEventListener('touchstart', handleTouch, { passive: false });
-    document.getElementById('CoinImage').addEventListener('click', handleClick);
+    document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
+    document.getElementById('coinImage').addEventListener('click', handleClick);
 
     // Mostrar el nombre del usuario
     window.onload = function() {
@@ -377,3 +341,13 @@
   </script>
 </body>
 </html>
+
+Quiero que cada vez que se guarde un elemento en la nube de Telegram, se muestre todos los valores por keys con esto:
+cloudStorage
+  .getKeys()
+  .then((keys) => {
+    // Will be ['my-key'].
+    console.log('Keys are', keys);
+  })
+
+Pero no mediante la consola, si no que lo muestre en la pantalla
