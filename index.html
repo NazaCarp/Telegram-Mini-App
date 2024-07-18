@@ -26,12 +26,12 @@
       user-select: none; /* Evita que los textos / imagen sean seleccionables */
       -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
-    .counter {
+    .score {
       font-weight: bold;
       text-align: center;
       margin-top: -25%; /* Ajusta este valor según sea necesario */
     }
-    #counter {
+    #score {
       font-size: 48px; /* Ajusta el tamaño del número según sea necesario */
       position: absolute; /* Añade esta línea */
       top: 30%; /* Ajusta este valor según sea necesario */
@@ -153,8 +153,8 @@
     <div class="container">
       <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="Bitcoin Image" class="bitcoin-image" id="bitcoinImage">
     </div>
-    <div class="counter" id="counter">0</div>
-    <div class="counter" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
+    <div class="score" id="score">0</div>
+    <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
   </div>
   <div class="section" id="exchange">
     <h1>Exchange</h1>
@@ -188,8 +188,8 @@
 
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
-      tg.CloudStorage.getItem('score', (error, storedCount) => {
-        score = parseInt(storedCount, 10) || 0;
+      tg.CloudStorage.getItem('score', (error, score) => {
+        score = parseInt(score, 10) || 0;
         document.getElementById('score').textContent = score;
       });
 
@@ -267,7 +267,7 @@
         score += 1;
         secondaryCount -= 1;
         lastTimestamp = Date.now();
-        document.getElementById('counter').textContent = score;
+        document.getElementById('score').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
         // Mostrar "+1" en el lugar del clic
