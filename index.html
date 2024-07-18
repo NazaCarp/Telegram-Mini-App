@@ -220,22 +220,14 @@
       const cloudStorageValues = document.getElementById('cloudStorageValues');
       cloudStorageValues.innerHTML = '';
 
-      tg.CloudStorage.getItem('count', (error, storedCount) => {
-        const countValue = document.createElement('div');
-        countValue.textContent = `count: ${storedCount}`;
-        cloudStorageValues.appendChild(countValue);
-      });
-
-      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
-        const secondaryCountValue = document.createElement('div');
-        secondaryCountValue.textContent = `secondaryCount: ${storedSecondaryCount}`;
-        cloudStorageValues.appendChild(secondaryCountValue);
-      });
-
-      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
-        const timestampValue = document.createElement('div');
-        timestampValue.textContent = `timestamp: ${storedTimestamp}`;
-        cloudStorageValues.appendChild(timestampValue);
+      tg.CloudStorage.getKeys().then((keys) => {
+        keys.forEach((key) => {
+          tg.CloudStorage.getItem(key, (error, value) => {
+            const keyValuePair = document.createElement('div');
+            keyValuePair.textContent = `${key}: ${value}`;
+            cloudStorageValues.appendChild(keyValuePair);
+          });
+        });
       });
     }
 
