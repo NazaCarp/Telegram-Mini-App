@@ -44,7 +44,7 @@
         const loadCounterFromCloud = () => {
             webApp.CloudStorage.getItem('counter', (error, value) => {
                 if (error) {
-                    console.error('Error al cargar el contador desde la nube:', error);
+                    document.getElementById('counter').textContent = 'Error al cargar el contador';
                     currentCounter = 0;
                 } else {
                     currentCounter = parseInt(value, 10) || 0;
@@ -57,7 +57,7 @@
         const saveCounterToCloud = () => {
             webApp.CloudStorage.setItem('counter', currentCounter.toString(), (error, success) => {
                 if (error) {
-                    console.error('Error al guardar el contador en la nube:', error);
+                    document.getElementById('counter').textContent = 'Error al guardar el contador en la nube:';
                 }
             });
         };
