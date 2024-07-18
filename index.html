@@ -14,6 +14,7 @@
         #counter {
             font-size: 2em;
             margin: 20px;
+            color: #007BFF; /* Azul brillante */
         }
         button {
             font-size: 1.2em;
@@ -32,34 +33,28 @@
         const webApp = window.Telegram.WebApp;
         webApp.ready();
 
+        let currentCounter = 0;
+
         // Obtener el contador del almacenamiento en la nube
         const getCounter = () => {
             webApp.CloudStorage.getItem('counter', (error, value) => {
                 if (error) {
-                    console.error('Error al obtener el contador:', error);
                     document.getElementById('counter').textContent = 'Error al cargar el contador';
                 } else {
-                    const counter = value ? parseInt(value, 10) : 0;
-                    document.getElementById('counter').textContent = counter;
+                    currentCounter = value ? parseInt(value, 10) : 0;
+                    document.getElementById('counter').textContent = currentCounter;
                 }
             });
         };
 
         // Incrementar el contador y guardarlo en la nube
         const incrementCounter = () => {
-            webApp.CloudStorage.getItem('counter', (error, value) => {
+            currentCounter += 1;
+            webApp.CloudStorage.setItem('counter', currentCounter.toString(), (error, success) => {
                 if (error) {
-                    console.error('Error al obtener el contador:', error);
+                    document.getElementById('counter').textContent = 'Error al guardar el contador';
                 } else {
-                    const counter = value ? parseInt(value, 10) : 0;
-                    const newCounter = counter + 1;
-                    webApp.CloudStorage.setItem('counter', newCounter.toString(), (error, success) => {
-                        if (error) {
-                            console.error('Error al guardar el contador:', error);
-                        } else {
-                            document.getElementById('counter').textContent = newCounter;
-                        }
-                    });
+                    document.getElementById('counter').textContent = currentCounter;
                 }
             });
         };
