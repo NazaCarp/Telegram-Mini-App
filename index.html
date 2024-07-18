@@ -181,16 +181,16 @@
 
   <script>
     const tg = window.Telegram.WebApp;
-    let count = 0;
+    let score = 0;
     let secondaryCount = 0;
     let lastTimestamp = 0;
     const userId = tg.initDataUnsafe.user.id;
 
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
-      tg.CloudStorage.getItem('count', (error, storedCount) => {
-        count = parseInt(storedCount, 10) || 0;
-        document.getElementById('counter').textContent = count;
+      tg.CloudStorage.getItem('score', (error, storedCount) => {
+        score = parseInt(storedCount, 10) || 0;
+        document.getElementById('score').textContent = score;
       });
 
       tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
@@ -210,7 +210,7 @@
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('count', count.toString());
+      tg.CloudStorage.setItem('score', score.toString());
       tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString());
       tg.CloudStorage.setItem('timestamp', lastTimestamp.toString());
       updateCloudStorageValues();
@@ -221,9 +221,9 @@
       const cloudStorageValues = document.getElementById('cloudStorageValues');
       cloudStorageValues.innerHTML = '';
 
-      tg.CloudStorage.getItem('count', (error, storedCount) => {
+      tg.CloudStorage.getItem('score', (error, storedCount) => {
         const countValue = document.createElement('div');
-        countValue.textContent = `count: ${storedCount}`;
+        countValue.textContent = `score: ${storedCount}`;
         cloudStorageValues.appendChild(countValue);
       });
 
@@ -264,10 +264,10 @@
 
     function handleClick(event) {
       if (secondaryCount > 0) {
-        count += 1;
+        score += 1;
         secondaryCount -= 1;
         lastTimestamp = Date.now();
-        document.getElementById('counter').textContent = count;
+        document.getElementById('counter').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
         // Mostrar "+1" en el lugar del clic
