@@ -191,13 +191,11 @@
       tg.CloudStorage.getItem('count', (error, storedCount) => {
         count = parseInt(storedCount, 10) || 0;
         document.getElementById('counter').textContent = count;
-        updateCloudStorageValues();
       });
 
       tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
         secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-        updateCloudStorageValues();
       });
 
       tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
