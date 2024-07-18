@@ -205,7 +205,7 @@
 
       tg.CloudStorage.getKeys().then((keys) => {
         keys.forEach((key) => {
-          tg.CloudStorage.getItem(key, (error, value) => {
+          tg.CloudStorage.getItem(key).then((value) => {
             const keyValuePair = document.createElement('div');
             keyValuePair.textContent = `${key}: ${value}`;
             cloudStorageValues.appendChild(keyValuePair);
