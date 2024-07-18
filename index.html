@@ -24,7 +24,7 @@
     </style>
 </head>
 <body>
-    <h1>Mini App de Telegramas</h1>
+    <h1>Mini App de Telegram</h1>
     <div id="counter">Cargando...</div>
     <button id="incrementButton">Incrementar</button>
 
@@ -35,35 +35,42 @@
 
         let currentCounter = 0;
 
-        // Obtener el contador del almacenamiento en la nube
-        const getCounter = () => {
+        // Función para actualizar el contador en la interfaz
+        const updateCounterDisplay = () => {
+            document.getElementById('counter').textContent = currentCounter;
+        };
+
+        // Función para cargar el contador desde la nube
+        const loadCounterFromCloud = () => {
             webApp.CloudStorage.getItem('counter', (error, value) => {
                 if (error) {
-                    document.getElementById('counter').textContent = 'Error al cargar el contador';
+                    console.error('Error al cargar el contador desde la nube:', error);
+                    currentCounter = 0;
                 } else {
-                    currentCounter = value ? parseInt(value, 10) : 0;
-                    document.getElementById('counter').textContent = currentCounter;
+                    currentCounter = parseInt(value, 10) || 0;
                 }
+                updateCounterDisplay();
             });
         };
 
-        // Incrementar el contador y guardarlo en la nube
-        const incrementCounter = () => {
-            currentCounter += 1;
+        // Función para guardar el contador en la nube
+        const saveCounterToCloud = () => {
             webApp.CloudStorage.setItem('counter', currentCounter.toString(), (error, success) => {
                 if (error) {
-                    document.getElementById('counter').textContent = 'Error al guardar el contador';
-                } else {
-                    document.getElementById('counter').textContent = currentCounter;
+                    console.error('Error al guardar el contador en la nube:', error);
                 }
             });
         };
 
-        // Configurar el botón de incremento
-        document.getElementById('incrementButton').addEventListener('click', incrementCounter);
+        // Manejador para el botón de incremento
+        document.getElementById('incrementButton').addEventListener('click', () => {
+            currentCounter += 1;
+            updateCounterDisplay();
+            saveCounterToCloud();
+        });
 
-        // Cargar el contador al iniciar la Mini App
-        getCounter();
+        // Cargar el contador desde la nube al iniciar la mini app
+        loadCounterFromCloud();
     </script>
 </body>
 </html>
