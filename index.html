@@ -23,7 +23,7 @@
       align-items: center;
       height: 100vh;
       position: relative;
-      user-select: none; /* Evita que la imagen sea seleccionable */
+      user-select: none; /* Evita que los textos / imagen sean seleccionables */
       -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
     .counter {
@@ -115,8 +115,6 @@
       left: 10px; /* Alinea a la izquierda */
       display: flex;
       align-items: center;
-      user-select: none; /* Evita que la imagen sea seleccionable */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
     #secondaryCounter iconify-icon {
       font-size: 30px;
@@ -136,6 +134,16 @@
 
     .section.active {
       display: flex;
+    }
+
+    #cloudStorageValues {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -169,6 +177,8 @@
     <a href="#" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
   </div>
 
+  <div id="cloudStorageValues"></div>
+
   <script>
     const tg = window.Telegram.WebApp;
     let count = 0;
@@ -181,11 +191,13 @@
       tg.CloudStorage.getItem('count', (error, storedCount) => {
         count = parseInt(storedCount, 10) || 0;
         document.getElementById('counter').textContent = count;
+        updateCloudStorageValues();
       });
 
       tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
         secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        updateCloudStorageValues();
       });
 
       tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
@@ -194,18 +206,38 @@
         const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
         secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        updateCloudStorageValues();
       });
     }
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('count', count.toString(), (error, success) => {
+      tg.CloudStorage.setItem('count', count.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), updateCloudStorageValues);
+    }
+
+    // Función para actualizar los valores mostrados en la pantalla
+    function updateCloudStorageValues() {
+      const cloudStorageValues = document.getElementById('cloudStorageValues');
+      cloudStorageValues.innerHTML = '';
+
+      tg.CloudStorage.getItem('count', (error, storedCount) => {
+        const countValue = document.createElement('div');
+        countValue.textContent = `count: ${storedCount}`;
+        cloudStorageValues.appendChild(countValue);
       });
 
-      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), (error, success) => {
+      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
+        const secondaryCountValue = document.createElement('div');
+        secondaryCountValue.textContent = `secondaryCount: ${storedSecondaryCount}`;
+        cloudStorageValues.appendChild(secondaryCountValue);
       });
 
-      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), (error, success) => {
+      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
+        const timestampValue = document.createElement('div');
+        timestampValue.textContent = `timestamp: ${storedTimestamp}`;
+        cloudStorageValues.appendChild(timestampValue);
       });
     }
 
@@ -261,6 +293,8 @@
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
+
+        saveCounts();
       }
     }
 
