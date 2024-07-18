@@ -188,20 +188,20 @@
 
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
-      tg.CloudStorage.getItem('count', (error, Count) => {
-        count = parseInt(Count, 10) || 0;
+      tg.CloudStorage.getItem('count', (error, storedCount) => {
+        count = parseInt(storedCount, 10) || 0;
         document.getElementById('counter').textContent = count;
         updateCloudStorageValues();
       });
 
-      tg.CloudStorage.getItem('secondaryCount', (error, SecondaryCount) => {
-        secondaryCount = parseInt(SecondaryCount, 10) || 0;
+      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
+        secondaryCount = parseInt(storedSecondaryCount, 10) || 0;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
         updateCloudStorageValues();
       });
 
-      tg.CloudStorage.getItem('timestamp', (error, Timestamp) => {
-        lastTimestamp = parseInt(Timestamp, 10) || Date.now();
+      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
+        lastTimestamp = parseInt(storedTimestamp, 10) || Date.now();
         const now = Date.now();
         const elapsedTime = Math.floor((now - lastTimestamp) / 1000);
         secondaryCount = Math.min(1000, secondaryCount + elapsedTime);
@@ -222,21 +222,21 @@
       const cloudStorageValues = document.getElementById('cloudStorageValues');
       cloudStorageValues.innerHTML = '';
 
-      tg.CloudStorage.getItem('count', (error, Count) => {
+      tg.CloudStorage.getItem('count', (error, storedCount) => {
         const countValue = document.createElement('div');
-        countValue.textContent = `count: ${Count}`;
+        countValue.textContent = `count: ${storedCount}`;
         cloudStorageValues.appendChild(countValue);
       });
 
-      tg.CloudStorage.getItem('secondaryCount', (error, SecondaryCount) => {
+      tg.CloudStorage.getItem('secondaryCount', (error, storedSecondaryCount) => {
         const secondaryCountValue = document.createElement('div');
-        secondaryCountValue.textContent = `secondaryCount: ${SecondaryCount}`;
+        secondaryCountValue.textContent = `secondaryCount: ${storedSecondaryCount}`;
         cloudStorageValues.appendChild(secondaryCountValue);
       });
 
-      tg.CloudStorage.getItem('timestamp', (error, Timestamp) => {
+      tg.CloudStorage.getItem('timestamp', (error, storedTimestamp) => {
         const timestampValue = document.createElement('div');
-        timestampValue.textContent = `timestamp: ${Timestamp}`;
+        timestampValue.textContent = `timestamp: ${storedTimestamp}`;
         cloudStorageValues.appendChild(timestampValue);
       });
     }
