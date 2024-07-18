@@ -135,6 +135,16 @@
     .section.active {
       display: flex;
     }
+
+    #cloudStorageValues {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -167,6 +177,8 @@
     <a href="#" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
   </div>
 
+  <div id="cloudStorageValues"></div>
+
   <script>
     const tg = window.Telegram.WebApp;
     let score = 0;
@@ -176,8 +188,8 @@
 
     // Función para cargar los contadores del almacenamiento en la nube de Telegram
     function loadCounts() {
-      tg.CloudStorage.getItem('score', (error, score) => {
-        score = parseInt(score, 10) || 0;
+      tg.CloudStorage.getItem('score', (error, storedScore) => {
+        score = parseInt(storedScore, 10) || 0;
         document.getElementById('score').textContent = score;
       });
 
@@ -197,9 +209,21 @@
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('score', score.toString())
-      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString())
-      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString())
+      tg.CloudStorage.setItem('score', score.toString());
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString());
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString());
+
+      tg.CloudStorage.getKeys().then((keys) => {
+        const cloudStorageValues = document.getElementById('cloudStorageValues');
+        cloudStorageValues.innerHTML = '';
+        keys.forEach(key => {
+          tg.CloudStorage.getItem(key, (error, value) => {
+            const div = document.createElement('div');
+            div.textContent = `${key}: ${value}`;
+            cloudStorageValues.appendChild(div);
+          });
+        });
+      });
     }
 
     // Función para incrementar el contador secundario cada segundo
