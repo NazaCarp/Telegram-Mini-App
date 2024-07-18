@@ -70,6 +70,14 @@
         opacity: 0;
       }
     }
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
     .navbar {
       display: flex;
       justify-content: space-around;
@@ -193,14 +201,41 @@
 
     // Función para guardar los contadores en el almacenamiento en la nube de Telegram
     function saveCounts() {
-      tg.CloudStorage.setItem('count', count.toString(), updateCloudStorageValues);
-      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), updateCloudStorageValues);
-      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), updateCloudStorageValues);
+      tg.CloudStorage.setItem('count', count.toString(), () => {
+        showHelloMessage();
+        updateCloudStorageValues();
+      });
+      tg.CloudStorage.setItem('secondaryCount', secondaryCount.toString(), () => {
+        showHelloMessage();
+        updateCloudStorageValues();
+      });
+      tg.CloudStorage.setItem('timestamp', lastTimestamp.toString(), () => {
+        showHelloMessage();
+        updateCloudStorageValues();
+      });
+    }
+
+    function showHelloMessage() {
+      const helloMessage = document.createElement('div');
+      helloMessage.textContent = 'HOLA';
+      helloMessage.style.position = 'absolute';
+      helloMessage.style.top = '50%';
+      helloMessage.style.left = '50%';
+      helloMessage.style.transform = 'translate(-50%, -50%)';
+      helloMessage.style.fontSize = '48px';
+      helloMessage.style.color = 'white';
+      helloMessage.style.zIndex = '1000';
+      helloMessage.style.animation = 'fadeOut 1s forwards';
+      helloMessage.style.animationDelay = '1s';
+      document.body.appendChild(helloMessage);
+
+      setTimeout(() => {
+        helloMessage.remove();
+      }, 2000);
     }
 
     // Función para actualizar los valores mostrados en la pantalla
     function updateCloudStorageValues() {
-      keyValuePair.textContent = `Hola`;
       const cloudStorageValues = document.getElementById('cloudStorageValues');
       cloudStorageValues.innerHTML = '';
 
@@ -208,7 +243,7 @@
         keys.forEach((key) => {
           tg.CloudStorage.getItem(key).then((value) => {
             const keyValuePair = document.createElement('div');
-            keyValuePair.textContent = `Hola`;
+            keyValuePair.textContent = `${key}: ${value}`;
             cloudStorageValues.appendChild(keyValuePair);
           });
         });
