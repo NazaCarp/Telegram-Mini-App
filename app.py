@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
 @app.route('/')
 def home():
