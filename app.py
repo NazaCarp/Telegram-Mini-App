@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
