@@ -1,9 +1,13 @@
 # app.py
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
 
 app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 @app.route('/get_counter', methods=['GET'])
 def get_counter():
