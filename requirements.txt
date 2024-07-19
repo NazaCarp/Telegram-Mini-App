@@ -1,5 +1,5 @@
 Flask==2.0.1
 SQLAlchemy==1.4.22
-psycopg[binary]==3.2.1
+psycopg[binary,pool]
 werkzeug==2.0.1
 gunicorn==20.1.0
