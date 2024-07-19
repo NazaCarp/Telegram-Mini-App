@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
+from waitress import serve
 
 app = Flask(__name__, template_folder='.')
 
@@ -36,4 +37,4 @@ def update_counter():
     return jsonify({'status': 'success'})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    serve(app, host='0.0.0.0', port=8080)
