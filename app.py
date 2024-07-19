@@ -14,11 +14,15 @@ def home():
 
 @app.route('/get_counter', methods=['GET'])
 def get_counter():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+
     try:
         db = SessionLocal()
-        counter = db.query(Counter).first()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(value=0)
+            counter = Counter(user_id=user_id, value=0)
             db.add(counter)
             db.commit()
         db.close()
@@ -29,13 +33,18 @@ def get_counter():
 
 @app.route('/update_counter', methods=['POST'])
 def update_counter():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    value = data.get('value')
+
+    if not user_id or value is None:
+        return jsonify({'error': 'user_id and value are required'}), 400
+
     try:
-        data = request.get_json()
-        value = data.get('value')
         db = SessionLocal()
-        counter = db.query(Counter).first()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(value=value)
+            counter = Counter(user_id=user_id, value=value)
             db.add(counter)
         else:
             counter.value = value
