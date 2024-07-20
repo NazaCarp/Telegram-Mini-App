@@ -202,18 +202,11 @@
         }
         score = data.score;
         secondaryCount = data.secondarycount;
-        lastTimestamp = new Date(data.timestamp).getTime();
-
-        // Mostrar el valor del timestamp almacenado en la tabla de Supabase
-        document.getElementById('storedTimestampValue').textContent = lastTimestamp;
+        lastTimestamp = new Date(data.timestamp).getTime(); // Convertir el timestamp de la base de datos a milisegundos
 
         // Calcular el tiempo transcurrido y actualizar secondaryCount
-        const currentTime = Date.now();
-        const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
-
-        // Mostrar currentTime y elapsedTime en pantalla
-        document.getElementById('currentTimeValue').textContent = currentTime;
-        document.getElementById('elapsedTimeValue').textContent = elapsedTime;
+        const currentTime = Date.now(); // Obtener el tiempo actual en milisegundos (UTC)
+        const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000); // Calcular la diferencia en segundos
 
         secondaryCount += elapsedTime;
         if (secondaryCount > 1000) {
