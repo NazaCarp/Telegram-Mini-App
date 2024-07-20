@@ -187,25 +187,25 @@
     const userId = tg.initDataUnsafe.user.id;
 
     async function loadCounts() {
-      const response = await fetch(`/get_counters?user_id=${userId}`);
-      const data = await response.json();
-      if (data.error) {
-        console.error(data.error);
-        return;
-      }
-      score = data.score;
-      secondaryCount = data.secondarycount;
-      lastTimestamp = new Date(data.timestamp).getTime();
+        const response = await fetch(`/get_counters?user_id=${userId}`);
+        const data = await response.json();
+        if (data.error) {
+            console.error(data.error);
+            return;
+        }
+        score = data.score;
+        secondaryCount = data.secondarycount;
+        lastTimestamp = new Date(data.timestamp).getTime();
 
-      const currentTime = Date.now();
-      const timeDifference = Math.floor((currentTime - lastTimestamp) / 1000);
-      secondaryCount = Math.min(secondaryCount + timeDifference, 1000);
+        const currentTime = Date.now();
+        const timeDifference = Math.floor((currentTime - lastTimestamp) / 1000);
+        secondaryCount = Math.min(secondaryCount + timeDifference, 1000);
 
-      document.getElementById('score').textContent = score;
-      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        document.getElementById('score').textContent = score;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
-      // Update the counters in the database
-      await saveCounts();
+        // Update the counters in the database
+        await saveCounts();
     }
 
     async function saveCounts() {
