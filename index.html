@@ -221,7 +221,7 @@
     function incrementSecondaryCounter() {
       if (secondaryCount < 1000) {
         secondaryCount += 1;
-        lastTimestamp = Date.now();
+        lastTimestamp=datetime.utcnow()
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
         saveCounts();
       }
@@ -243,7 +243,7 @@
       if (secondaryCount > 0) {
         score += 1;
         secondaryCount -= 1;
-        lastTimestamp = Date.now();
+        lastTimestamp=datetime.utcnow()
         document.getElementById('score').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
