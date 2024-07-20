@@ -15,7 +15,7 @@ Base.metadata.create_all(bind=engine)
 
 # Agregar un registro inicial
 db = SessionLocal()
-counter = Counter(user_id=1, value=0)
+counter = Counter(user_id=1, score=0, secondarycount=0)
 db.add(counter)
 db.commit()
 db.close()
