@@ -13,10 +13,6 @@ logging.basicConfig(level=logging.DEBUG)
 def home():
     return render_template('index.html')
 
-from datetime import datetime, timezone
-
-from datetime import datetime, timezone
-
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
     user_id = request.args.get('user_id')
