@@ -182,7 +182,7 @@
   <script>
     const tg = window.Telegram.WebApp;
     let score = 0;
-    let secondaryCount = 1000;
+    let secondaryCount = 0;
     let lastTimestamp = 0;
     const userId = tg.initDataUnsafe.user.id;
 
@@ -195,43 +195,51 @@
             return;
         }
         score = data.score;
+        secondaryCount = data.secondarycount;
         lastTimestamp = new Date(data.timestamp).getTime();
+
+        // Calcular el incremento basado en el tiempo transcurrido
         const currentTime = Date.now();
         const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
-        secondaryCount = data.secondarycount + elapsedTime;
-        if (secondaryCount > 1000) {
-            secondaryCount = 1000; // Asegúrate de que no exceda 1000
-        }
+        secondaryCount += elapsedTime;
+        if (secondaryCount > 1000) secondaryCount = 1000; // Asegurarse de no superar 1000
+
         document.getElementById('score').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-        saveCounts(); // Guarda los contadores actualizados
+
+        // Guardar los contadores actualizados inmediatamente
+        saveCounts();
     }
 
     // Función para guardar los contadores en la base de datos
     async function saveCounts() {
-      const response = await fetch('/update_counters', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
-      });
+        const response = await fetch('/update_counters', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+        });
 
-      if (response.ok) {
-        console.log('Contadores guardados exitosamente');
-      } else {
-        console.error('Error al guardar los contadores');
-      }
+        if (response.ok) {
+            console.log('Contadores guardados exitosamente');
+        } else {
+            console.error('Error al guardar los contadores');
+        }
     }
 
     // Función para incrementar el contador secundario cada segundo
     function incrementSecondaryCounter() {
       if (secondaryCount < 1000) {
         secondaryCount += 1;
+        lastTimestamp = Date.now();
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
         saveCounts();
       }
     }
+
+    // Iniciar el intervalo para incrementar el contador secundario cada segundo
+    setInterval(incrementSecondaryCounter, 1000);
 
     function handleTouch(event) {
       event.preventDefault(); // Evita el comportamiento predeterminado del evento touch
