@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 app = Flask(__name__, template_folder='.')
 
@@ -12,6 +12,8 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+from datetime import datetime, timezone
 
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
@@ -32,7 +34,7 @@ def get_counters():
         return jsonify({
             'score': counter.score,
             'secondarycount': counter.secondarycount,
-            'timestamp': counter.timestamp.isoformat()  # Convertir a ISO 8601
+            'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat()  # Convertir a ISO 8601 con UTC
         })
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
