@@ -209,19 +209,19 @@
 
     // Función para guardar los contadores en la base de datos
     async function saveCounts() {
-      const response = await fetch('/update_counters', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
-      });
+        const response = await fetch('/update_counters', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+        });
 
-      if (response.ok) {
-        console.log('Contadores guardados exitosamente');
-      } else {
-        console.error('Error al guardar los contadores');
-      }
+        if (response.ok) {
+            console.log('Contadores guardados exitosamente');
+        } else {
+            console.error('Error al guardar los contadores');
+        }
     }
 
     // Función para incrementar el contador secundario cada segundo
