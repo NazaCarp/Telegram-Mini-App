@@ -204,6 +204,10 @@
         secondaryCount = data.secondarycount;
         lastTimestamp = new Date(data.timestamp).getTime();
 
+        // Ajustar el lastTimestamp según el huso horario de Argentina (UTC -3)
+        const timezoneOffset = 3 * 60 * 60 * 1000; // 3 horas en milisegundos
+        lastTimestamp += timezoneOffset;
+
         // Mostrar el valor del timestamp almacenado en la tabla de Supabase
         document.getElementById('storedTimestampValue').textContent = lastTimestamp;
 
