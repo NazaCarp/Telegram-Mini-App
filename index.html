@@ -188,33 +188,23 @@
 
     // Función para cargar los contadores desde la base de datos
     async function loadCounts() {
-      const response = await fetch(`/get_counters?user_id=${userId}`);
-      const data = await response.json();
-      if (data.error) {
-        console.error(data.error);
-        return;
-      }
-      score = data.score;
-      secondaryCount = data.secondarycount;
-      lastTimestamp = new Date(data.timestamp).getTime(); // Convertir el timestamp de la base de datos a milisegundos
-
-      // Calcular el tiempo transcurrido y actualizar secondaryCount
-      const currentTime = Date.now(); // Obtener el tiempo actual en milisegundos (UTC)
-      const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000); // Calcular la diferencia en segundos
-
-      secondaryCount += elapsedTime;
-      if (secondaryCount > 1000) {
-        secondaryCount = 1000; // Asegurarse de que no exceda 1000
-      }
-
-      document.getElementById('score').textContent = score;
-      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-
-      // Guardar los contadores actualizados en la base de datos
-      saveCounts();
-
-      // Iniciar el intervalo para incrementar el contador secundario cada segundo
-      setInterval(incrementSecondaryCounter, 1000);
+        const response = await fetch(`/get_counters?user_id=${userId}`);
+        const data = await response.json();
+        if (data.error) {
+            console.error(data.error);
+            return;
+        }
+        score = data.score;
+        lastTimestamp = new Date(data.timestamp).getTime();
+        const currentTime = Date.now();
+        const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
+        secondaryCount = data.secondarycount + elapsedTime;
+        if (secondaryCount > 1000) {
+            secondaryCount = 1000; // Asegúrate de que no exceda 1000
+        }
+        document.getElementById('score').textContent = score;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        saveCounts(); // Guarda los contadores actualizados
     }
 
     // Función para guardar los contadores en la base de datos

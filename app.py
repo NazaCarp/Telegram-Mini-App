@@ -29,11 +29,7 @@ def get_counters():
             db.commit()
         db.close()
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
-        return jsonify({
-            'score': counter.score,
-            'secondarycount': counter.secondarycount,
-            'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat()  # Convertir a ISO 8601 con UTC
-        })
+        return jsonify({'score': counter.score, 'secondarycount': counter.secondarycount, 'timestamp': counter.timestamp.isoformat()})
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
