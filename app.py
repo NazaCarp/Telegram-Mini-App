@@ -24,7 +24,7 @@ def get_counters():
         user_id = int(user_id)
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, score=0, secondarycount=1000, timestamp=datetime.utcnow())  # Iniciar con 1000 para nuevos usuarios
+            counter = Counter(user_id=user_id, score=0, secondarycount=1000)  # Iniciar con 1000 para nuevos usuarios
             db.add(counter)
             db.commit()
         db.close()
