@@ -26,7 +26,6 @@ def get_counter():
             db.add(counter)
             db.commit()
         db.close()
-        logging.info(f"Contador obtenido para user_id {user_id}: {counter.value}")
         return jsonify({'value': counter.value})
     except Exception as e:
         logging.error(f"Error in get_counter: {e}")
@@ -51,7 +50,6 @@ def update_counter():
             counter.value = value
         db.commit()
         db.close()
-        logging.info(f"Contador actualizado para user_id {user_id}: {value}")
         return jsonify({'status': 'success'})
     except Exception as e:
         logging.error(f"Error in update_counter: {e}")

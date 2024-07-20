@@ -43,7 +43,6 @@
 
         // Obtener el valor actual del contador desde la base de datos
         const fetchCounter = async () => {
-            console.log(`Obteniendo contador para user_id: ${userId}`);
             const response = await fetch(`/get_counter?user_id=${userId}`);
             const data = await response.json();
             if (data.error) {
@@ -51,7 +50,6 @@
                 return;
             }
             currentCounter = data.value;
-            console.log(`Contador obtenido: ${currentCounter}`);
             updateCounterDisplay(currentCounter);
         };
 
@@ -59,8 +57,6 @@
         document.getElementById('incrementButton').addEventListener('click', async () => {
             currentCounter += 1;
             updateCounterDisplay(currentCounter);
-
-            console.log(`Enviando nuevo valor del contador: ${currentCounter}`);
 
             // Enviar el nuevo valor del contador a la base de datos
             const response = await fetch('/update_counter', {
@@ -74,8 +70,6 @@
             const data = await response.json();
             if (data.error) {
                 console.error(data.error);
-            } else {
-                console.log('Respuesta del servidor:', data);
             }
         });
 
