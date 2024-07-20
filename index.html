@@ -179,6 +179,11 @@
 
   <div id="cloudStorageValues"></div>
 
+  <div id="debugInfo" style="position: fixed; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 10px; border-radius: 5px;">
+    currentTime: <span id="currentTimeValue">0</span><br>
+    elapsedTime: <span id="elapsedTimeValue">0</span>
+  </div>
+
   <script>
     const tg = window.Telegram.WebApp;
     let score = 0;
@@ -201,6 +206,11 @@
         // Calcular el tiempo transcurrido y actualizar secondaryCount
         const currentTime = Date.now();
         const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
+
+        // Mostrar currentTime y elapsedTime en pantalla
+        document.getElementById('currentTimeValue').textContent = currentTime;
+        document.getElementById('elapsedTimeValue').textContent = elapsedTime;
+
         secondaryCount += elapsedTime;
         if (secondaryCount > 1000) {
             secondaryCount = 1000; // Asegurarse de que no exceda 1000
