@@ -220,16 +220,6 @@
         setInterval(incrementSecondaryCounter, 1000);
     }
 
-      document.getElementById('score').textContent = score;
-      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-
-      // Guardar los contadores actualizados en la base de datos
-      saveCounts();
-
-      // Iniciar el intervalo para incrementar el contador secundario cada segundo
-      setInterval(incrementSecondaryCounter, 1000);
-    }
-
     // Función para guardar los contadores en la base de datos
     async function saveCounts() {
       const response = await fetch('/update_counters', {
