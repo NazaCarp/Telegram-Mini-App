@@ -187,17 +187,11 @@
       secondaryCount = data.secondarycount;
       lastTimestamp = new Date(data.timestamp).getTime();
 
-      // Mostrar el valor del timestamp almacenado en la tabla de Supabase
-      document.getElementById('storedTimestampValue').textContent = lastTimestamp;
-
       // Calcular el tiempo transcurrido y actualizar secondaryCount
       const currentTime = Date.now();
       const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
 
-      // Mostrar currentTime y elapsedTime en pantalla
-      document.getElementById('currentTimeValue').textContent = currentTime;
-      document.getElementById('elapsedTimeValue').textContent = elapsedTime;
-
+      // Sumar el tiempo transcurrido a secondaryCount
       secondaryCount += elapsedTime;
       if (secondaryCount > 1000) {
         secondaryCount = 1000; // Asegurarse de que no exceda 1000
@@ -212,19 +206,19 @@
 
     // Función para guardar los contadores en la base de datos
     async function saveCounts() {
-        const response = await fetch('/update_counters', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
-        });
+      const response = await fetch('/update_counters', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+      });
 
-        if (response.ok) {
-            console.log('Contadores guardados exitosamente');
-        } else {
-            console.error('Error al guardar los contadores');
-        }
+      if (response.ok) {
+        console.log('Contadores guardados exitosamente');
+      } else {
+        console.error('Error al guardar los contadores');
+      }
     }
 
     // Función para incrementar el contador secundario cada segundo
