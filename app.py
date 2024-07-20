@@ -1,12 +1,13 @@
+import logging
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
-import logging
+import os
 
 app = Flask(__name__, template_folder='.')
 
 # Configurar logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 @app.route('/')
 def home():
