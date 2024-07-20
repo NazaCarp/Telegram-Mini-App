@@ -187,21 +187,26 @@
       secondaryCount = data.secondarycount;
       lastTimestamp = new Date(data.timestamp).getTime();
 
-      // Convertir el timestamp almacenado en la base de datos a UTC
-      const storedTimestampUTC = new Date(data.timestamp).getTime();
+      // Mostrar el valor del timestamp almacenado en la tabla de Supabase
+      document.getElementById('storedTimestampValue').textContent = lastTimestamp;
 
-      // Obtener el timestamp actual en UTC
-      const currentTimeUTC = Date.now();
+      // Calcular el tiempo transcurrido y actualizar secondaryCount
+      const currentTime = Date.now();
+      const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
 
-      // Calcular el incremento basado en el tiempo transcurrido en UTC
-      const elapsedTime = Math.floor((currentTimeUTC - storedTimestampUTC) / 1000);
+      // Mostrar currentTime y elapsedTime en pantalla
+      document.getElementById('currentTimeValue').textContent = currentTime;
+      document.getElementById('elapsedTimeValue').textContent = elapsedTime;
+
       secondaryCount += elapsedTime;
-      if (secondaryCount > 1000) secondaryCount = 1000; // Asegurarse de no superar 1000
+      if (secondaryCount > 1000) {
+        secondaryCount = 1000; // Asegurarse de que no exceda 1000
+      }
 
       document.getElementById('score').textContent = score;
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
-      // Guardar los contadores actualizados inmediatamente
+      // Guardar los contadores actualizados en la base de datos
       saveCounts();
     }
 
