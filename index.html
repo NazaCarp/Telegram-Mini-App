@@ -1,80 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini App de Telegram</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        #counter {
-            font-size: 2em;
-            margin: 20px;
-            color: #007BFF; /* Azul brillante */
-        }
-        button {
-            font-size: 1.2em;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <h1>Mini App de Telegram</h1>
-    <div id="counter">0</div>
-    <button id="incrementButton">Incrementar</button>
+const webApp = window.Telegram.WebApp;
+webApp.ready();
 
-    <script>
-        // Inicializar la Mini App
-        const webApp = window.Telegram.WebApp;
-        webApp.ready();
+let currentCounter = 0;
+const userId = webApp.initDataUnsafe.user.id;
 
-        let currentCounter = 0;
-        const userId = webApp.initDataUnsafe.user.id;
+const updateCounterDisplay = (value) => {
+    document.getElementById('counter').textContent = value;
+};
 
-        // Función para actualizar el contador en la interfaz
-        const updateCounterDisplay = (value) => {
-            document.getElementById('counter').textContent = value;
-        };
+const fetchCounter = async () => {
+    const response = await fetch(`/get_counter?user_id=${userId}`);
+    const data = await response.json();
+    if (data.error) {
+        console.error(data.error);
+        return;
+    }
+    currentCounter = data.value;
+    updateCounterDisplay(currentCounter);
+};
 
-        // Obtener el valor actual del contador desde la base de datos
-        const fetchCounter = async () => {
-            const response = await fetch(`/get_counter?user_id=${userId}`);
-            const data = await response.json();
-            if (data.error) {
-                console.error(data.error);
-                return;
-            }
-            currentCounter = data.value;
-            updateCounterDisplay(currentCounter);
-        };
+document.getElementById('incrementButton').addEventListener('click', async () => {
+    currentCounter += 1;
+    updateCounterDisplay(currentCounter);
 
-        // Manejador para el botón de incremento
-        document.getElementById('incrementButton').addEventListener('click', async () => {
-            currentCounter += 1;
-            updateCounterDisplay(currentCounter);
+    const response = await fetch('/update_counter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId, value: currentCounter })
+    });
 
-            // Enviar el nuevo valor del contador a la base de datos
-            const response = await fetch('/update_counter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user_id: userId, value: currentCounter })
-            });
+    const data = await response.json();
+    if (data.error) {
+        console.error(data.error);
+    }
+});
 
-            const data = await response.json();
-            if (data.error) {
-                console.error(data.error);
-            }
-        });
-
-        // Inicializar el contador
-        fetchCounter();
-    </script>
-</body>
-</html>
+fetchCounter();
