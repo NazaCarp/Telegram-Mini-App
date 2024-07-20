@@ -21,6 +21,7 @@ def get_counter():
 
     try:
         db = SessionLocal()
+        user_id = int(user_id)  # Convertir a int si es necesario
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
             counter = Counter(user_id=user_id, value=0)
