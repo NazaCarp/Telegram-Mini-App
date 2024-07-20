@@ -27,17 +27,13 @@ def get_counters():
             counter = Counter(user_id=user_id, score=0, secondarycount=0)
             db.add(counter)
             db.commit()
-        else:
-            # Calcular la diferencia de tiempo y actualizar secondarycount
-            current_time = datetime.utcnow()
-            time_difference = current_time - counter.timestamp
-            seconds_passed = time_difference.total_seconds()
-            counter.secondarycount += int(seconds_passed)
-            counter.timestamp = current_time
-            db.commit()
         db.close()
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
-        return jsonify({'score': counter.score, 'secondarycount': counter.secondarycount, 'timestamp': counter.timestamp.isoformat()})
+        return jsonify({
+            'score': counter.score,
+            'secondarycount': counter.secondarycount,
+            'timestamp': counter.timestamp.isoformat()  # Convertir a ISO 8601
+        })
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
