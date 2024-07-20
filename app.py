@@ -1,13 +1,12 @@
-import logging
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
-import os
+import logging
 
 app = Flask(__name__, template_folder='.')
 
 # Configurar logging
-logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/')
 def home():
@@ -53,7 +52,6 @@ def update_counter():
             counter.value = value
         db.commit()
         db.close()
-        logging.info(f"Contador actualizado para user_id {user_id}: {value}")
         return jsonify({'status': 'success'})
     except Exception as e:
         logging.error(f"Error in update_counter: {e}")
