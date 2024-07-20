@@ -21,19 +21,15 @@ def get_counters():
 
     try:
         db = SessionLocal()
-        user_id = int(user_id)  # Convertir a int si es necesario
+        user_id = int(user_id)
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, score=0, secondarycount=0, timestamp=datetime.utcnow())
+            counter = Counter(user_id=user_id, score=0, secondarycount=1000)
             db.add(counter)
             db.commit()
         db.close()
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
-        return jsonify({
-            'score': counter.score,
-            'secondarycount': counter.secondarycount,
-            'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat()  # Convertir a ISO 8601 con UTC
-        })
+        return jsonify({'score': counter.score, 'secondarycount': counter.secondarycount, 'timestamp': counter.timestamp.isoformat()})
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
