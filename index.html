@@ -188,46 +188,30 @@
 
     // Función para cargar los contadores desde la base de datos
     async function loadCounts() {
-      const response = await fetch(`/get_counter?user_id=${userId}`);
+      const response = await fetch(`/get_counters?user_id=${userId}`);
       const data = await response.json();
       if (data.error) {
         console.error(data.error);
         return;
       }
-      score = data.value;
+      score = data.score;
+      secondaryCount = data.secondarycount;
       document.getElementById('score').textContent = score;
-
-      const responseSecondary = await fetch(`/get_counter?user_id=${userId + 1}`);
-      const dataSecondary = await responseSecondary.json();
-      if (dataSecondary.error) {
-        console.error(dataSecondary.error);
-        return;
-      }
-      secondaryCount = dataSecondary.value;
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-
       lastTimestamp = Date.now();
     }
 
     // Función para guardar los contadores en la base de datos
     async function saveCounts() {
-      const response = await fetch('/update_counter', {
+      const response = await fetch('/update_counters', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_id: userId, value: score })
+        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
       });
 
-      const responseSecondary = await fetch('/update_counter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: userId + 1, value: secondaryCount })
-      });
-
-      if (response.ok && responseSecondary.ok) {
+      if (response.ok) {
         console.log('Contadores guardados exitosamente');
       } else {
         console.error('Error al guardar los contadores');
