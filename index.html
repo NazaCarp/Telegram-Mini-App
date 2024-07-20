@@ -177,27 +177,32 @@
 
     // Función para cargar los contadores desde la base de datos
     async function loadCounts() {
-        const response = await fetch(`/get_counters?user_id=${userId}`);
-        const data = await response.json();
-        if (data.error) {
-            console.error(data.error);
-            return;
-        }
-        score = data.score;
-        secondaryCount = data.secondarycount;
-        lastTimestamp = new Date(data.timestamp).getTime();
+      const response = await fetch(`/get_counters?user_id=${userId}`);
+      const data = await response.json();
+      if (data.error) {
+        console.error(data.error);
+        return;
+      }
+      score = data.score;
+      secondaryCount = data.secondarycount;
+      lastTimestamp = new Date(data.timestamp).getTime();
 
-        // Calcular el incremento basado en el tiempo transcurrido
-        const currentTime = Date.now(datetime.UTC);
-        const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
-        secondaryCount += elapsedTime;
-        if (secondaryCount > 1000) secondaryCount = 1000; // Asegurarse de no superar 1000
+      // Convertir el timestamp almacenado en la base de datos a UTC
+      const storedTimestampUTC = new Date(data.timestamp).getTime();
 
-        document.getElementById('score').textContent = score;
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+      // Obtener el timestamp actual en UTC
+      const currentTimeUTC = Date.now();
 
-        // Guardar los contadores actualizados inmediatamente
-        saveCounts();
+      // Calcular el incremento basado en el tiempo transcurrido en UTC
+      const elapsedTime = Math.floor((currentTimeUTC - storedTimestampUTC) / 1000);
+      secondaryCount += elapsedTime;
+      if (secondaryCount > 1000) secondaryCount = 1000; // Asegurarse de no superar 1000
+
+      document.getElementById('score').textContent = score;
+      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+
+      // Guardar los contadores actualizados inmediatamente
+      saveCounts();
     }
 
     // Función para guardar los contadores en la base de datos
@@ -221,7 +226,7 @@
     function incrementSecondaryCounter() {
       if (secondaryCount < 1000) {
         secondaryCount += 1;
-        lastTimestamp=Date.now(datetime.UTC)
+        lastTimestamp = Date.now();
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
         saveCounts();
       }
@@ -243,7 +248,7 @@
       if (secondaryCount > 0) {
         score += 1;
         secondaryCount -= 1;
-        lastTimestamp=Date.now(datetime.UTC)
+        lastTimestamp = Date.now();
         document.getElementById('score').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
