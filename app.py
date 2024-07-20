@@ -24,7 +24,7 @@ def get_counters():
         user_id = int(user_id)  # Convertir a int si es necesario
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, score=0, secondarycount=0)
+            counter = Counter(user_id=user_id, score=0, secondarycount=0, timestamp=datetime.utcnow())
             db.add(counter)
             db.commit()
         db.close()
