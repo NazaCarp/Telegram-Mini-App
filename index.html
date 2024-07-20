@@ -196,9 +196,9 @@
       }
       score = data.score;
       secondaryCount = data.secondarycount;
+      lastTimestamp = new Date(data.timestamp).getTime();
       document.getElementById('score').textContent = score;
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-      lastTimestamp = Date.now();
     }
 
     // Función para guardar los contadores en la base de datos

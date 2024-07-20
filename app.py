@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
 import logging
+from datetime import datetime
 
 app = Flask(__name__, template_folder='.')
 
@@ -27,8 +28,8 @@ def get_counters():
             db.add(counter)
             db.commit()
         db.close()
-        logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}")
-        return jsonify({'score': counter.score, 'secondarycount': counter.secondarycount})
+        logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
+        return jsonify({'score': counter.score, 'secondarycount': counter.secondarycount, 'timestamp': counter.timestamp.isoformat()})
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
@@ -47,11 +48,12 @@ def update_counters():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount)
+            counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
             db.add(counter)
         else:
             counter.score = score
             counter.secondarycount = secondarycount
+            counter.timestamp = datetime.utcnow()
         db.commit()
         db.close()
         return jsonify({'status': 'success'})
