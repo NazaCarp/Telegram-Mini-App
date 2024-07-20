@@ -5,6 +5,7 @@ import logging
 
 app = Flask(__name__, template_folder='.')
 
+# Configurar logging
 logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/')

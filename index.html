@@ -29,16 +29,19 @@
     <button id="incrementButton">Incrementar</button>
 
     <script>
+        // Inicializar la Mini App
         const webApp = window.Telegram.WebApp;
         webApp.ready();
 
         let currentCounter = 0;
         const userId = webApp.initDataUnsafe.user.id;
 
+        // Función para actualizar el contador en la interfaz
         const updateCounterDisplay = (value) => {
             document.getElementById('counter').textContent = value;
         };
 
+        // Obtener el valor actual del contador desde la base de datos
         const fetchCounter = async () => {
             const response = await fetch(`/get_counter?user_id=${userId}`);
             const data = await response.json();
@@ -50,10 +53,12 @@
             updateCounterDisplay(currentCounter);
         };
 
+        // Manejador para el botón de incremento
         document.getElementById('incrementButton').addEventListener('click', async () => {
             currentCounter += 1;
             updateCounterDisplay(currentCounter);
 
+            // Enviar el nuevo valor del contador a la base de datos
             const response = await fetch('/update_counter', {
                 method: 'POST',
                 headers: {
@@ -68,6 +73,7 @@
             }
         });
 
+        // Inicializar el contador
         fetchCounter();
     </script>
 </body>
