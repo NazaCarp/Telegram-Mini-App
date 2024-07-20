@@ -212,6 +212,9 @@
 
       // Guardar los contadores actualizados en la base de datos
       saveCounts();
+
+      // Iniciar el intervalo para incrementar el contador secundario cada segundo
+      setInterval(incrementSecondaryCounter, 1000);
     }
 
     // Función para guardar los contadores en la base de datos
@@ -228,6 +231,15 @@
         console.log('Contadores guardados exitosamente');
       } else {
         console.error('Error al guardar los contadores');
+      }
+    }
+
+    // Función para incrementar el contador secundario cada segundo
+    function incrementSecondaryCounter() {
+      if (secondaryCount < 1000) {
+        secondaryCount += 1;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        saveCounts();
       }
     }
 
