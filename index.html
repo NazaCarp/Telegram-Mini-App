@@ -171,8 +171,8 @@
   <div id="debugInfo" style="position: fixed; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 10px; border-radius: 5px;">
     currentTime: <span id="currentTimeValue">0</span><br>
     elapsedTime: <span id="elapsedTimeValue">0</span><br>
-    storedTimestamp: <span id="storedTimestampValue">0</span>
-    storedscore: <span id="storedscore">0</span>
+    storedTimestamp: <span id="storedTimestampValue">0</span><br>
+    storedscore: <span id="storedscore">0</span> <!-- Añadir esta línea -->
   </div>
 
   <script>
@@ -198,12 +198,11 @@
       const currentTime = Date.now();
       const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
 
-      // Mostrar currentTime, elapsedTime, storedTimestamp en pantalla
+      // Mostrar currentTime, elapsedTime, storedTimestamp y storedScore en pantalla
       document.getElementById('currentTimeValue').textContent = currentTime;
       document.getElementById('elapsedTimeValue').textContent = elapsedTime;
       document.getElementById('storedTimestampValue').textContent = lastTimestamp;
-      document.getElementById('storedscore').textContent = score;
-
+      document.getElementById('storedscore').textContent = score; // Añadir esta línea
 
       // Sumar el tiempo transcurrido a secondaryCount
       secondaryCount += elapsedTime;
