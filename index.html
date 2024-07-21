@@ -198,17 +198,20 @@
       const currentTime = Date.now();
       const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
 
-      // Mostrar currentTime, elapsedTime, storedTimestamp y storedScore en pantalla
-      document.getElementById('currentTimeValue').textContent = currentTime;
-      document.getElementById('elapsedTimeValue').textContent = elapsedTime;
-      document.getElementById('storedTimestampValue').textContent = lastTimestamp;
-      document.getElementById('storedscore').textContent = score; // Añadir esta línea
-
       // Sumar el tiempo transcurrido a secondaryCount
       secondaryCount += elapsedTime;
       if (secondaryCount > 1000) {
         secondaryCount = 1000; // Asegurarse de que no exceda 1000
       }
+
+      // Actualizar el timestamp con el tiempo actual después de calcular el tiempo transcurrido
+      lastTimestamp = currentTime;
+
+      // Mostrar currentTime, elapsedTime, storedTimestamp y storedScore en pantalla
+      document.getElementById('currentTimeValue').textContent = currentTime;
+      document.getElementById('elapsedTimeValue').textContent = elapsedTime;
+      document.getElementById('storedTimestampValue').textContent = lastTimestamp;
+      document.getElementById('storedscore').textContent = score;
 
       document.getElementById('score').textContent = score;
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
@@ -224,7 +227,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount, timestamp: new Date(lastTimestamp).toISOString() })
       });
 
       if (response.ok) {
