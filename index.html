@@ -1,383 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mi Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
-  <style>
-    body {
-      background: radial-gradient(circle, #0047ab, #002357, #000000);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100vh;
-      margin: 0;
-      align-items: center;
-      color: white;
-      transition: filter 0.3s;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      position: relative;
-      user-select: none; /* Evita que los textos / imagen sean seleccionables */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
-    }
-    .score {
-      font-weight: bold;
-      text-align: center;
-      margin-top: -25%; /* Ajusta este valor según sea necesario */
-    }
-    #score {
-      font-size: 48px; /* Ajusta el tamaño del número según sea necesario */
-      position: absolute; /* Añade esta línea */
-      top: 30%; /* Ajusta este valor según sea necesario */
-      left: 50%; /* Ajusta este valor según sea necesario */
-      transform: translate(-50%, -50%); /* Añade esta línea */
-      z-index: 1; /* Añade esta línea para asegurarte de que esté encima de la imagen */
-    }
-    .user-info {
-      display: flex;
-      align-items: center;
-      position: absolute;
-      top: 10px;
-      left: 10px;
-    }
-    .coin-image {
-      width: 350px; /* Ajusta el tamaño de la imagen según sea necesario */
-      height: auto;
-      cursor: pointer;
-      position: relative;
-    }
-    .plus-one {
-      position: absolute;
-      font-size: 45px;
-      font-weight: bold;
-      color: white;
-      pointer-events: none;
-      animation: moveUp 1s forwards;
-    }
-    @keyframes moveUp {
-      from {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-150px);
-        opacity: 0;
-      }
-    }
-    .navbar {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      width: 100%;
-      height: 60px;
-      border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
-      margin: 0 auto; /* Centra la barra de navegación */
-      background-color: #222222;
-      position: fixed;
-      bottom: 10px;
-    }
-    .navbar a {
-      color: gray;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 14px;
-      position: relative;
-    }
-    .navbar a.active span, .navbar a.active iconify-icon {
-      color: white;
-    }
-    .navbar a iconify-icon {
-      font-size: 24px;
-    }
-    .navbar a.active::before {
-      content: '';
-      position: absolute;
-      top: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
-      left: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
-      right: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
-      bottom: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
-      border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
-      background-color: rgba(0, 0, 0, 0.267); /* Color del relleno */
-      z-index: -1;
-    }
-    #secondaryCounter {
-      font-size: 20px; /* Ajusta el tamaño del número según sea necesario */
-      position: absolute;
-      bottom: 75px; /* Ajusta este valor según sea necesario */
-      left: 10px; /* Alinea a la izquierda */
-      display: flex;
-      align-items: center;
-    }
-    #secondaryCounter iconify-icon {
-      font-size: 30px;
-      color: orange;
-      transform: rotate(15deg);
-    }
-
-    /* Estilos para las secciones */
-    .section {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      width: 100%;
-    }
-
-    .section.active {
-      display: flex;
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Segundos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #seconds {
+            font-size: 2em;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-  <div class="user-info" id="user-info"></div>
-  <div class="section active" id="home">
     <div class="container">
-      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="coin Image" class="coin-image" id="coinImage">
+        <h1>Segundos hasta el 22 de Junio de 2024 a las 13:42hs</h1>
+        <div id="seconds">Cargando...</div>
     </div>
-    <div class="score" id="score">0</div>
-    <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
-  </div>
-  <div class="section" id="exchange">
-    <h1>Exchange</h1>
-  </div>
-  <div class="section" id="mine">
-    <h1>Mine</h1>
-  </div>
-  <div class="section" id="earn">
-    <h1>Earn</h1>
-  </div>
-  <div class="section" id="airdrop">
-    <h1>Airdrop</h1>
-  </div>
 
-  <div class="navbar">
-    <a href="#" id="exchangeNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-    <a href="#" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
-    <a href="#" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-    <a href="#" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
-    <a href="#" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
-  </div>
-
-  <div id="debugInfo" style="position: fixed; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 10px; border-radius: 5px;">
-    currentTime: <span id="currentTimeValue">0</span><br>
-    elapsedTime: <span id="elapsedTimeValue">0</span><br>
-    storedTimestamp: <span id="storedTimestampValue">0</span><br>
-    storedscore: <span id="storedscore">0</span>
-  </div>
-
-  <script>
-    const tg = window.Telegram.WebApp;
-    let score = 0;
-    let secondaryCount = 0;
-    let lastTimestamp = 0;
-    const userId = tg.initDataUnsafe.user.id;
-
-    // Función para cargar los contadores desde la base de datos
-    async function loadCounts() {
-      const response = await fetch(`/get_counters?user_id=${userId}`);
-      const data = await response.json();
-      if (data.error) {
-          console.error(data.error);
-          return;
-      }
-      score = data.score;
-      secondaryCount = data.secondarycount;
-      lastTimestamp = new Date(data.timestamp).getTime();
-
-      // Mostrar el valor del score inmediatamente
-      document.getElementById('score').textContent = score;
-      document.getElementById('storedscore').textContent = score;
-
-      // Esperar 10 segundos antes de continuar con el resto del proceso
-      setTimeout(async () => {
-          // Calcular el tiempo transcurrido y actualizar secondaryCount
-          const currentTime = Date.now();
-          const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
-
-          // Sumar el tiempo transcurrido a secondaryCount
-          secondaryCount += elapsedTime;
-          if (secondaryCount > 1000) {
-              secondaryCount = 1000; // Asegurarse de que no exceda 1000
-          }
-
-          // Actualizar el timestamp con el tiempo actual después de calcular el tiempo transcurrido
-          lastTimestamp = currentTime;
-
-          // Mostrar currentTime, elapsedTime, storedTimestamp y storedScore en pantalla
-          document.getElementById('currentTimeValue').textContent = currentTime;
-          document.getElementById('elapsedTimeValue').textContent = elapsedTime;
-          document.getElementById('storedTimestampValue').textContent = lastTimestamp;
-          document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-
-          // Guardar los contadores actualizados en la base de datos
-          saveCounts();
-      }, 10000); // 10000 milisegundos = 10 segundos
-    }
-
-    // Función para guardar los contadores en la base de datos
-    async function saveCounts() {
-      const response = await fetch('/update_counters', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount, timestamp: new Date(lastTimestamp).toISOString() })
-      });
-
-      if (response.ok) {
-        console.log('Contadores guardados exitosamente');
-      } else {
-        console.error('Error al guardar los contadores');
-      }
-    }
-
-    // Función para incrementar el contador secundario cada segundo
-    function incrementSecondaryCounter() {
-      if (secondaryCount < 1000) {
-        secondaryCount += 1;
-        lastTimestamp = Date.now();
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-        saveCounts();
-      }
-    }
-
-    // Iniciar el intervalo para incrementar el contador secundario cada segundo
-    setInterval(incrementSecondaryCounter, 1000);
-
-    function handleTouch(event) {
-      event.preventDefault(); // Evita el comportamiento predeterminado del evento touch
-      let touchCount = event.touches.length; // Obtiene el número de toques simultáneos
-      for (let i = 0; i < touchCount; i++) {
-        let touch = event.touches[i];
-        handleClick(touch);
-      }
-    }
-
-    function handleClick(event) {
-      if (secondaryCount > 0) {
-        score += 1;
-        secondaryCount -= 1;
-        lastTimestamp = Date.now();
-        document.getElementById('score').textContent = score;
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-
-        // Mostrar "+1" en el lugar del clic
-        let plusOne = document.createElement('div');
-        plusOne.className = 'plus-one';
-        plusOne.textContent = '+1';
-        plusOne.style.left = `${event.clientX - 10}px`; // Ajusta la posición según sea necesario
-        plusOne.style.top = `${event.clientY - 20}px`; // Ajusta la posición según sea necesario
-        document.body.appendChild(plusOne);
-
-        // Ocultar el "+1" después de 1 segundo
-        setTimeout(() => {
-          plusOne.remove();
-        }, 1000);
-
-        // Cambiar el tamaño de la imagen
-        let image = document.getElementById('coinImage');
-        image.style.transition = 'transform 0.5s';
-        image.style.transform = 'scale(0.8)';
-
-        // Volver al tamaño original después de 0.5 segundos
-        setTimeout(() => {
-          image.style.transform = 'scale(1)';
-        }, 500);
-
-        saveCounts();
-      }
-    }
-
-    document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
-    document.getElementById('coinImage').addEventListener('click', handleClick);
-
-    // Mostrar el nombre del usuario
-    window.onload = function() {
-      const user = tg.initDataUnsafe.user;
-      if (user) {
-        const userInfo = document.getElementById('user-info');
-        const userName = document.createElement('span');
-        userName.textContent = user.first_name + ' ' + (user.last_name || '');
-        userInfo.appendChild(userName);
-      }
-      loadCounts();
-    };
-
-    // Agregar eventos de clic a los íconos de la barra de navegación
-    const navbarItems = document.querySelectorAll('.navbar a');
-    const sections = document.querySelectorAll('.section');
-
-    navbarItems.forEach(item => {
-      item.addEventListener('click', (event) => {
-        event.preventDefault();
-        navbarItems.forEach(navItem => navItem.classList.remove('active'));
-        item.classList.add('active');
-
-        const targetId = item.id.replace('Nav', '');
-        if (targetId === 'exchange') {
-          sections.forEach(section => {
-            if (section.id === 'home') {
-              section.classList.add('active');
-            } else {
-              section.classList.remove('active');
-            }
-          });
-        } else {
-          sections.forEach(section => {
-            if (section.id === targetId) {
-              section.classList.add('active');
-            } else {
-              section.classList.remove('active');
-            }
-          });
+    <script>
+        function updateSeconds() {
+            const targetDate = new Date(2024, 5, 22, 13, 42, 0); // 22 de Junio de 2024 a las 13:42hs
+            const now = new Date();
+            const secondsDifference = Math.floor((targetDate - now) / 1000);
+            document.getElementById('seconds').textContent = secondsDifference.toLocaleString();
         }
 
-        // Manejo del botón de retroceso
-        if (targetId === 'home') {
-          tg.BackButton.hide();
-        } else {
-          tg.BackButton.show();
-        }
-      });
-    });
-
-    document.getElementById('friendsNav').addEventListener('click', function(event) {
-      event.preventDefault();
-      window.location.href = 'friends.html'; // Redirige a la nueva página
-    });
-
-    tg.onEvent('backButtonClicked', () => {
-      const activeSection = document.querySelector('.section.active');
-      if (activeSection && activeSection.id !== 'home') {
-        navigateTo('home');
-      }
-    });
-
-    function navigateTo(sectionId) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(section => section.classList.remove('active'));
-
-      const targetSection = document.getElementById(sectionId);
-      targetSection.classList.add('active');
-
-      if (sectionId === 'home') {
-        tg.BackButton.hide();
-      } else {
-        tg.BackButton.show();
-      }
-    }
-
-    tg.ready();
-  </script>
+        updateSeconds();
+        setInterval(updateSeconds, 1000); // Actualizar cada segundo
+    </script>
 </body>
 </html>
