@@ -1,13 +1,18 @@
 from flask import Flask, jsonify, request, render_template
-from db import SessionLocal
+from db import SessionLocal, engine
 from models import Counter
 import logging
 from datetime import datetime, timezone
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 app = Flask(__name__, template_folder='.')
 
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
+
+# Usar scoped_session para manejar sesiones de manera más robusta
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
 
 @app.route('/')
 def home():
@@ -20,7 +25,7 @@ def get_counters():
         return jsonify({'error': 'user_id is required'}), 400
 
     try:
-        db = SessionLocal()
+        db = Session()
         user_id = int(user_id)  # Convertir a int si es necesario
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
@@ -49,7 +54,7 @@ def update_counters():
         return jsonify({'error': 'user_id, score, and secondarycount are required'}), 400
 
     try:
-        db = SessionLocal()
+        db = Session()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
             counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
