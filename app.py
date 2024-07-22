@@ -4,6 +4,7 @@ from models import Counter
 import logging
 from datetime import datetime, timezone
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
 
 app = Flask(__name__, template_folder='.')
 
@@ -13,6 +14,10 @@ logging.basicConfig(level=logging.DEBUG)
 # Usar scoped_session para manejar sesiones de manera más robusta
 session_factory = sessionmaker(bind=engine)
 Session = scoped_session(session_factory)
+
+@app.teardown_appcontext
+def remove_session(exception=None):
+    Session.remove()
 
 @app.route('/')
 def home():
@@ -25,21 +30,20 @@ def get_counters():
         return jsonify({'error': 'user_id is required'}), 400
 
     try:
-        db = Session()
-        user_id = int(user_id)  # Convertir a int si es necesario
-        counter = db.query(Counter).filter_by(user_id=user_id).first()
-        if not counter:
-            counter = Counter(user_id=user_id, score=0, secondarycount=0)
-            db.add(counter)
-            db.commit()
-        db.close()
-        logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
-        return jsonify({
-            'score': counter.score,
-            'secondarycount': counter.secondarycount,
-            'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat()  # Convertir a ISO 8601 con UTC
-        })
-    except Exception as e:
+        with Session() as db:
+            user_id = int(user_id)  # Convertir a int si es necesario
+            counter = db.query(Counter).filter_by(user_id=user_id).first()
+            if not counter:
+                counter = Counter(user_id=user_id, score=0, secondarycount=0)
+                db.add(counter)
+                db.commit()
+            logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
+            return jsonify({
+                'score': counter.score,
+                'secondarycount': counter.secondarycount,
+                'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat()  # Convertir a ISO 8601 con UTC
+            })
+    except SQLAlchemyError as e:
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
 
@@ -54,19 +58,19 @@ def update_counters():
         return jsonify({'error': 'user_id, score, and secondarycount are required'}), 400
 
     try:
-        db = Session()
-        counter = db.query(Counter).filter_by(user_id=user_id).first()
-        if not counter:
-            counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
-            db.add(counter)
-        else:
-            counter.score = score
-            counter.secondarycount = secondarycount
-            counter.timestamp = datetime.utcnow()
-        db.commit()
-        db.close()
-        return jsonify({'status': 'success'})
-    except Exception as e:
+        with Session() as db:
+            counter = db.query(Counter).filter_by(user_id=user_id).first()
+            if not counter:
+                counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
+                db.add(counter)
+            else:
+                counter.score = score
+                counter.secondarycount = secondarycount
+                counter.timestamp = datetime.utcnow()
+            db.commit()
+            logging.info(f"Contadores actualizados para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
+            return jsonify({'status': 'success'})
+    except SQLAlchemyError as e:
         logging.error(f"Error in update_counters: {e}")
         return jsonify({'error': str(e)}), 500
 

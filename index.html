@@ -171,7 +171,7 @@
   <div id="debugInfo" style="position: fixed; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 10px; border-radius: 5px;">
     currentTime: <span id="currentTimeValue">0</span><br>
     elapsedTime: <span id="elapsedTimeValue">0</span><br>
-    storedTimestamp: <span id="storedTimestampValue">0</span><br>
+    storedTimestamp: <span id="storedTimestampValue">0</span>
     storedscore: <span id="storedscore">0</span>
   </div>
 
@@ -182,77 +182,51 @@
     let lastTimestamp = 0;
     const userId = tg.initDataUnsafe.user.id;
 
-    // Función para cargar los contadores desde la base de datos
-    async function loadCounts() {
-      const response = await fetch(`/get_counters?user_id=${userId}`);
-      const data = await response.json();
-      if (data.error) {
-          console.error(data.error);
-          return;
-      }
-      score = data.score;
-      secondaryCount = data.secondarycount;
-      lastTimestamp = new Date(data.timestamp).getTime();
+    async function loadAndUpdateCounters() {
+        try {
+            // Primero, obtener los contadores
+            const response = await fetch(`/get_counters?user_id=${userId}`);
+            const data = await response.json();
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
 
-      // Mostrar el valor del score inmediatamente
-      document.getElementById('score').textContent = score;
-      document.getElementById('storedscore').textContent = score;
+            // Actualizar las variables de contadores con los datos obtenidos
+            score = data.score;
+            secondaryCount = data.secondarycount;
+            lastTimestamp = new Date(data.timestamp).getTime();
 
-      // Esperar 10 segundos antes de continuar con el resto del proceso
-      setTimeout(async () => {
-          // Calcular el tiempo transcurrido y actualizar secondaryCount
-          const currentTime = Date.now();
-          const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
+            // Calcular el tiempo transcurrido y actualizar secondaryCount
+            const currentTime = Date.now();
+            const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
+            secondaryCount += elapsedTime;
+            if (secondaryCount > 1000) {
+                secondaryCount = 1000; // Asegurarse de que no exceda 1000
+            }
 
-          // Sumar el tiempo transcurrido a secondaryCount
-          secondaryCount += elapsedTime;
-          if (secondaryCount > 1000) {
-              secondaryCount = 1000; // Asegurarse de que no exceda 1000
-          }
+            // Actualizar la interfaz de usuario
+            document.getElementById('score').textContent = score;
+            document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
-          // Actualizar el timestamp con el tiempo actual después de calcular el tiempo transcurrido
-          lastTimestamp = currentTime;
+            // Luego, actualizar los contadores en la base de datos
+            const updateResponse = await fetch('/update_counters', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+            });
 
-          // Mostrar currentTime, elapsedTime, storedTimestamp y storedScore en pantalla
-          document.getElementById('currentTimeValue').textContent = currentTime;
-          document.getElementById('elapsedTimeValue').textContent = elapsedTime;
-          document.getElementById('storedTimestampValue').textContent = lastTimestamp;
-          document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-
-          // Guardar los contadores actualizados en la base de datos
-          saveCounts();
-      }, 10000); // 10000 milisegundos = 10 segundos
+            if (updateResponse.ok) {
+                console.log('Contadores guardados exitosamente');
+            } else {
+                console.error('Error al guardar los contadores');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
-
-    // Función para guardar los contadores en la base de datos
-    async function saveCounts() {
-      const response = await fetch('/update_counters', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount, timestamp: new Date(lastTimestamp).toISOString() })
-      });
-
-      if (response.ok) {
-        console.log('Contadores guardados exitosamente');
-      } else {
-        console.error('Error al guardar los contadores');
-      }
-    }
-
-    // Función para incrementar el contador secundario cada segundo
-    function incrementSecondaryCounter() {
-      if (secondaryCount < 1000) {
-        secondaryCount += 1;
-        lastTimestamp = Date.now();
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-        saveCounts();
-      }
-    }
-
-    // Iniciar el intervalo para incrementar el contador secundario cada segundo
-    setInterval(incrementSecondaryCounter, 1000);
 
     function handleTouch(event) {
       event.preventDefault(); // Evita el comportamiento predeterminado del evento touch
@@ -298,6 +272,22 @@
       }
     }
 
+    async function saveCounts() {
+      const response = await fetch('/update_counters', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+      });
+
+      if (response.ok) {
+        console.log('Contadores guardados exitosamente');
+      } else {
+        console.error('Error al guardar los contadores');
+      }
+    }
+
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
     document.getElementById('coinImage').addEventListener('click', handleClick);
 
@@ -310,7 +300,7 @@
         userName.textContent = user.first_name + ' ' + (user.last_name || '');
         userInfo.appendChild(userName);
       }
-      loadCounts();
+      loadAndUpdateCounters();
     };
 
     // Agregar eventos de clic a los íconos de la barra de navegación
