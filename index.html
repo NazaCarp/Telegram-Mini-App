@@ -31,7 +31,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Segundos hasta el 22 de Junio de 2024 a las 13:42hs</h1>
+        <h1>Segundos desde el 22 de Junio de 2024 a las 13:42hs</h1>
         <div id="seconds">Cargando...</div>
     </div>
 
@@ -39,7 +39,7 @@
         function updateSeconds() {
             const targetDate = new Date(2024, 5, 22, 13, 42, 0); // 22 de Junio de 2024 a las 13:42hs
             const now = new Date();
-            const secondsDifference = Math.floor((targetDate - now) / 1000);
+            const secondsDifference = Math.floor((now - targetDate) / 1000);
             document.getElementById('seconds').textContent = secondsDifference.toLocaleString();
         }
 
