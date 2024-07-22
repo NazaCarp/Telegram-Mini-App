@@ -172,7 +172,7 @@
     currentTime: <span id="currentTimeValue">0</span><br>
     elapsedTime: <span id="elapsedTimeValue">0</span><br>
     storedTimestamp: <span id="storedTimestampValue">0</span><br>
-    storedscore: <span id="storedscore">0</span> <!-- Añadir esta línea -->
+    storedscore: <span id="storedscore">0</span>
   </div>
 
   <script>
@@ -187,37 +187,41 @@
       const response = await fetch(`/get_counters?user_id=${userId}`);
       const data = await response.json();
       if (data.error) {
-        console.error(data.error);
-        return;
+          console.error(data.error);
+          return;
       }
       score = data.score;
       secondaryCount = data.secondarycount;
       lastTimestamp = new Date(data.timestamp).getTime();
 
-      // Calcular el tiempo transcurrido y actualizar secondaryCount
-      const currentTime = Date.now();
-      const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
-
-      // Sumar el tiempo transcurrido a secondaryCount
-      secondaryCount += elapsedTime;
-      if (secondaryCount > 1000) {
-        secondaryCount = 1000; // Asegurarse de que no exceda 1000
-      }
-
-      // Actualizar el timestamp con el tiempo actual después de calcular el tiempo transcurrido
-      lastTimestamp = currentTime;
-
-      // Mostrar currentTime, elapsedTime, storedTimestamp y storedScore en pantalla
-      document.getElementById('currentTimeValue').textContent = currentTime;
-      document.getElementById('elapsedTimeValue').textContent = elapsedTime;
-      document.getElementById('storedTimestampValue').textContent = lastTimestamp;
+      // Mostrar el valor del score inmediatamente
+      document.getElementById('score').textContent = score;
       document.getElementById('storedscore').textContent = score;
 
-      document.getElementById('score').textContent = score;
-      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+      // Esperar 10 segundos antes de continuar con el resto del proceso
+      setTimeout(async () => {
+          // Calcular el tiempo transcurrido y actualizar secondaryCount
+          const currentTime = Date.now();
+          const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
 
-      // Guardar los contadores actualizados en la base de datos
-      saveCounts();
+          // Sumar el tiempo transcurrido a secondaryCount
+          secondaryCount += elapsedTime;
+          if (secondaryCount > 1000) {
+              secondaryCount = 1000; // Asegurarse de que no exceda 1000
+          }
+
+          // Actualizar el timestamp con el tiempo actual después de calcular el tiempo transcurrido
+          lastTimestamp = currentTime;
+
+          // Mostrar currentTime, elapsedTime, storedTimestamp y storedScore en pantalla
+          document.getElementById('currentTimeValue').textContent = currentTime;
+          document.getElementById('elapsedTimeValue').textContent = elapsedTime;
+          document.getElementById('storedTimestampValue').textContent = lastTimestamp;
+          document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+
+          // Guardar los contadores actualizados en la base de datos
+          saveCounts();
+      }, 10000); // 10000 milisegundos = 10 segundos
     }
 
     // Función para guardar los contadores en la base de datos
