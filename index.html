@@ -288,6 +288,18 @@
       }
     }
 
+    function incrementSecondaryCounter() {
+      if (secondaryCount < 1000) {
+        secondaryCount += 1;
+        lastTimestamp = Date.now();
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        saveCounts();
+      }
+    }
+
+    // Iniciar el intervalo para incrementar el contador secundario cada segundo
+    setInterval(incrementSecondaryCounter, 1000);
+
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
     document.getElementById('coinImage').addEventListener('click', handleClick);
 
