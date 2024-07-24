@@ -184,53 +184,48 @@
 
     async function loadAndUpdateCounters() {
       try {
-          // Primero, obtener los contadores
-          const response = await fetch(`/get_counters?user_id=${userId}`);
-          const data = await response.json();
-          if (data.error) {
-              console.error(data.error);
-              return;
-          }
+        const response = await fetch(`/get_counters?user_id=${userId}`);
+        const data = await response.json();
+        if (data.error) {
+          console.error(data.error);
+          return;
+        }
 
-          // Actualizar las variables de contadores con los datos obtenidos
-          score = data.score;
-          secondaryCount = data.secondarycount;
-          lastTimestamp = new Date(data.timestamp).getTime();
+        score = data.score;
+        secondaryCount = data.secondarycount;
+        lastTimestamp = new Date(data.timestamp).getTime();
 
-          // Calcular el tiempo transcurrido y actualizar secondaryCount
-          const currentTime = Date.now();
-          const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
-          secondaryCount += elapsedTime;
-          if (secondaryCount > 1000) {
-              secondaryCount = 1000; // Asegurarse de que no exceda 1000
-          }
+        const currentTime = Date.now();
+        const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
+        secondaryCount += elapsedTime;
+        if (secondaryCount > 1000) {
+          secondaryCount = 1000;
+        }
 
-          // Actualizar la interfaz de usuario
-          document.getElementById('score').textContent = score;
-          document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        document.getElementById('score').textContent = score;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
-          // Luego, actualizar los contadores en la base de datos
-          const updateResponse = await fetch('/update_counters', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
-          });
+        const updateResponse = await fetch('/update_counters', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+        });
 
-          if (updateResponse.ok) {
-              console.log('Contadores guardados exitosamente');
-          } else {
-              console.error('Error al guardar los contadores');
-          }
+        if (updateResponse.ok) {
+          console.log('Contadores guardados exitosamente');
+        } else {
+          console.error('Error al guardar los contadores');
+        }
       } catch (error) {
-          console.error('Error:', error);
+        console.error('Error:', error);
       }
     }
 
     function handleTouch(event) {
-      event.preventDefault(); // Evita el comportamiento predeterminado del evento touch
-      let touchCount = event.touches.length; // Obtiene el número de toques simultáneos
+      event.preventDefault();
+      let touchCount = event.touches.length;
       for (let i = 0; i < touchCount; i++) {
         let touch = event.touches[i];
         handleClick(touch);
@@ -245,25 +240,21 @@
         document.getElementById('score').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
-        // Mostrar "+1" en el lugar del clic
         let plusOne = document.createElement('div');
         plusOne.className = 'plus-one';
         plusOne.textContent = '+1';
-        plusOne.style.left = `${event.clientX - 10}px`; // Ajusta la posición según sea necesario
-        plusOne.style.top = `${event.clientY - 20}px`; // Ajusta la posición según sea necesario
+        plusOne.style.left = `${event.clientX - 10}px`;
+        plusOne.style.top = `${event.clientY - 20}px`;
         document.body.appendChild(plusOne);
 
-        // Ocultar el "+1" después de 1 segundo
         setTimeout(() => {
           plusOne.remove();
         }, 1000);
 
-        // Cambiar el tamaño de la imagen
         let image = document.getElementById('coinImage');
         image.style.transition = 'transform 0.5s';
         image.style.transform = 'scale(0.8)';
 
-        // Volver al tamaño original después de 0.5 segundos
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
@@ -297,13 +288,11 @@
       }
     }
 
-    // Iniciar el intervalo para incrementar el contador secundario cada segundo
     setInterval(incrementSecondaryCounter, 1000);
 
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
     document.getElementById('coinImage').addEventListener('click', handleClick);
 
-    // Mostrar el nombre del usuario
     window.onload = function() {
       const user = tg.initDataUnsafe.user;
       if (user) {
@@ -315,7 +304,6 @@
       loadAndUpdateCounters();
     };
 
-    // Agregar eventos de clic a los íconos de la barra de navegación
     const navbarItems = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('.section');
 
@@ -344,7 +332,6 @@
           });
         }
 
-        // Manejo del botón de retroceso
         if (targetId === 'home') {
           tg.BackButton.hide();
         } else {
@@ -355,7 +342,7 @@
 
     document.getElementById('friendsNav').addEventListener('click', function(event) {
       event.preventDefault();
-      window.location.href = 'friends.html'; // Redirige a la nueva página
+      window.location.href = 'friends.html';
     });
 
     tg.onEvent('backButtonClicked', () => {
