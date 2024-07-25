@@ -280,8 +280,10 @@
     }
 
     function incrementSecondaryCounter() {
+      console.log('Incrementing secondaryCounter');
       if (secondaryCount < 1000) {
         secondaryCount += 1;
+        console.log(`secondaryCount: ${secondaryCount}`);
         lastTimestamp = Date.now();
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
         saveCounts();
