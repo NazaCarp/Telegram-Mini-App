@@ -180,12 +180,12 @@
     let score = 0;
     let secondaryCount = 0;
     let lastTimestamp = 0;
-    const userId = tg.initDataUnsafe.user.id;
+    const user = tg.initDataUnsafe.user;
 
     async function loadAndUpdateCounters() {
       try {
         // Primero, obtener los contadores
-        const response = await fetch(`/get_counters?user_id=${userId}`);
+        const response = await fetch(`/get_counters?user_id=${user.id}`);
         const data = await response.json();
         if (data.error) {
           console.error(data.error);
@@ -209,8 +209,9 @@
         document.getElementById('score').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
-        // Luego, actualizar los contadores en la base de datos
-        await saveCounts();
+        // Iniciar el intervalo para incrementar el contador secundario cada segundo
+        setInterval(incrementSecondaryCounter, 1000);
+
       } catch (error) {
         console.error('Error:', error);
       }
@@ -255,8 +256,6 @@
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
-
-        saveCounts();
       }
     }
 
@@ -285,15 +284,11 @@
       }
     }
 
-    // Iniciar el intervalo para incrementar el contador secundario cada segundo
-    setInterval(incrementSecondaryCounter, 1000);
-
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
     document.getElementById('coinImage').addEventListener('click', handleClick);
-
+        
     // Mostrar el nombre del usuario
     window.onload = function() {
-      const user = tg.initDataUnsafe.user;
       if (user) {
         const userInfo = document.getElementById('user-info');
         const userName = document.createElement('span');
