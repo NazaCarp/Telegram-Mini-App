@@ -280,7 +280,7 @@
       const logsContainer = document.getElementById('logs');
 
       const logMessage = document.createElement('div');
-      logMessage.textContent = 'Guardando contadores...';
+      logMessage.textContent = 'Guardando el único contador...';
       logsContainer.appendChild(logMessage);
 
       const dataMessage = document.createElement('div');
@@ -314,7 +314,7 @@
         logMessage.textContent = `Incrementando secondaryCounter: ${secondaryCount} -> ${secondaryCount + 1}`;
         logsContainer.appendChild(logMessage);
 
-        secondaryCount += 4;
+        secondaryCount += 1;
         lastTimestamp = Date.now();
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
