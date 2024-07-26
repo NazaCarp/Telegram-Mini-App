@@ -276,7 +276,7 @@
       }
     }
 
-    async function saveCounts() {
+    async function saveCounts(userId, score, secondaryCount) {
       const logsContainer = document.getElementById('logs');
 
       const logMessage = document.createElement('div');
@@ -318,7 +318,7 @@
         updateMessage.textContent = `secondaryCounter actualizado: ${secondaryCount}`;
         logsContainer.appendChild(updateMessage);
 
-        saveCounts();
+        saveCounts(userId, score, secondaryCount);
       } else {
         const limitMessage = document.createElement('div');
         limitMessage.textContent = `secondaryCounter alcanzó el límite: ${secondaryCount}`;
