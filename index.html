@@ -292,11 +292,26 @@
     }
 
     function incrementSecondaryCounter() {
+      const logsContainer = document.getElementById('logs');
+
       if (secondaryCount < 1000) {
+        const logMessage = document.createElement('div');
+        logMessage.textContent = `Incrementando secondaryCounter: ${secondaryCount} -> ${secondaryCount + 1}`;
+        logsContainer.appendChild(logMessage);
+
         secondaryCount += 1;
         lastTimestamp = Date.now();
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+
+        const updateMessage = document.createElement('div');
+        updateMessage.textContent = `secondaryCounter actualizado: ${secondaryCount}`;
+        logsContainer.appendChild(updateMessage);
+
         saveCounts();
+      } else {
+        const limitMessage = document.createElement('div');
+        limitMessage.textContent = `secondaryCounter alcanzó el límite: ${secondaryCount}`;
+        logsContainer.appendChild(limitMessage);
       }
     }
 
