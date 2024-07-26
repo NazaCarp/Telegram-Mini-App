@@ -136,21 +136,6 @@
       display: flex;
     }
 
-    #logs {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    #logs div {
-      margin-bottom: 5px;
-    }
   </style>
 </head>
 <body>
@@ -189,8 +174,6 @@
     storedTimestamp: <span id="storedTimestampValue">0</span>
     storedscore: <span id="storedscore">0</span>
   </div>
-
-  <div id="logs"></div>
 
   <script>
     const tg = window.Telegram.WebApp;
@@ -276,13 +259,7 @@
       }
     }
 
-    async function saveCounts(userId, score, secondaryCount) {
-      const logsContainer = document.getElementById('logs');
-
-      const logMessage = document.createElement('div');
-      logMessage.textContent = `Guardando contadores: user_id=${userId}, score=${score}, secondarycount=${secondaryCount}`;
-      logsContainer.appendChild(logMessage);
-
+    async function saveCounts() {
       const response = await fetch('/update_counters', {
         method: 'POST',
         headers: {
@@ -292,37 +269,18 @@
       });
 
       if (response.ok) {
-        const successMessage = document.createElement('div');
-        successMessage.textContent = 'Contadores guardados exitosamente';
-        logsContainer.appendChild(successMessage);
+        console.log('Contadores guardados exitosamente');
       } else {
-        const errorMessage = document.createElement('div');
-        errorMessage.textContent = 'Error al guardar los contadores';
-        logsContainer.appendChild(errorMessage);
+        console.error('Error al guardar los contadores');
       }
     }
 
     function incrementSecondaryCounter() {
-      const logsContainer = document.getElementById('logs');
-
       if (secondaryCount < 1000) {
-        const logMessage = document.createElement('div');
-        logMessage.textContent = `Incrementando secondaryCounter: ${secondaryCount} -> ${secondaryCount + 1}`;
-        logsContainer.appendChild(logMessage);
-
         secondaryCount += 1;
         lastTimestamp = Date.now();
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
-
-        const updateMessage = document.createElement('div');
-        updateMessage.textContent = `secondaryCounter actualizado: ${secondaryCount}`;
-        logsContainer.appendChild(updateMessage);
-
-        saveCounts(userId, score, secondaryCount);
-      } else {
-        const limitMessage = document.createElement('div');
-        limitMessage.textContent = `secondaryCounter alcanzó el límite: ${secondaryCount}`;
-        logsContainer.appendChild(limitMessage);
+        saveCounts();
       }
     }
 
