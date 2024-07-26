@@ -265,7 +265,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_id: userId, score: score, secondarycount: secondaryCount })
+        body: JSON.stringify({ user_id: user.id, score: score, secondarycount: secondaryCount })
       });
 
       if (response.ok) {
