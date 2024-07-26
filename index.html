@@ -175,6 +175,8 @@
     storedscore: <span id="storedscore">0</span>
   </div>
 
+  <div id="logs"></div>
+
   <script>
     const tg = window.Telegram.WebApp;
     let score = 0;
@@ -260,6 +262,16 @@
     }
 
     async function saveCounts() {
+      const logsContainer = document.getElementById('logs');
+
+      const logMessage = document.createElement('div');
+      logMessage.textContent = 'Guardando contadores...';
+      logsContainer.appendChild(logMessage);
+
+      const dataMessage = document.createElement('div');
+      dataMessage.textContent = `Datos a enviar: user_id=${userId}, score=${score}, secondarycount=${secondaryCount}`;
+      logsContainer.appendChild(dataMessage);
+
       const response = await fetch('/update_counters', {
         method: 'POST',
         headers: {
@@ -269,9 +281,13 @@
       });
 
       if (response.ok) {
-        console.log('Contadores guardados exitosamente');
+        const successMessage = document.createElement('div');
+        successMessage.textContent = 'Contadores guardados exitosamente';
+        logsContainer.appendChild(successMessage);
       } else {
-        console.error('Error al guardar los contadores');
+        const errorMessage = document.createElement('div');
+        errorMessage.textContent = 'Error al guardar los contadores';
+        logsContainer.appendChild(errorMessage);
       }
     }
 
