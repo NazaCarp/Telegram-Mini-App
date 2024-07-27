@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, send_from_directory
 from db import SessionLocal, engine
 from models import Counter
 import logging
@@ -22,6 +22,10 @@ def remove_session(exception=None):
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/friends.html')
+def serve_friends():
+    return send_from_directory('.', 'friends.html')
 
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
