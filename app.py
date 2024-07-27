@@ -34,14 +34,15 @@ def get_counters():
             user_id = int(user_id)  # Convertir a int si es necesario
             counter = db.query(Counter).filter_by(user_id=user_id).first()
             if not counter:
-                counter = Counter(user_id=user_id, score=0, secondarycount=0)
+                counter = Counter(user_id=user_id, score=0, secondarycount=0, tap=1)
                 db.add(counter)
                 db.commit()
-            logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
+            logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
             return jsonify({
                 'score': counter.score,
                 'secondarycount': counter.secondarycount,
-                'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat()  # Convertir a ISO 8601 con UTC
+                'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat(),  # Convertir a ISO 8601 con UTC
+                'tap': counter.tap
             })
     except SQLAlchemyError as e:
         logging.error(f"Error in get_counters: {e}")
@@ -50,18 +51,15 @@ def get_counters():
 @app.route('/update_counters', methods=['POST'])
 def update_counters():
     data = request.get_json()
+    user_id = data.get('user_id')
     score = data.get('score')
     secondarycount = data.get('secondarycount')
 
-    if score is None or secondarycount is None:
-        return jsonify({'error': 'score and secondarycount are required'}), 400
+    if not user_id or score is None or secondarycount is None:
+        return jsonify({'error': 'user_id, score, and secondarycount are required'}), 400
 
     try:
         with Session() as db:
-            user_id = request.headers.get('X-User-ID')
-            if not user_id:
-                return jsonify({'error': 'user_id is required'}), 400
-
             counter = db.query(Counter).filter_by(user_id=user_id).first()
             if not counter:
                 counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
@@ -71,7 +69,6 @@ def update_counters():
                 counter.secondarycount = secondarycount
                 counter.timestamp = datetime.utcnow()
             db.commit()
-            logging.info(f"Contadores actualizados para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
             return jsonify({'status': 'success'})
     except SQLAlchemyError as e:
         logging.error(f"Error in update_counters: {e}")

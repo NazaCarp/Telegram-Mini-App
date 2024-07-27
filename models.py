@@ -11,3 +11,4 @@ class Counter(Base):
     score = Column(Integer, default=0)
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
+    tap = Column(Integer, default=1)
