@@ -68,7 +68,6 @@ def update_counters():
                 counter.secondarycount = secondarycount
                 counter.timestamp = datetime.utcnow()
             db.commit()
-            logging.info(f"Contadores actualizados para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}")
             return jsonify({'status': 'success'})
     except SQLAlchemyError as e:
         logging.error(f"Error in update_counters: {e}")
