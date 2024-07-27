@@ -181,8 +181,7 @@
         const response = await fetch(`/get_counters?user_id=${user.id}`);
         const data = await response.json();
         if (data.error) {
-          console.error(data.error);
-          return;
+          score = 100;
         }
 
         // Actualizar las variables de contadores con los datos obtenidos
