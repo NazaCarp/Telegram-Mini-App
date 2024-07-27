@@ -174,10 +174,11 @@
     let secondaryCount = 0;
     let lastTimestamp = 0;
     const user = tg.initDataUnsafe.user;
+    const user_id = user.id;
 
     async function loadAndUpdateCounters() {
       // Primero, obtener los contadores
-      const response = await fetch(`/get_counters?user_id=${user.id}`);
+      const response = await fetch(`/get_counters?user_id=${user_id}`);
       const data = await response.json();
       
       // Actualizar las variables de contadores con los datos obtenidos
@@ -249,7 +250,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_id: user.id, score: score, secondarycount: secondaryCount })
+        body: JSON.stringify({ user_id: user_id, score: score, secondarycount: secondaryCount })
       });
     }
 
