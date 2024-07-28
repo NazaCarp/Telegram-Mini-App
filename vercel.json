@@ -1,20 +1,18 @@
 {
   "version": 2,
-  "name": "mini-app-ejemplo",
   "builds": [
     {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "friends.html",
-      "use": "@vercel/static"
+      "src": "app.py",
+      "use": "@vercel/python",
+      "config": {
+        "pythonVersion": "3.12.1"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/friends",
-      "dest": "/friends.html"
+      "src": "/(.*)",
+      "dest": "app.py"
     }
   ]
 }
