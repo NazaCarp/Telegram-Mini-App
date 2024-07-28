@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.')
 
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
