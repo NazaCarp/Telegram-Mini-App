@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, render_template, send_from_directory
 from db import SessionLocal, engine
 from models import Counter
 import logging
@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
@@ -21,7 +21,7 @@ def remove_session(exception=None):
 
 @app.route('/')
 def home():
-    return send_from_directory('.', 'index.html')
+    return render_template('index.html')
 
 @app.route('/friends.html')
 def serve_friends():
