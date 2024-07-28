@@ -28,7 +28,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            user-select: none; /* Evita que sea seleccionable */
+            user-select: none; /* Evita que la imagen sea seleccionable */
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
         .rectangles {
@@ -98,7 +98,7 @@
             }
         }
         .scrollable-content {
-            max-height: 100px;
+            max-height: 100px; /* Ajusta la altura máxima según sea necesario */
             overflow-y: auto;
             scrollbar-width: none; /* Firefox */
             -ms-overflow-style: none; /* IE and Edge */
@@ -112,7 +112,7 @@
             align-items: center;
             width: 100%;
             height: 60px;
-            border-radius: 50px;
+            border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
             margin: 0 auto; /* Centra la barra de navegación */
             background-color: #222222;
             position: fixed;
@@ -126,6 +126,8 @@
             align-items: center;
             font-size: 14px;
             position: relative;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
         .navbar a.active span, .navbar a.active iconify-icon {
             color: white;
@@ -136,12 +138,12 @@
         .navbar a.active::before {
             content: '';
             position: absolute;
-            top: -7px;
-            left: -14px;
-            right: -14px;
-            bottom: -7px;
-            border-radius: 50px;
-            background-color: rgba(0, 0, 0, 0.267);
+            top: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
+            left: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
+            right: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
+            bottom: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
+            border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
+            background-color: rgba(0, 0, 0, 0.267); /* Color del relleno */
             z-index: -1;
         }
     </style>
@@ -248,7 +250,7 @@
 
             copyButton.addEventListener('click', async function() {
                 try {
-                    await navigator.clipboard.writeText('Ola');
+                    await navigator.clipboard.writeText('Ola k acé?');
                     console.log('Texto copiado al portapapeles');
                     alertContainer.style.display = 'block';
                     setTimeout(() => {
@@ -260,7 +262,7 @@
             });
 
             shareButton.addEventListener('click', function() {
-                const texto = "Hola soy Luc el hacker";
+                const texto = "Hola soy Naza el hacker";
                 const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
                 window.open(url, '_blank');
             });
