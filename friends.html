@@ -250,7 +250,7 @@
 
             copyButton.addEventListener('click', async function() {
                 try {
-                    await navigator.clipboard.writeText('Ola k acé?');
+                    await navigator.clipboard.writeText('Ola');
                     console.log('Texto copiado al portapapeles');
                     alertContainer.style.display = 'block';
                     setTimeout(() => {
@@ -262,7 +262,7 @@
             });
 
             shareButton.addEventListener('click', function() {
-                const texto = "Hola soy Naza el hacker";
+                const texto = "Hola soy Luc el hacker";
                 const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
                 window.open(url, '_blank');
             });
@@ -272,7 +272,6 @@
             });
 
             tg.ready();
-            tg.BackButton.show();
         });
     </script>
     <div class="navbar">
