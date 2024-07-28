@@ -3,15 +3,19 @@
   "name": "mini-app-ejemplo",
   "builds": [
     {
-      "src": "index.html",
-      "use": "@vercel/static"
+      "src": "app.py",
+      "use": "@vercel/python"
     },
     {
-      "src": "friends.html",
+      "src": "static/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    },
     {
       "src": "/friends",
       "dest": "/friends.html"
