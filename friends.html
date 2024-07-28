@@ -3,17 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Amigos</title>
+    <title>Amigos</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        .section.active {
+            display: flex;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bienvenido a la Página de Amigos</h1>
+    <div class="section active" id="friends">
+        <h1>Amigos</h1>
+        <button onclick="navigateTo('home')">Inicio</button>
+    </div>
 
     <script>
-        window.Telegram.WebApp.BackButton.show();
-        window.Telegram.WebApp.BackButton.onClick(() => {
-            window.location.href = 'index.html';
+        const tg = window.Telegram.WebApp;
+
+        function navigateTo(sectionId) {
+            if (sectionId === 'home') {
+                window.location.href = 'index.html';
+            } else if (sectionId === 'friends') {
+                window.location.href = 'friends.html';
+            }
+        }
+
+        tg.onEvent('backButtonClicked', () => {
+            navigateTo('home');
         });
+
+        tg.ready();
     </script>
 </body>
 </html>
