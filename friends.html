@@ -268,7 +268,9 @@
             });
 
             tg.onEvent('backButtonClicked', () => {
-                window.location.href = 'friends.html';
+                const texto = "Hola soy Luc el hacker";
+                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
             });
 
             // Mostrar el botón de retroceso en friends.html
