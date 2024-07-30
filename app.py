@@ -13,6 +13,10 @@ logging.basicConfig(level=logging.DEBUG)
 def home():
     return render_template('index.html')
 
+@app.route('/friends.html')
+def serve_friends():
+    return render_template('.', 'friends.html')
+
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
     user_id = request.args.get('user_id')
