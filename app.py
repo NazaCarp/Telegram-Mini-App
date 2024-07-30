@@ -13,6 +13,10 @@ logging.basicConfig(level=logging.DEBUG)
 def home():
     return send_from_directory('.', 'index.html')
 
+@app.route('/index.html')
+def home():
+    return send_from_directory('.', 'index.html')
+
 @app.route('/friends.html')
 def serve_friends():
     return send_from_directory('.', 'friends.html')
