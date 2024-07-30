@@ -98,7 +98,7 @@
             }
         }
         .scrollable-content {
-            max-height: 100px; /* Ajusta la altura máxima según sea necesario */
+            max-height: 100px;
             overflow-y: auto;
             scrollbar-width: none; /* Firefox */
             -ms-overflow-style: none; /* IE and Edge */
@@ -112,11 +112,13 @@
             align-items: center;
             width: 100%;
             height: 60px;
-            border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
+            border-radius: 50px;
             margin: 0 auto; /* Centra la barra de navegación */
             background-color: #222222;
             position: fixed;
             bottom: 10px;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
         .navbar a {
             color: gray;
@@ -138,12 +140,12 @@
         .navbar a.active::before {
             content: '';
             position: absolute;
-            top: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
-            left: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
-            right: -14px; /* Ajusta el valor para aumentar el tamaño horizontal */
-            bottom: -7px; /* Ajusta el valor para aumentar el tamaño vertical */
-            border-radius: 50px; /* Ajusta el valor del radio según sea necesario */
-            background-color: rgba(0, 0, 0, 0.267); /* Color del relleno */
+            top: -7px;
+            left: -14px;
+            right: -14px;
+            bottom: -7px;
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
     </style>
@@ -159,7 +161,7 @@
                     <iconify-icon icon="noto:wrapped-gift"></iconify-icon>
                 </div>
                 <div class="text">
-                    <h3>Invite a or more friend/s</h3>
+                    <h3>Invite a friend</h3>
                     <p><span style="color: yellow;">+5000</span> for you and your friend</p>
                     </div>
                 </div>
@@ -220,7 +222,7 @@
             for (let i = 0; i < 10; i++) {
                 const referralName = document.createElement('h4');
                 referralName.style = 'margin: 10px'
-                referralName.textContent = '1Referral\'s Name';
+                referralName.textContent = 'Referral\'s Name';
 
                 const bonusText = document.createElement('div');
 
@@ -270,9 +272,6 @@
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
             });
-
-            // Mostrar el botón de retroceso en friends.html
-            tg.BackButton.show();
 
             tg.ready();
         });
