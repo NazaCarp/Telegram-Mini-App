@@ -14,7 +14,7 @@ def home():
     return send_from_directory('.', 'index.html')
 
 @app.route('/index.html')
-def home():
+def index():
     return send_from_directory('.', 'index.html')
 
 @app.route('/friends.html')
