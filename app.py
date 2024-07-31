@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from flask import Flask, jsonify, request, send_from_directory, render_template
+from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter
 import logging
@@ -7,16 +7,13 @@ import logging
 app = Flask(__name__, template_folder='.')
 
 @app.route('/')
-def home():
-    return send_from_directory('.', 'index.html')
-
 @app.route('/index.html')
 def index():
-    return send_from_directory('.', 'index.html')
+    return render_template('index.html')
 
 @app.route('/friends.html')
 def serve_friends():
-    return render_template('.', 'friends.html')
+    return render_template('friends.html')
 
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
