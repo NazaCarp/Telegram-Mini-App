@@ -197,7 +197,7 @@
 
       // Actualizar la interfaz de usuario
       document.getElementById('score').textContent = score;
-      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 10sdfss0`;
+      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
       // Iniciar el intervalo para incrementar el contador secundario cada segundo
       setInterval(incrementSecondaryCounter, 1000);
@@ -223,7 +223,7 @@
         // Mostrar "+tap" en el lugar del clic
         let plusTap = document.createElement('div');
         plusTap.className = 'plus-one';
-        plusTap.textContent = `NazaCarp`;
+        plusTap.textContent = `+${tap}`;
         plusTap.style.left = `${event.clientX - 10}px`;
         plusTap.style.top = `${event.clientY - 20}px`;
         document.body.appendChild(plusTap);
