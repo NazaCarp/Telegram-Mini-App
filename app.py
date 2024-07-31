@@ -6,13 +6,7 @@ import logging
 
 app = Flask(__name__, template_folder='.')
 
-# Configurar logging
-logging.basicConfig(level=logging.DEBUG)
-
 @app.route('/')
-def home():
-    return send_from_directory('.', 'index.html')
-
 @app.route('/index.html')
 def index():
     return send_from_directory('.', 'index.html')
