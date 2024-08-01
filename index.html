@@ -188,6 +188,11 @@
       startParamElement.textContent = `Start Param: ${startParam}`;
       document.body.appendChild(startParamElement);
     }
+    else{
+      const startParamElement = document.createElement('div');
+      startParamElement.textContent = `Nada por acá`;
+      document.body.appendChild(startParamElement);
+    }
 
     async function loadAndUpdateCounters() {
       // Primero, obtener los contadores
