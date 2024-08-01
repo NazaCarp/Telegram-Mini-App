@@ -8,6 +8,7 @@ class Counter(Base):
     __tablename__ = 'counters'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, nullable=False, unique=True)
+    name = Column(String, default='')
     score = Column(Integer, default=0)
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
