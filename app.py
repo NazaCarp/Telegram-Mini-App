@@ -36,12 +36,12 @@ def get_counters():
             db.add(referral)
             db.commit()
         
-            # Incrementar referralscount para el user_id igual a start_param
-            if start_param:
-                referrer = db.query(Referral).filter_by(user_id=int(start_param)).first()
-                if referrer:
-                    referrer.referralscount += 1
-                    db.commit()
+        # Incrementar referralscount para el user_id igual a start_param
+        if start_param:
+            referrer = db.query(Referral).filter_by(user_id=int(start_param)).first()
+            if referrer:
+                referrer.referralscount += 1
+                db.commit()
 
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
         return jsonify({
