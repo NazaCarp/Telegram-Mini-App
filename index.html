@@ -178,6 +178,7 @@
     let from_user = ''
     const user = tg.initDataUnsafe.user;
     const user_id = user.id;
+    const name = user.first_name + ' ' + (user.last_name || '')
 
     // Manejar el parámetro startapp
     const startParam = tg.initDataUnsafe.start_param;
@@ -187,7 +188,7 @@
 
     async function loadAndUpdateCounters() {
       // Primero, obtener los contadores
-      const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}`);
+      const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}`);
       const data = await response.json();
       
       // Actualizar las variables de contadores con los datos obtenidos
@@ -281,7 +282,7 @@
       if (user) {
         const userInfo = document.getElementById('user-info');
         const userName = document.createElement('span');
-        userName.textContent = user.first_name + ' ' + (user.last_name || '');
+        userName.textContent = name;
         userInfo.appendChild(userName);
       }
       loadAndUpdateCounters();

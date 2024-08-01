@@ -19,6 +19,7 @@ def serve_friends():
 def get_counters():
     user_id = request.args.get('user_id')
     start_param = request.args.get('startParam')
+    name = request.args.get('name')
     if not user_id:
         return jsonify({'error': 'user_id is required'}), 400
 
@@ -41,6 +42,10 @@ def get_counters():
             referrer = db.query(Referral).filter_by(user_id=int(start_param)).first()
             if referrer:
                 referrer.referralscount += 1
+                if referrer.referrals:
+                    referrer.referrals += f', {name}'
+                else:
+                    referrer.referrals = name
                 db.commit()
 
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
