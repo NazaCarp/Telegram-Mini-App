@@ -18,6 +18,7 @@ def serve_friends():
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
     user_id = request.args.get('user_id')
+    start_param = request.args.get('startParam')
     if not user_id:
         return jsonify({'error': 'user_id is required'}), 400
 
@@ -31,7 +32,7 @@ def get_counters():
             db.commit()
 
             # Crear la tabla referrals para el nuevo usuario
-            referral = Referral(user_id=user_id, from_user='', referralscount=0, referrals='')
+            referral = Referral(user_id=user_id, from_user=start_param, referralscount=0, referrals='')
             db.add(referral)
             db.commit()
 
