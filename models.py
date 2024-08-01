@@ -4,7 +4,7 @@ from datetime import datetime
 
 Base = declarative_base()
 
-class Counter(Base):
+class Counters(Base):
     __tablename__ = 'counters'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, nullable=False, unique=True)
