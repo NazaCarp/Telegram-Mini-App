@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
-from models import Counter
+from models import Counter, Referral
 import logging
 
 app = Flask(__name__, template_folder='.')
@@ -29,6 +29,12 @@ def get_counters():
             counter = Counter(user_id=user_id, score=0, secondarycount=0, tap=1)
             db.add(counter)
             db.commit()
+
+            # Crear la tabla referrals para el nuevo usuario
+            referral = Referral(user_id=user_id, from_user='', referralscount=0, referrals='')
+            db.add(referral)
+            db.commit()
+
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
         return jsonify({
             'score': counter.score,
