@@ -15,11 +15,11 @@ Base.metadata.create_all(bind=engine)
 
 # Agregar un registro inicial
 db = SessionLocal()
-counter = Counter(user_id=1, score=0, secondarycount=0, tap=1)
+counter = Counter(user_id=1, name='', score=0, secondarycount=0, tap=1)
 db.add(counter)
 db.commit()
 
-referral = Referral(user_id=1, from_user='', referralscount=0, referrals='')
+referral = Referral(user_id=1, name='', from_user='', referralscount=0, referrals='')
 db.add(referral)
 db.commit()
 
