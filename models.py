@@ -21,3 +21,4 @@ class Referral(Base):
     from_user = Column(String, default='')
     referralscount = Column(Integer, default=0)
     referrals = Column(String, default='')
+    name = Column(String, default='')
