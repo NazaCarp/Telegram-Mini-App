@@ -49,9 +49,8 @@ def get_counters():
                 db.commit()
 
                 referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).with_for_update().first()
-                if referrer_counter:
-                    referrer_counter.score += 100
-                    db.commit()
+                referrer_counter.score += 100
+                db.commit()
 
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
         return jsonify({
