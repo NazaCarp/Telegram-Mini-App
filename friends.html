@@ -227,11 +227,17 @@
                 } else {
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
-                    referrals.forEach(name => {
+                    const scores = data.referrals_score.split(', ');
+                    referrals.forEach((name, index) => {
                         const referralName = document.createElement('h4');
                         referralName.style = 'margin: 10px';
                         referralName.textContent = name;
                         scrollableContent.appendChild(referralName);
+
+                        const scoreText = document.createElement('p');
+                        scoreText.style = 'margin-left: 15px; font-size: 0.8em;';
+                        scoreText.textContent = `Score: ${scores[index]}`;
+                        scrollableContent.appendChild(scoreText);
                     });
                 }
             }

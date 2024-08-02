@@ -102,11 +102,23 @@ def get_referrals():
         db = SessionLocal()
         referral = db.query(Referral).filter_by(user_id=user_id).first()
         if not referral:
-            return jsonify({'referrals_count': 0, 'referrals_name': ''})
+            return jsonify({'referrals_count': 0, 'referrals_name': '', 'referrals_score': ''})
+
+        referrals_id = referral.referrals_id.split(', ') if referral.referrals_id else []
+        referrals_name = referral.referrals_name.split(', ') if referral.referrals_name else []
+        referrals_score = []
+
+        for ref_id in referrals_id:
+            counter = db.query(Counter).filter_by(user_id=int(ref_id)).first()
+            if counter:
+                referrals_score.append(str(counter.score))
+            else:
+                referrals_score.append('0')
 
         return jsonify({
             'referrals_count': referral.referrals_count,
-            'referrals_name': referral.referrals_name
+            'referrals_name': ', '.join(referrals_name),
+            'referrals_score': ', '.join(referrals_score)
         })
     except Exception as e:
         logging.error(f"Error in get_referrals: {e}")
