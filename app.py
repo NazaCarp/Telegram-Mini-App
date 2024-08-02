@@ -98,8 +98,5 @@ def update_counters():
         logging.error(f"Error in update_counters: {e}")
         return jsonify({'error': str(e)}), 500
     
-    finally:
-        db.close()
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
