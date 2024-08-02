@@ -68,9 +68,6 @@ def get_counters():
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
     
-    finally:
-        db.close()
-
 @app.route('/update_counters', methods=['POST'])
 def update_counters():
     data = request.get_json()
@@ -98,5 +95,8 @@ def update_counters():
         logging.error(f"Error in update_counters: {e}")
         return jsonify({'error': str(e)}), 500
     
+    finally:
+        db.close()
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
