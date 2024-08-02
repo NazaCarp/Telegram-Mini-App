@@ -26,7 +26,7 @@ def get_counters():
     try:
         db = SessionLocal()
         user_id = int(user_id)  # Convertir a int si es necesario
-        counter = db.query(Counter).filter_by(user_id=user_id).with_for_update().first()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
             counter = Counter(user_id=user_id, name=name, score=0, secondarycount=0, tap=1)
             db.add(counter)
@@ -52,11 +52,10 @@ def get_counters():
                     referrer.referrals_id = user_id
                 db.commit()
 
-                referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).with_for_update().first()
+                referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).first()
                 referrer_counter.score += 100
                 db.commit()
 
-        logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
         return jsonify({
             'score': counter.score,
             'secondarycount': counter.secondarycount,
@@ -94,8 +93,5 @@ def update_counters():
         logging.error(f"Error in update_counters: {e}")
         return jsonify({'error': str(e)}), 500
     
-    finally:
-        db.close()
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
