@@ -181,7 +181,7 @@
     const name = user.first_name + ' ' + (user.last_name || '')
 
     // Manejar el parámetro startapp
-    const startParam = tg.initDataUnsafe.start_param;
+    const startParam = int(tg.initDataUnsafe.start_param);
     if (startParam) {
       from_user = startParam
     }
