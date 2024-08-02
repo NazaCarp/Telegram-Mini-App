@@ -1,4 +1,4 @@
 from db import Base, engine
-from models import Base, Counters, Referral
+from models import Base, Counter, Referral
 
 Base.metadata.create_all(bind=engine)

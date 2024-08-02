@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base, Counters, Referral
+from models import Base, Counter, Referral
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -15,7 +15,7 @@ Base.metadata.create_all(bind=engine)
 
 # Agregar un registro inicial
 db = SessionLocal()
-counter = Counters(user_id=1, name='', score=0, secondarycount=0, tap=1)
+counter = Counter(user_id=1, name='', score=0, secondarycount=0, tap=1)
 db.add(counter)
 db.commit()
 
