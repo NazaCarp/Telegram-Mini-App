@@ -33,7 +33,7 @@ def get_counters():
             db.commit()
 
             # Crear la tabla referrals para el nuevo usuario
-            referral = Referral(user_id=user_id, name=name, from_user=start_param, referralscount=0, referrals='')
+            referral = Referral(user_id=user_id, name=name, from_user=start_param, referrals_count=0, referrals_name='', referrals_id=None)
             db.add(referral)
             db.commit()
         
@@ -41,11 +41,11 @@ def get_counters():
         if start_param.isdigit():
             referrer = db.query(Referral).filter_by(user_id=int(start_param)).first()
             if referrer:
-                referrer.referralscount += 1
-                if referrer.referrals:
-                    referrer.referrals += f', {name}'
+                referrer.referrals_count += 1
+                if referrer.referrals_name:
+                    referrer.referrals_name += f', {name}'
                 else:
-                    referrer.referrals = name
+                    referrer.referrals_name = name
                 db.commit()
 
                 referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).with_for_update().first()
