@@ -46,6 +46,8 @@ def get_counters():
                     referrer.referrals += f', {name}'
                 else:
                     referrer.referrals = name
+                referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).first()
+                referrer_counter.score += 100
                 db.commit()
 
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
