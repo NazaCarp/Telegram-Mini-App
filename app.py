@@ -18,7 +18,7 @@ def serve_friends():
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
     user_id = request.args.get('user_id')
-    start_param = request.args.get('startParam')
+    startParam = request.args.get('startParam')
     name = request.args.get('name')
     if not user_id:
         return jsonify({'error': 'user_id is required'}), 400
@@ -33,13 +33,13 @@ def get_counters():
             db.commit()
 
             # Crear la tabla referrals para el nuevo usuario
-            referral = Referral(user_id=user_id, name=name, from_user=start_param, referrals_count=0, referrals_name='', referrals_id=None)
+            referral = Referral(user_id=user_id, name=name, from_user=startParam, referrals_count=0, referrals_name='', referrals_id=None)
             db.add(referral)
             db.commit()
         
-        # Incrementar referralscount para el user_id igual a start_param
-        if start_param.isdigit():
-            referrer = db.query(Referral).filter_by(user_id=int(start_param)).first()
+        # Incrementar referralscount para el user_id igual a startParam
+        if startParam.isdigit():
+            referrer = db.query(Referral).filter_by(user_id=int(startParam)).first()
             if referrer:
                 referrer.referrals_count += 1
                 if referrer.referrals_name:
@@ -52,7 +52,7 @@ def get_counters():
                     referrer.referrals_id = user_id
                 db.commit()
 
-                referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).first()
+                referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
                 referrer_counter.score += 100
                 db.commit()
 
