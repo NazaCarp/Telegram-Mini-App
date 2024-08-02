@@ -217,22 +217,26 @@
                 }, 500);
             });
 
-            for (let i = 0; i < 10; i++) {
-                const referralName = document.createElement('h4');
-                referralName.style = 'margin: 10px'
-                referralName.textContent = 'Referral\'s Name';
+            async function loadReferrals() {
+                const user_id = tg.initDataUnsafe.user.id;
+                const response = await fetch(`/get_referrals?user_id=${user_id}`);
+                const data = await response.json();
 
-                const bonusText = document.createElement('div');
-
-                const smallText = document.createElement('p');
-                smallText.style = 'margin-left: 15px; margin-bottom: 25px'
-                smallText.textContent = 'Referral\'s info';
-
-                bonusText.appendChild(smallText);
-
-                scrollableContent.appendChild(referralName);
-                scrollableContent.appendChild(bonusText);
+                if (data.referrals_count === 0) {
+                    scrollableContent.innerHTML = '<h4 style="text-align: center;">You haven\'t invited anyone yet</h4>';
+                } else {
+                    scrollableContent.innerHTML = '';
+                    const referrals = data.referrals_name.split(', ');
+                    referrals.forEach(name => {
+                        const referralName = document.createElement('h4');
+                        referralName.style = 'margin: 10px';
+                        referralName.textContent = name;
+                        scrollableContent.appendChild(referralName);
+                    });
+                }
             }
+
+            loadReferrals();
 
             let startY = 0;
 
