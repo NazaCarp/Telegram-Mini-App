@@ -79,7 +79,7 @@ def update_counters():
 
     try:
         db = SessionLocal()
-        counter = db.query(Counter).filter_by(user_id=user_id).with_for_update().first()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
             counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
             db.add(counter)
