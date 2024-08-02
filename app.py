@@ -25,7 +25,6 @@ def get_counters():
 
     try:
         db = SessionLocal()
-        user_id = user_id  # Convertir a int si es necesario
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
             counter = Counter(user_id=user_id, name=name, score=0, secondarycount=0, tap=1)
