@@ -22,4 +22,4 @@ class Referral(Base):
     from_user = Column(String, default='')
     referrals_count = Column(Integer, default=0)
     referrals_name = Column(String, default='')
-    referrals_id = Column(BigInteger, default=None)
+    referrals_id = Column(String, default=None)
