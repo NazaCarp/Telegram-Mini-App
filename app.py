@@ -26,7 +26,7 @@ def get_counters():
     try:
         db = SessionLocal()
         user_id = int(user_id)  # Convertir a int si es necesario
-        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        counter = db.query(Counter).filter_by(user_id=user_id).with_for_update().first()
         if not counter:
             counter = Counter(user_id=user_id, name=name, score=0, secondarycount=0, tap=1)
             db.add(counter)
@@ -46,9 +46,12 @@ def get_counters():
                     referrer.referrals += f', {name}'
                 else:
                     referrer.referrals = name
-                referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).first()
-                referrer_counter.score += 100
                 db.commit()
+
+                referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).with_for_update().first()
+                if referrer_counter:
+                    referrer_counter.score += 100
+                    db.commit()
 
         logging.info(f"Contadores obtenidos para user_id {user_id}: score={counter.score}, secondarycount={counter.secondarycount}, timestamp={counter.timestamp}, tap={counter.tap}")
         return jsonify({
@@ -73,7 +76,7 @@ def update_counters():
 
     try:
         db = SessionLocal()
-        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        counter = db.query(Counter).filter_by(user_id=user_id).with_for_update().first()
         if not counter:
             counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
             db.add(counter)
