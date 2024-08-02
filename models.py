@@ -17,7 +17,7 @@ class Counter(Base):
 class Referral(Base):
     __tablename__ = 'referrals'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, nullable=False)
+    user_id = Column(String, nullable=False)
     name = Column(String, default='')
     from_user = Column(String, default='')
     referrals_count = Column(Integer, default=0)
