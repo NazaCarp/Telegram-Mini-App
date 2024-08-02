@@ -20,7 +20,7 @@ counter = Counter(user_id=1, name='', score=0, secondarycount=0, tap=1)
 db.add(counter)
 db.commit()
 
-referral = Referral(user_id=1, name='', from_user='', referralscount=0, referrals='')
+referral = Referral(user_id=1, name='', from_user='', referrals_count=0, referrals_name='', referrals_id=None)
 db.add(referral)
 db.commit()
 
