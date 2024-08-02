@@ -39,7 +39,7 @@ def get_counters():
         
         # Incrementar referralscount para el user_id igual a start_param
         if start_param.isdigit():
-            referrer = db.query(Referral).filter_by(user_id=start_param).first()
+            referrer = db.query(Referral).filter_by(user_id=int(start_param)).first()
             if referrer:
                 referrer.referrals_count += 1
                 if referrer.referrals_name:
@@ -52,7 +52,7 @@ def get_counters():
                     referrer.referrals_id = user_id
                 db.commit()
 
-                referrer_counter = db.query(Counter).filter_by(user_id=start_param).with_for_update().first()
+                referrer_counter = db.query(Counter).filter_by(user_id=int(start_param)).with_for_update().first()
                 referrer_counter.score += 100
                 db.commit()
 
@@ -63,11 +63,10 @@ def get_counters():
             'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat(),  # Convertir a ISO 8601 con UTC
             'tap': counter.tap
         })
-    
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
-    
+
 @app.route('/update_counters', methods=['POST'])
 def update_counters():
     data = request.get_json()
