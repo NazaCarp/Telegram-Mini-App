@@ -57,8 +57,12 @@ def get_counters():
                 db.commit()
 
         return jsonify({
-            'score': counter.score,
-            'secondarycount': counter.secondarycount,
+            #'score': counter.score,
+            #'secondarycount': counter.secondarycount,
+            #'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat(),  # Convertir a ISO 8601 con UTC
+            #'tap': counter.tap
+            'score': 0,
+            'secondarycount': 0,
             'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat(),  # Convertir a ISO 8601 con UTC
             'tap': counter.tap
         })
