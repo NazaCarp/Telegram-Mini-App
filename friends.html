@@ -248,7 +248,7 @@
             });
 
             reloadIcon.addEventListener('click', function() {
-                if (timerSeconds < 60) return; // Si el temporizador está activo, no hagas nada
+                if (timerSeconds < 60 & timerSeconds > 1) return; // Si el temporizador está activo, no hagas nada
 
                 this.classList.add('rotate', 'disabled');
                 startTimer();
@@ -266,7 +266,7 @@
                     timerElement.textContent = timerSeconds;
                     if (timerSeconds <= 0) {
                         clearInterval(timerInterval);
-                        reloadIcon.classList.remove('disabled');
+                        reloadIcon.classList.remove('disabled'); // Asegurarse de que la clase 'disabled' se elimine
                         timerElement.textContent = '';
                     }
                 }, 1000);
