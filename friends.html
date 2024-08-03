@@ -164,6 +164,11 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .timer {
+            position: absolute;
+            right: 50px;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -194,7 +199,7 @@
             </div>
         </div>
         <h2 style="color: rgb(0, 204, 255); margin-top: 3%;">More Bonuses</h3>
-        <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon></h4>
+        <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
             <div class="rectangle" style="border-radius: 20px;" id="scrollable-rectangle">
@@ -226,6 +231,10 @@
             const shareButton = document.getElementById('share-button');
             const alertContainer = document.getElementById('alert-container');
             const friendsNav = document.getElementById('friendsNav');
+            const timerElement = document.getElementById('timer');
+
+            let timerInterval;
+            let timerSeconds = 60;
 
             friendsNav.addEventListener('click', function(event) {
                 if (window.location.pathname.includes('friends.html')) {
@@ -234,12 +243,29 @@
             });
 
             reloadIcon.addEventListener('click', function() {
+                if (timerSeconds < 60) return; // Si el temporizador está activo, no hagas nada
+
                 this.classList.add('rotate');
+                reloadIcon.style.pointerEvents = 'none'; // Deshabilitar el clic
+                startTimer();
                 setTimeout(() => {
                     this.classList.remove('rotate');
+                    reloadIcon.style.pointerEvents = 'auto'; // Habilitar el clic
                 }, 500);
                 loadReferrals(true);
             });
+
+            function startTimer() {
+                timerSeconds = 60;
+                timerElement.textContent = timerSeconds;
+                timerInterval = setInterval(() => {
+                    timerSeconds--;
+                    timerElement.textContent = timerSeconds;
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                    }
+                }, 1000);
+            }
 
             async function loadReferrals(forceReload = false) {
                 const user_id = tg.initDataUnsafe.user.id;
