@@ -260,14 +260,14 @@
             });
 
             reloadIcon.addEventListener('click', function() {
-                if (timerSeconds < 60 & timerSeconds > 0) return; // Si el temporizador está activo, no hagas nada
+                if (timerSeconds < 60 && timerSeconds > 0) return; // Si el temporizador está activo, no hagas nada
 
                 this.classList.add('rotate', 'disabled');
                 startTimer();
                 setTimeout(() => {
                     this.classList.remove('rotate');
                 }, 500);
-                loadReferrals(true);
+                loadReferrals(true); // Forzar la recarga de los referidos
             });
 
             function startTimer() {
@@ -331,6 +331,8 @@
                     scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
                     scrollableRectangle.textContent = "You haven't invited anyone yet";
                 } else {
+                    scrollableRectangle.style = 'border-radius: 20px; height: 220px';
+
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
