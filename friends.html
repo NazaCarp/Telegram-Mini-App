@@ -55,9 +55,21 @@
             transition: transform 0.5s ease-in-out;
             position: absolute;
             right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .reload-icon.rotate {
             transform: rotate(360deg);
+        }
+        .reload-icon.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .reload-icon span {
+            position: absolute;
+            font-size: 14px;
+            color: white;
         }
         .bottom-buttons {
             display: flex;
@@ -146,24 +158,6 @@
             background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
-        .loading-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100px;
-        }
-        .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid white;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
@@ -178,7 +172,7 @@
                 </div>
                 <div class="text">
                     <h3>Invite a friend</h3>
-                    <p><span style="color: yellow; font-weight: bolder;">+5000</span> for you and your friend</p>
+                    <p><span style="color: yellow; font-weight: bold;">+5000</span> for you and your friend</p>
                     </div>
                 </div>
             </div>
@@ -193,18 +187,13 @@
                 </div>
             </div>
         </div>
-        <h2 style="color: rgb(0, 204, 255); margin-top: 3%;">More Bonuses</h3>
+        <h2 style="color: rgb(0, 204, 255); margin-top: 3%;">More Bonuses</h2>
         <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon></h4>
         </div>
         <div class="rectangles">
             <div class="rectangle" style="border-radius: 20px;" id="scrollable-rectangle">
                 <div class="text">
-                    <div class="scrollable-content" id="scrollable-content">
-                        <div class="loading-container">
-                            <div class="loading-spinner"></div>
-                            <span style="margin-left: 10px;">Loading referral list...</span>
-                        </div>
-                    </div>
+                    <div class="scrollable-content" id="scrollable-content"></div>
                 </div>
             </div>
         </div>
@@ -227,6 +216,8 @@
             const alertContainer = document.getElementById('alert-container');
             const friendsNav = document.getElementById('friendsNav');
 
+            let countdownTimer = null;
+
             friendsNav.addEventListener('click', function(event) {
                 if (window.location.pathname.includes('friends.html')) {
                     event.preventDefault();
@@ -234,42 +225,35 @@
             });
 
             reloadIcon.addEventListener('click', function() {
+                if (reloadIcon.classList.contains('disabled')) return;
+
                 this.classList.add('rotate');
-                setTimeout(() => {
-                    this.classList.remove('rotate');
-                }, 500);
-                loadReferrals(true);
+                this.classList.add('disabled');
+                startCountdown();
+                loadReferrals();
             });
 
-            async function loadReferrals(forceReload = false) {
+            function startCountdown() {
+                let countdown = 60;
+                reloadIcon.innerHTML = `<iconify-icon icon="mdi:reload" width="22" height="22"></iconify-icon><span>${countdown}</span>`;
+
+                countdownTimer = setInterval(() => {
+                    countdown--;
+                    if (countdown <= 0) {
+                        clearInterval(countdownTimer);
+                        reloadIcon.classList.remove('disabled');
+                        reloadIcon.innerHTML = `<iconify-icon icon="mdi:reload" width="22" height="22"></iconify-icon>`;
+                    } else {
+                        reloadIcon.innerHTML = `<iconify-icon icon="mdi:reload" width="22" height="22"></iconify-icon><span>${countdown}</span>`;
+                    }
+                }, 1000);
+            }
+
+            async function loadReferrals() {
                 const user_id = tg.initDataUnsafe.user.id;
-                const cacheKey = `referrals_${user_id}`;
-
-                // Verificar si los datos están en caché y no se fuerza una recarga
-                if (!forceReload && localStorage.getItem(cacheKey)) {
-                    const cachedData = JSON.parse(localStorage.getItem(cacheKey));
-                    displayReferrals(cachedData);
-                    return;
-                }
-
-                // Mostrar el mensaje de carga
-                scrollableContent.innerHTML = `
-                    <div class="loading-container">
-                        <div class="loading-spinner"></div>
-                        <span style="margin-left: 10px;">Loading referral list...</span>
-                    </div>
-                `;
-
                 const response = await fetch(`/get_referrals?user_id=${user_id}`);
                 const data = await response.json();
 
-                // Guardar los datos en caché
-                localStorage.setItem(cacheKey, JSON.stringify(data));
-
-                displayReferrals(data);
-            }
-
-            function displayReferrals(data) {
                 if (data.referrals_count === 0) {
                     scrollableContent.innerHTML = '<h4 style="text-align: center;">You haven\'t invited anyone yet</h4>';
                 } else {
