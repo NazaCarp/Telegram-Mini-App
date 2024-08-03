@@ -205,7 +205,7 @@
             </div>
         </div>
         <h2 style="color: rgb(0, 204, 255); margin-top: 3%;">More Bonuses</h3>
-        <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
+        <h4><span style="position:fixed; left: 3%;" id="friends-list-label">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
             <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
@@ -238,6 +238,7 @@
             const alertContainer = document.getElementById('alert-container');
             const friendsNav = document.getElementById('friendsNav');
             const timerElement = document.getElementById('timer');
+            const friendsListLabel = document.getElementById('friends-list-label');
 
             let timerInterval;
             let timerSeconds = 60;
@@ -337,6 +338,9 @@
                         scrollableContent.appendChild(scoreText);
                     });
                 }
+
+                // Actualizar el texto de "List of your friends" con el valor de referrals_count
+                friendsListLabel.textContent = `List of your friends (${data.referrals_count})`;
             }
 
             loadReferrals();
