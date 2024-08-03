@@ -317,9 +317,9 @@
                     scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
                     scrollableRectangle.textContent = "You haven't invited anyone yet";
                 } else {
+                    scrollableRectangle.innerHTML = ''
                     scrollableRectangle.style = 'border-radius: 20px; height: 220px';
                     
-                    scrollableRectangle.innerHTML = ''
                     scrollableRectangle.innerHTML = `
                         <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
                             <div class="text">
