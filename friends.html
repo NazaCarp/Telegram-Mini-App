@@ -207,13 +207,12 @@
         <h2 style="color: rgb(0, 204, 255); margin-top: 3%;">More Bonuses</h3>
         <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
-        <div class="rectangles">
-            <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
-                <div class="text">
-                    <div class="scrollable-content" id="scrollable-content">
-                        <div class="loading-container">
-                            <div class="loading-spinner"></div>
-                            <span style="margin-left: 10px;">Loading referral list...</span>
+        <div class="rectangles" style="display: flex; justify-content: center;">
+            <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle" style="display: flex; justify-content: center;"> <!-- Aumenta la altura del contenedor -->
+                <div class="text" style="display: flex; justify-content: center;">
+                    <div class="scrollable-content" id="scrollable-content" style="display: flex; justify-content: center;">
+                        <div class="loading-container" style="display: flex; justify-content: center;">
+                            <span style="display: flex; justify-content: center;">Loading referral list...</span>
                         </div>
                     </div>
                 </div>
@@ -301,7 +300,7 @@
                 scrollableContent.innerHTML = `
                     <div class="loading-container">
                         <div class="loading-spinner"></div>
-                        <span style="margin-left: 10px;">Loading referral list...</span>
+                        <span style="display: flex; justify-content: center;">Loadingsdsds referral list...</span>
                     </div>
                 `;
 
@@ -316,7 +315,7 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = '<h4 style="text-align: center;">You haven\'t invited anyone yet</h4>';
+                    scrollableContent.innerHTML = '<h4 style="display: flex; justify-content: center;">You haven\'t invited anyone yet</h4>';
                 } else {
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
