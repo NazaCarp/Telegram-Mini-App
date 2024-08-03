@@ -317,7 +317,7 @@
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
                     scrollableRectangle.style = 'display: flex; justify-content: center';
-                    scrollableRectangle.text = "<h4>You haven't invited anyone yet</h4>";
+                    scrollableRectangle.textContent = "You haven't invited anyone yet";
                 } else {
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
