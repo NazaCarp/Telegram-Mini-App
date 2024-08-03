@@ -299,10 +299,8 @@
 
                 // Mostrar el mensaje de carga
                 scrollableRectangle.innerHTML = `
-                    <div class="loading-container">
-                        <div class="loading-spinner"></div>
-                        <span style="margin-left: 10px;">Loading referral list...</span>
-                    </div>
+                    <div class="loading-spinner"></div>
+                    <span style="margin-left: 10px;">Loading referral list...</span>
                 `;
 
                 const response = await fetch(`/get_referrals?user_id=${user_id}`);
