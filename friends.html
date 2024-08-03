@@ -52,12 +52,17 @@
         }
         .reload-icon {
             cursor: pointer;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
             position: absolute;
             right: 20px;
+            opacity: 1;
         }
         .reload-icon.rotate {
             transform: rotate(360deg);
+        }
+        .reload-icon.disabled {
+            opacity: 0.5;
+            pointer-events: none;
         }
         .bottom-buttons {
             display: flex;
@@ -245,12 +250,10 @@
             reloadIcon.addEventListener('click', function() {
                 if (timerSeconds < 60) return; // Si el temporizador está activo, no hagas nada
 
-                this.classList.add('rotate');
-                reloadIcon.style.pointerEvents = 'none'; // Deshabilitar el clic
+                this.classList.add('rotate', 'disabled');
                 startTimer();
                 setTimeout(() => {
                     this.classList.remove('rotate');
-                    reloadIcon.style.pointerEvents = 'auto'; // Habilitar el clic
                 }, 500);
                 loadReferrals(true);
             });
@@ -263,6 +266,8 @@
                     timerElement.textContent = timerSeconds;
                     if (timerSeconds <= 0) {
                         clearInterval(timerInterval);
+                        reloadIcon.classList.remove('disabled');
+                        timerElement.textContent = '';
                     }
                 }, 1000);
             }
