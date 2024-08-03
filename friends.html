@@ -313,32 +313,31 @@
             }
 
             function displayReferrals(data) {
+                scrollableContent.innerHTML = ''; // Limpiar el contenido anterior
+
                 if (data.referrals_count === 0) {
                     scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
                     scrollableRectangle.textContent = "You haven't invited anyone yet";
                 } else {
                     scrollableRectangle.style = 'border-radius: 20px; height: 220px';
-                    
-                    scrollableRectangle.innerHTML = `
-                        <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
-                            <div class="text">
-                                <div class="scrollable-content" id="scrollable-content">
-                                </div>
-                            </div>
-                        </div>`;
 
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
+                        const referralItem = document.createElement('div');
+                        referralItem.style = 'display: flex; justify-content: space-between; margin: 10px 0;';
+
                         const referralName = document.createElement('h4');
-                        referralName.style = 'margin: 10px';
+                        referralName.style = 'margin: 0;';
                         referralName.textContent = name;
-                        scrollableContent.appendChild(referralName);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px';
+                        scoreText.style = 'margin: 0; margin-left: 25px;';
                         scoreText.textContent = `Score: ${scores[index]}`;
-                        scrollableContent.appendChild(scoreText);
+
+                        referralItem.appendChild(referralName);
+                        referralItem.appendChild(scoreText);
+                        scrollableContent.appendChild(referralItem);
                     });
                 }
             }
