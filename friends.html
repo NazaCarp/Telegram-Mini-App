@@ -208,7 +208,7 @@
         <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
-            <div class="rectangle" style="border-radius: 20px; height: 220px; display: flex; justify-content: center;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
+            <div class="rectangle" style="border-radius: 20px; height: 220px;display: flex; justify-content: center;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
@@ -323,12 +323,12 @@
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
                         const referralName = document.createElement('h4');
-                        referralName.style = 'margin: 10px; display: flex; justify-content: left;';
+                        referralName.style = 'margin: 10px; text-align: left;';
                         referralName.textContent = name;
                         scrollableContent.appendChild(referralName);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px; display: flex; justify-content: left;';
+                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px; text-align: left;';
                         scoreText.textContent = `Score: ${scores[index]}`;
                         scrollableContent.appendChild(scoreText);
                     });
