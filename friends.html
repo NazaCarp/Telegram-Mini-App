@@ -103,11 +103,16 @@
             }
         }
         .scrollable-content {
-            max-height: 220px;
+            max-height: 200px; /* Aumenta la altura máxima */
             overflow-y: auto;
             scrollbar-width: none; /* Firefox */
             -ms-overflow-style: none; /* IE and Edge */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
+
         .scrollable-content::-webkit-scrollbar {
             display: none; /* Chrome, Safari and Opera */
         }
