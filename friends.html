@@ -189,7 +189,7 @@
                 </div>
                 <div class="text">
                     <h3>Invite a friend</h3>
-                    <p><span style="color: yellow; font-weight: bolder;">+5000</span> for you and your friend</p>
+                    <p><span style="color: yellow; font-weight: bold;">+5000</span> for you and your friend</p>
                     </div>
                 </div>
             </div>
@@ -298,11 +298,9 @@
                 }
 
                 // Mostrar el mensaje de carga
-                scrollableContent.innerHTML = `
-                    <div class="loading-container">
-                        <div class="loading-spinner"></div>
-                        <span style="margin-left: 10px;">Loading referral list...</span>
-                    </div>
+                scrollableRectangle.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <span style="color: rgba(255, 255, 255, 1); margin-left: 10px;">Loading referral list...</span>
                 `;
 
                 const response = await fetch(`/get_referrals?user_id=${user_id}`);
@@ -316,9 +314,13 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = '<h4 style="text-align: center;">You haven\'t invited anyone yet</h4>';
+                    scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
+                    const noRefs = document.createElement('p')
+                    noRefs.textContent = "You haven't invited anyone yet";
+                    scrollableRectangle.appendChild(noRefs)
                 } else {
-                    scrollableContent.innerHTML = '';
+                    scrollableContent.innerHTML = ''
+                    
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
