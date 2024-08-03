@@ -354,7 +354,7 @@
             scrollableRectangle.addEventListener('touchmove', function(event) {
                 event.preventDefault();
                 const touchY = event.touches[0].clientY;
-                const deltaY = startY - touchY + 5;
+                const deltaY = (startY - touchY) * 2; // Aumenta la sensibilidad del scroll
                 scrollableContent.scrollTop += deltaY;
                 startY = touchY;
             });
