@@ -320,13 +320,6 @@
                     scrollableRectangle.innerHTML = ''
                     scrollableRectangle.style = 'border-radius: 20px; height: 220px';
                     
-                    scrollableRectangle.innerHTML = `
-                        <div class="text">
-                            <div class="scrollable-content" id="scrollable-content">
-                            </div>
-                        </div>
-                    `;
-
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
