@@ -301,7 +301,7 @@
                 scrollableContent.innerHTML = `
                     <div class="loading-container">
                         <div class="loading-spinner"></div>
-                        <span style="margin-left: 10px;">Loading referral list...</span>
+                        <span style="margin-left: 10px; color: rgba(255, 255, 255, 1)">Loading referral list...</span>
                     </div>
                 `;
 
@@ -317,8 +317,9 @@
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
                     scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
-                    scrollableContent.innerHTML = '<h4 style="text-align: center;">You haven\'t invited anyone yet</h4>';
+                    scrollableContent.textContent = "You haven't invited anyone yet"
                 } else {
+                    scrollableRectangle.style = "border-radius: 20px; height: 220px;"
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
