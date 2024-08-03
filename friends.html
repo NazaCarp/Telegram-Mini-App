@@ -104,10 +104,12 @@
         }
         .scrollable-content {
             max-height: 200px; /* Aumenta la altura máxima */
-            max-width: 100%;
             overflow-y: auto;
             scrollbar-width: none; /* Firefox */
             -ms-overflow-style: none; /* IE and Edge */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .scrollable-content::-webkit-scrollbar {
             display: none; /* Chrome, Safari and Opera */
@@ -317,7 +319,7 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = '<h4 style="text-align: center; margin-left: 85px">You haven\'t invited anyone yet</h4>';
+                    scrollableContent.innerHTML = '<h4 style="text-align: center;">You haven\'t invited anyone yet</h4>';
                 } else {
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
