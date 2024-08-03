@@ -316,7 +316,7 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = '<h4 style="text-align: center; opacity: 0.5">You haven\'t invited anyone yet</h4>';
+                    scrollableContent.innerHTML = '<h4 style="text-align: center; height: 100%">You haven\'t invited anyone yet</h4>';
                 } else {
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
