@@ -316,19 +316,19 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = '<h4 style="text-align: center;">You haven\'t invited anyone yet</h4>';
+                    scrollableContent.innerHTML = '<h4>You haven\'t invited anyone yet</h4>';
                 } else {
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
                         const referralName = document.createElement('h4');
-                        referralName.style = 'margin: 10px';
+                        referralName.style = 'margin: 10px; text-align: left';
                         referralName.textContent = name;
                         scrollableContent.appendChild(referralName);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px';
+                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px; text-align: left';
                         scoreText.textContent = `Score: ${scores[index]}`;
                         scrollableContent.appendChild(scoreText);
                     });
