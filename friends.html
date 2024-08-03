@@ -107,13 +107,9 @@
             overflow-y: auto;
             scrollbar-width: none; /* Firefox */
             -ms-overflow-style: none; /* IE and Edge */
-            display: flex;
-            justify-content: center;
         }
         .scrollable-content::-webkit-scrollbar {
             display: none; /* Chrome, Safari and Opera */
-            display: flex;
-            justify-content: center;"
         }
         .navbar {
             display: flex;
@@ -212,7 +208,7 @@
         <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
-            <div class="rectangle" style="border-radius: 20px; height: 220px" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
+            <div class="rectangle" style="border-radius: 20px; height: 220px; display: flex; justify-content: center;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
