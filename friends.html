@@ -316,10 +316,11 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableRectangle.style = 'border-radius: 20px; height: 220px; display: flex; justify-content: center';
+                    scrollableRectangle.style = 'border-radius: 20px; height: 40px; display: flex; justify-content: center';
                     scrollableRectangle.textContent = "You haven't invited anyone yet";
                 } else {
                     scrollableContent.innerHTML = '';
+                    scrollableRectangle.style = 'border-radius: 20px; height: 220px';
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
