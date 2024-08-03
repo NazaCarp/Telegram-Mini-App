@@ -330,21 +330,6 @@
             });
 
             tg.ready();
-
-            // Caché de la página completa
-            const cacheKey = 'page_cache';
-            const cachedPage = localStorage.getItem(cacheKey);
-
-            if (cachedPage) {
-                document.open();
-                document.write(cachedPage);
-                document.close();
-            } else {
-                // Almacenar la página en caché cuando se cargue por primera vez
-                window.addEventListener('beforeunload', () => {
-                    localStorage.setItem(cacheKey, document.documentElement.outerHTML);
-                });
-            }
         });
     </script>
     <div class="navbar">
