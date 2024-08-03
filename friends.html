@@ -240,6 +240,17 @@
 
             let timerInterval;
             let timerSeconds = 60;
+            const timerKey = 'reloadTimer';
+
+            // Recuperar el tiempo restante del temporizador desde localStorage
+            const storedTimer = localStorage.getItem(timerKey);
+            if (storedTimer) {
+                timerSeconds = parseInt(storedTimer, 10);
+                if (timerSeconds > 0) {
+                    reloadIcon.classList.add('disabled');
+                    startTimer();
+                }
+            }
 
             friendsNav.addEventListener('click', function(event) {
                 if (window.location.pathname.includes('friends.html')) {
@@ -248,7 +259,7 @@
             });
 
             reloadIcon.addEventListener('click', function() {
-                if (timerSeconds < 60 & timerSeconds > 1) return; // Si el temporizador está activo, no hagas nada
+                if (timerSeconds < 60 & timerSeconds > 0) return; // Si el temporizador está activo, no hagas nada
 
                 this.classList.add('rotate', 'disabled');
                 startTimer();
@@ -264,10 +275,12 @@
                 timerInterval = setInterval(() => {
                     timerSeconds--;
                     timerElement.textContent = timerSeconds;
+                    localStorage.setItem(timerKey, timerSeconds); // Guardar el tiempo restante en localStorage
                     if (timerSeconds <= 0) {
                         clearInterval(timerInterval);
-                        reloadIcon.classList.remove('disabled'); // Asegurarse de que la clase 'disabled' se elimine
+                        reloadIcon.classList.remove('disabled');
                         timerElement.textContent = '';
+                        localStorage.removeItem(timerKey); // Eliminar el tiempo restante de localStorage
                     }
                 }, 1000);
             }
