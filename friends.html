@@ -314,21 +314,19 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; opacity: 0.5';
+                    scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(0, 0, 0, 0.5)';
                     scrollableRectangle.textContent = "You haven't invited anyone yet";
                 } else {
                     scrollableRectangle.style = 'border-radius: 20px; height: 220px';
+                    
                     scrollableRectangle.innerHTML = `
                         <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
                             <div class="text">
                                 <div class="scrollable-content" id="scrollable-content">
-                                    <div class="loading-container">
-                                        <div class="loading-spinner"></div>
-                                        <span style="margin-left: 10px;">Loading referral list...</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>`;
+
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
