@@ -144,6 +144,16 @@
     .section.active {
       display: flex;
     }
+
+    /* Estilos para el ícono de cohete */
+    #rocketIcon {
+      position: absolute;
+      bottom: 75px;
+      right: 10px;
+      font-size: 30px;
+      color: white;
+      transform: rotate(90deg);
+    }
   </style>
 </head>
 <body>
@@ -154,6 +164,7 @@
     </div>
     <div class="score" id="score">0</div>
     <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
+    <iconify-icon id="rocketIcon" icon="openmoji:rocket"></iconify-icon>
   </div>
   <div class="section" id="exchange">
     <h1>Exchange</h1>
