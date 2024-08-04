@@ -346,18 +346,41 @@
             loadReferrals();
 
             let startY = 0;
+            let lastY = 0;
+            let velocityY = 0;
+            let isScrolling = false;
 
             scrollableRectangle.addEventListener('touchstart', function(event) {
                 startY = event.touches[0].clientY;
+                lastY = startY;
+                velocityY = 0;
+                isScrolling = true;
             });
 
             scrollableRectangle.addEventListener('touchmove', function(event) {
                 event.preventDefault();
                 const touchY = event.touches[0].clientY;
-                const deltaY = (startY - touchY) * 2;
+                const deltaY = (startY - touchY) * 2; // Aumenta la sensibilidad del scroll
                 scrollableContent.scrollTop += deltaY;
                 startY = touchY;
+
+                // Calcular la velocidad del desplazamiento
+                velocityY = touchY - lastY;
+                lastY = touchY;
             });
+
+            scrollableRectangle.addEventListener('touchend', function() {
+                isScrolling = false;
+                requestAnimationFrame(applyInertia);
+            });
+
+            function applyInertia() {
+                if (!isScrolling && Math.abs(velocityY) > 0.5) {
+                    scrollableContent.scrollTop += velocityY;
+                    velocityY *= 0.95; // Deceleración suave
+                    requestAnimationFrame(applyInertia);
+                }
+            }
 
             copyButton.addEventListener('click', async function() {
                 try {
@@ -373,7 +396,7 @@
             });
 
             shareButton.addEventListener('click', function() {
-                const texto = "Hola soy Luc el hacker.";
+                const texto = "Hola soy Luc el hacker";
                 const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
                 window.open(url, '_blank');
             });
