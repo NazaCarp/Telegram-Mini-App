@@ -285,7 +285,6 @@
     document.getElementById('coinImage').addEventListener('click', handleClick);
     
     // Mostrar el nombre del usuario
-    // Mostrar el nombre del usuario
     window.onload = function() {
       if (user) {
         const userInfo = document.getElementById('user-info');
@@ -302,6 +301,9 @@
             const icon = document.createElement('iconify-icon');
             icon.icon = 'fluent-emoji-flat:person-zombie';
             icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
+            icon.style.width = '40px'; // Ajusta el ancho
+            icon.style.height = '40px'; // Ajusta el alto
+            icon.style.borderRadius = '50%'; // Asegura que sea circular
             userInfo.insertBefore(icon, userInfo.firstChild);
           }
         };
@@ -311,6 +313,9 @@
           const icon = document.createElement('iconify-icon');
           icon.icon = 'fluent-emoji-flat:person-zombie';
           icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
+          icon.style.width = '40px'; // Ajusta el ancho
+          icon.style.height = '40px'; // Ajusta el alto
+          icon.style.borderRadius = '50%'; // Asegura que sea circular
           userInfo.insertBefore(icon, userInfo.firstChild);
         };
 
