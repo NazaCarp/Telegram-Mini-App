@@ -340,24 +340,21 @@
                         userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
                         userPhoto.classList.add('user-photo');
                         userPhoto.onload = function() {
-                            // Verificar el tamaño de la imagen
                             if (userPhoto.naturalWidth <= 1 || userPhoto.naturalHeight <= 1) {
-                                // Si la imagen es muy pequeña, reemplazarla con el ícono de Iconify
                                 userPhoto.remove();
                                 const icon = document.createElement('iconify-icon');
                                 icon.icon = 'fluent-emoji-flat:person-zombie';
-                                icon.style = 'font-size: 40px'
-                                icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
+                                icon.style = 'font-size: 40px';
+                                icon.classList.add('user-photo');
                                 referralItem.insertBefore(icon, referralItem.firstChild);
                             }
                         };
                         userPhoto.onerror = function() {
-                            // Si la imagen no se carga, reemplazarla con el ícono de Iconify
                             userPhoto.remove();
                             const icon = document.createElement('iconify-icon');
                             icon.icon = 'fluent-emoji-flat:person-zombie';
-                            icon.style = 'font-size: 40px'
-                            icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
+                            icon.style = 'font-size: 40px';
+                            icon.classList.add('user-photo');
                             referralItem.insertBefore(icon, referralItem.firstChild);
                         };
 
@@ -369,7 +366,7 @@
                         referralItem.appendChild(referralName);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px; color: yellow';
+                        scoreText.style = 'margin-left: 25px; color: yellow;';
                         scoreText.textContent = `Score: ${scores[index]}`;
                         referralItem.appendChild(scoreText);
 
