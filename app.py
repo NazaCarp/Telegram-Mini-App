@@ -16,7 +16,7 @@ def serve_friends():
     return render_template('friends.html')
 
 @app.route('/boosts.html')
-def serve_friends():
+def serve_boosts():
     return render_template('boosts.html')
 
 @app.route('/get_counters', methods=['GET'])
