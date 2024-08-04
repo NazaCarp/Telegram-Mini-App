@@ -182,9 +182,8 @@
             margin-right: 10px;
         }
         .score {
-            position: absolute;
-            right: 20px;
             color: yellow;
+            margin-left: auto; /* Alinea el score a la derecha */
         }
     </style>
 </head>
@@ -339,7 +338,7 @@
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
                         const referralItem = document.createElement('div');
-                        referralItem.style = 'display: flex; align-items: center; margin: 10px 0; width: 100%; position: relative;';
+                        referralItem.style = 'display: flex; align-items: center; margin: 10px 0; width: 100%;';
 
                         const userPhoto = document.createElement('img');
                         userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
@@ -376,7 +375,7 @@
                         scoreText.classList.add('score');
                         scoreText.style = 'margin: 0; color: yellow;';
                         scoreText.textContent = `Score: ${scores[index]}`;
-                        referralItem.appendChild(scoreText);
+                        textContainer.appendChild(scoreText);
 
                         referralItem.appendChild(textContainer);
 
