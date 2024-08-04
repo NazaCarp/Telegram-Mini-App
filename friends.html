@@ -332,27 +332,27 @@
                     scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
                     scrollableContent.textContent = "You haven't invited anyone yet"
                 } else {
-                    scrollableRectangle.style = "border-radius: 20px; height: 220px; position: relative; overflow: hidden;";
+                    scrollableRectangle.style = "border-radius: 20px; height: 220px;"
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
                         const referralItem = document.createElement('div');
-                        referralItem.style = 'display: flex; align-items: center; margin: 10px 0; width: 100%; padding: 0 10px; position: relative;';
+                        referralItem.style = 'display: flex; align-items: center; justify-content: space-between; margin: 10px 0; width: 100%; padding: 0 10px;';
 
                         const leftContent = document.createElement('div');
-                        leftContent.style = 'display: flex; align-items: center; max-width: calc(100% - 100px);';
+                        leftContent.style = 'display: flex; align-items: center;';
 
                         const userPhoto = document.createElement('img');
                         userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
                         userPhoto.classList.add('user-photo');
-                        userPhoto.style = 'width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; flex-shrink: 0;';
+                        userPhoto.style = 'width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;';
                         userPhoto.onload = function() {
                             if (userPhoto.naturalWidth <= 1 || userPhoto.naturalHeight <= 1) {
                                 userPhoto.remove();
                                 const icon = document.createElement('iconify-icon');
                                 icon.icon = 'fluent-emoji-flat:person-zombie';
-                                icon.style = 'font-size: 40px; margin-right: 10px; flex-shrink: 0;';
+                                icon.style = 'font-size: 40px; margin-right: 10px;';
                                 leftContent.insertBefore(icon, leftContent.firstChild);
                             }
                         };
@@ -360,21 +360,21 @@
                             userPhoto.remove();
                             const icon = document.createElement('iconify-icon');
                             icon.icon = 'fluent-emoji-flat:person-zombie';
-                            icon.style = 'font-size: 40px; margin-right: 10px; flex-shrink: 0;';
+                            icon.style = 'font-size: 40px; margin-right: 10px;';
                             leftContent.insertBefore(icon, leftContent.firstChild);
                         };
 
                         leftContent.appendChild(userPhoto);
 
                         const referralName = document.createElement('h4');
-                        referralName.style = 'margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
+                        referralName.style = 'margin: 0;';
                         referralName.textContent = name;
                         leftContent.appendChild(referralName);
 
                         referralItem.appendChild(leftContent);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin: 0; color: yellow; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);';
+                        scoreText.style = 'margin: 0; color: yellow;';
                         scoreText.textContent = `Score: ${scores[index]}`;
                         referralItem.appendChild(scoreText);
 
