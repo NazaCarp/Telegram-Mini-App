@@ -337,32 +337,8 @@
                         referralItem.style = 'display: flex; align-items: center; margin: 10px 0;';
 
                         const userPhoto = document.createElement('img');
-                        userPhoto.src = `https://t.me/i/userpic/320/${name}.jpg`;
+                        userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
                         userPhoto.classList.add('user-photo');
-                        userPhoto.onload = function() {
-
-                            // Si la imagen es muy pequeña, reemplazarla con el ícono de Iconify
-                            if (userPhoto.naturalWidth <= 1 || userPhoto.naturalHeight <= 1) {
-                                userPhoto.remove();
-                                const icon = document.createElement('iconify-icon');
-                                icon.icon = 'fluent-emoji-flat:person-zombie';
-                                icon.classList.add('user-photo');
-                                icon.style = 'font-size: 40px'; // Ajusta el tamaño del ícono
-                                icon.style.borderRadius = '50%'; // Asegura que sea circular
-                                userInfo.insertBefore(icon, userInfo.firstChild);
-                            }
-                        };
-
-                        // Si la imagen no se carga, reemplazarla con el ícono de Iconify
-                        userPhoto.onerror = function() {
-                            userPhoto.remove();
-                            const icon = document.createElement('iconify-icon');
-                            icon.icon = 'fluent-emoji-flat:person-zombie';
-                            icon.classList.add('user-photo');
-                            icon.style = 'font-size: 40px'; // Ajusta el tamaño del ícono
-                            icon.style.borderRadius = '50%'; // Asegura que sea circular
-                            userInfo.insertBefore(icon, userInfo.firstChild);
-                        };
                         referralItem.appendChild(userPhoto);
 
                         const referralName = document.createElement('h4');
