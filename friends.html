@@ -334,7 +334,10 @@
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
                         const referralItem = document.createElement('div');
-                        referralItem.style = 'display: flex; align-items: center; margin: 10px 0;';
+                        referralItem.style = 'display: flex; align-items: center; justify-content: space-between; margin: 10px 0;';
+
+                        const leftContent = document.createElement('div');
+                        leftContent.style = 'display: flex; align-items: center;';
 
                         const userPhoto = document.createElement('img');
                         userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
@@ -346,7 +349,7 @@
                                 icon.icon = 'fluent-emoji-flat:person-zombie';
                                 icon.style = 'font-size: 40px';
                                 icon.classList.add('user-photo');
-                                referralItem.insertBefore(icon, referralItem.firstChild);
+                                leftContent.insertBefore(icon, leftContent.firstChild);
                             }
                         };
                         userPhoto.onerror = function() {
@@ -355,19 +358,21 @@
                             icon.icon = 'fluent-emoji-flat:person-zombie';
                             icon.style = 'font-size: 40px';
                             icon.classList.add('user-photo');
-                            referralItem.insertBefore(icon, referralItem.firstChild);
+                            leftContent.insertBefore(icon, leftContent.firstChild);
                         };
 
-                        referralItem.appendChild(userPhoto);
+                        leftContent.appendChild(userPhoto);
 
                         const referralName = document.createElement('h4');
                         referralName.style = 'margin-left: 10px;';
                         referralName.textContent = name;
-                        referralItem.appendChild(referralName);
+                        leftContent.appendChild(referralName);
+
+                        referralItem.appendChild(leftContent);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: 25px; color: yellow;';
-                        scoreText.textContent = scores[index];
+                        scoreText.style = 'color: yellow;';
+                        scoreText.textContent = `Score: ${scores[index]}`;
                         referralItem.appendChild(scoreText);
 
                         scrollableContent.appendChild(referralItem);
