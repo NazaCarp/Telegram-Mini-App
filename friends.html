@@ -334,7 +334,7 @@
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
                         const referralItem = document.createElement('div');
-                        referralItem.style = 'display: flex; align-items: center; margin: 10px 0;';
+                        referralItem.style = 'display: flex; align-items: center; justify-content: space-between; margin: 10px 0;';
 
                         const userPhoto = document.createElement('img');
                         userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
@@ -346,7 +346,6 @@
                                 userPhoto.remove();
                                 const icon = document.createElement('iconify-icon');
                                 icon.icon = 'fluent-emoji-flat:person-zombie';
-                                icon.style = 'font-size: 40px'
                                 icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
                                 referralItem.insertBefore(icon, referralItem.firstChild);
                             }
@@ -356,7 +355,6 @@
                             userPhoto.remove();
                             const icon = document.createElement('iconify-icon');
                             icon.icon = 'fluent-emoji-flat:person-zombie';
-                            icon.style = 'font-size: 40px'
                             icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
                             referralItem.insertBefore(icon, referralItem.firstChild);
                         };
@@ -369,7 +367,7 @@
                         referralItem.appendChild(referralName);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px';
+                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px; color: yellow;';
                         scoreText.textContent = `Score: ${scores[index]}`;
                         referralItem.appendChild(scoreText);
 
