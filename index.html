@@ -382,6 +382,11 @@
       window.location.href = 'friends.html'; // Redirige a la nueva página
     });
 
+    document.getElementById('rocketIcon').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'boosts.html'; // Redirige a la nueva página
+    });
+
     tg.onEvent('backButtonClicked', () => {
       const activeSection = document.querySelector('.section.active');
       if (activeSection && activeSection.id !== 'home') {

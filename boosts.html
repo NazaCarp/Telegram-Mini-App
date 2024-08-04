@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boosts</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at center, #0047ab, #002357, #000000);
+            color: white;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .score {
+            color: yellow;
+            margin-top: 30px;
+            font-size: 24px;
+        }
+        .boosters {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        .rectangles {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .rectangle {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            border-radius: 50px;
+            width: 95%;
+            margin: 5px;
+            padding: 5px;
+        }
+        .icon {
+            margin: 10px;
+            font-size: 52px;
+        }
+        .text {
+            display: flex;
+            flex-direction: column;
+        }
+        .text h3 {
+            margin: 0;
+        }
+        .text p {
+            margin: 0;
+            color: yellow;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="score" id="score">0</div>
+        <div class="boosters">Boosters</div>
+        <div class="rectangles">
+            <div class="rectangle">
+                <div class="icon">
+                    <iconify-icon icon="hugeicons:tap-06"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3>Multitap</h3>
+                    <p>1000</p>
+                </div>
+                <div class="text">
+                    <p>Level 1</p>
+                </div>
+            </div>
+            <div class="rectangle">
+                <div class="icon">
+                    <iconify-icon icon="bi:battery-charging"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3>Energy limit</h3>
+                    <p>1000</p>
+                </div>
+                <div class="text">
+                    <p>Level 1</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tg = window.Telegram.WebApp;
+            const scoreElement = document.getElementById('score');
+
+            // Obtener el score desde el almacenamiento local o de alguna otra fuente
+            const score = localStorage.getItem('score') || 0;
+            scoreElement.textContent = score;
+
+            tg.onEvent('backButtonClicked', () => {
+                window.location.href = 'index.html';
+            });
+
+            tg.ready();
+        });
+    </script>
+</body>
+</html>
