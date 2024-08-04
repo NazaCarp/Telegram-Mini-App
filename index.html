@@ -294,6 +294,20 @@
         userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`;
         userPhoto.classList.add('user-photo');
 
+        // Manejar los usuarios sin foto de perfil o sin nombres de usuario
+        userPhoto.onerror = function() {
+          // Eliminar la imágen que no se pudo cargar
+          userInfo.removeChild(userPhoto)
+
+          // Crear el ícono de perfil
+          const zombiePicture = documen.createElement('zombiePicture')
+          zombiePicture.icon = 'fluent-emoji-flat:person-zombie'
+          zombiePicture.classList.add('user-photo')
+
+          // Agregar el ícono de perfil al contenedor
+          userInfo.appendChild(zombiePicture)
+        }
+
         // Crear el elemento del nombre de perfil
         const userName = document.createElement('span');
         userName.textContent = name;
