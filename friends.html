@@ -175,6 +175,12 @@
             color: white;
             opacity: 0.5;
         }
+        .user-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -327,15 +333,26 @@
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
+                        const referralItem = document.createElement('div');
+                        referralItem.style = 'display: flex; align-items: center; margin: 10px 0;';
+
+                        const userPhoto = document.createElement('img');
+                        userPhoto.src = 'https://t.me/i/userpic/320/leocarp.jpg';
+                        userPhoto.alt = name;
+                        userPhoto.classList.add('user-photo');
+                        referralItem.appendChild(userPhoto);
+
                         const referralName = document.createElement('h4');
-                        referralName.style = 'margin: 10px';
+                        referralName.style = 'margin-left: 10px;';
                         referralName.textContent = name;
-                        scrollableContent.appendChild(referralName);
+                        referralItem.appendChild(referralName);
 
                         const scoreText = document.createElement('p');
                         scoreText.style = 'margin-left: 25px; margin-bottom: 20px';
                         scoreText.textContent = `Score: ${scores[index]}`;
-                        scrollableContent.appendChild(scoreText);
+                        referralItem.appendChild(scoreText);
+
+                        scrollableContent.appendChild(referralItem);
                     });
                 }
 
@@ -360,7 +377,7 @@
             scrollableRectangle.addEventListener('touchmove', function(event) {
                 event.preventDefault();
                 const touchY = event.touches[0].clientY;
-                const deltaY = (startY - touchY);
+                const deltaY = (startY - touchY) * 2; // Aumenta la sensibilidad del scroll
                 scrollableContent.scrollTop += deltaY;
                 startY = touchY;
 
