@@ -300,14 +300,14 @@
           icon.icon = 'fluent-emoji-flat:person-zombie';
           icon.classList.add('user-photo');
           userInfo.insertBefore(icon, userInfo.firstChild);
+
+          const userName = document.createElement('span');
+          userName.textContent = name;
+          userInfo.appendChild(userName);
         };
 
         // Crear el elemento del nombre de perfil
-        const userName = document.createElement('span');
-        userName.textContent = name;
-
         userInfo.appendChild(userPhoto);
-        userInfo.appendChild(userName);
       }
       loadAndUpdateCounters();
     };
