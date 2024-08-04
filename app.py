@@ -36,24 +36,24 @@ def get_counters():
             db.add(referral)
             db.commit()
         
-            # Incrementar el número de referidos
-            if startParam.isdigit():
-                referrer = db.query(Referral).filter_by(user_id=int(startParam)).first()
-                if referrer:
-                    referrer.referrals_count += 1
-                    if referrer.referrals_name:
-                        referrer.referrals_name += f', {name}'
-                    else:
-                        referrer.referrals_name = name
-                    if referrer.referrals_id:
-                        referrer.referrals_id += f', {user_id}'
-                    else:
-                        referrer.referrals_id = user_id
-                    db.commit()
-
-                referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
-                referrer_counter.score += 100
+        # Incrementar el número de referidos
+        if startParam.isdigit():
+            referrer = db.query(Referral).filter_by(user_id=int(startParam)).first()
+            if referrer:
+                referrer.referrals_count += 1
+                if referrer.referrals_name:
+                    referrer.referrals_name += f', {name}'
+                else:
+                    referrer.referrals_name = name
+                if referrer.referrals_id:
+                    referrer.referrals_id += f', {user_id}'
+                else:
+                    referrer.referrals_id = user_id
                 db.commit()
+
+            referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
+            referrer_counter.score += 100
+            db.commit()
 
         return jsonify({
             'score': counter.score,
