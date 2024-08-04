@@ -15,6 +15,10 @@ def index():
 def serve_friends():
     return render_template('friends.html')
 
+@app.route('/boosts.html')
+def serve_friends():
+    return render_template('boosts.html')
+
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
     user_id = request.args.get('user_id')
