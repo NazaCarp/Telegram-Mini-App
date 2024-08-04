@@ -294,26 +294,26 @@
         userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`;
         userPhoto.classList.add('user-photo');
         userPhoto.onload = function() {
-          // Verificar el tamaño de la imagen
+
+          // Si la imagen es muy pequeña, reemplazarla con el ícono de Iconify
           if (userPhoto.naturalWidth <= 1 || userPhoto.naturalHeight <= 1) {
-            // Si la imagen es muy pequeña, reemplazarla con el ícono de Iconify
             userPhoto.remove();
             const icon = document.createElement('iconify-icon');
             icon.icon = 'fluent-emoji-flat:person-zombie';
-            icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
-            icon.style = 'font-size: 40px'; // Ajusta el ancho
+            icon.classList.add('user-photo');
+            icon.style = 'font-size: 40px'; // Ajusta el tamaño del ícono
             icon.style.borderRadius = '50%'; // Asegura que sea circular
             userInfo.insertBefore(icon, userInfo.firstChild);
           }
         };
+
         userPhoto.onerror = function() {
           // Si la imagen no se carga, reemplazarla con el ícono de Iconify
           userPhoto.remove();
           const icon = document.createElement('iconify-icon');
           icon.icon = 'fluent-emoji-flat:person-zombie';
-          icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
-          icon.style.width = '40px'; // Ajusta el ancho
-          icon.style.height = '40px'; // Ajusta el alto
+          icon.classList.add('user-photo');
+          icon.style = 'font-size: 40px'; // Ajusta el tamaño del ícono
           icon.style.borderRadius = '50%'; // Asegura que sea circular
           userInfo.insertBefore(icon, userInfo.firstChild);
         };
