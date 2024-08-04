@@ -285,6 +285,7 @@
     document.getElementById('coinImage').addEventListener('click', handleClick);
     
     // Mostrar el nombre del usuario
+    // Mostrar el nombre del usuario
     window.onload = function() {
       if (user) {
         const userInfo = document.getElementById('user-info');
@@ -300,7 +301,7 @@
             userPhoto.remove();
             const icon = document.createElement('iconify-icon');
             icon.icon = 'fluent-emoji-flat:person-zombie';
-            icon.classList.add('user-photo');
+            icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
             userInfo.insertBefore(icon, userInfo.firstChild);
           }
         };
@@ -309,7 +310,7 @@
           userPhoto.remove();
           const icon = document.createElement('iconify-icon');
           icon.icon = 'fluent-emoji-flat:person-zombie';
-          icon.classList.add('user-photo');
+          icon.classList.add('user-photo'); // Asegúrate de que tenga la misma clase
           userInfo.insertBefore(icon, userInfo.firstChild);
         };
 
