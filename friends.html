@@ -360,13 +360,18 @@
 
                         referralItem.appendChild(userPhoto);
 
+                        const referralNameContainer = document.createElement('div');
+                        referralNameContainer.style = 'flex: 1;';
+
                         const referralName = document.createElement('h4');
                         referralName.style = 'margin-left: 10px;';
                         referralName.textContent = name;
-                        referralItem.appendChild(referralName);
+                        referralNameContainer.appendChild(referralName);
+
+                        referralItem.appendChild(referralNameContainer);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: auto; color: yellow;';
+                        scoreText.style = 'color: yellow;';
                         scoreText.textContent = `Score: ${scores[index]}`;
                         referralItem.appendChild(scoreText);
 
