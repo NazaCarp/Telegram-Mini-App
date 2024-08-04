@@ -334,52 +334,50 @@
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
                         const referralItem = document.createElement('div');
-                        referralItem.style = 'display: flex; align-items: center; justify-content: space-between; margin: 10px 0;';
-
-                        const leftContent = document.createElement('div');
-                        leftContent.style = 'display: flex; align-items: center;';
+                        referralItem.style = 'display: flex; align-items: center; margin: 10px 0; width: 100%;';
 
                         const userPhoto = document.createElement('img');
                         userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
                         userPhoto.classList.add('user-photo');
+                        userPhoto.style = 'width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;';
                         userPhoto.onload = function() {
                             if (userPhoto.naturalWidth <= 1 || userPhoto.naturalHeight <= 1) {
                                 userPhoto.remove();
                                 const icon = document.createElement('iconify-icon');
                                 icon.icon = 'fluent-emoji-flat:person-zombie';
-                                icon.style = 'font-size: 40px';
-                                icon.classList.add('user-photo');
-                                leftContent.insertBefore(icon, leftContent.firstChild);
+                                icon.style = 'font-size: 40px; margin-right: 10px;';
+                                referralItem.insertBefore(icon, referralItem.firstChild);
                             }
                         };
                         userPhoto.onerror = function() {
                             userPhoto.remove();
                             const icon = document.createElement('iconify-icon');
                             icon.icon = 'fluent-emoji-flat:person-zombie';
-                            icon.style = 'font-size: 40px';
-                            icon.classList.add('user-photo');
-                            leftContent.insertBefore(icon, leftContent.firstChild);
+                            icon.style = 'font-size: 40px; margin-right: 10px;';
+                            referralItem.insertBefore(icon, referralItem.firstChild);
                         };
 
-                        leftContent.appendChild(userPhoto);
+                        referralItem.appendChild(userPhoto);
+
+                        const textContainer = document.createElement('div');
+                        textContainer.style = 'display: flex; justify-content: space-between; align-items: center; flex-grow: 1;';
 
                         const referralName = document.createElement('h4');
-                        referralName.style = 'margin-left: 10px;';
+                        referralName.style = 'margin: 0;';
                         referralName.textContent = name;
-                        leftContent.appendChild(referralName);
-
-                        referralItem.appendChild(leftContent);
+                        textContainer.appendChild(referralName);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'color: yellow;';
+                        scoreText.style = 'margin: 0; color: yellow;';
                         scoreText.textContent = `Score: ${scores[index]}`;
-                        referralItem.appendChild(scoreText);
+                        textContainer.appendChild(scoreText);
+
+                        referralItem.appendChild(textContainer);
 
                         scrollableContent.appendChild(referralItem);
                     });
                 }
 
-                // Actualizar el texto de "List of your friends" con el valor de referrals_count
                 friendsListLabel.textContent = `List of your friends (${data.referrals_count})`;
             }
 
