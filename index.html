@@ -286,36 +286,28 @@
     
     // Mostrar el nombre del usuario
     window.onload = function() {
-    if (user) {
-      const userInfo = document.getElementById('user-info');
-      
-      // Crear el elemento de la imagen
-      const userPhoto = document.createElement('img');
-      userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`; // URL de la imagen del usuario
-      userPhoto.alt = name; // Texto alternativo para la imagen
-      userPhoto.classList.add('user-photo'); // Añadir la clase para el estilo
-      
-      // Manejar el error de carga de la imagen
-      userPhoto.onerror = function() {
-        // Eliminar la imagen que no se pudo cargar
-        userInfo.removeChild(userPhoto);
+      if (user) {
+        const userInfo = document.getElementById('user-info');
         
-        // Crear el ícono de Iconify
-        const iconifyIcon = document.createElement('iconify-icon');
-        iconifyIcon.icon = 'fluent-emoji-flat:person-zombie';
-        iconifyIcon.classList.add('user-photo'); // Añadir la clase para el estilo
-        
-        // Añadir el ícono al contenedor
-        userInfo.appendChild(iconifyIcon);
-      };
-      
-      // Crear el elemento del nombre
-      const userName = document.createElement('span');
-      userName.textContent = name;
-      
-      // Añadir la imagen y el nombre al contenedor
-      userInfo.appendChild(userPhoto);
-      userInfo.appendChild(userName);
+        // Crear el elemento de la foto de perfil
+        const userPhoto = document.createElement('img');
+        userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`;
+        userPhoto.classList.add('user-photo');
+        userPhoto.onerror = function() {
+          // Si la imagen no se carga, reemplazarla con el ícono de Iconify
+          userPhoto.remove();
+          const icon = document.createElement('iconify-icon');
+          icon.icon = 'fluent-emoji-flat:person-zombie';
+          icon.classList.add('user-photo');
+          userInfo.insertBefore(icon, userInfo.firstChild);
+        };
+
+        // Crear el elemento del nombre de perfil
+        const userName = document.createElement('span');
+        userName.textContent = name;
+
+        userInfo.appendChild(userPhoto);
+        userInfo.appendChild(userName);
       }
       loadAndUpdateCounters();
     };
