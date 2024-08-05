@@ -19,27 +19,24 @@
             user-select: none; /* Evita que la imagen sea seleccionable */
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
+        * {
+            margin: 0px;
+        }
+        h4 {
+            margin: 10px;
+            margin-bottom: 20px;
+        }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
         }
-        .score {
-            color: yellow;
-            margin-top: 30px;
-            font-size: 24px;
-        }
-        .boosters {
-            margin-top: 20px;
-            font-size: 20px;
-        }
         .rectangles {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            margin-top: 20px;
         }
         .rectangle {
             display: flex;
@@ -53,18 +50,6 @@
         .icon {
             margin: 10px;
             font-size: 52px;
-        }
-        .text {
-            display: flex;
-            flex-direction: column;
-        }
-        .text h3 {
-            margin: 0;
-        }
-        .text p {
-            margin: 0;
-            color: yellow;
-            font-weight: bold;
         }
         .navbar {
             display: flex;
@@ -110,8 +95,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="score" id="score">0</div>
-        <div class="boosters">Boosters</div>
+        <h1 style="margin-top: 30px;">Boosters</h1>
         <div class="rectangles">
             <div class="rectangle">
                 <div class="icon">
@@ -119,10 +103,7 @@
                 </div>
                 <div class="text">
                     <h3>Multitap</h3>
-                    <p>1000</p>
-                </div>
-                <div class="text">
-                    <p>Level 1</p>
+                    <p><span style="color: yellow; font-weight: bolder;">1000</span> Level 1</p>
                 </div>
             </div>
             <div class="rectangle">
@@ -131,10 +112,7 @@
                 </div>
                 <div class="text">
                     <h3>Energy limit</h3>
-                    <p>1000</p>
-                </div>
-                <div class="text">
-                    <p>Level 1</p>
+                    <p><span style="color: yellow; font-weight: bold;">1000</span> Level 1</p>
                 </div>
             </div>
         </div>
@@ -147,20 +125,11 @@
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tg = window.Telegram.WebApp;
-            const scoreElement = document.getElementById('score');
-
-            // Obtener el score desde el almacenamiento local o de alguna otra fuente
-            const score = localStorage.getItem('score') || 0;
-            scoreElement.textContent = score;
-
-            tg.onEvent('backButtonClicked', () => {
-                window.location.href = 'index.html';
-            });
-
-            tg.ready();
+        const tg = window.Telegram.WebApp;
+        tg.onEvent('backButtonClicked', () => {
+            window.location.href = 'index.html';
         });
+        tg.ready();
     </script>
 </body>
 </html>
