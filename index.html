@@ -227,6 +227,9 @@
       document.getElementById('score').textContent = score;
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
 
+      // Guardar el score en localStorage
+      localStorage.setItem('score', score);
+
       // Iniciar el intervalo para incrementar el contador secundario cada segundo
       setInterval(incrementSecondaryCounter, 1000);
     }
@@ -270,6 +273,9 @@
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
+
+        // Guardar el score en localStorage
+        localStorage.setItem('score', score);
       }
     }
 
