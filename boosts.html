@@ -198,6 +198,9 @@
     <script>
         document.querySelectorAll('.rectangle').forEach(rectangle => {
             rectangle.addEventListener('click', () => {
+                document.querySelector('.container').classList.add('blur-content');
+                document.querySelector('.navbar').classList.add('blur-content');
+                
                 const target = rectangle.getAttribute('data-target');
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3').innerText;
@@ -205,8 +208,6 @@
                 document.getElementById('dropdownIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
                 document.getElementById('dropdownText').innerText = text;
                 document.getElementById('dropdownMenu').style.display = 'block';
-                document.querySelector('.container').classList.add('blur-content');
-                document.querySelector('.navbar').classList.add('blur-content');
             });
         });
 
