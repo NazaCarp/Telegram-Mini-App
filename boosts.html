@@ -18,6 +18,7 @@
             align-items: center;
             user-select: none; /* Evita que la imagen sea seleccionable */
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+            transition: filter 0.3s ease;
         }
         * {
             margin: 0px;
@@ -116,6 +117,11 @@
             right: 10px;
             cursor: pointer;
         }
+        .blur-content {
+            filter: blur(5px);
+            pointer-events: none;
+            transition: filter 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -184,6 +190,8 @@
                 document.getElementById('dropdownIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
                 document.getElementById('dropdownText').innerText = text;
                 document.getElementById('dropdownMenu').style.display = 'block';
+                document.querySelector('.container').classList.add('blur-content');
+                document.querySelector('.navbar').classList.add('blur-content');
             });
         });
 
@@ -191,11 +199,15 @@
             const dropdown = document.getElementById('dropdownMenu');
             if (!dropdown.contains(event.target) && event.target.closest('.rectangle') === null) {
                 dropdown.style.display = 'none';
+                document.querySelector('.container').classList.remove('blur-content');
+                document.querySelector('.navbar').classList.remove('blur-content');
             }
         });
 
         function closeDropdown() {
             document.getElementById('dropdownMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
         }
     </script>
 </body>
