@@ -153,6 +153,35 @@
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
         }
+        .cost {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .cost.yellow {
+            color: yellow;
+        }
+        .cost.gray {
+            color: gray;
+        }
+        .action-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .action-button.active {
+            background-color: #4CAF50; /* Verde */
+            color: white;
+        }
+        .action-button.inactive {
+            background-color: #808080; /* Gris */
+            color: white;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -162,7 +191,7 @@
         <h5>Balance</h5>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h2>
         <div class="rectangles">
-            <div class="rectangle" data-target="multitap">
+            <div class="rectangle" data-target="multitap" data-cost="1000">
                 <div class="icon">
                     <iconify-icon icon="hugeicons:tap-06"></iconify-icon>
                 </div>
@@ -174,7 +203,7 @@
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-target="energy-limit">
+            <div class="rectangle" data-target="energy-limit" data-cost="1000">
                 <div class="icon">
                     <iconify-icon icon="mdi:battery-plus-outline"></iconify-icon>
                 </div>
@@ -186,7 +215,7 @@
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-target="recharge-speed">
+            <div class="rectangle" data-target="recharge-speed" data-cost="1000">
                 <div class="icon">
                     <iconify-icon icon="bi:battery-charging"></iconify-icon>
                 </div>
@@ -213,6 +242,8 @@
         <div class="alert-text" id="alertText"></div>
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="second-subtitle" id="alertSecondSubtitle"></div>
+        <div class="cost" id="alertCost"></div>
+        <button class="action-button" id="actionButton">Buy</button>
     </div>
     <script>
         const subtitles = {
@@ -234,13 +265,20 @@
                 const text = rectangle.querySelector('.text h3').innerText;
                 const subtitle = subtitles[target];
                 const secondSubtitle = secondSubtitles[target];
+                const cost = rectangle.getAttribute('data-cost');
+                const score = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
+                const costColor = parseInt(cost) <= score ? 'yellow' : 'gray';
+                const buttonClass = parseInt(cost) <= score ? 'active' : 'inactive';
 
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertSubtitle').innerText = subtitle;
-                document.getElementById('alertSubtitle').style = "margin-top: 30px"
                 document.getElementById('alertSecondSubtitle').innerText = secondSubtitle;
-                document.getElementById('alertSecondSubtitle').style = "margin-top: 15px"
+                document.getElementById('alertCost').innerHTML = `<p style="font-size: 48px; margin-top: 20px"><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
+                document.getElementById('alertCost').classList.remove('yellow', 'gray');
+                document.getElementById('alertCost').classList.add(costColor);
+                document.getElementById('actionButton').classList.remove('active', 'inactive');
+                document.getElementById('actionButton').classList.add(buttonClass);
                 document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
