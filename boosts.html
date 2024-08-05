@@ -104,7 +104,7 @@
             display: none;
             position: fixed;
             bottom: 80px;
-            width: 90%;
+            width: 50%;
             background-color: #333;
             border-radius: 20px;
             padding: 20px;
@@ -122,9 +122,24 @@
             pointer-events: none;
             transition: filter 0.3s ease;
         }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .back-button iconify-icon {
+            margin-right: 5px;
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
+    <a href="index.html" class="back-button"><iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>Back</a>
     <div class="container">
         <div class="score" id="score" style="color: yellow"><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon>0</div>
         <h5>Balance</h5>
