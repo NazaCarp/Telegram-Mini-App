@@ -106,7 +106,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50%;
+            width: 90%;
             max-width: 400px;
             background-color: #333;
             border-radius: 20px;
@@ -139,6 +139,11 @@
         .back-button iconify-icon {
             margin-right: 5px;
             font-size: 24px;
+        }
+        .subtitle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
         }
     </style>
 </head>
@@ -198,16 +203,25 @@
         <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="mdi:close"></iconify-icon></div>
         <div class="icon" id="alertIcon"></div>
         <div class="text" id="alertText"></div>
+        <div class="subtitle" id="alertSubtitle"></div>
     </div>
     <script>
+        const subtitles = {
+            "multitap": "Increase the amount of coins you can earn per tap",
+            "energy-limit": "Increase the amount of total energy",
+            "recharge-speed": "Increase the speed of recharge of your energy"
+        };
+
         document.querySelectorAll('.rectangle').forEach(rectangle => {
             rectangle.addEventListener('click', () => {
                 const target = rectangle.getAttribute('data-target');
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3').innerText;
+                const subtitle = subtitles[target];
 
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
+                document.getElementById('alertSubtitle').innerText = subtitle;
                 document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
