@@ -37,6 +37,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            margin-top: 5px;
         }
         .rectangle {
             display: flex;
@@ -46,10 +47,11 @@
             width: 95%;
             margin: 5px;
             padding: 5px;
+            cursor: pointer;
         }
         .icon {
             margin: 10px;
-            font-size: 52px;
+            font-size: 45px;
         }
         .navbar {
             display: flex;
@@ -91,28 +93,86 @@
             background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
+        .score {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 48px;
+        }
+        .popup-menu {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            border-radius: 50px 50px 0 0;
+            transition: bottom 0.5s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .popup-menu.active {
+            bottom: 0;
+        }
+        .popup-menu .icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        .popup-menu .text {
+            font-size: 24px;
+            text-align: center;
+        }
+        .popup-menu .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="margin-top: 30px;">Boosters</h1>
+        <div class="score" id="score" style="color: yellow"><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon>0</div>
+        <h5>Balance</h5>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h2>
         <div class="rectangles">
-            <div class="rectangle">
+            <div class="rectangle" data-icon="hugeicons:tap-06" data-text="Multitap">
                 <div class="icon">
                     <iconify-icon icon="hugeicons:tap-06"></iconify-icon>
                 </div>
                 <div class="text">
                     <h3>Multitap</h3>
-                    <p><span style="color: yellow; font-weight: bolder;">1000</span> Level 1</p>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
+                </div>
+                <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle">
+            <div class="rectangle" data-icon="mdi:battery-plus-outline" data-text="Energy limit">
+                <div class="icon">
+                    <iconify-icon icon="mdi:battery-plus-outline"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3>Energy limit</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
+                </div>
+                <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+            <div class="rectangle" data-icon="bi:battery-charging" data-text="Recharge speed">
                 <div class="icon">
                     <iconify-icon icon="bi:battery-charging"></iconify-icon>
                 </div>
                 <div class="text">
-                    <h3>Energy limit</h3>
-                    <p><span style="color: yellow; font-weight: bold;">1000</span> Level 1</p>
+                    <h3>Recharge speed</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
+                </div>
+                <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
         </div>
@@ -124,11 +184,57 @@
         <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
     </div>
+    <div class="popup-menu" id="popupMenu">
+        <div class="close-btn" id="closeBtn"><iconify-icon icon="mdi:close"></iconify-icon></div>
+        <div class="icon" id="popupIcon"></div>
+        <div class="text" id="popupText"></div>
+    </div>
     <script>
         const tg = window.Telegram.WebApp;
+        let score = 0;
+
+        async function loadAndUpdateCounters() {
+            const user_id = tg.initDataUnsafe.user.id;
+            const response = await fetch(`/get_counters?user_id=${user_id}`);
+            const data = await response.json();
+            score = data.score;
+            document.getElementById('score').textContent = score;
+        }
+
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
         });
+
+        window.onload = function() {
+            loadAndUpdateCounters();
+
+            const rectangles = document.querySelectorAll('.rectangle');
+            const popupMenu = document.getElementById('popupMenu');
+            const popupIcon = document.getElementById('popupIcon');
+            const popupText = document.getElementById('popupText');
+            const closeBtn = document.getElementById('closeBtn');
+
+            rectangles.forEach(rect => {
+                rect.addEventListener('click', () => {
+                    const icon = rect.getAttribute('data-icon');
+                    const text = rect.getAttribute('data-text');
+                    popupIcon.innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
+                    popupText.textContent = text;
+                    popupMenu.classList.add('active');
+                });
+            });
+
+            closeBtn.addEventListener('click', () => {
+                popupMenu.classList.remove('active');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!popupMenu.contains(event.target) && event.target !== closeBtn) {
+                    popupMenu.classList.remove('active');
+                }
+            });
+        };
+
         tg.ready();
     </script>
 </body>
