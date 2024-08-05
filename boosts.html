@@ -250,7 +250,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const storedScore = localStorage.getItem('score');
             if (storedScore !== null) {
-                document.getElementById('score').innerText = `<iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${storedScore}`;
+                document.getElementById('score').innerText = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${storedScore}</p>`;
             }
         });
         const subtitles = {
