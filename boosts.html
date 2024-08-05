@@ -316,6 +316,7 @@
                 localStorage.setItem('score', newScore);
 
                 // Actualizar el score en Supabase
+                const tg = window.Telegram.WebApp;
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch('/update_counters', {
                     method: 'POST',
