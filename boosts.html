@@ -100,18 +100,22 @@
             margin-top: 20px;
             font-size: 48px;
         }
-        .dropdown-menu {
+        .alert-menu {
             display: none;
             position: fixed;
-            bottom: 80px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 50%;
+            max-width: 400px;
             background-color: #333;
             border-radius: 20px;
             padding: 20px;
             text-align: center;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
-        .dropdown-menu .close {
+        .alert-menu .close {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -190,38 +194,37 @@
         <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
     </div>
-    <div class="dropdown-menu" id="dropdownMenu">
-        <div class="close" onclick="closeDropdown()"><iconify-icon icon="mdi:close"></iconify-icon></div>
-        <div class="icon" id="dropdownIcon"></div>
-        <div class="text" id="dropdownText"></div>
+    <div class="alert-menu" id="alertMenu">
+        <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="mdi:close"></iconify-icon></div>
+        <div class="icon" id="alertIcon"></div>
+        <div class="text" id="alertText"></div>
     </div>
     <script>
         document.querySelectorAll('.rectangle').forEach(rectangle => {
             rectangle.addEventListener('click', () => {
-                document.querySelector('.container').classList.add('blur-content');
-                document.querySelector('.navbar').classList.add('blur-content');
-                
                 const target = rectangle.getAttribute('data-target');
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3').innerText;
 
-                document.getElementById('dropdownIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
-                document.getElementById('dropdownText').innerText = text;
-                document.getElementById('dropdownMenu').style.display = 'block';
+                document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
+                document.getElementById('alertText').innerText = text;
+                document.getElementById('alertMenu').style.display = 'block';
+                document.querySelector('.container').classList.add('blur-content');
+                document.querySelector('.navbar').classList.add('blur-content');
             });
         });
 
         document.addEventListener('click', (event) => {
-            const dropdown = document.getElementById('dropdownMenu');
-            if (!dropdown.contains(event.target) && event.target.closest('.rectangle') === null) {
-                dropdown.style.display = 'none';
+            const alertMenu = document.getElementById('alertMenu');
+            if (!alertMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
+                alertMenu.style.display = 'none';
                 document.querySelector('.container').classList.remove('blur-content');
                 document.querySelector('.navbar').classList.remove('blur-content');
             }
         });
 
-        function closeDropdown() {
-            document.getElementById('dropdownMenu').style.display = 'none';
+        function closeAlertMenu() {
+            document.getElementById('alertMenu').style.display = 'none';
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
