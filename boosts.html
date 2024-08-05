@@ -140,22 +140,22 @@
             margin-right: 5px;
             font-size: 24px;
         }
-        .subtitle {
-            margin-top: 10px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
         .alert-text {
             font-size: 24px; /* Tamaño del título en los rectángulos */
         }
+        .subtitle {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
         .second-subtitle {
-            margin-top: 5px;
+            margin-top: 10px;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
         }
         .cost {
-            margin-top: 10px;
-            font-size: 18px;
+            font-size: 48px;
+            margin-top: 25px;
             font-weight: bold;
         }
         .cost.yellow {
@@ -271,11 +271,11 @@
                 const costColor = parseInt(cost) <= score ? 'yellow' : 'gray';
                 const buttonClass = parseInt(cost) <= score ? 'active' : 'inactive';
 
-                document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
+                document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style= "font-size: 80px"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertSubtitle').innerText = subtitle;
                 document.getElementById('alertSecondSubtitle').innerText = secondSubtitle;
-                document.getElementById('alertCost').innerHTML = `<p style="font-size: 48px; margin-top: 20px"><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
+                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
                 document.getElementById('alertCost').classList.remove('yellow', 'gray');
                 document.getElementById('alertCost').classList.add(costColor);
                 document.getElementById('actionButton').classList.remove('active', 'inactive');
