@@ -145,6 +145,14 @@
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
         }
+        .alert-text {
+            font-size: 24px; /* Tamaño del título en los rectángulos */
+        }
+        .second-subtitle {
+            margin-top: 5px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -202,8 +210,9 @@
     <div class="alert-menu" id="alertMenu">
         <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="mdi:close"></iconify-icon></div>
         <div class="icon" id="alertIcon"></div>
-        <div class="text" id="alertText"></div>
+        <div class="alert-text" id="alertText"></div>
         <div class="subtitle" id="alertSubtitle"></div>
+        <div class="second-subtitle" id="alertSecondSubtitle"></div>
     </div>
     <script>
         const subtitles = {
@@ -212,16 +221,26 @@
             "recharge-speed": "Increase the speed of recharge of your energy"
         };
 
+        const secondSubtitles = {
+            "multitap": "+1 coin for tap for level",
+            "energy-limit": "+500 energy points for level",
+            "recharge-speed": "+1 energy for second for level"
+        };
+
         document.querySelectorAll('.rectangle').forEach(rectangle => {
             rectangle.addEventListener('click', () => {
                 const target = rectangle.getAttribute('data-target');
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3').innerText;
                 const subtitle = subtitles[target];
+                const secondSubtitle = secondSubtitles[target];
 
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertSubtitle').innerText = subtitle;
+                document.getElementById('alertSubtitle').style = "margin-top: 30px"
+                document.getElementById('alertSecondSubtitle').innerText = secondSubtitle;
+                document.getElementById('alertSecondSubtitle').style = "margin-top: 15px"
                 document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
