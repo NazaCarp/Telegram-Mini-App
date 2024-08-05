@@ -250,16 +250,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             const storedScore = localStorage.getItem('score');
             if (storedScore !== null) {
-                document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore} </p>`;
+                document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore}</p>`;
             }
-
-            const tg = window.Telegram.WebApp;
-            tg.onEvent('backButtonClicked', () => {
-                window.location.href = 'index.html';
-            });
-            tg.ready();
         });
-
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
             "energy-limit": "Increase the amount of total energy",
