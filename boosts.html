@@ -198,7 +198,7 @@
             const response = await fetch(`/get_counters?user_id=${user_id}`);
             const data = await response.json();
             score = data.score;
-            document.getElementById('score').textContent = `<iconify-icon icon="twemoji:coin"></iconify-icon>${score}`;
+            document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin"></iconify-icon>${score}`;
         }
 
         tg.onEvent('backButtonClicked', () => {
