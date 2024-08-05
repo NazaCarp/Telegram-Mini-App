@@ -254,6 +254,7 @@
             }
 
             const tg = window.Telegram.WebApp;
+            tg.BackButton.show(); // Mostrar el botón de retroceso
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
             });
