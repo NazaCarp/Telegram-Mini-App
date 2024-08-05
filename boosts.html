@@ -99,33 +99,22 @@
             margin-top: 20px;
             font-size: 48px;
         }
-        .menu {
+        .dropdown-menu {
+            display: none;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            bottom: 80px;
+            width: 90%;
             background-color: #333;
-            border-radius: 20px 20px 0 0;
+            border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-            transform: translateY(100%);
-            transition: transform 0.3s ease-in-out;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
-        .menu.active {
-            transform: translateY(0);
-        }
-        .menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .menu-header .icon {
-            font-size: 30px;
-        }
-        .menu-header .close {
+        .dropdown-menu .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             cursor: pointer;
-            font-size: 24px;
         }
     </style>
 </head>
@@ -135,7 +124,7 @@
         <h5>Balance</h5>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h2>
         <div class="rectangles">
-            <div class="rectangle" data-title="Multitap">
+            <div class="rectangle" data-target="multitap">
                 <div class="icon">
                     <iconify-icon icon="hugeicons:tap-06"></iconify-icon>
                 </div>
@@ -147,7 +136,7 @@
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-title="Energy limit">
+            <div class="rectangle" data-target="energy-limit">
                 <div class="icon">
                     <iconify-icon icon="mdi:battery-plus-outline"></iconify-icon>
                 </div>
@@ -159,7 +148,7 @@
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-title="Recharge speed">
+            <div class="rectangle" data-target="recharge-speed">
                 <div class="icon">
                     <iconify-icon icon="bi:battery-charging"></iconify-icon>
                 </div>
@@ -180,59 +169,34 @@
         <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
     </div>
-    <div class="menu" id="menu">
-        <div class="menu-header">
-            <div class="icon" id="menuIcon"></div>
-            <div class="close" id="closeMenu">X</div>
-        </div>
-        <div class="menu-content" id="menuContent"></div>
+    <div class="dropdown-menu" id="dropdownMenu">
+        <div class="close" onclick="closeDropdown()"><iconify-icon icon="mdi:close"></iconify-icon></div>
+        <div class="icon" id="dropdownIcon"></div>
+        <div class="text" id="dropdownText"></div>
     </div>
     <script>
-        const tg = window.Telegram.WebApp;
-        let score = 0;
+        document.querySelectorAll('.rectangle').forEach(rectangle => {
+            rectangle.addEventListener('click', () => {
+                const target = rectangle.getAttribute('data-target');
+                const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
+                const text = rectangle.querySelector('.text h3').innerText;
 
-        async function loadAndUpdateCounters() {
-            const user_id = tg.initDataUnsafe.user.id;
-            const response = await fetch(`/get_counters?user_id=${user_id}`);
-            const data = await response.json();
-            score = data.score;
-            document.getElementById('score').textContent = score;
-        }
+                document.getElementById('dropdownIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
+                document.getElementById('dropdownText').innerText = text;
+                document.getElementById('dropdownMenu').style.display = 'block';
+            });
+        });
 
-        tg.onEvent('backButtonClicked', () => {
-            if (document.getElementById('menu').classList.contains('active')) {
-                closeMenu();
-            } else {
-                window.location.href = 'index.html';
+        document.addEventListener('click', (event) => {
+            const dropdown = document.getElementById('dropdownMenu');
+            if (!dropdown.contains(event.target) && event.target.closest('.rectangle') === null) {
+                dropdown.style.display = 'none';
             }
         });
 
-        window.onload = function() {
-            loadAndUpdateCounters();
-            document.querySelectorAll('.rectangle').forEach(rect => {
-                rect.addEventListener('click', () => openMenu(rect));
-            });
-            document.getElementById('closeMenu').addEventListener('click', closeMenu);
-            document.addEventListener('click', (event) => {
-                if (!document.getElementById('menu').contains(event.target) && document.getElementById('menu').classList.contains('active')) {
-                    closeMenu();
-                }
-            });
-        };
-
-        function openMenu(rect) {
-            const icon = rect.querySelector('.icon iconify-icon').getAttribute('icon');
-            const title = rect.getAttribute('data-title');
-            document.getElementById('menuIcon').innerHTML = `<iconify-icon icon="${icon}"></iconify-icon>`;
-            document.getElementById('menuContent').textContent = title;
-            document.getElementById('menu').classList.add('active');
+        function closeDropdown() {
+            document.getElementById('dropdownMenu').style.display = 'none';
         }
-
-        function closeMenu() {
-            document.getElementById('menu').classList.remove('active');
-        }
-
-        tg.ready();
     </script>
 </body>
 </html>
