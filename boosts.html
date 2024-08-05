@@ -247,6 +247,12 @@
         <button class="action-button" id="actionButton">Buy</button>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedScore = localStorage.getItem('score');
+            if (storedScore !== null) {
+                document.getElementById('score').innerText = storedScore;
+            }
+        });
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
             "energy-limit": "Increase the amount of total energy",
