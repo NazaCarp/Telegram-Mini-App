@@ -364,12 +364,12 @@
             const data = await response.json();
 
             document.getElementById('multitapLevel').innerText = data.tap;
-            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500);
+            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500 - 1);
             document.getElementById('rechargeSpeedLevel').innerText = data.recharge_speed;
 
             // Calcular los costos basados en los valores de las variables
             document.getElementById('multitapCost').innerText = 2000 * Math.pow(2, data.tap - 1);
-            document.getElementById('energyLimitCost').innerText = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 1);
+            document.getElementById('energyLimitCost').innerText = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
             document.getElementById('rechargeSpeedCost').innerText = 2000 * Math.pow(2, data.recharge_speed - 1);
 
             // Actualizar los datos de costo en los rectángulos
