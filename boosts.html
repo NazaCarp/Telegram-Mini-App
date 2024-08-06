@@ -198,7 +198,7 @@
                 </div>
                 <div class="text">
                     <h3>Multitap</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level <span id="multitapLevel">1</span></p>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="multitapCost">1000</span></span> • Level <span id="multitapLevel">1</span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
@@ -210,7 +210,7 @@
                 </div>
                 <div class="text">
                     <h3>Energy limit</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level <span id="energyLimitLevel">1</span></p>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="energyLimitCost">1000</span></span> • Level <span id="energyLimitLevel">1</span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
@@ -222,7 +222,7 @@
                 </div>
                 <div class="text">
                     <h3>Recharge speed</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level <span id="rechargeSpeedLevel">1</span></p>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="rechargeSpeedCost">1000</span></span> • Level <span id="rechargeSpeedLevel">1</span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
@@ -360,6 +360,16 @@
             document.getElementById('multitapLevel').innerText = data.tap;
             document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500);
             document.getElementById('rechargeSpeedLevel').innerText = data.recharge_speed;
+
+            // Calcular los costos basados en los valores de las variables
+            document.getElementById('multitapCost').innerText = 2000 * Math.pow(2, data.tap - 1);
+            document.getElementById('energyLimitCost').innerText = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 1);
+            document.getElementById('rechargeSpeedCost').innerText = 2000 * Math.pow(2, data.recharge_speed - 1);
+
+            // Actualizar los datos de costo en los rectángulos
+            document.querySelector('[data-target="multitap"]').setAttribute('data-cost', document.getElementById('multitapCost').innerText);
+            document.querySelector('[data-target="energy-limit"]').setAttribute('data-cost', document.getElementById('energyLimitCost').innerText);
+            document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', document.getElementById('rechargeSpeedCost').innerText);
         }
 
         window.onload = function() {
