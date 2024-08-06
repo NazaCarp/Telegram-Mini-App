@@ -6,18 +6,22 @@ import logging
 
 app = Flask(__name__, template_folder='.')
 
+
 @app.route('/')
 @app.route('/index.html')
 def index():
     return render_template('index.html')
 
+
 @app.route('/friends.html')
 def serve_friends():
     return render_template('friends.html')
 
+
 @app.route('/boosts.html')
 def serve_boosts():
     return render_template('boosts.html')
+
 
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
@@ -69,6 +73,7 @@ def get_counters():
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/update_counters', methods=['POST'])
 def update_counters():
     data = request.get_json()
@@ -95,7 +100,8 @@ def update_counters():
     except Exception as e:
         logging.error(f"Error in update_counters: {e}")
         return jsonify({'error': str(e)}), 500
-    
+
+
 @app.route('/get_referrals', methods=['GET'])
 def get_referrals():
     user_id = request.args.get('user_id')
@@ -128,6 +134,7 @@ def get_referrals():
         logging.error(f"Error in get_referrals: {e}")
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/get_user_data', methods=['GET'])
 def get_user_data():
     user_id = request.args.get('user_id')
@@ -149,6 +156,39 @@ def get_user_data():
     except Exception as e:
         logging.error(f"Error in get_user_data: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/update_boost', methods=['POST'])
+def update_boost():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    score = data.get('score')
+    boost_type = data.get('boost_type')
+    cost = data.get('cost')
+
+    if not all([user_id, score, boost_type, cost]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    try:
+        db = SessionLocal()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        if not counter:
+            return jsonify({'error': 'User not found'}), 404
+
+        counter.score = score
+        if boost_type == 'multitap':
+            counter.tap += 1
+        elif boost_type == 'energy_limit':
+            counter.energy_limit = (counter.energy_limit or 1000) + 500
+        elif boost_type == 'recharge_speed':
+            counter.recharge_speed = (counter.recharge_speed or 1) + 1
+
+        db.commit()
+        return jsonify({'status': 'success'})
     
+    except Exception as e:
+        logging.error(f"Error in update_boost: {e}")
+        return jsonify({'error': str(e)}), 500
+    
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

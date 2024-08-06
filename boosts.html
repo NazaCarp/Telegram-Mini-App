@@ -300,6 +300,43 @@
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
+
+        document.getElementById('actionButton').addEventListener('click', async function() {
+            const tg = window.Telegram.WebApp;
+            const user = tg.initDataUnsafe.user;
+            const user_id = user.id;
+            const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
+            const currentScore = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
+            const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
+
+            if (currentScore >= cost) {
+                const newScore = currentScore - cost;
+                const response = await fetch('/update_boost', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: user_id,
+                        score: newScore,
+                        boost_type: boostType,
+                        cost: cost
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    document.getElementById('score').innerText = newScore;
+                    closeAlertMenu();
+                    // Actualiza la interfaz según sea necesario
+                } else {
+                    alert('Error al actualizar el boost');
+                }
+            } else {
+                alert('No tienes suficientes monedas para comprar este boost');
+            }
+        });
+        
         const tg = window.Telegram.WebApp;
         
         async function loadScore() {
@@ -311,7 +348,7 @@
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
-                document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score}</p>`;
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score}`;
             }
         }
 
