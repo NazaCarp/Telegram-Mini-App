@@ -364,26 +364,30 @@
             const data = await response.json();
 
             document.getElementById('multitapLevel').innerText = data.tap;
-            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500 - 1);
+            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500);
             document.getElementById('rechargeSpeedLevel').innerText = data.recharge_speed;
 
             // Calcular los costos basados en los valores de las variables
-            document.getElementById('multitapCost').innerText = 2000 * Math.pow(2, data.tap - 1);
-            document.getElementById('energyLimitCost').innerText = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
-            document.getElementById('rechargeSpeedCost').innerText = 2000 * Math.pow(2, data.recharge_speed - 1);
+            const multitapCost = 2000 * Math.pow(2, data.tap - 1);
+            const energyLimitCost = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
+            const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
+
+            document.getElementById('multitapCost').innerText = multitapCost;
+            document.getElementById('energyLimitCost').innerText = energyLimitCost;
+            document.getElementById('rechargeSpeedCost').innerText = rechargeSpeedCost;
 
             // Actualizar los datos de costo en los rectángulos
-            document.querySelector('[data-target="multitap"]').setAttribute('data-cost', document.getElementById('multitapCost').innerText);
-            document.querySelector('[data-target="energy-limit"]').setAttribute('data-cost', document.getElementById('energyLimitCost').innerText);
-            document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', document.getElementById('rechargeSpeedCost').innerText);
+            document.querySelector('[data-target="multitap"]').setAttribute('data-cost', multitapCost);
+            document.querySelector('[data-target="energy-limit"]').setAttribute('data-cost', energyLimitCost);
+            document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', rechargeSpeedCost);
 
             // Guardar los datos en localStorage
             localStorage.setItem('multitapLevel', data.tap);
             localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500) - 1);
             localStorage.setItem('rechargeSpeedLevel', data.recharge_speed);
-            localStorage.setItem('multitapCost', document.getElementById('multitapCost').innerText);
-            localStorage.setItem('energyLimitCost', document.getElementById('energyLimitCost').innerText);
-            localStorage.setItem('rechargeSpeedCost', document.getElementById('rechargeSpeedCost').innerText);
+            localStorage.setItem('multitapCost', multitapCost);
+            localStorage.setItem('energyLimitCost', energyLimitCost);
+            localStorage.setItem('rechargeSpeedCost', rechargeSpeedCost);
         }
 
         window.onload = function() {
