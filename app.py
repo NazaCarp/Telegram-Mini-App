@@ -86,10 +86,8 @@ def update_counters():
             counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
             db.add(counter)
         else:
-            if secondarycount == 1540:
-                counter.score = score
-            else:
-                counter.score = score
+            counter.score = score
+            if secondarycount != 1540:
                 counter.secondarycount = secondarycount
                 counter.timestamp = datetime.utcnow()
         db.commit()
