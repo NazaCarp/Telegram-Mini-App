@@ -303,6 +303,10 @@
         const tg = window.Telegram.WebApp;
         
         async function loadScore() {
+            const storedScore = localStorage.getItem('score');
+            if (storedScore !== null) {
+                document.getElementById('score').innerText = storedScore;
+            }
             const user_id = tg.initDataUnsafe.user.id;
             const response = await fetch(`/get_counters?user_id=${user_id}`);
             const data = await response.json();
