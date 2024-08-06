@@ -159,6 +159,7 @@ def get_user_data():
         logging.error(f"Error in get_user_data: {e}")
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/update_boost', methods=['POST'])
 def update_boost():
     data = request.get_json()
