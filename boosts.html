@@ -198,7 +198,7 @@
                 </div>
                 <div class="text">
                     <h3>Multitap</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level <span id="multitapLevel">1</span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
@@ -210,7 +210,7 @@
                 </div>
                 <div class="text">
                     <h3>Energy limit</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level <span id="energyLimitLevel">1</span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
@@ -222,7 +222,7 @@
                 </div>
                 <div class="text">
                     <h3>Recharge speed</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level <span id="rechargeSpeedLevel">1</span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
@@ -352,8 +352,19 @@
             }
         }
 
+        async function loadUserData() {
+            const user_id = tg.initDataUnsafe.user.id;
+            const response = await fetch(`/get_user_data?user_id=${user_id}`);
+            const data = await response.json();
+
+            document.getElementById('multitapLevel').innerText = data.tap;
+            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500);
+            document.getElementById('rechargeSpeedLevel').innerText = data.recharge_speed;
+        }
+
         window.onload = function() {
             loadScore();
+            loadUserData();
         };
     </script>
 </body>
