@@ -247,27 +247,29 @@
 
     function handleClick(event) {
       if (secondaryCount > 0) {
+        let amountToAdd;
         if ((secondaryCount - tap) > 0){
           secondaryCount -= tap;
-          score += tap;
+          amountToAdd = tap;
         }
         else{
-          score += secondaryCount;
+          amountToAdd = secondaryCount;
           secondaryCount = 0;
         }
+        score += amountToAdd;
         lastTimestamp = Date.now();
         document.getElementById('score').textContent = score;
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`;
 
-        // Mostrar "+tap" en el lugar del clic
+        // Mostrar "+amountToAdd" en el lugar del clic
         let plusTap = document.createElement('div');
         plusTap.className = 'plus-one';
-        plusTap.textContent = `+${tap}`;
+        plusTap.textContent = `+${amountToAdd}`;
         plusTap.style.left = `${event.clientX - 10}px`;
         plusTap.style.top = `${event.clientY - 20}px`;
         document.body.appendChild(plusTap);
 
-        // Ocultar el "+tap" después de 1 segundo
+        // Ocultar el "+amountToAdd" después de 1 segundo
         setTimeout(() => {
           plusTap.remove();
         }, 1000);
