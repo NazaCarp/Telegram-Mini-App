@@ -319,7 +319,7 @@
             const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
             const score = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
             if (cost <= score) {
-                const newScore = score - cost;
+                const newScore = `${score - cost}`;
                 document.getElementById('score').innerText = newScore;
                 localStorage.setItem('score', newScore);
 
