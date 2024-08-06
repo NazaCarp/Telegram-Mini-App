@@ -31,7 +31,7 @@ def get_counters():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, name=name, score=0, secondarycount=0, tap=1)
+            counter = Counter(user_id=user_id, name=name, score=0, secondarycount=0, timestamp=datetime.utcnow(), tap=1, energy_limit=1000, recharge_speed=1)
             db.add(counter)
             db.commit()
 

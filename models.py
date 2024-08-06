@@ -13,6 +13,9 @@ class Counter(Base):
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
     tap = Column(Integer, default=1)
+    energy_limit = Column(Integer, default=1)
+    recharge_speed = Column(Integer, default=1)
+
 
 class Referral(Base):
     __tablename__ = 'referrals'
