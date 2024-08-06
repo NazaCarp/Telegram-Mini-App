@@ -76,8 +76,8 @@ def update_counters():
     score = data.get('score')
     secondarycount = data.get('secondarycount')
 
-    if not user_id or score is None:
-        return jsonify({'error': 'user_id and score are required'}), 400
+    if not user_id or score is None or secondarycount is None:
+        return jsonify({'error': 'user_id, score, and secondarycount are required'}), 400
 
     try:
         db = SessionLocal()
@@ -86,7 +86,7 @@ def update_counters():
             counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
             db.add(counter)
         else:
-            if secondarycount == 100000:
+            if secondarycount == 1540:
                 counter.score = score
             else:
                 counter.score = score
