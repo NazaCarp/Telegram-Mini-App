@@ -319,8 +319,8 @@
             const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
             const score = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
             if (cost <= score) {
-                const newScore = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score - cost}</p>`;
-                document.getElementById('score').innerHTML = newScore;
+                const newScore = score - cost;
+                document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score - cost}</p>`;
                 localStorage.setItem('score', newScore);
 
                 // Actualizar el score en Supabase
@@ -331,7 +331,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: 0 })
+                    body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: 1540 })
                 });
 
                 if (response.ok) {
