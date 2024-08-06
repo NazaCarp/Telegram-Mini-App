@@ -331,7 +331,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: false})
+                    body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: 100000})
                 });
 
                 if (response.ok) {

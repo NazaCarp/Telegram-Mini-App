@@ -86,7 +86,7 @@ def update_counters():
             counter = Counter(user_id=user_id, score=score, secondarycount=secondarycount, timestamp=datetime.utcnow())
             db.add(counter)
         else:
-            if secondarycount is False:
+            if secondarycount == 100000:
                 counter.score = score
             else:
                 counter.score = score
