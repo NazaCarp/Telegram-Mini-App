@@ -376,6 +376,14 @@
         window.onload = function() {
             loadScore();
             loadUserData();
+
+            // Configurar el botón de retroceso
+            tg.onEvent('backButtonClicked', () => {
+                window.location.href = 'index.html';
+            });
+
+            // Mostrar el botón de retroceso
+            tg.BackButton.show();
         };
     </script>
 </body>
