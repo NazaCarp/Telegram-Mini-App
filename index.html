@@ -245,11 +245,12 @@
 
     function handleClick(event) {
       if (secondaryCount > 0) {
-        score += tap;
         if ((secondaryCount - tap) > 0){
           secondaryCount -= tap;
+          score += tap;
         }
         else{
+          score += secondaryCount;
           secondaryCount = 0;
         }
         lastTimestamp = Date.now();
