@@ -323,16 +323,7 @@
                 document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score - cost}</p>`;
                 localStorage.setItem('score', newScore);
 
-                // Obtener el valor actual de 'tap' desde el almacenamiento local o inicializarlo si no existe
-                let tap = localStorage.getItem('tap');
-                if (tap === null) {
-                    tap = 1;
-                } else {
-                    tap = parseInt(tap) + 1;
-                }
-                localStorage.setItem('tap', tap);
-
-                // Actualizar el score y el valor 'tap' en Supabase
+                // Actualizar el score en Supabase
                 const tg = window.Telegram.WebApp;
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch('/update_counters', {
@@ -340,13 +331,13 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: 1540, tap: tap })
+                    body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: false })
                 });
 
                 if (response.ok) {
                     closeAlertMenu();
                 } else {
-                    console.error('Failed to update score and tap in Supabase');
+                    console.error('Failed to update score in Supabase');
                 }
             }
         });

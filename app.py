@@ -75,7 +75,6 @@ def update_counters():
     user_id = data.get('user_id')
     score = data.get('score')
     secondarycount = data.get('secondarycount')
-    tap = data.get('tap')
 
     if not user_id or score is None or secondarycount is None:
         return jsonify({'error': 'user_id, score, and secondarycount are required'}), 400
@@ -88,11 +87,11 @@ def update_counters():
             db.add(counter)
         else:
             counter.score = score
-            if secondarycount != 1540:
+            if secondarycount:
                 counter.secondarycount = secondarycount
                 counter.timestamp = datetime.utcnow()
-            if tap is not None:
-                counter.tap = tap
+            else:
+                counter.tap += 1
         db.commit()
         return jsonify({'status': 'success'})
     
