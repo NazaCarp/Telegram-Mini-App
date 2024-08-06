@@ -246,7 +246,12 @@
     function handleClick(event) {
       if (secondaryCount > 0) {
         score += tap;
-        secondaryCount -= tap;
+        if ((secondaryCount - tap) > 0){
+          secondaryCount -= tap;
+        }
+        else{
+          secondaryCount = 0;
+        }
         lastTimestamp = Date.now();
         document.getElementById('score').textContent = score;
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;

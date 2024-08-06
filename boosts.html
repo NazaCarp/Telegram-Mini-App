@@ -97,8 +97,8 @@
         .score {
             font-weight: bold;
             text-align: center;
-            margin-top: 50px;
-            font-size: 80px;
+            margin-top: 20px;
+            font-size: 48px;
         }
         .alert-menu {
             display: none;
@@ -188,7 +188,7 @@
 <body>
     <a href="index.html" class="back-button"><iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>Back</a>
     <div class="container">
-        <div class="score" id="score" style="color: yellow"><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>0</div>
+        <div class="score" id="score" style="color: yellow"><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon>0</div>
         <h5>Balance</h5>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h2>
         <div class="rectangles">
@@ -238,7 +238,7 @@
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
     </div>
     <div class="alert-menu" id="alertMenu">
-        <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone" style="font-size:  30px;"></iconify-icon></div>
+        <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="mdi:close"></iconify-icon></div>
         <div class="icon" id="alertIcon"></div>
         <div class="alert-text" id="alertText"></div>
         <div class="subtitle" id="alertSubtitle"></div>
@@ -247,20 +247,6 @@
         <button class="action-button" id="actionButton">Buy</button>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const storedScore = localStorage.getItem('score');
-            if (storedScore !== null) {
-                document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore}</p>`;
-            }
-
-            const tg = window.Telegram.WebApp;
-            tg.BackButton.show(); // Mostrar el botón de retroceso
-            tg.onEvent('backButtonClicked', () => {
-                window.location.href = 'index.html';
-            });
-            tg.ready();
-        });
-
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
             "energy-limit": "Increase the amount of total energy",
@@ -314,33 +300,6 @@
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
-
-        document.getElementById('actionButton').addEventListener('click', async () => {
-            const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
-            const score = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
-            if (cost <= score) {
-                const newScore = score - cost;
-                document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score - cost}</p>`;
-                localStorage.setItem('score', newScore);
-
-                // Actualizar el score en Supabase
-                const tg = window.Telegram.WebApp;
-                const user_id = tg.initDataUnsafe.user.id;
-                const response = await fetch('/update_counters', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: false })
-                });
-
-                if (response.ok) {
-                    closeAlertMenu();
-                } else {
-                    console.error('Failed to update score in Supabase');
-                }
-            }
-        });
     </script>
 </body>
 </html>
