@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #17212b;
+            background: radial-gradient(circle at center, #0047ab, #002357, #000000);
             color: white;
             margin: 0;
             height: 100vh;
@@ -98,7 +98,7 @@
             font-weight: bold;
             text-align: center;
             margin-top: 50px;
-            font-size: 60px;
+            font-size: 80px;
         }
         .alert-menu {
             display: none;
@@ -120,6 +120,7 @@
             top: 10px;
             right: 10px;
             cursor: pointer;
+            font-size: 20px;
         }
         .blur-content {
             filter: blur(5px);
@@ -183,30 +184,6 @@
             color: white;
             cursor: not-allowed;
         }
-        .horizontal-rectangles {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .horizontal-rectangle {
-            display: flex;
-            align-items: center;
-            background-color: #333;
-            border-radius: 10px;
-            padding: 5px;
-            cursor: pointer;
-            flex: 1;
-            margin: 0 2px;
-        }
-        .horizontal-rectangle .icon {
-            margin: 10px;
-            font-size: 45px;
-        }
-        .horizontal-rectangle .text {
-            display: flex;
-            flex-direction: column;
-        }
     </style>
 </head>
 <body>
@@ -214,28 +191,7 @@
     <div class="container">
         <div class="score" id="score" style="color: yellow"><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>0</div>
         <h5>Balance</h5>
-        <h3 style="margin-top: 40px; text-align: left; width: 95%;">Potenciadores diarios gratis</h3>
-        <div class="horizontal-rectangles">
-            <div class="horizontal-rectangle" data-target="rocket" data-cost="1000">
-                <div class="icon">
-                    <iconify-icon icon="openmoji:rocket"></iconify-icon>
-                </div>
-                <div class="text">
-                    <h3>Rocket</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
-                </div>
-            </div>
-            <div class="horizontal-rectangle" data-target="ck" data-cost="1000">
-                <div class="icon">
-                    <iconify-icon icon="openmoji:rocket"></iconify-icon>
-                </div>
-                <div class="text">
-                    <h3>ck l+++</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> 1000</span> • Level 1</p>
-                </div>
-            </div>
-        </div>
-        <h3 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h3>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h2>
         <div class="rectangles">
             <div class="rectangle" data-target="multitap" data-cost="1000">
                 <div class="icon">
@@ -295,20 +251,16 @@
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
             "energy-limit": "Increase the amount of total energy",
-            "recharge-speed": "Increase the speed of recharge of your energy",
-            "rocket": "Boost your earnings with a rocket",
-            "ck": "Increase your luck with ck l+++"
+            "recharge-speed": "Increase the speed of recharge of your energy"
         };
 
         const secondSubtitles = {
             "multitap": "+1 coin for tap for level",
             "energy-limit": "+500 energy points for level",
-            "recharge-speed": "+1 energy for second for level",
-            "rocket": "Double your earnings for a short time",
-            "ck": "Increase your chance of finding rare items"
+            "recharge-speed": "+1 energy for second for level"
         };
 
-        document.querySelectorAll('.rectangle, .horizontal-rectangle').forEach(rectangle => {
+        document.querySelectorAll('.rectangle').forEach(rectangle => {
             rectangle.addEventListener('click', () => {
                 const target = rectangle.getAttribute('data-target');
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
@@ -337,7 +289,7 @@
 
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
-            if (!alertMenu.contains(event.target) && event.target.closest('.rectangle, .horizontal-rectangle') === null) {
+            if (!alertMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
                 alertMenu.style.display = 'none';
                 document.querySelector('.container').classList.remove('blur-content');
                 document.querySelector('.navbar').classList.remove('blur-content');
