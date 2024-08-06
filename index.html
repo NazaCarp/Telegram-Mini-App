@@ -213,19 +213,21 @@
       score = data.score;
       secondaryCount = data.secondarycount;
       tap = data.tap;
+      energyLimit = data.energy_limit;
+      rechargeSpeed = data.recharge_speed;
       lastTimestamp = new Date(data.timestamp).getTime();
 
       // Calcular el tiempo transcurrido y actualizar secondaryCount
       const currentTime = Date.now();
       const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
-      secondaryCount += elapsedTime;
-      if (secondaryCount > 1000) {
-        secondaryCount = 1000; // Asegurarse de que no exceda 1000
+      secondaryCount += elapsedTime * rechargeSpeed; // Usar rechargeSpeed
+      if (secondaryCount > energyLimit) { // Usar energyLimit
+        secondaryCount = energyLimit; // Asegurarse de que no exceda energyLimit
       }
 
       // Actualizar la interfaz de usuario
       document.getElementById('score').textContent = score;
-      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+      document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
 
       // Guardar el score en localStorage
       localStorage.setItem('score', score);
@@ -296,10 +298,10 @@
     }
 
     function incrementSecondaryCounter() {
-      if (secondaryCount < 1000) {
-        secondaryCount += 1;
+      if (secondaryCount < energyLimit) { // Usar energyLimit
+        secondaryCount += rechargeSpeed; // Usar rechargeSpeed
         lastTimestamp = Date.now();
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / 1000`;
+        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
         saveCounts();
       }
     }
