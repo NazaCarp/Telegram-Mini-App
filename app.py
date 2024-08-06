@@ -87,9 +87,8 @@ def update_counters():
             db.add(counter)
         else:
             counter.score = score
-            if secondarycount != 1540:
-                counter.secondarycount = secondarycount
-                counter.timestamp = datetime.utcnow()
+            counter.secondarycount = secondarycount
+            counter.timestamp = datetime.utcnow()
         db.commit()
         return jsonify({'status': 'success'})
     
