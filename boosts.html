@@ -304,7 +304,7 @@
             const user_id = tg.initDataUnsafe.user.id;
             const response = await fetch(`/get_counters?user_id=${user_id}`);
             const data = await response.json();
-            document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>${data.score}`;
+            document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>${data.score}</p>`;
         }
 
         window.onload = function() {
