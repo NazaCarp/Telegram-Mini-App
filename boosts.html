@@ -331,6 +331,8 @@
                     closeAlertMenu();
                     // Actualiza la interfaz según sea necesario
                     loadUserData();
+                    // Guardar el nuevo score en localStorage
+                    localStorage.setItem('score', newScore);
                 } else {
                     alert('Error al actualizar el boost');
                 }
@@ -351,6 +353,8 @@
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score}`;
+                // Guardar el score en localStorage
+                localStorage.setItem('score', data.score);
             }
         }
 
@@ -372,6 +376,14 @@
             document.querySelector('[data-target="multitap"]').setAttribute('data-cost', document.getElementById('multitapCost').innerText);
             document.querySelector('[data-target="energy-limit"]').setAttribute('data-cost', document.getElementById('energyLimitCost').innerText);
             document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', document.getElementById('rechargeSpeedCost').innerText);
+
+            // Guardar los datos en localStorage
+            localStorage.setItem('multitapLevel', data.tap);
+            localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500));
+            localStorage.setItem('rechargeSpeedLevel', data.recharge_speed);
+            localStorage.setItem('multitapCost', document.getElementById('multitapCost').innerText);
+            localStorage.setItem('energyLimitCost', document.getElementById('energyLimitCost').innerText);
+            localStorage.setItem('rechargeSpeedCost', document.getElementById('rechargeSpeedCost').innerText);
         }
 
         window.onload = function() {
