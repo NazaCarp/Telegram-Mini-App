@@ -379,7 +379,7 @@
 
             // Guardar los datos en localStorage
             localStorage.setItem('multitapLevel', data.tap);
-            localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500));
+            localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500) - 1);
             localStorage.setItem('rechargeSpeedLevel', data.recharge_speed);
             localStorage.setItem('multitapCost', document.getElementById('multitapCost').innerText);
             localStorage.setItem('energyLimitCost', document.getElementById('energyLimitCost').innerText);
