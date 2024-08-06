@@ -127,6 +127,28 @@ def get_referrals():
     except Exception as e:
         logging.error(f"Error in get_referrals: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/get_user_data', methods=['GET'])
+def get_user_data():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+
+    try:
+        db = SessionLocal()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        if not counter:
+            return jsonify({'error': 'User not found'}), 404
+
+        return jsonify({
+            'score': counter.score,
+            'tap': counter.tap,
+            'energy_limit': counter.energy_limit,
+            'recharge_speed': counter.recharge_speed
+        })
+    except Exception as e:
+        logging.error(f"Error in get_user_data: {e}")
+        return jsonify({'error': str(e)}), 500
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
