@@ -300,15 +300,19 @@
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
-        async function getScore() {
+        const tg = window.Telegram.WebApp;
+        let score = 0;
+
+        async function loadScore() {
             const user_id = tg.initDataUnsafe.user.id;
             const response = await fetch(`/get_counters?user_id=${user_id}`);
             const data = await response.json();
-            document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>${data.score}</p>`;
+            score = data.score;
+            document.getElementById('score').innerText = score;
         }
 
         window.onload = function() {
-            getScore();
+            loadScore();
         };
     </script>
 </body>
