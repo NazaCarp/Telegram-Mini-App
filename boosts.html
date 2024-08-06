@@ -320,7 +320,7 @@
             const score = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
             if (cost <= score) {
                 const newScore = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score - cost}</p>`;
-                document.getElementById('score').innerText = newScore;
+                document.getElementById('score').innerHTML = newScore;
                 localStorage.setItem('score', newScore);
 
                 // Actualizar el score en Supabase
