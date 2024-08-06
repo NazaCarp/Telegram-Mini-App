@@ -5,15 +5,15 @@ from datetime import datetime
 Base = declarative_base()
 
 class Counter(Base):
-    __tablename__ = 'counters'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, nullable=False, unique=True)
-    name = Column(String, default='')
+    __tablename__ = "counters"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(BigInteger, unique=True, index=True)
+    name = Column(String)
     score = Column(Integer, default=0)
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
     tap = Column(Integer, default=1)
-    energy_limit = Column(Integer, default=1)
+    energy_limit = Column(Integer, default=1000)
     recharge_speed = Column(Integer, default=1)
 
 
