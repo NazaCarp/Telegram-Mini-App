@@ -305,7 +305,7 @@
         async function loadScore() {
             const storedScore = localStorage.getItem('score');
             if (storedScore !== null) {
-                document.getElementById('score').innerText = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore}`;
+                document.getElementById('score').innerText = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore}</p>`;
             }
             else{
                 const user_id = tg.initDataUnsafe.user.id;
