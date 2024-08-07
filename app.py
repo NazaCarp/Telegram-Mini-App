@@ -47,7 +47,7 @@ def get_counters():
         
             # Incrementar el número de referidos
             if startParam.isdigit():
-                referrer = db.query(Referral).filter_by(user_id=int(startParam)).first()
+                referrer = db.query(Referral).filter_by(user_id=startParam).first()
                 referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
                 referrer_counter.score += 100
                 db.commit()
