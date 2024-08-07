@@ -369,7 +369,7 @@
 
             // Calcular los costos basados en los valores de las variables
             const multitapCost = 2000 * Math.pow(2, data.tap - 1);
-            const energyLimitCost = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 1);
+            const energyLimitCost = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
             const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
 
             document.getElementById('multitapCost').innerText = multitapCost;
@@ -383,7 +383,7 @@
 
             // Guardar los datos en localStorage
             localStorage.setItem('multitapLevel', data.tap);
-            localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500));
+            localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500) - 1);
             localStorage.setItem('rechargeSpeedLevel', data.recharge_speed);
             localStorage.setItem('multitapCost', multitapCost);
             localStorage.setItem('energyLimitCost', energyLimitCost);
