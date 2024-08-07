@@ -162,7 +162,6 @@
             height: 100px;
         }
         .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top: 4px solid white;
             width: 24px;
@@ -349,7 +348,7 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = `<div class="no-invites-message">You haven't invited anyone yet</div>`;
+                    scrollableContent.innerHTML = `<div class="loading-container"><div class="no-invites-message">You haven't invited anyone yet</div></div>`;
                 } else {
                     scrollableRectangle.style = "border-radius: 20px; height: auto; max-height: calc(100vh - 280px);"
                     scrollableContent.innerHTML = '';
