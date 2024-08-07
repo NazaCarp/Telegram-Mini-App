@@ -231,7 +231,7 @@
         </div>
         <div class="rectangles">
             <div class="rectangle" id="scrollable-rectangle">
-                <div class="no-invites-message">
+                <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
                             <div class="loading-spinner"></div>
@@ -348,6 +348,12 @@
             }
 
             function displayReferrals(data) {
+                scrollableContent.innerHTML = `
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <span style="margin-left: 10px; color: rgba(255, 255, 255, 1)">Loading referral list...</span>
+                    </div>
+                `;
                 if (data.referrals_count === 0) {
                     scrollableContent.innerHTML = `<div class="no-invites-message">You haven't invited anyone yet</div>`;
                 } else {
