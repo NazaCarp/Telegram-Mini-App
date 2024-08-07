@@ -397,20 +397,6 @@
 
             loadReferrals();
 
-            let startY = 0;
-
-            scrollableRectangle.addEventListener('touchstart', function(event) {
-                startY = event.touches[0].clientY;
-            });
-
-            scrollableRectangle.addEventListener('touchmove', function(event) {
-                event.preventDefault();
-                const touchY = event.touches[0].clientY;
-                const deltaY = startY - touchY;
-                scrollableContent.scrollTop += deltaY;
-                startY = touchY;
-            });
-
             copyButton.addEventListener('click', async function() {
                 try {
                     await navigator.clipboard.writeText('Ola');
@@ -429,6 +415,41 @@
                 const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
                 window.open(url, '_blank');
             });
+
+            let startY = 0;
+            let lastY = 0;
+            let velocityY = 0;
+            let isScrolling = false;
+
+            mainContainer.addEventListener('touchstart', function(event) {
+                startY = event.touches[0].clientY;
+                lastY = startY;
+                velocityY = 0;
+                isScrolling = true;
+            });
+
+            mainContainer.addEventListener('touchmove', function(event) {
+                const touchY = event.touches[0].clientY;
+                const deltaY = (startY - touchY);
+                mainContainer.scrollTop += deltaY;
+                startY = touchY;
+
+                velocityY = touchY - lastY;
+                lastY = touchY;
+            });
+
+            mainContainer.addEventListener('touchend', function() {
+                isScrolling = false;
+                requestAnimationFrame(applyInertia);
+            });
+
+            function applyInertia() {
+                if (!isScrolling && Math.abs(velocityY) > 0.5) {
+                    mainContainer.scrollTop += velocityY;
+                    velocityY *= 0.95;
+                    requestAnimationFrame(applyInertia);
+                }
+            }
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
