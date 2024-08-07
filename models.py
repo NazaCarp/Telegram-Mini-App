@@ -8,7 +8,7 @@ class Counter(Base):
     __tablename__ = "counters"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(BigInteger, unique=True, index=True)
-    username = Column(String)
+    name = Column(String)
     score = Column(Integer, default=0)
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
@@ -21,7 +21,7 @@ class Referral(Base):
     __tablename__ = 'referrals'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(String, nullable=False)
-    username = Column(String, default='')
+    name = Column(String, default='')
     from_user = Column(String, default='')
     referrals_count = Column(Integer, default=0)
     referrals_name = Column(String, default='')
