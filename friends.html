@@ -11,14 +11,12 @@
             background: radial-gradient(circle at center, #0047ab, #002357, #000000);
             color: white;
             margin: 0;
-            padding-bottom: 60px; /* Espacio para la barra de navegación */
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            box-sizing: border-box;
-            overflow-y: auto;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            align-items: center;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
         * {
             margin: 0px;
@@ -29,11 +27,9 @@
         }
         .container {
             display: flex;
-            flex: 1;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            position: relative;
         }
         .rectangles {
             display: flex;
@@ -70,7 +66,10 @@
         }
         .bottom-buttons {
             display: flex;
-            padding: 10px 0;
+            justify-content: space-between;
+            width: 100%;
+            position: fixed;
+            bottom: 75px;
         }
         .bottom-rectangle {
             background-color: rgb(11, 62, 121);
@@ -122,10 +121,7 @@
             margin: 0 auto; /* Centra la barra de navegación */
             background-color: #222222;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
+            bottom: 10px;
             user-select: none; /* Evita que la imagen sea seleccionable */
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
@@ -179,24 +175,13 @@
             color: white;
             opacity: 0.5;
         }
-        .user-photo {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .score {
-            color: yellow;
-            margin-left: auto; /* Alinea el score a la derecha */
-        }
-        
     </style>
 </head>
 <body>
     <div id="alert-container" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000;">Texto copiado ✅</div>
-    <div class="main-container">
-        <h1 style="margin-top: 30px; text-align: center">Invite Friends!</h1>
-        <h4 style="text-align: center">You and your friend will receive bonuses</h4>
+    <div class="container">
+        <h1 style="margin-top: 30px;">Invite Friends!</h1>
+        <h4>You and your friend will receive bonuses</h4>
         <div class="rectangles">
             <div class="rectangle">
                 <div class="icon">
@@ -204,7 +189,7 @@
                 </div>
                 <div class="text">
                     <h3>Invite a friend</h3>
-                    <p><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon><span style="color: yellow; font-weight: bolder;"> +5000</span> for you and your friend</p>
+                    <p><span style="color: yellow; font-weight: bolder;">+5000</span> for you and your friend</p>
                     </div>
                 </div>
             </div>
@@ -214,16 +199,16 @@
                 </div>
                 <div class="text">
                     <h3>Invite a friend with Premium</h3>
-                    <p><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon><span style="color: yellow; font-weight: bold;"> +25000</span> for you and your friend</span></p>
+                    <p><span style="color: yellow; font-weight: bold;">+25000</span> for you and your friend</span></p>
                     </div>
                 </div>
             </div>
         </div>
-        <h2 style="color: rgb(0, 204, 255); margin-top: 3%; text-align: center">More Bonuses</h3>
-        <h4 style="margin: 5px;"><span style="left: 3%;" id="friends-list-label">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
+        <h2 style="color: rgb(0, 204, 255); margin-top: 3%;">More Bonuses</h3>
+        <h4><span style="position:fixed; left: 3%;">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
-            <div class="rectangle" id="scrollable-rectangle">
+            <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
@@ -240,16 +225,166 @@
             </div>
             <button class="square-button" id="copy-button"><iconify-icon icon="bitcoin-icons:copy-outline" style="font-size:35px;"></iconify-icon></button>
         </div>
-        <div class="navbar">
-            <a href="index.html#exchange" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-            <a href="index.html#mine" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
-            <a href="friends.html" id="friendsNav" class="active"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-            <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
-            <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
-        </div>
     </div>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tg = window.Telegram.WebApp;
+            const reloadIcon = document.querySelector('.reload-icon');
+            const scrollableContent = document.getElementById('scrollable-content');
+            const scrollableRectangle = document.getElementById('scrollable-rectangle');
+            const copyButton = document.getElementById('copy-button');
+            const shareButton = document.getElementById('share-button');
+            const alertContainer = document.getElementById('alert-container');
+            const friendsNav = document.getElementById('friendsNav');
+            const timerElement = document.getElementById('timer');
+
+            let timerInterval;
+            let timerSeconds = 60;
+            const timerKey = 'reloadTimer';
+
+            // Recuperar el tiempo restante del temporizador desde localStorage
+            const storedTimer = localStorage.getItem(timerKey);
+            if (storedTimer) {
+                timerSeconds = parseInt(storedTimer, 10);
+                if (timerSeconds > 0) {
+                    reloadIcon.classList.add('disabled');
+                    startTimer();
+                }
+            }
+
+            friendsNav.addEventListener('click', function(event) {
+                if (window.location.pathname.includes('friends.html')) {
+                    event.preventDefault();
+                }
+            });
+
+            reloadIcon.addEventListener('click', function() {
+                if (timerSeconds < 60 & timerSeconds > 0) return; // Si el temporizador está activo, no hagas nada
+
+                this.classList.add('rotate', 'disabled');
+                startTimer();
+                setTimeout(() => {
+                    this.classList.remove('rotate');
+                }, 500);
+                loadReferrals(true);
+            });
+
+            function startTimer() {
+                timerSeconds = 60;
+                timerElement.textContent = timerSeconds;
+                timerInterval = setInterval(() => {
+                    timerSeconds--;
+                    timerElement.textContent = timerSeconds;
+                    localStorage.setItem(timerKey, timerSeconds); // Guardar el tiempo restante en localStorage
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        reloadIcon.classList.remove('disabled');
+                        timerElement.textContent = '';
+                        localStorage.removeItem(timerKey); // Eliminar el tiempo restante de localStorage
+                    }
+                }, 1000);
+            }
+
+            async function loadReferrals(forceReload = false) {
+                const user_id = tg.initDataUnsafe.user.id;
+                const cacheKey = `referrals_${user_id}`;
+
+                // Verificar si los datos están en caché y no se fuerza una recarga
+                if (!forceReload && localStorage.getItem(cacheKey)) {
+                    const cachedData = JSON.parse(localStorage.getItem(cacheKey));
+                    displayReferrals(cachedData);
+                    return;
+                }
+
+                // Mostrar el mensaje de carga
+                scrollableContent.innerHTML = `
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <span style="margin-left: 10px; color: rgba(255, 255, 255, 1)">Loading referral list...</span>
+                    </div>
+                `;
+
+                const response = await fetch(`/get_referrals?user_id=${user_id}`);
+                const data = await response.json();
+
+                // Guardar los datos en caché
+                localStorage.setItem(cacheKey, JSON.stringify(data));
+
+                displayReferrals(data);
+            }
+
+            function displayReferrals(data) {
+                if (data.referrals_count === 0) {
+                    scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
+                    scrollableContent.textContent = "You haven't invited anyone yet"
+                } else {
+                    scrollableRectangle.style = "border-radius: 20px; height: 220px;"
+                    scrollableContent.innerHTML = '';
+                    const referrals = data.referrals_name.split(', ');
+                    const scores = data.referrals_score.split(', ');
+                    referrals.forEach((name, index) => {
+                        const referralName = document.createElement('h4');
+                        referralName.style = 'margin: 10px';
+                        referralName.textContent = name;
+                        scrollableContent.appendChild(referralName);
+
+                        const scoreText = document.createElement('p');
+                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px';
+                        scoreText.textContent = `Score: ${scores[index]}`;
+                        scrollableContent.appendChild(scoreText);
+                    });
+                }
+            }
+
+            loadReferrals();
+
+            let startY = 0;
+
+            scrollableRectangle.addEventListener('touchstart', function(event) {
+                startY = event.touches[0].clientY;
+            });
+
+            scrollableRectangle.addEventListener('touchmove', function(event) {
+                event.preventDefault();
+                const touchY = event.touches[0].clientY;
+                const deltaY = startY - touchY;
+                scrollableContent.scrollTop += deltaY;
+                startY = touchY;
+            });
+
+            copyButton.addEventListener('click', async function() {
+                try {
+                    await navigator.clipboard.writeText('Ola');
+                    console.log('Texto copiado al portapapeles');
+                    alertContainer.style.display = 'block';
+                    setTimeout(() => {
+                        alertContainer.style.display = 'none';
+                    }, 3000);
+                } catch (err) {
+                    console.error('Error al copiar el texto: ', err);
+                }
+            });
+
+            shareButton.addEventListener('click', function() {
+                const texto = "Hola soy Luc el hacker";
+                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
+            });
+
+            tg.onEvent('backButtonClicked', () => {
+                window.location.href = 'index.html';
+            });
+
+            tg.ready();
+        });
     </script>
+    <div class="navbar">
+        <a href="index.html#exchange" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+        <a href="index.html#mine" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="index.html#friends" id="friendsNav" class="active"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+        <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+        <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
+      </div>
 </body>
 </html>
