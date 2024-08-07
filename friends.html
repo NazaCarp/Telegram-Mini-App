@@ -349,7 +349,7 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = `<p class="no-invites-message"><div class="loading-container">You haven't invited anyone yet</div></p>`;
+                    scrollableContent.innerHTML = `<div class="loading-container"><p class="no-invites-message">You haven't invited anyone yet</p></div>`;
                 } else {
                     scrollableRectangle.style = "border-radius: 20px; height: auto; max-height: calc(100vh - 280px);"
                     scrollableContent.innerHTML = '';
