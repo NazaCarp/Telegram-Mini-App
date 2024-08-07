@@ -443,8 +443,9 @@
                 }
             }
 
+            const user_id = tg.initDataUnsafe.user.id;
+            
             copyButton.addEventListener('click', async function() {
-                const user_id = tg.initDataUnsafe.user.id;
                 try {
                     const textToCopy = "`https://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`";
                     await navigator.clipboard.writeText(textToCopy);
@@ -458,7 +459,6 @@
             });
 
             shareButton.addEventListener('click', function() {
-                const user_id = tg.initDataUnsafe.user.id;
                 const textToShare = `https://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`;
                 const url = `https://t.me/share/url?text=${encodeURIComponent(textToShare)}`;
                 window.open(url, '_blank');
