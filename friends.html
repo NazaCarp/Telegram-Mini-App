@@ -223,7 +223,7 @@
         <h4 style="margin: 5px;"><span style="left: 3%;" id="friends-list-label">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
-            <div class="rectangle" id="scrollable-rectangle">
+            <div class="rectangle" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
@@ -251,6 +251,7 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const mainContainer = document.getElementById('main-container');
             const tg = window.Telegram.WebApp;
             const reloadIcon = document.querySelector('.reload-icon');
             const scrollableContent = document.getElementById('scrollable-content');
@@ -260,6 +261,7 @@
             const alertContainer = document.getElementById('alert-container');
             const friendsNav = document.getElementById('friendsNav');
             const timerElement = document.getElementById('timer');
+            const friendsListLabel = document.getElementById('friends-list-label');
 
             let timerInterval;
             let timerSeconds = 60;
@@ -354,7 +356,7 @@
                         leftContent.style = 'display: flex; align-items: center;';
 
                         const userPhoto = document.createElement('img');
-                        userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`;
+                        userPhoto.src = `https://t.me/i/userpic/320/${name}.jpg`;
                         userPhoto.classList.add('user-photo');
                         userPhoto.style = 'width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;';
                         userPhoto.onload = function() {
@@ -397,6 +399,41 @@
 
             loadReferrals();
 
+            let startY = 0;
+            let lastY = 0;
+            let velocityY = 0;
+            let isScrolling = false;
+
+            mainContainer.addEventListener('touchstart', function(event) {
+                startY = event.touches[0].clientY;
+                lastY = startY;
+                velocityY = 0;
+                isScrolling = true;
+            });
+
+            mainContainer.addEventListener('touchmove', function(event) {
+                const touchY = event.touches[0].clientY;
+                const deltaY = (startY - touchY);
+                mainContainer.scrollTop += deltaY;
+                startY = touchY;
+
+                velocityY = touchY - lastY;
+                lastY = touchY;
+            });
+
+            mainContainer.addEventListener('touchend', function() {
+                isScrolling = false;
+                requestAnimationFrame(applyInertia);
+            });
+
+            function applyInertia() {
+                if (!isScrolling && Math.abs(velocityY) > 0.5) {
+                    mainContainer.scrollTop += velocityY;
+                    velocityY *= 0.95;
+                    requestAnimationFrame(applyInertia);
+                }
+            }
+
             copyButton.addEventListener('click', async function() {
                 try {
                     await navigator.clipboard.writeText('Ola');
@@ -415,37 +452,6 @@
                 const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
                 window.open(url, '_blank');
             });
-
-            let startY = 0;
-            let lastY = 0;
-            let velocityY = 0;
-            let isScrolling = false;
-
-            mainContainer.addEventListener('touchstart', function(event) {
-                const texto = "Hola soy Luc el hacker";
-                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
-                window.open(url, '_blank');
-            });
-
-            mainContainer.addEventListener('touchmove', function(event) {
-                const texto = "Hola soy Luc el hacker";
-                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
-                window.open(url, '_blank');
-            });
-
-            mainContainer.addEventListener('touchend', function() {
-                const texto = "Hola soy Luc el hacker";
-                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
-                window.open(url, '_blank');
-            });
-
-            function applyInertia() {
-                if (!isScrolling && Math.abs(velocityY) > 0.5) {
-                    mainContainer.scrollTop += velocityY;
-                    velocityY *= 0.95;
-                    requestAnimationFrame(applyInertia);
-                }
-            }
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
