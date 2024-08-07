@@ -197,6 +197,14 @@
             font-weight: bold;
             color: rgba(255, 255, 255, 0.5);
         }
+        .scrollable-rectangle {
+            border-radius: 20px;
+            height: auto;
+            max-height: calc(100vh - 280px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -230,7 +238,7 @@
         <h4 style="margin: 5px;"><span style="left: 3%;" id="friends-list-label">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
-            <div class="rectangle" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
+            <div class="rectangle" id="scrollable-rectangle">
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
