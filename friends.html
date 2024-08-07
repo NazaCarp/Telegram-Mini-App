@@ -397,6 +397,25 @@
 
             loadReferrals();
 
+            copyButton.addEventListener('click', async function() {
+                try {
+                    await navigator.clipboard.writeText('Ola');
+                    console.log('Texto copiado al portapapeles');
+                    alertContainer.style.display = 'block';
+                    setTimeout(() => {
+                        alertContainer.style.display = 'none';
+                    }, 3000);
+                } catch (err) {
+                    console.error('Error al copiar el texto: ', err);
+                }
+            });
+
+            shareButton.addEventListener('click', function() {
+                const texto = "Hola soy Luc el hacker";
+                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
+            });
+
             let startY = 0;
             let lastY = 0;
             let velocityY = 0;
@@ -417,38 +436,6 @@
 
                 velocityY = touchY - lastY;
                 lastY = touchY;
-            });
-
-            mainContainer.addEventListener('touchend', function() {
-                isScrolling = false;
-                requestAnimationFrame(applyInertia);
-            });
-
-            function applyInertia() {
-                if (!isScrolling && Math.abs(velocityY) > 0.5) {
-                    mainContainer.scrollTop += velocityY;
-                    velocityY *= 0.95;
-                    requestAnimationFrame(applyInertia);
-                }
-            }
-            
-            copyButton.addEventListener('click', async function() {
-                try {
-                    await navigator.clipboard.writeText('Ola');
-                    console.log('Texto copiado al portapapeles');
-                    alertContainer.style.display = 'block';
-                    setTimeout(() => {
-                        alertContainer.style.display = 'none';
-                    }, 3000);
-                } catch (err) {
-                    console.error('Error al copiar el texto: ', err);
-                }
-            });
-
-            shareButton.addEventListener('click', function() {
-                const texto = "Hola soy Luc el hacker";
-                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
-                window.open(url, '_blank');
             });
 
             tg.onEvent('backButtonClicked', () => {
