@@ -27,7 +27,7 @@ def serve_boosts():
 def get_counters():
     user_id = request.args.get('user_id')
     startParam = request.args.get('startParam')
-    name = request.args.get('name')
+    username = request.args.get('username')
     if not user_id:
         return jsonify({'error': 'user_id is required'}), 400
 
@@ -35,12 +35,12 @@ def get_counters():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, name=name, score=0, secondarycount=0, tap=1)
+            counter = Counter(user_id=user_id, username=username, score=0, secondarycount=0, tap=1)
             db.add(counter)
             db.commit()
 
             # Crear la tabla referrals para el nuevo usuario
-            referral = Referral(user_id=user_id, name=name, from_user=startParam, referrals_count=0, referrals_name='', referrals_id=None)
+            referral = Referral(user_id=user_id, username=username, from_user=startParam, referrals_count=0, referrals_name='', referrals_id=None)
             db.add(referral)
             db.commit()
         
@@ -50,9 +50,9 @@ def get_counters():
                 if referrer:
                     referrer.referrals_count += 1
                     if referrer.referrals_name:
-                        referrer.referrals_name += f', {name}'
+                        referrer.referrals_name += f', {username}'
                     else:
-                        referrer.referrals_name = name
+                        referrer.referrals_name = username
                     if referrer.referrals_id:
                         referrer.referrals_id += f', {user_id}'
                     else:
