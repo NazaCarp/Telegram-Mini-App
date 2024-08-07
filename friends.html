@@ -445,8 +445,7 @@
 
             copyButton.addEventListener('click', async function() {
                 try {
-                    await navigator.clipboard.writeText('Ola');
-                    console.log('Texto copiado al portapapeles');
+                    await navigator.clipboard.writeText(`http://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`);
                     alertContainer.style.display = 'block';
                     setTimeout(() => {
                         alertContainer.style.display = 'none';
@@ -457,8 +456,8 @@
             });
 
             shareButton.addEventListener('click', function() {
-                const texto = "Hola soy Luc el hacker";
-                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                const texto = `http://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`;
+                const url = `http://t.me/share/url?text=${encodeURIComponent(texto)}`;
                 window.open(url, '_blank');
             });
 
