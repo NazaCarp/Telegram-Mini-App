@@ -301,7 +301,7 @@
 
     function incrementSecondaryCounter() {
       if (secondaryCount < energyLimit) { // Usar energyLimit
-        if (secondaryCount + energyLimit > 1500) {
+        if (secondaryCount + rechargeSpeed > energyLimit) {
           secondaryCount = energyLimit
         }
         else {
