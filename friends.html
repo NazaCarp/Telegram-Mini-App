@@ -421,19 +421,6 @@
             let velocityY = 0;
             let isScrolling = false;
 
-            mainContainer.addEventListener('touchend', function() {
-                isScrolling = false;
-                requestAnimationFrame(applyInertia);
-            });
-
-            function applyInertia() {
-                if (!isScrolling && Math.abs(velocityY) > 0.5) {
-                    mainContainer.scrollTop += velocityY;
-                    velocityY *= 0.95;
-                    requestAnimationFrame(applyInertia);
-                }
-            }
-
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
             });
