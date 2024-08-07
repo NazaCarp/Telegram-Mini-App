@@ -421,22 +421,18 @@
             let velocityY = 0;
             let isScrolling = false;
 
-            mainContainer.addEventListener('touchstart', function(event) {
-                startY = event.touches[0].clientY;
-                lastY = startY;
-                velocityY = 0;
-                isScrolling = true;
+            mainContainer.addEventListener('touchend', function() {
+                isScrolling = false;
+                requestAnimationFrame(applyInertia);
             });
 
-            mainContainer.addEventListener('touchmove', function(event) {
-                const touchY = event.touches[0].clientY;
-                const deltaY = (startY - touchY);
-                mainContainer.scrollTop += deltaY;
-                startY = touchY;
-
-                velocityY = touchY - lastY;
-                lastY = touchY;
-            });
+            function applyInertia() {
+                if (!isScrolling && Math.abs(velocityY) > 0.5) {
+                    mainContainer.scrollTop += velocityY;
+                    velocityY *= 0.95;
+                    requestAnimationFrame(applyInertia);
+                }
+            }
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
