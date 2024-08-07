@@ -9,6 +9,7 @@ class Counter(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(BigInteger, unique=True, index=True)
     name = Column(String)
+    username = Column(String)
     score = Column(Integer, default=0)
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)

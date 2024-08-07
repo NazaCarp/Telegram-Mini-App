@@ -28,6 +28,7 @@ def get_counters():
     user_id = request.args.get('user_id')
     startParam = request.args.get('startParam')
     name = request.args.get('name')
+    username = request.args.get('username')
     if not user_id:
         return jsonify({'error': 'user_id is required'}), 400
 
@@ -35,7 +36,7 @@ def get_counters():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, name=name, score=0, secondarycount=0, tap=1)
+            counter = Counter(user_id=user_id, name=name, username=username, score=0, secondarycount=0, tap=1, energy_limit=1000, recharge_speed=1)
             db.add(counter)
             db.commit()
 
@@ -44,24 +45,24 @@ def get_counters():
             db.add(referral)
             db.commit()
         
-        # Incrementar el número de referidos
-        if startParam.isdigit():
-            referrer = db.query(Referral).filter_by(user_id=int(startParam)).first()
-            if referrer:
-                referrer.referrals_count += 1
-                if referrer.referrals_name:
-                    referrer.referrals_name += f', {name}'
-                else:
-                    referrer.referrals_name = name
-                if referrer.referrals_id:
-                    referrer.referrals_id += f', {user_id}'
-                else:
-                    referrer.referrals_id = user_id
-                db.commit()
+            # Incrementar el número de referidos
+            if startParam.isdigit():
+                referrer = db.query(Referral).filter_by(user_id=int(startParam)).first()
+                if referrer:
+                    referrer.referrals_count += 1
+                    if referrer.referrals_name:
+                        referrer.referrals_name += f', {name}'
+                    else:
+                        referrer.referrals_name = name
+                    if referrer.referrals_id:
+                        referrer.referrals_id += f', {user_id}'
+                    else:
+                        referrer.referrals_id = user_id
+                    db.commit()
 
-            referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
-            referrer_counter.score += 100
-            db.commit()
+                referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
+                referrer_counter.score += 100
+                db.commit()
 
         return jsonify({
             'score': counter.score,
@@ -114,23 +115,27 @@ def get_referrals():
         db = SessionLocal()
         referral = db.query(Referral).filter_by(user_id=user_id).first()
         if not referral:
-            return jsonify({'referrals_count': 0, 'referrals_name': '', 'referrals_score': ''})
+            return jsonify({'referrals_count': 0, 'referrals_name': '', 'referrals_score': '', 'referrals_username': ''})
 
         referrals_id = referral.referrals_id.split(', ') if referral.referrals_id else []
         referrals_name = referral.referrals_name.split(', ') if referral.referrals_name else []
         referrals_score = []
+        referrals_username = []
 
         for ref_id in referrals_id:
             counter = db.query(Counter).filter_by(user_id=int(ref_id)).first()
             if counter:
                 referrals_score.append(str(counter.score))
+                referrals_username.append(str(counter.username))
             else:
                 referrals_score.append('0')
+                referrals_username.append('0')
 
         return jsonify({
             'referrals_count': referral.referrals_count,
             'referrals_name': ', '.join(referrals_name),
-            'referrals_score': ', '.join(referrals_score)
+            'referrals_score': ', '.join(referrals_score),
+            'referrals_username': ', '.join(referrals_username)
         })
     except Exception as e:
         logging.error(f"Error in get_referrals: {e}")
