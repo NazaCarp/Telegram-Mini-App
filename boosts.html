@@ -193,37 +193,37 @@
         <h5>Balance</h5>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h2>
         <div class="rectangles">
-            <div class="rectangle" data-target="multitap" data-cost="1000">
+            <div class="rectangle" data-target="multitap" data-cost="">
                 <div class="icon">
                     <iconify-icon icon="hugeicons:tap-06"></iconify-icon>
                 </div>
                 <div class="text">
                     <h3>Multitap</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="multitapCost">1000</span></span> • Level <span id="multitapLevel">1</span></p>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="multitapCost"></span></span> • Level <span id="multitapLevel"></span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-target="energy-limit" data-cost="1000">
+            <div class="rectangle" data-target="energy-limit" data-cost="">
                 <div class="icon">
                     <iconify-icon icon="mdi:battery-plus-outline"></iconify-icon>
                 </div>
                 <div class="text">
                     <h3>Energy limit</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="energyLimitCost">1000</span></span> • Level <span id="energyLimitLevel">1</span></p>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="energyLimitCost"></span></span> • Level <span id="energyLimitLevel"></span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-target="recharge-speed" data-cost="1000">
+            <div class="rectangle" data-target="recharge-speed" data-cost="">
                 <div class="icon">
                     <iconify-icon icon="bi:battery-charging"></iconify-icon>
                 </div>
                 <div class="text">
                     <h3>Recharge speed</h3>
-                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="rechargeSpeedCost">1000</span></span> • Level <span id="rechargeSpeedLevel">1</span></p>
+                    <p style="color: rgba(255, 255, 255, 0.5);"><span style="color: yellow; font-weight: bold;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span id="rechargeSpeedCost"></span></span> • Level <span id="rechargeSpeedLevel"></span></p>
                 </div>
                 <div class="icon" style="position: fixed; right: 5px; font-size: 25px; transform: scaleX(-1)">
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
@@ -331,6 +331,8 @@
                     closeAlertMenu();
                     // Actualiza la interfaz según sea necesario
                     loadUserData();
+                    // Guardar el nuevo score en localStorage
+                    localStorage.setItem('score', newScore);
                 } else {
                     alert('Error al actualizar el boost');
                 }
@@ -351,6 +353,8 @@
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score}`;
+                // Guardar el score en localStorage
+                localStorage.setItem('score', data.score);
             }
         }
 
@@ -360,18 +364,30 @@
             const data = await response.json();
 
             document.getElementById('multitapLevel').innerText = data.tap;
-            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500);
+            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500) - 1;
             document.getElementById('rechargeSpeedLevel').innerText = data.recharge_speed;
 
             // Calcular los costos basados en los valores de las variables
-            document.getElementById('multitapCost').innerText = 2000 * Math.pow(2, data.tap - 1);
-            document.getElementById('energyLimitCost').innerText = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 1);
-            document.getElementById('rechargeSpeedCost').innerText = 2000 * Math.pow(2, data.recharge_speed - 1);
+            const multitapCost = 2000 * Math.pow(2, data.tap - 1);
+            const energyLimitCost = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
+            const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
+
+            document.getElementById('multitapCost').innerText = multitapCost;
+            document.getElementById('energyLimitCost').innerText = energyLimitCost;
+            document.getElementById('rechargeSpeedCost').innerText = rechargeSpeedCost;
 
             // Actualizar los datos de costo en los rectángulos
-            document.querySelector('[data-target="multitap"]').setAttribute('data-cost', document.getElementById('multitapCost').innerText);
-            document.querySelector('[data-target="energy-limit"]').setAttribute('data-cost', document.getElementById('energyLimitCost').innerText);
-            document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', document.getElementById('rechargeSpeedCost').innerText);
+            document.querySelector('[data-target="multitap"]').setAttribute('data-cost', multitapCost);
+            document.querySelector('[data-target="energy-limit"]').setAttribute('data-cost', energyLimitCost);
+            document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', rechargeSpeedCost);
+
+            // Guardar los datos en localStorage
+            localStorage.setItem('multitapLevel', data.tap);
+            localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500) - 1);
+            localStorage.setItem('rechargeSpeedLevel', data.recharge_speed);
+            localStorage.setItem('multitapCost', multitapCost);
+            localStorage.setItem('energyLimitCost', energyLimitCost);
+            localStorage.setItem('rechargeSpeedCost', rechargeSpeedCost);
         }
 
         window.onload = function() {
