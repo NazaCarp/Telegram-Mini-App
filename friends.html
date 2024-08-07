@@ -445,7 +445,8 @@
 
             copyButton.addEventListener('click', async function() {
                 try {
-                    await navigator.clipboard.writeText(`http://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`);
+                    const textToCopy = `https://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`;
+                    await navigator.clipboard.writeText(textToCopy);
                     alertContainer.style.display = 'block';
                     setTimeout(() => {
                         alertContainer.style.display = 'none';
@@ -456,8 +457,8 @@
             });
 
             shareButton.addEventListener('click', function() {
-                const texto = `http://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`;
-                const url = `http://t.me/share/url?text=${encodeURIComponent(texto)}`;
+                const textToShare = `https://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`;
+                const url = `https://t.me/share/url?text=${encodeURIComponent(textToShare)}`;
                 window.open(url, '_blank');
             });
 
