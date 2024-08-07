@@ -11,14 +11,12 @@
             background: radial-gradient(circle at center, #0047ab, #002357, #000000);
             color: white;
             margin: 0;
-            padding-bottom: 60px; /* Espacio para la barra de navegación */
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            box-sizing: border-box;
-            overflow-y: auto;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            align-items: center;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
         * {
             margin: 0px;
@@ -29,11 +27,9 @@
         }
         .container {
             display: flex;
-            flex: 1;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            position: relative;
         }
         .rectangles {
             display: flex;
@@ -70,7 +66,10 @@
         }
         .bottom-buttons {
             display: flex;
-            padding: 10px 0;
+            justify-content: space-between;
+            width: 100%;
+            position: fixed;
+            bottom: 75px;
         }
         .bottom-rectangle {
             background-color: rgb(11, 62, 121);
@@ -122,10 +121,7 @@
             margin: 0 auto; /* Centra la barra de navegación */
             background-color: #222222;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
+            bottom: 10px;
             user-select: none; /* Evita que la imagen sea seleccionable */
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
@@ -189,14 +185,13 @@
             color: yellow;
             margin-left: auto; /* Alinea el score a la derecha */
         }
-        
     </style>
 </head>
 <body>
     <div id="alert-container" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000;">Texto copiado ✅</div>
-    <div class="main-container">
-        <h1 style="margin-top: 30px; text-align: center">Invite Friends!</h1>
-        <h4 style="text-align: center">You and your friend will receive bonuses</h4>
+    <div class="container">
+        <h1 style="margin-top: 30px;">Invite Friends!</h1>
+        <h4>You and your friend will receive bonuses</h4>
         <div class="rectangles">
             <div class="rectangle">
                 <div class="icon">
@@ -204,7 +199,7 @@
                 </div>
                 <div class="text">
                     <h3>Invite a friend</h3>
-                    <p><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon><span style="color: yellow; font-weight: bolder;"> +5000</span> for you and your friend</p>
+                    <p><span style="color: yellow; font-weight: bolder;">+5000</span> for you and your friend</p>
                     </div>
                 </div>
             </div>
@@ -214,16 +209,16 @@
                 </div>
                 <div class="text">
                     <h3>Invite a friend with Premium</h3>
-                    <p><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon><span style="color: yellow; font-weight: bold;"> +25000</span> for you and your friend</span></p>
+                    <p><span style="color: yellow; font-weight: bold;">+25000</span> for you and your friend</span></p>
                     </div>
                 </div>
             </div>
         </div>
-        <h2 style="color: rgb(0, 204, 255); margin-top: 3%; text-align: center">More Bonuses</h3>
-        <h4 style="margin: 5px;"><span style="left: 3%;" id="friends-list-label">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
+        <h2 style="color: rgb(0, 204, 255); margin-top: 3%;">More Bonuses</h3>
+        <h4><span style="position:fixed; left: 3%;" id="friends-list-label">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
-            <div class="rectangle" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
+            <div class="rectangle" style="border-radius: 20px; height: 220px;" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
@@ -240,18 +235,10 @@
             </div>
             <button class="square-button" id="copy-button"><iconify-icon icon="bitcoin-icons:copy-outline" style="font-size:35px;"></iconify-icon></button>
         </div>
-        <div class="navbar">
-            <a href="index.html#exchange" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-            <a href="index.html#mine" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
-            <a href="friends.html" id="friendsNav" class="active"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-            <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
-            <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
-        </div>
     </div>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const mainContainer = document.getElementById('main-container');
             const tg = window.Telegram.WebApp;
             const reloadIcon = document.querySelector('.reload-icon');
             const scrollableContent = document.getElementById('scrollable-content');
@@ -342,9 +329,10 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = "<div style='display: flex; justify-content: center; align-items: center; height: 100%; font-weight: bold; color: rgba(255, 255, 255, 0.5);'>You haven't invited anyone yet</div>";
+                    scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
+                    scrollableContent.textContent = "You haven't invited anyone yet"
                 } else {
-                    scrollableRectangle.style = "border-radius: 20px; height: auto; max-height: calc(100vh - 280px);"
+                    scrollableRectangle.style = "border-radius: 20px; height: 220px;"
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
@@ -356,7 +344,7 @@
                         leftContent.style = 'display: flex; align-items: center;';
 
                         const userPhoto = document.createElement('img');
-                        userPhoto.src = `https://t.me/i/userpic/320/${name}.jpg`;
+                        userPhoto.src = 'https://t.me/i/userpic/320/developer_bot_luc.jpg';
                         userPhoto.classList.add('user-photo');
                         userPhoto.style = 'width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;';
                         userPhoto.onload = function() {
@@ -404,32 +392,34 @@
             let velocityY = 0;
             let isScrolling = false;
 
-            mainContainer.addEventListener('touchstart', function(event) {
+            scrollableRectangle.addEventListener('touchstart', function(event) {
                 startY = event.touches[0].clientY;
                 lastY = startY;
                 velocityY = 0;
                 isScrolling = true;
             });
 
-            mainContainer.addEventListener('touchmove', function(event) {
+            scrollableRectangle.addEventListener('touchmove', function(event) {
+                event.preventDefault();
                 const touchY = event.touches[0].clientY;
                 const deltaY = (startY - touchY);
-                mainContainer.scrollTop += deltaY;
+                scrollableContent.scrollTop += deltaY;
                 startY = touchY;
 
+                // Calcular la velocidad del desplazamiento
                 velocityY = touchY - lastY;
                 lastY = touchY;
             });
 
-            mainContainer.addEventListener('touchend', function() {
+            scrollableRectangle.addEventListener('touchend', function() {
                 isScrolling = false;
                 requestAnimationFrame(applyInertia);
             });
 
             function applyInertia() {
                 if (!isScrolling && Math.abs(velocityY) > 0.5) {
-                    mainContainer.scrollTop += velocityY;
-                    velocityY *= 0.95;
+                    scrollableContent.scrollTop += velocityY;
+                    velocityY *= 0.95; // Deceleración suave
                     requestAnimationFrame(applyInertia);
                 }
             }
@@ -460,5 +450,12 @@
             tg.ready();
         });
     </script>
+    <div class="navbar">
+        <a href="index.html#exchange" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+        <a href="index.html#mine" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="index.html#friends" id="friendsNav" class="active"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+        <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+        <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="cryptocurrency-color:ncash"></iconify-icon><span>Airdrop</span></a>
+      </div>
 </body>
 </html>
