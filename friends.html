@@ -189,7 +189,14 @@
             color: yellow;
             margin-left: auto; /* Alinea el score a la derecha */
         }
-        
+        .no-invites-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -342,7 +349,7 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = "<div style='display: flex; justify-content: center; align-items: center; height: 100%; font-weight: bold; color: rgba(255, 255, 255, 0.5);'>You haven't invited anyone yet</div>";
+                    scrollableContent.innerHTML = `<div class="no-invites-message">You haven't invited anyone yet</div>`;
                 } else {
                     scrollableRectangle.style = "border-radius: 20px; height: auto; max-height: calc(100vh - 280px);"
                     scrollableContent.innerHTML = '';
