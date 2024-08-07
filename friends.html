@@ -320,6 +320,8 @@
                 }
 
                 // Mostrar el mensaje de carga
+                scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
+                
                 scrollableContent.innerHTML = `
                     <div class="loading-container">
                         <div class="loading-spinner"></div>
@@ -338,43 +340,98 @@
 
             function displayReferrals(data) {
                 if (data.referrals_count === 0) {
-                    scrollableRectangle.style = 'border-radius: 20px; height: 70px; display: flex; justify-content: center; font-weight: bold; color: rgba(255, 255, 255, 0.5)';
-                    scrollableContent.textContent = "You haven't invited anyone yet"
+                    scrollableContent.innerHTML = "<div style='display: flex; justify-content: center; align-items: center; height: 100%; font-weight: bold; color: rgba(255, 255, 255, 0.5);'>You haven't invited anyone yet</div>";
                 } else {
-                    scrollableRectangle.style = "border-radius: 20px; height: 220px;"
+                    scrollableRectangle.style = "border-radius: 20px; height: auto; max-height: calc(100vh - 280px);"
                     scrollableContent.innerHTML = '';
                     const referrals = data.referrals_name.split(', ');
                     const scores = data.referrals_score.split(', ');
                     referrals.forEach((name, index) => {
+                        const referralItem = document.createElement('div');
+                        referralItem.style = 'display: flex; align-items: center; justify-content: space-between; margin: 10px 0; width: 100%; padding: 0 10px;';
+
+                        const leftContent = document.createElement('div');
+                        leftContent.style = 'display: flex; align-items: center;';
+
+                        const userPhoto = document.createElement('img');
+                        userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`;
+                        userPhoto.classList.add('user-photo');
+                        userPhoto.style = 'width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;';
+                        userPhoto.onload = function() {
+                            if (userPhoto.naturalWidth <= 1 || userPhoto.naturalHeight <= 1) {
+                                userPhoto.remove();
+                                const icon = document.createElement('iconify-icon');
+                                icon.icon = 'fluent-emoji-flat:person-zombie';
+                                icon.style = 'font-size: 40px; margin-right: 10px;';
+                                leftContent.insertBefore(icon, leftContent.firstChild);
+                            }
+                        };
+                        userPhoto.onerror = function() {
+                            userPhoto.remove();
+                            const icon = document.createElement('iconify-icon');
+                            icon.icon = 'fluent-emoji-flat:person-zombie';
+                            icon.style = 'font-size: 40px; margin-right: 10px;';
+                            leftContent.insertBefore(icon, leftContent.firstChild);
+                        };
+
+                        leftContent.appendChild(userPhoto);
+
                         const referralName = document.createElement('h4');
-                        referralName.style = 'margin: 10px';
+                        referralName.style = 'margin: 0;';
                         referralName.textContent = name;
-                        scrollableContent.appendChild(referralName);
+                        leftContent.appendChild(referralName);
+
+                        referralItem.appendChild(leftContent);
 
                         const scoreText = document.createElement('p');
-                        scoreText.style = 'margin-left: 25px; margin-bottom: 20px';
+                        scoreText.style = 'margin: 0; color: yellow;';
                         scoreText.textContent = `Score: ${scores[index]}`;
-                        scrollableContent.appendChild(scoreText);
+                        referralItem.appendChild(scoreText);
+
+                        scrollableContent.appendChild(referralItem);
                     });
                 }
+
+                friendsListLabel.textContent = `List of your friends (${data.referrals_count})`;
             }
 
             loadReferrals();
 
             let startY = 0;
+            let lastY = 0;
+            let velocityY = 0;
+            let isScrolling = false;
 
-            scrollableRectangle.addEventListener('touchstart', function(event) {
+            mainContainer.addEventListener('touchstart', function(event) {
                 startY = event.touches[0].clientY;
+                lastY = startY;
+                velocityY = 0;
+                isScrolling = true;
             });
 
-            scrollableRectangle.addEventListener('touchmove', function(event) {
-                event.preventDefault();
+            mainContainer.addEventListener('touchmove', function(event) {
                 const touchY = event.touches[0].clientY;
-                const deltaY = startY - touchY;
-                scrollableContent.scrollTop += deltaY;
+                const deltaY = (startY - touchY);
+                mainContainer.scrollTop += deltaY;
                 startY = touchY;
+
+                velocityY = touchY - lastY;
+                lastY = touchY;
             });
 
+            mainContainer.addEventListener('touchend', function() {
+                isScrolling = false;
+                requestAnimationFrame(applyInertia);
+            });
+
+            function applyInertia() {
+                if (!isScrolling && Math.abs(velocityY) > 0.5) {
+                    mainContainer.scrollTop += velocityY;
+                    velocityY *= 0.95;
+                    requestAnimationFrame(applyInertia);
+                }
+            }
+            
             copyButton.addEventListener('click', async function() {
                 try {
                     await navigator.clipboard.writeText('Ola');
