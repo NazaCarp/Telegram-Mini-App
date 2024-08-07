@@ -447,7 +447,7 @@
             
             copyButton.addEventListener('click', async function() {
                 try {
-                    const textToCopy = "`https://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`";
+                    const textToCopy = `https://t.me/MiniAppDePrueba_bot/RiverPlate?startapp=${user_id}`;
                     await navigator.clipboard.writeText(textToCopy);
                     alertContainer.style.display = 'block';
                     setTimeout(() => {
