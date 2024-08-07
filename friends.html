@@ -421,11 +421,14 @@
             let velocityY = 0;
             let isScrolling = false;
 
-            mainContainer.addEventListener('touchstart', function(event) {
-                startY = event.touches[0].clientY;
-                lastY = startY;
-                velocityY = 0;
-                isScrolling = true;
+            mainContainer.addEventListener('touchmove', function(event) {
+                const touchY = event.touches[0].clientY;
+                const deltaY = (startY - touchY);
+                mainContainer.scrollTop += deltaY;
+                startY = touchY;
+
+                velocityY = touchY - lastY;
+                lastY = touchY;
             });
 
             tg.onEvent('backButtonClicked', () => {
