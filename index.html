@@ -194,7 +194,9 @@
     let from_user = ''
     const user = tg.initDataUnsafe.user;
     const user_id = user.id;
-    const username = (user.username || (user.first_name + ' ' + (user.last_name || '')))
+    const name = user.first_name + ' ' + (user.last_name || '')
+    const username = (user.username || '')
+    // const username = (user.username || (user.first_name + ' ' + (user.last_name || '')))
 
     // Manejar el parámetro startapp
     const startParam = tg.initDataUnsafe.start_param;
@@ -204,7 +206,8 @@
 
     async function loadAndUpdateCounters() {
       // Primero, obtener los contadores
-      const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&username=${username}`);
+      const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}`);
+      // const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&username=${username}`);
       const data = await response.json();
       
       // Actualizar las variables de contadores con los datos obtenidos
@@ -345,7 +348,8 @@
 
         // Crear el elemento del nombre de perfil
         const userName = document.createElement('span');
-        userName.textContent = username;
+        userName.textContent = name;
+        // userName.textContent = username;
 
         userInfo.appendChild(userPhoto);
         userInfo.appendChild(userName);
