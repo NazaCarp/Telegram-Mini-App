@@ -192,7 +192,6 @@
     let score = 0;
     let secondaryCount = 0;
     let lastTimestamp = 0;
-    let from_user = ''
     const user = tg.initDataUnsafe.user;
     const user_id = user.id;
     const name = user.first_name + ' ' + (user.last_name || '')
@@ -200,9 +199,6 @@
 
     // Manejar el parámetro startapp
     const startParam = tg.initDataUnsafe.start_param;
-    if (startParam) {
-      from_user = startParam
-    }
 
     async function loadAndUpdateCounters() {
       // Primero, obtener los contadores

@@ -50,14 +50,6 @@ def get_counters():
                 referrer = db.query(Referral).filter_by(user_id=int(startParam)).first()
                 if referrer:
                     referrer.referrals_count += 1
-                    if referrer.referrals_name:
-                        referrer.referrals_name += f', {name}'
-                    else:
-                        referrer.referrals_name = name
-                    if referrer.referrals_id:
-                        referrer.referrals_id += f', {user_id}'
-                    else:
-                        referrer.referrals_id = user_id
                     db.commit()
 
                 referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
