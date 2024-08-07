@@ -348,14 +348,8 @@
             }
 
             function displayReferrals(data) {
-                scrollableContent.innerHTML = `
-                    <div class="loading-container">
-                        <div class="loading-spinner"></div>
-                        <span style="margin-left: 10px; color: rgba(255, 255, 255, 1)">Loading referral list...</span>
-                    </div>
-                `;
                 if (data.referrals_count === 0) {
-                    scrollableContent.innerHTML = `<div class="loading-container">You haven't invited anyone yet</div>`;
+                    scrollableContent.innerHTML = `<p class="no-invites-message"><div class="loading-container">You haven't invited anyone yet</div></p>`;
                 } else {
                     scrollableRectangle.style = "border-radius: 20px; height: auto; max-height: calc(100vh - 280px);"
                     scrollableContent.innerHTML = '';
