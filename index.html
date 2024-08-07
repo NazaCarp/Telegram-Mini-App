@@ -301,10 +301,15 @@
 
     function incrementSecondaryCounter() {
       if (secondaryCount < energyLimit) { // Usar energyLimit
-        secondaryCount += rechargeSpeed; // Usar rechargeSpeed
-        lastTimestamp = Date.now();
-        document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
-        saveCounts();
+        if (secondaryCount + energyLimit > 1500) {
+          secondaryCount = energyLimit
+        }
+        else {
+          secondaryCount += rechargeSpeed; // Usar rechargeSpeed
+          lastTimestamp = Date.now();
+          document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
+          saveCounts();
+        }
       }
     }
 
