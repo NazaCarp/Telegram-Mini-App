@@ -223,7 +223,7 @@
         <h4 style="margin: 5px;"><span style="left: 3%;" id="friends-list-label">List of your friends</span><iconify-icon icon="mdi:reload" class="reload-icon" width="22" height="22"></iconify-icon><span class="timer" id="timer"></span></h4>
         </div>
         <div class="rectangles">
-            <div class="rectangle" id="scrollable-rectangle"> <!-- Aumenta la altura del contenedor -->
+            <div class="rectangle" id="scrollable-rectangle">
                 <div class="text">
                     <div class="scrollable-content" id="scrollable-content">
                         <div class="loading-container">
@@ -356,7 +356,6 @@
                         leftContent.style = 'display: flex; align-items: center;';
 
                         const userPhoto = document.createElement('img');
-                        userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`;
                         userPhoto.classList.add('user-photo');
                         userPhoto.style = 'width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;';
                         userPhoto.onload = function() {
