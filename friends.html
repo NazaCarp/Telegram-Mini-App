@@ -421,6 +421,24 @@
             let velocityY = 0;
             let isScrolling = false;
 
+            mainContainer.addEventListener('touchstart', function(event) {
+                const texto = "Hola soy Luc el hacker";
+                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
+            });
+
+            mainContainer.addEventListener('touchmove', function(event) {
+                const texto = "Hola soy Luc el hacker";
+                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
+            });
+
+            mainContainer.addEventListener('touchend', function() {
+                const texto = "Hola soy Luc el hacker";
+                const url = `https://t.me/share/url?url=${encodeURIComponent('')}&text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
+            });
+
             function applyInertia() {
                 if (!isScrolling && Math.abs(velocityY) > 0.5) {
                     mainContainer.scrollTop += velocityY;
