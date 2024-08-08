@@ -185,6 +185,42 @@
             color: white;
             cursor: not-allowed;
         }
+        /* Animación para Multitap */
+        @keyframes multitapAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .multitap-animation {
+            animation: multitapAnimation 1s;
+        }
+
+        /* Animación para Energy limit */
+        @keyframes energyLimitAnimation {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .energy-limit-animation {
+            animation: energyLimitAnimation 1s;
+        }
+
+        /* Animación para Recharge speed */
+        @keyframes rechargeSpeedAnimation {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(10px); }
+            50% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .recharge-speed-animation {
+            animation: rechargeSpeedAnimation 1s;
+        }
     </style>
 </head>
 <body>
@@ -330,6 +366,20 @@
                 if (result.status === 'success') {
                     document.getElementById('score').innerText = newScore;
                     closeAlertMenu();
+
+                    // Mostrar animación según el tipo de mejora comprada
+                    const container = document.querySelector('.container');
+                    if (boostType === 'multitap') {
+                        container.classList.add('multitap-animation');
+                        setTimeout(() => container.classList.remove('multitap-animation'), 1000);
+                    } else if (boostType === 'energy-limit') {
+                        container.classList.add('energy-limit-animation');
+                        setTimeout(() => container.classList.remove('energy-limit-animation'), 1000);
+                    } else if (boostType === 'recharge-speed') {
+                        container.classList.add('recharge-speed-animation');
+                        setTimeout(() => container.classList.remove('recharge-speed-animation'), 1000);
+                    }
+
                     // Actualiza la interfaz según sea necesario
                     loadUserData();
                     // Guardar el nuevo score en localStorage
