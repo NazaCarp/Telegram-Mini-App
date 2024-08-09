@@ -17,6 +17,9 @@ def index():
 def serve_friends():
     return render_template('friends.html')
 
+@app.route('/mine.html')
+def mine():
+    return render_template('mine.html')
 
 @app.route('/boosts.html')
 def serve_boosts():

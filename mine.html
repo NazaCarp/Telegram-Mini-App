@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mine</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at center, #0047ab, #002357, #000000);
+            color: white;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+            transition: filter 0.3s ease;
+        }
+        * {
+            margin: 0px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 70px; /* Añadido para evitar que la barra de navegación tape el contenido */
+        }
+        .score {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 50px;
+            font-size: 80px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 60px;
+            border-radius: 50px;
+            margin: 0 auto; /* Centra la barra de navegación */
+            background-color: #222222;
+            position: fixed;
+            bottom: 0;
+            user-select: none; /* Evita que los íconos sean seleccionables */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+            z-index: 1000; /* Asegura que la barra de navegación esté por encima del contenido */
+        }
+        .navbar a {
+            color: gray;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 14px;
+            position: relative;
+        }
+        .navbar a.active span, .navbar a.active iconify-icon {
+            color: white;
+        }
+        .navbar a iconify-icon {
+            font-size: 24px;
+        }
+        .navbar a.active::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: -14px;
+            right: -14px;
+            bottom: -7px;
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.267);
+            z-index: -1;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 60px;
+            background-color: #222222;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .tabs a {
+            color: gray;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 14px;
+            position: relative;
+        }
+        .tabs a.active span, .tabs a.active iconify-icon {
+            color: white;
+        }
+        .tabs a iconify-icon {
+            font-size: 24px;
+        }
+        .tabs a.active::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: -14px;
+            right: -14px;
+            bottom: -7px;
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.267);
+            z-index: -1;
+        }
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 60px;
+            margin-bottom: 70px; /* Añadido para evitar que la barra de navegación tape el contenido */
+        }
+        .tab-content.active {
+            display: flex;
+        }
+        .rectangle {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            border-radius: 50px;
+            border: 2px solid white;
+            width: 95%;
+            margin: 5px;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .icon {
+            margin: 10px;
+            font-size: 45px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button"><iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>Back</a>
+    <div class="container">
+        <div class="score" id="score" style="color: rgb(255, 255, 255)"><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>0</div>
+        <h5>Balance</h5>
+        <div class="tabs">
+            <a href="#" id="northAmericaTab" class="active"><iconify-icon icon="simple-icons:mls"></iconify-icon><span>América del Norte</span></a>
+            <a href="#" id="southAmericaTab"><iconify-icon icon="simple-icons:conmebol"></iconify-icon><span>América del Sur</span></a>
+            <a href="#" id="europeTab"><iconify-icon icon="simple-icons:uefa"></iconify-icon><span>Europa</span></a>
+            <a href="#" id="asiaTab"><iconify-icon icon="simple-icons:afc"></iconify-icon><span>Asia</span></a>
+            <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>África</span></a>
+        </div>
+        <div class="tab-content active" id="northAmericaContent"></div>
+        <div class="tab-content" id="southAmericaContent"></div>
+        <div class="tab-content" id="europeContent"></div>
+        <div class="tab-content" id="asiaContent"></div>
+        <div class="tab-content" id="africaContent"></div>
+    </div>
+    <div class="navbar">
+        <a href="index.html#exchange" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+        <a href="index.html#mine" id="mineNav" class="active"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+        <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+        <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
+    </div>
+    <script>
+        const tg = window.Telegram.WebApp;
+
+        async function loadScore() {
+            const storedScore = localStorage.getItem('score');
+            if (storedScore !== null) {
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore}`;
+            } else {
+                const user_id = tg.initDataUnsafe.user.id;
+                const response = await fetch(`/get_counters?user_id=${user_id}`);
+                const data = await response.json();
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score}`;
+                // Guardar el score en localStorage
+                localStorage.setItem('score', data.score);
+            }
+        }
+
+        function generateRectangles(containerId, icons, texts) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // Limpiar contenido anterior
+
+            for (let i = 0; i < 12; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+
+                for (let j = 0; j < 2; j++) {
+                    if (i === 11 && j === 1) break; // Última fila con 1 rectángulo
+
+                    const rectangle = document.createElement('div');
+                    rectangle.className = 'rectangle';
+
+                    const iconElement = document.createElement('div');
+                    iconElement.className = 'icon';
+                    iconElement.innerHTML = `<iconify-icon icon="${icons[Math.floor(Math.random() * icons.length)]}"></iconify-icon>`;
+
+                    const textElement = document.createElement('div');
+                    textElement.className = 'text';
+                    textElement.innerHTML = `<h3>${texts[Math.floor(Math.random() * texts.length)]}</h3>`;
+
+                    rectangle.appendChild(iconElement);
+                    rectangle.appendChild(textElement);
+                    row.appendChild(rectangle);
+                }
+
+                container.appendChild(row);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadScore();
+
+            const tabs = document.querySelectorAll('.tabs a');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            const northAmericaIcons = ['simple-icons:mls', 'simple-icons:cfmontreal', 'simple-icons:fcdenver'];
+            const northAmericaTexts = ['MLS', 'CF Montreal', 'FC Denver'];
+
+            const southAmericaIcons = ['simple-icons:conmebol', 'simple-icons:santosfc', 'simple-icons:clublibertad'];
+            const southAmericaTexts = ['CONMEBOL', 'Santos FC', 'Club Libertad'];
+
+            const europeIcons = ['simple-icons:uefa', 'simple-icons:fcbarcelona', 'simple-icons:mancity'];
+            const europeTexts = ['UEFA', 'FC Barcelona', 'Manchester City'];
+
+            const asiaIcons = ['simple-icons:afc', 'simple-icons:gambaosaka', 'simple-icons:alhilal'];
+            const asiaTexts = ['AFC', 'Gamba Osaka', 'Al Hilal'];
+
+            const africaIcons = ['simple-icons:caf', 'simple-icons:alahly', 'simple-icons:eskisehirspor'];
+            const africaTexts = ['CAF', 'Al Ahly', 'Eskişehirspor'];
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    const targetId = tab.id.replace('Tab', 'Content');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(targetId).classList.add('active');
+
+                    // Generar rectángulos según la pestaña activa
+                    switch (targetId) {
+                        case 'northAmericaContent':
+                            generateRectangles('northAmericaContent', northAmericaIcons, northAmericaTexts);
+                            break;
+                        case 'southAmericaContent':
+                            generateRectangles('southAmericaContent', southAmericaIcons, southAmericaTexts);
+                            break;
+                        case 'europeContent':
+                            generateRectangles('europeContent', europeIcons, europeTexts);
+                            break;
+                        case 'asiaContent':
+                            generateRectangles('asiaContent', asiaIcons, asiaTexts);
+                            break;
+                        case 'africaContent':
+                            generateRectangles('africaContent', africaIcons, africaTexts);
+                            break;
+                    }
+                });
+            });
+
+            // Generar rectángulos iniciales para la pestaña activa por defecto
+            generateRectangles('northAmericaContent', northAmericaIcons, northAmericaTexts);
+
+            tg.onEvent('backButtonClicked', () => {
+                window.location.href = 'index.html';
+            });
+
+            tg.BackButton.show();
+        });
+    </script>
+</body>
+</html>
