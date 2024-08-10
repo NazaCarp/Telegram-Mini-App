@@ -129,6 +129,7 @@
         }
         .rectangle {
             display: flex;
+            flex-direction: column;
             align-items: center;
             background-color: #333;
             border-radius: 50px;
@@ -140,12 +141,85 @@
         }
         .icon {
             margin: 10px;
-            font-size: 45px;
+            width: 75px; /* Ajusta el ancho de la imagen */
+            height: 75px; /* Ajusta la altura de la imagen */
+            object-fit: contain; /* Asegura que la imagen se ajuste sin deformarse */
         }
         .row {
             display: flex;
             justify-content: space-around;
             width: 100%;
+        }
+        /* Añadir estilos para el subtítulo y el contenido adicional */
+        .subtitle {
+            font-size: 14px;
+            color: gray;
+            margin-top: 5px;
+        }
+        .profit-info {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .profit-info iconify-icon {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+        .profit-info span {
+            font-size: 16px;
+            color: yellow;
+        }
+        /* Añadir estilos para la línea divisora y las secciones adicionales */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: rgb(255, 255, 255, 0.2);
+            margin: 10px 0;
+        }
+
+        .vertical-divider {
+            width: 1px;
+            height: 100%;
+            margin-left: 5px;
+            margin-right: 5px;
+            background-color: rgb(255, 255, 255, 0.2);
+        }
+
+        .section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .section-left {
+            display: flex;
+            justify-content: flex-end; /* Alinea el contenido a la derecha */
+            align-items: center;
+            flex: 4; /* 70% del espacio */
+        }
+
+        .section-right {
+            display: flex;
+            align-items: center;
+            flex: 6; /* 30% del espacio */
+        }
+
+        .section-right iconify-icon {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .section-right span {
+            font-size: 16px;
+            color: yellow;
+        }
+
+        .text-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
         }
     </style>
 </head>
@@ -155,8 +229,8 @@
         <div class="score" id="score" style="color: rgb(255, 255, 255)"><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>0</div>
         <h5>Balance</h5>
         <div class="tabs">
-            <a href="#" id="northAmericaTab" class="active"><iconify-icon icon="simple-icons:mls"></iconify-icon><span>América del Norte</span></a>
-            <a href="#" id="southAmericaTab"><iconify-icon icon="simple-icons:conmebol"></iconify-icon><span>América del Sur</span></a>
+            <a href="#" id="northAmericaTab" class="active"><iconify-icon icon="simple-icons:mls"></iconify-icon><span>North America</span></a>
+            <a href="#" id="southAmericaTab"><iconify-icon icon="simple-icons:conmebol"></iconify-icon><span>South America</span></a>
             <a href="#" id="europeTab"><iconify-icon icon="simple-icons:uefa"></iconify-icon><span>Europa</span></a>
             <a href="#" id="asiaTab"><iconify-icon icon="simple-icons:afc"></iconify-icon><span>Asia</span></a>
             <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>África</span></a>
@@ -168,8 +242,8 @@
         <div class="tab-content" id="africaContent"></div>
     </div>
     <div class="navbar">
-        <a href="index.html#exchange" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-        <a href="index.html#mine" id="mineNav" class="active"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="index.html" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+        <a href="mine.html" id="mineNav" class="active"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
         <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
         <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
@@ -191,30 +265,86 @@
             }
         }
 
-        function generateRectangles(containerId, icons, texts) {
+        function generateRectangles(containerId, clubs) {
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Limpiar contenido anterior
 
-            for (let i = 0; i < 12; i++) {
+            const rows = Math.ceil(clubs.length / 2);
+
+            for (let i = 0; i < rows; i++) {
                 const row = document.createElement('div');
                 row.className = 'row';
 
                 for (let j = 0; j < 2; j++) {
-                    if (i === 11 && j === 1) break; // Última fila con 1 rectángulo
+                    const index = i * 2 + j;
+                    if (index >= clubs.length) break; // Salir si no hay más clubes
+
+                    const club = clubs[index];
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
 
-                    const iconElement = document.createElement('div');
-                    iconElement.className = 'icon';
-                    iconElement.innerHTML = `<iconify-icon icon="${icons[Math.floor(Math.random() * icons.length)]}"></iconify-icon>`;
+                    const imageElement = document.createElement('img');
+                    imageElement.className = 'icon';
+                    imageElement.src = club.image;
+                    imageElement.alt = club.name;
 
-                    const textElement = document.createElement('div');
-                    textElement.className = 'text';
-                    textElement.innerHTML = `<h3>${texts[Math.floor(Math.random() * texts.length)]}</h3>`;
+                    const textContent = document.createElement('div');
+                    textContent.className = 'text-content';
 
-                    rectangle.appendChild(iconElement);
-                    rectangle.appendChild(textElement);
+                    const title = document.createElement('h3');
+                    title.style.fontSize = '14px'; // Tamaño de letra más chico
+                    title.textContent = club.name;
+
+                    const subtitle = document.createElement('div');
+                    subtitle.className = 'subtitle';
+                    subtitle.textContent = 'Profit per hour';
+
+                    const profitInfo = document.createElement('div');
+                    profitInfo.className = 'profit-info';
+                    const profitIcon = document.createElement('iconify-icon');
+                    profitIcon.icon = 'twemoji:coin';
+                    const profitSpan = document.createElement('span');
+                    profitSpan.textContent = '1000';
+
+                    profitInfo.appendChild(profitIcon);
+                    profitInfo.appendChild(profitSpan);
+
+                    const divider = document.createElement('div');
+                    divider.className = 'divider';
+
+                    const section = document.createElement('div');
+                    section.className = 'section';
+
+                    const sectionLeft = document.createElement('div');
+                    sectionLeft.className = 'section-left';
+                    sectionLeft.textContent = 'lvl 1';
+
+                    const verticalDivider = document.createElement('div');
+                    verticalDivider.className = 'vertical-divider';
+
+                    const sectionRight = document.createElement('div');
+                    sectionRight.className = 'section-right';
+                    const sectionRightIcon = document.createElement('iconify-icon');
+                    sectionRightIcon.icon = 'twemoji:coin';
+                    const sectionRightSpan = document.createElement('span');
+                    sectionRightSpan.textContent = '1000';
+
+                    sectionRight.appendChild(sectionRightIcon);
+                    sectionRight.appendChild(sectionRightSpan);
+
+                    section.appendChild(sectionLeft);
+                    section.appendChild(verticalDivider);
+                    section.appendChild(sectionRight);
+
+                    textContent.appendChild(title);
+                    textContent.appendChild(subtitle);
+                    textContent.appendChild(profitInfo);
+                    textContent.appendChild(divider);
+                    textContent.appendChild(section);
+
+                    rectangle.appendChild(imageElement);
+                    rectangle.appendChild(textContent);
                     row.appendChild(rectangle);
                 }
 
@@ -228,20 +358,57 @@
             const tabs = document.querySelectorAll('.tabs a');
             const tabContents = document.querySelectorAll('.tab-content');
 
-            const northAmericaIcons = ['simple-icons:mls', 'simple-icons:cfmontreal', 'simple-icons:fcdenver'];
-            const northAmericaTexts = ['MLS', 'CF Montreal', 'FC Denver'];
+            const northAmericaClubs = [
+                { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg' },
+                { name: 'Houston Dynamo FC', image: '/static/images/North America/Houston Dynamo FC.svg' },
+                { name: 'Los Angeles Galaxy', image: '/static/images/North America/Los Angeles Galaxy.svg' },
+                { name: 'CF Montreal', image: '/static/images/North America/CF Montreal.svg' },
+                { name: 'New York Red Bulls', image: '/static/images/North America/New York Red Bulls.svg' },
+                { name: 'Seattle Sounders FC', image: '/static/images/North America/Seattle Sounders FC.svg' },
+                { name: 'Atlanta United FC', image: '/static/images/North America/Atlanta United FC.svg' },
+                { name: 'Chicago Fire FC', image: '/static/images/North America/Chicago Fire FC.svg' },
+                { name: 'Columbus Crew SC', image: '/static/images/North America/Columbus Crew SC.svg' },
+                { name: 'DC United', image: '/static/images/North America/DC United.svg' },
+                { name: 'FC Dallas', image: '/static/images/North America/FC Dallas.svg' },
+                { name: 'Los Angeles FC', image: '/static/images/North America/Los Angeles FC.svg' },
+                { name: 'Minnesota United FC', image: '/static/images/North America/Minnesota United FC.svg' },
+                { name: 'Nashville SC', image: '/static/images/North America/Nashville SC.svg' },
+                { name: 'Orlando City SC', image: '/static/images/North America/Orlando City SC.svg' },
+                { name: 'Philadelphia Union', image: '/static/images/North America/Philadelphia Union.svg' },
+                { name: 'Portland Timbers', image: '/static/images/North America/Portland Timbers.svg' },
+                { name: 'Real Salt Lake', image: '/static/images/North America/Real Salt Lake.svg' },
+                { name: 'San Jose Earthquakes', image: '/static/images/North America/San Jose Earthquakes.svg' },
+                { name: 'Sporting Kansas City', image: '/static/images/North America/Sporting Kansas City.svg' },
+                { name: 'Club America', image: '/static/images/North America/Club America.svg' },
+                { name: 'Cruz Azul', image: '/static/images/North America/Cruz Azul.svg' },
+                { name: 'Chivas Guadalajara', image: '/static/images/North America/Chivas Guadalajara.svg' },
+                { name: 'Pumas UNAM', image: '/static/images/North America/Pumas UNAM.svg' },
+                { name: 'Tigres UANL', image: '/static/images/North America/Tigres UANL.svg' }
+            ];
 
-            const southAmericaIcons = ['simple-icons:conmebol', 'simple-icons:santosfc', 'simple-icons:clublibertad'];
-            const southAmericaTexts = ['CONMEBOL', 'Santos FC', 'Club Libertad'];
+            const southAmericaClubs = [
+                { name: 'CONMEBOL', image: '/static/images/conmebol.png' },
+                { name: 'Santos FC', image: '/static/images/santosfc.png' },
+                { name: 'Club Libertad', image: '/static/images/clublibertad.png' }
+            ];
 
-            const europeIcons = ['simple-icons:uefa', 'simple-icons:fcbarcelona', 'simple-icons:mancity'];
-            const europeTexts = ['UEFA', 'FC Barcelona', 'Manchester City'];
+            const europeClubs = [
+                { name: 'UEFA', image: '/static/images/uefa.png' },
+                { name: 'FC Barcelona', image: '/static/images/fcbarcelona.png' },
+                { name: 'Manchester City', image: '/static/images/mancity.png' }
+            ];
 
-            const asiaIcons = ['simple-icons:afc', 'simple-icons:gambaosaka', 'simple-icons:alhilal'];
-            const asiaTexts = ['AFC', 'Gamba Osaka', 'Al Hilal'];
+            const asiaClubs = [
+                { name: 'AFC', image: '/static/images/afc.png' },
+                { name: 'Gamba Osaka', image: '/static/images/gambaosaka.png' },
+                { name: 'Al Hilal', image: '/static/images/alhilal.png' }
+            ];
 
-            const africaIcons = ['simple-icons:caf', 'simple-icons:alahly', 'simple-icons:eskisehirspor'];
-            const africaTexts = ['CAF', 'Al Ahly', 'Eskişehirspor'];
+            const africaClubs = [
+                { name: 'CAF', image: '/static/images/caf.png' },
+                { name: 'Al Ahly', image: '/static/images/alahly.png' },
+                { name: 'Eskişehirspor', image: '/static/images/eskisehirspor.png' }
+            ];
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', (event) => {
@@ -256,26 +423,26 @@
                     // Generar rectángulos según la pestaña activa
                     switch (targetId) {
                         case 'northAmericaContent':
-                            generateRectangles('northAmericaContent', northAmericaIcons, northAmericaTexts);
+                            generateRectangles('northAmericaContent', northAmericaClubs);
                             break;
                         case 'southAmericaContent':
-                            generateRectangles('southAmericaContent', southAmericaIcons, southAmericaTexts);
+                            generateRectangles('southAmericaContent', southAmericaClubs);
                             break;
                         case 'europeContent':
-                            generateRectangles('europeContent', europeIcons, europeTexts);
+                            generateRectangles('europeContent', europeClubs);
                             break;
                         case 'asiaContent':
-                            generateRectangles('asiaContent', asiaIcons, asiaTexts);
+                            generateRectangles('asiaContent', asiaClubs);
                             break;
                         case 'africaContent':
-                            generateRectangles('africaContent', africaIcons, africaTexts);
+                            generateRectangles('africaContent', africaClubs);
                             break;
                     }
                 });
             });
 
             // Generar rectángulos iniciales para la pestaña activa por defecto
-            generateRectangles('northAmericaContent', northAmericaIcons, northAmericaTexts);
+            generateRectangles('northAmericaContent', northAmericaClubs);
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
