@@ -6,7 +6,6 @@
     <title>Mine</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -117,24 +116,16 @@
             background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
-        .swiper {
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            height: auto; /* Cambiado a auto para que se ajuste al contenido */
             margin-top: 60px;
+            margin-bottom: 70px; /* Añadido para evitar que la barra de navegación tape el contenido */
         }
-        .swiper-slide {
+        .tab-content.active {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            overflow-y: auto;
-        }
-        .swiper-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            overflow-y: auto;
         }
         .rectangle {
             display: flex;
@@ -230,6 +221,24 @@
             width: 100%;
             align-items: center;
         }
+
+        .tab-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-slider {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tab-slide {
+            flex: 0 0 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -244,18 +253,14 @@
             <a href="#" id="asiaTab"><iconify-icon icon="simple-icons:afc"></iconify-icon><span>Asia</span></a>
             <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>África</span></a>
         </div>
-        <!-- Swiper -->
-        <div class="swiper">
-            <div class="swiper-wrapper">
-                <!-- Slides -->
-                <div class="swiper-slide" id="northAmericaContent"></div>
-                <div class="swiper-slide" id="southAmericaContent"></div>
-                <div class="swiper-slide" id="europeContent"></div>
-                <div class="swiper-slide" id="asiaContent"></div>
-                <div class="swiper-slide" id="africaContent"></div>
+        <div class="tab-container">
+            <div class="tab-slider" id="tabSlider">
+                <div class="tab-slide" id="northAmericaContent"></div>
+                <div class="tab-slide" id="southAmericaContent"></div>
+                <div class="tab-slide" id="europeContent"></div>
+                <div class="tab-slide" id="asiaContent"></div>
+                <div class="tab-slide" id="africaContent"></div>
             </div>
-            <!-- If we need pagination -->
-            <div class="swiper-pagination"></div>
         </div>
     </div>
     <div class="navbar">
@@ -265,7 +270,6 @@
         <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
     </div>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
 
@@ -374,26 +378,7 @@
             loadScore();
 
             const tabs = document.querySelectorAll('.tabs a');
-            const swiper = new Swiper('.swiper', {
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                speed: 400,
-                simulateTouch: true,
-                mousewheel: {
-                    forceToAxis: true,
-                },
-                keyboard: {
-                    enabled: true,
-                },
-                touchRatio: 1,
-                edgeSwipeDetection: true,
-                edgeSwipeThreshold: 50,
-                longSwipesMs: 300,
-                longSwipesRatio: 0.5,
-                threshold: 5,
-            });
+            const tabSlider = document.getElementById('tabSlider');
 
             const northAmericaClubs = [
                 { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg' },
@@ -454,9 +439,10 @@
                     tab.classList.add('active');
 
                     const targetId = tab.id.replace('Tab', 'Content');
-                    swiper.slideTo(Array.from(swiper.slides).findIndex(slide => slide.id === targetId));
+                    const targetIndex = Array.from(tabs).indexOf(tab);
+                    tabSlider.style.transform = `translateX(-${targetIndex * 100}%)`;
 
-                    // Generate rectangles and set the height of the swiper-slide
+                    // Generar rectángulos según la pestaña activa
                     switch (targetId) {
                         case 'northAmericaContent':
                             generateRectangles('northAmericaContent', northAmericaClubs);
@@ -474,37 +460,45 @@
                             generateRectangles('africaContent', africaClubs);
                             break;
                     }
-
-                    // Set the height of the swiper-wrapper based on the tallest content
-                    let maxHeight = 0;
-                    swiper.slides.forEach(slide => {
-                        slide.style.height = 'auto';
-                        if (slide.scrollHeight > maxHeight) {
-                            maxHeight = slide.scrollHeight;
-                        }
-                    });
-                    swiper.wrapperEl.style.height = `${maxHeight}px`;
                 });
             });
 
-            // Generate rectangles initially for the default active tab
+            // Generar rectángulos iniciales para la pestaña activa por defecto
             generateRectangles('northAmericaContent', northAmericaClubs);
-
-            // Set the initial height of the swiper-wrapper based on the tallest content
-            let maxHeight = 0;
-            swiper.slides.forEach(slide => {
-                slide.style.height = 'auto';
-                if (slide.scrollHeight > maxHeight) {
-                    maxHeight = slide.scrollHeight;
-                }
-            });
-            swiper.wrapperEl.style.height = `${maxHeight}px`;
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
             });
 
             tg.BackButton.show();
+
+            let startX = 0;
+            let endX = 0;
+            let currentIndex = 0;
+
+            document.addEventListener('touchstart', (event) => {
+                startX = event.touches[0].clientX;
+            });
+
+            document.addEventListener('touchmove', (event) => {
+                endX = event.touches[0].clientX;
+            });
+
+            document.addEventListener('touchend', () => {
+                const deltaX = endX - startX;
+                const threshold = 50; // Umbral para considerar un deslizamiento
+
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX > 0 && currentIndex > 0) {
+                        // Deslizamiento hacia la izquierda (anterior pestaña)
+                        currentIndex--;
+                    } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
+                        // Deslizamiento hacia la derecha (siguiente pestaña)
+                        currentIndex++;
+                    }
+                    tabs[currentIndex].click();
+                }
+            });
         });
     </script>
 </body>
