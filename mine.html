@@ -476,14 +476,18 @@
             let startX = 0;
             let currentX = 0;
             let currentIndex = 0;
+            let isDragging = false;
 
             document.addEventListener('touchstart', (event) => {
                 startX = event.touches[0].clientX;
                 currentX = startX;
+                isDragging = true;
                 tabSlider.style.transition = 'none';
             });
 
             document.addEventListener('touchmove', (event) => {
+                if (!isDragging) return;
+
                 const moveX = event.touches[0].clientX;
                 const deltaX = moveX - currentX;
                 currentX = moveX;
@@ -495,6 +499,9 @@
             });
 
             document.addEventListener('touchend', () => {
+                if (!isDragging) return;
+
+                isDragging = false;
                 const deltaX = currentX - startX;
                 const threshold = 50; // Umbral para considerar un deslizamiento
 
