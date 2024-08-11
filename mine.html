@@ -449,6 +449,35 @@
             });
 
             tg.BackButton.show();
+
+            let startX = 0;
+            let endX = 0;
+
+            document.addEventListener('touchstart', (event) => {
+                startX = event.touches[0].clientX;
+            });
+
+            document.addEventListener('touchmove', (event) => {
+                endX = event.touches[0].clientX;
+            });
+
+            document.addEventListener('touchend', () => {
+                const deltaX = endX - startX;
+                const threshold = 50; // Umbral para considerar un deslizamiento
+
+                if (Math.abs(deltaX) > threshold) {
+                    const activeTab = document.querySelector('.tabs a.active');
+                    const activeIndex = Array.from(tabs).indexOf(activeTab);
+
+                    if (deltaX > 0 && activeIndex > 0) {
+                        // Deslizamiento hacia la izquierda (anterior pestaña)
+                        tabs[activeIndex - 1].click();
+                    } else if (deltaX < 0 && activeIndex < tabs.length - 1) {
+                        // Deslizamiento hacia la derecha (siguiente pestaña)
+                        tabs[activeIndex + 1].click();
+                    }
+                }
+            });
         });
     </script>
 </body>
