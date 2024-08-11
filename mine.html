@@ -226,13 +226,10 @@
         /* Swiper styles */
         .swiper-container {
             width: 100%;
-            height: 100%;
+            height: auto;
         }
         .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
+            height: auto;
         }
     </style>
 </head>
@@ -368,6 +365,10 @@
 
                 container.appendChild(row);
             }
+
+            // Ajustar la altura del contenedor de la pestaña según el contenido generado
+            container.style.height = 'auto';
+            container.parentElement.style.height = `${container.scrollHeight}px`;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
