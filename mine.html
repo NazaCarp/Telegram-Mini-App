@@ -221,24 +221,6 @@
             width: 100%;
             align-items: center;
         }
-
-        .tab-container {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .tab-slider {
-            display: flex;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .tab-slide {
-            flex: 0 0 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
     </style>
 </head>
 <body>
@@ -253,15 +235,11 @@
             <a href="#" id="asiaTab"><iconify-icon icon="simple-icons:afc"></iconify-icon><span>Asia</span></a>
             <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>África</span></a>
         </div>
-        <div class="tab-container">
-            <div class="tab-slider" id="tabSlider">
-                <div class="tab-slide" id="northAmericaContent"></div>
-                <div class="tab-slide" id="southAmericaContent"></div>
-                <div class="tab-slide" id="europeContent"></div>
-                <div class="tab-slide" id="asiaContent"></div>
-                <div class="tab-slide" id="africaContent"></div>
-            </div>
-        </div>
+        <div class="tab-content active" id="northAmericaContent"></div>
+        <div class="tab-content" id="southAmericaContent"></div>
+        <div class="tab-content" id="europeContent"></div>
+        <div class="tab-content" id="asiaContent"></div>
+        <div class="tab-content" id="africaContent"></div>
     </div>
     <div class="navbar">
         <a href="index.html" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
@@ -378,7 +356,7 @@
             loadScore();
 
             const tabs = document.querySelectorAll('.tabs a');
-            const tabSlider = document.getElementById('tabSlider');
+            const tabContents = document.querySelectorAll('.tab-content');
 
             const northAmericaClubs = [
                 { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg' },
@@ -439,8 +417,8 @@
                     tab.classList.add('active');
 
                     const targetId = tab.id.replace('Tab', 'Content');
-                    const targetIndex = Array.from(tabs).indexOf(tab);
-                    tabSlider.style.transform = `translateX(-${targetIndex * 100}%)`;
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(targetId).classList.add('active');
 
                     // Generar rectángulos según la pestaña activa
                     switch (targetId) {
@@ -471,34 +449,6 @@
             });
 
             tg.BackButton.show();
-
-            let startX = 0;
-            let endX = 0;
-            let currentIndex = 0;
-
-            document.addEventListener('touchstart', (event) => {
-                startX = event.touches[0].clientX;
-            });
-
-            document.addEventListener('touchmove', (event) => {
-                endX = event.touches[0].clientX;
-            });
-
-            document.addEventListener('touchend', () => {
-                const deltaX = endX - startX;
-                const threshold = 50; // Umbral para considerar un deslizamiento
-
-                if (Math.abs(deltaX) > threshold) {
-                    if (deltaX > 0 && currentIndex > 0) {
-                        // Deslizamiento hacia la izquierda (anterior pestaña)
-                        currentIndex--;
-                    } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
-                        // Deslizamiento hacia la derecha (siguiente pestaña)
-                        currentIndex++;
-                    }
-                    tabs[currentIndex].click();
-                }
-            });
         });
     </script>
 </body>
