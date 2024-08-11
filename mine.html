@@ -477,15 +477,9 @@
             let currentX = 0;
             let currentIndex = 0;
             let isDragging = false;
+            let touchStartTimestamp = 0;
 
-            document.addEventListener('touchstart', (event) => {
-                startX = event.touches[0].clientX;
-                currentX = startX;
-                isDragging = true;
-                tabSlider.style.transition = 'none';
-            });
-
-            document.addEventListener('touchmove', (event) => {
+            const handleTouchMove = (event) => {
                 if (!isDragging) return;
 
                 const moveX = event.touches[0].clientX;
@@ -496,6 +490,19 @@
                 const newTranslate = currentTranslate + deltaX;
 
                 tabSlider.style.transform = `translateX(${newTranslate}px)`;
+            };
+
+            document.addEventListener('touchstart', (event) => {
+                startX = event.touches[0].clientX;
+                currentX = startX;
+                isDragging = true;
+                touchStartTimestamp = Date.now();
+                tabSlider.style.transition = 'none';
+            });
+
+            document.addEventListener('touchmove', (event) => {
+                event.preventDefault(); // Prevenir el comportamiento por defecto del scroll
+                requestAnimationFrame(() => handleTouchMove(event));
             });
 
             document.addEventListener('touchend', () => {
@@ -504,10 +511,11 @@
                 isDragging = false;
                 const deltaX = currentX - startX;
                 const threshold = 50; // Umbral para considerar un deslizamiento
+                const touchDuration = Date.now() - touchStartTimestamp;
 
                 tabSlider.style.transition = 'transform 0.3s ease-in-out';
 
-                if (Math.abs(deltaX) > threshold) {
+                if (Math.abs(deltaX) > threshold && touchDuration < 300) {
                     if (deltaX > 0 && currentIndex > 0) {
                         // Deslizamiento hacia la izquierda (anterior pestaña)
                         currentIndex--;
