@@ -473,6 +473,8 @@
 
             tg.BackButton.show();
 
+            document.addEventListener('DOMContentLoaded', function() {
+            
             let startX = 0;
             let currentTranslate = 0;
             let prevTranslate = 0;
@@ -504,11 +506,11 @@
 
                 tabSlider.style.transition = 'transform 0.3s ease-in-out';
 
-                if (Math.abs(movedBy) > tabWidth / 3) {
-                    if (movedBy > 0) {
-                        currentIndex = Math.max(currentIndex - 1, 0);
-                    } else {
-                        currentIndex = Math.min(currentIndex + 1, tabs.length - 1);
+                if (Math.abs(movedBy) > tabWidth / 4) { // Cambiamos el umbral a 1/4 del ancho
+                    if (movedBy > 0 && currentIndex > 0) {
+                        currentIndex--;
+                    } else if (movedBy < 0 && currentIndex < tabs.length - 1) {
+                        currentIndex++;
                     }
                 }
 
