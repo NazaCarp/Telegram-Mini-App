@@ -221,6 +221,24 @@
             width: 100%;
             align-items: center;
         }
+
+        .tab-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-slider {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tab-slide {
+            flex: 0 0 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -235,11 +253,15 @@
             <a href="#" id="asiaTab"><iconify-icon icon="simple-icons:afc"></iconify-icon><span>Asia</span></a>
             <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>África</span></a>
         </div>
-        <div class="tab-content active" id="northAmericaContent"></div>
-        <div class="tab-content" id="southAmericaContent"></div>
-        <div class="tab-content" id="europeContent"></div>
-        <div class="tab-content" id="asiaContent"></div>
-        <div class="tab-content" id="africaContent"></div>
+        <div class="tab-container">
+            <div class="tab-slider" id="tabSlider">
+                <div class="tab-slide" id="northAmericaContent"></div>
+                <div class="tab-slide" id="southAmericaContent"></div>
+                <div class="tab-slide" id="europeContent"></div>
+                <div class="tab-slide" id="asiaContent"></div>
+                <div class="tab-slide" id="africaContent"></div>
+            </div>
+        </div>
     </div>
     <div class="navbar">
         <a href="index.html" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
@@ -356,7 +378,9 @@
             loadScore();
 
             const tabs = document.querySelectorAll('.tabs a');
-            const tabContents = document.querySelectorAll('.tab-content');
+            const tabSlider = document.getElementById('tabSlider');
+            const tabContainer = document.querySelector('.tab-container');
+            const tabWidth = tabContainer.offsetWidth;
 
             const northAmericaClubs = [
                 { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg' },
@@ -416,25 +440,24 @@
                     tabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
 
-                    const targetId = tab.id.replace('Tab', 'Content');
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    document.getElementById(targetId).classList.add('active');
+                    const targetIndex = Array.from(tabs).indexOf(tab);
+                    tabSlider.style.transform = `translateX(-${targetIndex * 100}%)`;
 
                     // Generar rectángulos según la pestaña activa
-                    switch (targetId) {
-                        case 'northAmericaContent':
+                    switch (tab.id) {
+                        case 'northAmericaTab':
                             generateRectangles('northAmericaContent', northAmericaClubs);
                             break;
-                        case 'southAmericaContent':
+                        case 'southAmericaTab':
                             generateRectangles('southAmericaContent', southAmericaClubs);
                             break;
-                        case 'europeContent':
+                        case 'europeTab':
                             generateRectangles('europeContent', europeClubs);
                             break;
-                        case 'asiaContent':
+                        case 'asiaTab':
                             generateRectangles('asiaContent', asiaClubs);
                             break;
-                        case 'africaContent':
+                        case 'africaTab':
                             generateRectangles('africaContent', africaClubs);
                             break;
                     }
@@ -449,6 +472,47 @@
             });
 
             tg.BackButton.show();
+
+            let startX = 0;
+            let currentX = 0;
+            let currentIndex = 0;
+
+            document.addEventListener('touchstart', (event) => {
+                startX = event.touches[0].clientX;
+                currentX = startX;
+                tabSlider.style.transition = 'none';
+            });
+
+            document.addEventListener('touchmove', (event) => {
+                const moveX = event.touches[0].clientX;
+                const deltaX = moveX - currentX;
+                currentX = moveX;
+
+                const currentTranslate = currentIndex * -tabWidth;
+                const newTranslate = currentTranslate + deltaX;
+
+                tabSlider.style.transform = `translateX(${newTranslate}px)`;
+            });
+
+            document.addEventListener('touchend', () => {
+                const deltaX = currentX - startX;
+                const threshold = 50; // Umbral para considerar un deslizamiento
+
+                tabSlider.style.transition = 'transform 0.3s ease-in-out';
+
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX > 0 && currentIndex > 0) {
+                        // Deslizamiento hacia la izquierda (anterior pestaña)
+                        currentIndex--;
+                    } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
+                        // Deslizamiento hacia la derecha (siguiente pestaña)
+                        currentIndex++;
+                    }
+                }
+
+                tabSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
+                tabs[currentIndex].click();
+            });
         });
     </script>
 </body>
