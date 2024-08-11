@@ -474,59 +474,55 @@
             tg.BackButton.show();
 
             let startX = 0;
-            let currentX = 0;
-            let currentIndex = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
             let isDragging = false;
-            let touchStartTimestamp = 0;
 
-            const handleTouchMove = (event) => {
-                if (!isDragging) return;
+            tabSlider.addEventListener('touchstart', touchStart);
+            tabSlider.addEventListener('touchmove', touchMove);
+            tabSlider.addEventListener('touchend', touchEnd);
 
-                const moveX = event.touches[0].clientX;
-                const deltaX = moveX - currentX;
-                currentX = moveX;
-
-                const currentTranslate = currentIndex * -tabWidth;
-                const newTranslate = currentTranslate + deltaX;
-
-                tabSlider.style.transform = `translateX(${newTranslate}px)`;
-            };
-
-            document.addEventListener('touchstart', (event) => {
+            function touchStart(event) {
                 startX = event.touches[0].clientX;
-                currentX = startX;
                 isDragging = true;
-                touchStartTimestamp = Date.now();
                 tabSlider.style.transition = 'none';
-            });
+                prevTranslate = currentTranslate;
+            }
 
-            document.addEventListener('touchmove', (event) => {
-                event.preventDefault(); // Prevenir el comportamiento por defecto del scroll
-                requestAnimationFrame(() => handleTouchMove(event));
-            });
+            function touchMove(event) {
+                if (isDragging) {
+                    const currentX = event.touches[0].clientX;
+                    const diff = currentX - startX;
+                    currentTranslate = prevTranslate + diff;
+                    tabSlider.style.transform = `translateX(${currentTranslate}px)`;
+                }
+            }
 
-            document.addEventListener('touchend', () => {
-                if (!isDragging) return;
-
+            function touchEnd() {
                 isDragging = false;
-                const deltaX = currentX - startX;
-                const threshold = 50; // Umbral para considerar un deslizamiento
-                const touchDuration = Date.now() - touchStartTimestamp;
+                const movedBy = currentTranslate - prevTranslate;
 
                 tabSlider.style.transition = 'transform 0.3s ease-in-out';
 
-                if (Math.abs(deltaX) > threshold && touchDuration < 300) {
-                    if (deltaX > 0 && currentIndex > 0) {
-                        // Deslizamiento hacia la izquierda (anterior pestaña)
-                        currentIndex--;
-                    } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
-                        // Deslizamiento hacia la derecha (siguiente pestaña)
-                        currentIndex++;
+                if (Math.abs(movedBy) > tabWidth / 3) {
+                    if (movedBy > 0) {
+                        currentIndex = Math.max(currentIndex - 1, 0);
+                    } else {
+                        currentIndex = Math.min(currentIndex + 1, tabs.length - 1);
                     }
                 }
 
-                tabSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
+                currentTranslate = -currentIndex * tabWidth;
+                tabSlider.style.transform = `translateX(${currentTranslate}px)`;
                 tabs[currentIndex].click();
+            }
+
+            // Actualizar el ancho del tab cuando cambie el tamaño de la ventana
+            window.addEventListener('resize', () => {
+                tabWidth = tabContainer.offsetWidth;
+                currentTranslate = -currentIndex * tabWidth;
+                tabSlider.style.transition = 'none';
+                tabSlider.style.transform = `translateX(${currentTranslate}px)`;
             });
         });
     </script>
