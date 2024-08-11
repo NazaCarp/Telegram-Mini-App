@@ -379,8 +379,6 @@
 
             const tabs = document.querySelectorAll('.tabs a');
             const tabSlider = document.getElementById('tabSlider');
-            const tabContainer = document.querySelector('.tab-container');
-            const tabWidth = tabContainer.offsetWidth;
 
             const northAmericaClubs = [
                 { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg' },
@@ -440,24 +438,25 @@
                     tabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
 
+                    const targetId = tab.id.replace('Tab', 'Content');
                     const targetIndex = Array.from(tabs).indexOf(tab);
                     tabSlider.style.transform = `translateX(-${targetIndex * 100}%)`;
 
                     // Generar rectángulos según la pestaña activa
-                    switch (tab.id) {
-                        case 'northAmericaTab':
+                    switch (targetId) {
+                        case 'northAmericaContent':
                             generateRectangles('northAmericaContent', northAmericaClubs);
                             break;
-                        case 'southAmericaTab':
+                        case 'southAmericaContent':
                             generateRectangles('southAmericaContent', southAmericaClubs);
                             break;
-                        case 'europeTab':
+                        case 'europeContent':
                             generateRectangles('europeContent', europeClubs);
                             break;
-                        case 'asiaTab':
+                        case 'asiaContent':
                             generateRectangles('asiaContent', asiaClubs);
                             break;
-                        case 'africaTab':
+                        case 'africaContent':
                             generateRectangles('africaContent', africaClubs);
                             break;
                     }
@@ -474,70 +473,31 @@
             tg.BackButton.show();
 
             let startX = 0;
-            let currentTranslate = 0;
-            let prevTranslate = 0;
-            let isDragging = false;
+            let endX = 0;
+            let currentIndex = 0;
 
-            tabSlider.addEventListener('touchstart', touchStart);
-            tabSlider.addEventListener('touchmove', touchMove);
-            tabSlider.addEventListener('touchend', touchEnd);
-
-            function touchStart(event) {
+            document.addEventListener('touchstart', (event) => {
                 startX = event.touches[0].clientX;
-                isDragging = true;
-                tabSlider.style.transition = 'none';
-                prevTranslate = currentTranslate;
-            }
+            });
 
-            function touchMove(event) {
-                if (isDragging) {
-                    const currentX = event.touches[0].clientX;
-                    const diff = currentX - startX;
-                    currentTranslate = prevTranslate + diff;
-                    
-                    // Limitar el desplazamiento
-                    const maxTranslate = 0;
-                    const minTranslate = -tabWidth * (tabs.length - 1);
-                    currentTranslate = Math.max(Math.min(currentTranslate, maxTranslate), minTranslate);
-                    
-                    tabSlider.style.transform = `translateX(${currentTranslate}px)`;
-                }
-            }
+            document.addEventListener('touchmove', (event) => {
+                endX = event.touches[0].clientX;
+            });
 
-            function touchEnd() {
-                isDragging = false;
-                const movedBy = currentTranslate - prevTranslate;
+            document.addEventListener('touchend', () => {
+                const deltaX = endX - startX;
+                const threshold = 50; // Umbral para considerar un deslizamiento
 
-                tabSlider.style.transition = 'transform 0.3s ease-in-out';
-
-                if (Math.abs(movedBy) > tabWidth / 3) {
-                    if (movedBy > 0 && currentIndex > 0) {
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX > 0 && currentIndex > 0) {
+                        // Deslizamiento hacia la izquierda (anterior pestaña)
                         currentIndex--;
-                    } else if (movedBy < 0 && currentIndex < tabs.length - 1) {
+                    } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
+                        // Deslizamiento hacia la derecha (siguiente pestaña)
                         currentIndex++;
                     }
+                    tabs[currentIndex].click();
                 }
-
-                currentTranslate = -currentIndex * tabWidth;
-                tabSlider.style.transform = `translateX(${currentTranslate}px)`;
-                tabs[currentIndex].click();
-
-                // Actualizar la pestaña activa visualmente
-                tabs.forEach((tab, index) => {
-                    if (index === currentIndex) {
-                        tab.classList.add('active');
-                    } else {
-                        tab.classList.remove('active');
-                    }
-                });
-            }
-
-            // Actualizar el ancho del tab cuando cambie el tamaño de la ventana
-            window.addEventListener('resize', () => {
-                tabWidth = tabContainer.offsetWidth;
-                currentTranslate = -currentIndex * tabWidth;
-                tabSlider.style.transition = 'none';
-                tabSlider.style.transform = `translateX(${currentTranslate}px)`;
             });
         });
     </script>
