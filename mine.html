@@ -127,7 +127,6 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            height: auto; /* Cambiado a auto para que se ajuste al contenido */
             overflow-y: auto;
         }
         .rectangle {
@@ -450,7 +449,7 @@
                     const targetId = tab.id.replace('Tab', 'Content');
                     swiper.slideTo(Array.from(swiper.slides).findIndex(slide => slide.id === targetId));
 
-                    // Generar rectángulos según la pestaña activa
+                    // Generate rectangles and set the height of the swiper-slide
                     switch (targetId) {
                         case 'northAmericaContent':
                             generateRectangles('northAmericaContent', northAmericaClubs);
@@ -469,12 +468,18 @@
                             break;
                     }
 
-                    // Ajustar la altura del Swiper al contenido del slide activo
-                    swiper.update();
+                    // Set the height of the swiper-slide based on its content
+                    const activeSlide = document.getElementById(targetId);
+                    if (activeSlide) {
+                        swiper.slides.forEach(slide => {
+                            slide.style.height = 'auto';
+                        });
+                        activeSlide.style.height = `${activeSlide.scrollHeight}px`;
+                    }
                 });
             });
 
-            // Generar rectángulos iniciales para la pestaña activa por defecto
+            // Generate rectangles initially for the default active tab
             generateRectangles('northAmericaContent', northAmericaClubs);
 
             tg.onEvent('backButtonClicked', () => {
