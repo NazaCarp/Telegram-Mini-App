@@ -494,6 +494,12 @@
                     const currentX = event.touches[0].clientX;
                     const diff = currentX - startX;
                     currentTranslate = prevTranslate + diff;
+                    
+                    // Limitar el desplazamiento
+                    const maxTranslate = 0;
+                    const minTranslate = -tabWidth * (tabs.length - 1);
+                    currentTranslate = Math.max(Math.min(currentTranslate, maxTranslate), minTranslate);
+                    
                     tabSlider.style.transform = `translateX(${currentTranslate}px)`;
                 }
             }
@@ -504,7 +510,7 @@
 
                 tabSlider.style.transition = 'transform 0.3s ease-in-out';
 
-                if (Math.abs(movedBy) > tabWidth / 4) { // Cambiamos el umbral a 1/4 del ancho
+                if (Math.abs(movedBy) > tabWidth / 3) {
                     if (movedBy > 0 && currentIndex > 0) {
                         currentIndex--;
                     } else if (movedBy < 0 && currentIndex < tabs.length - 1) {
@@ -515,6 +521,15 @@
                 currentTranslate = -currentIndex * tabWidth;
                 tabSlider.style.transform = `translateX(${currentTranslate}px)`;
                 tabs[currentIndex].click();
+
+                // Actualizar la pestaña activa visualmente
+                tabs.forEach((tab, index) => {
+                    if (index === currentIndex) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
             }
 
             // Actualizar el ancho del tab cuando cambie el tamaño de la ventana
