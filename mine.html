@@ -117,16 +117,18 @@
             background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
-        .tab-content {
-            display: none;
+        .swiper {
+            width: 100%;
+            height: auto; /* Cambiado a auto para que se ajuste al contenido */
+            margin-top: 60px;
+        }
+        .swiper-slide {
+            display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            margin-top: 60px;
-            margin-bottom: 70px; /* Añadido para evitar que la barra de navegación tape el contenido */
-        }
-        .tab-content.active {
-            display: flex;
+            height: auto; /* Cambiado a auto para que se ajuste al contenido */
+            overflow-y: auto;
         }
         .rectangle {
             display: flex;
@@ -222,15 +224,6 @@
             width: 100%;
             align-items: center;
         }
-
-        /* Swiper styles */
-        .swiper-container {
-            width: 100%;
-            height: auto;
-        }
-        .swiper-slide {
-            height: auto;
-        }
     </style>
 </head>
 <body>
@@ -245,14 +238,18 @@
             <a href="#" id="asiaTab"><iconify-icon icon="simple-icons:afc"></iconify-icon><span>Asia</span></a>
             <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>África</span></a>
         </div>
-        <div class="swiper-container">
+        <!-- Swiper -->
+        <div class="swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide tab-content active" id="northAmericaContent"></div>
-                <div class="swiper-slide tab-content" id="southAmericaContent"></div>
-                <div class="swiper-slide tab-content" id="europeContent"></div>
-                <div class="swiper-slide tab-content" id="asiaContent"></div>
-                <div class="swiper-slide tab-content" id="africaContent"></div>
+                <!-- Slides -->
+                <div class="swiper-slide" id="northAmericaContent"></div>
+                <div class="swiper-slide" id="southAmericaContent"></div>
+                <div class="swiper-slide" id="europeContent"></div>
+                <div class="swiper-slide" id="asiaContent"></div>
+                <div class="swiper-slide" id="africaContent"></div>
             </div>
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
         </div>
     </div>
     <div class="navbar">
@@ -365,17 +362,32 @@
 
                 container.appendChild(row);
             }
-
-            // Ajustar la altura del contenedor de la pestaña según el contenido generado
-            container.style.height = 'auto';
-            container.parentElement.style.height = `${container.scrollHeight}px`;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             loadScore();
 
             const tabs = document.querySelectorAll('.tabs a');
-            const tabContents = document.querySelectorAll('.tab-content');
+            const swiper = new Swiper('.swiper', {
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                speed: 400,
+                simulateTouch: true,
+                mousewheel: {
+                    forceToAxis: true,
+                },
+                keyboard: {
+                    enabled: true,
+                },
+                touchRatio: 1,
+                edgeSwipeDetection: true,
+                edgeSwipeThreshold: 50,
+                longSwipesMs: 300,
+                longSwipesRatio: 0.5,
+                threshold: 5,
+            });
 
             const northAmericaClubs = [
                 { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg' },
@@ -436,7 +448,7 @@
                     tab.classList.add('active');
 
                     const targetId = tab.id.replace('Tab', 'Content');
-                    swiper.slideTo(Array.from(tabContents).indexOf(document.getElementById(targetId)));
+                    swiper.slideTo(Array.from(swiper.slides).findIndex(slide => slide.id === targetId));
 
                     // Generar rectángulos según la pestaña activa
                     switch (targetId) {
@@ -457,52 +469,9 @@
                             break;
                     }
 
-                    // Actualizar la altura de Swiper
-                    setTimeout(() => {
-                        swiper.update();
-                    }, 0);
+                    // Ajustar la altura del Swiper al contenido del slide activo
+                    swiper.update();
                 });
-            });
-
-            // Configurar Swiper
-            const swiper = new Swiper('.swiper-container', {
-                direction: 'horizontal',
-                loop: false,
-                speed: 400,
-                spaceBetween: 0,
-                slidesPerView: 1,
-                centeredSlides: true,
-                autoHeight: true, // Añade esta línea
-                on: {
-                    slideChange: function () {
-                        const activeTab = tabs[swiper.activeIndex];
-                        tabs.forEach(t => t.classList.remove('active'));
-                        activeTab.classList.add('active');
-
-                        // Generar rectángulos según la pestaña activa
-                        const targetId = activeTab.id.replace('Tab', 'Content');
-                        switch (targetId) {
-                            case 'northAmericaContent':
-                                generateRectangles('northAmericaContent', northAmericaClubs);
-                                break;
-                            case 'southAmericaContent':
-                                generateRectangles('southAmericaContent', southAmericaClubs);
-                                break;
-                            case 'europeContent':
-                                generateRectangles('europeContent', europeClubs);
-                                break;
-                            case 'asiaContent':
-                                generateRectangles('asiaContent', asiaClubs);
-                                break;
-                            case 'africaContent':
-                                generateRectangles('africaContent', africaClubs);
-                                break;
-                        }
-                    },
-                    slideChangeTransitionEnd: function () {
-                        this.update(); // Actualiza Swiper después de que la transición ha terminado
-                    }
-                }
             });
 
             // Generar rectángulos iniciales para la pestaña activa por defecto
