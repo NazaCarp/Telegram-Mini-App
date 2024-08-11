@@ -531,14 +531,6 @@
                     }
                 });
             }
-
-            // Actualizar el ancho del tab cuando cambie el tamaño de la ventana
-            window.addEventListener('resize', () => {
-                tabWidth = tabContainer.offsetWidth;
-                currentTranslate = -currentIndex * tabWidth;
-                tabSlider.style.transition = 'none';
-                tabSlider.style.transform = `translateX(${currentTranslate}px)`;
-            });
         });
     </script>
 </body>
