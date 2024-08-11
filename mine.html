@@ -123,9 +123,19 @@
             width: 100%;
             margin-top: 60px;
             margin-bottom: 70px; /* Añadido para evitar que la barra de navegación tape el contenido */
+            transition: transform 0.3s ease;
         }
         .tab-content.active {
             display: flex;
+            transform: translateX(0);
+        }
+        .tab-content.prev {
+            display: flex;
+            transform: translateX(-100%);
+        }
+        .tab-content.next {
+            display: flex;
+            transform: translateX(100%);
         }
         .rectangle {
             display: flex;
@@ -417,7 +427,10 @@
                     tab.classList.add('active');
 
                     const targetId = tab.id.replace('Tab', 'Content');
-                    tabContents.forEach(content => content.classList.remove('active'));
+                    tabContents.forEach(content => {
+                        content.classList.remove('active', 'prev', 'next');
+                        content.style.transform = 'translateX(0)';
+                    });
                     document.getElementById(targetId).classList.add('active');
 
                     // Generar rectángulos según la pestaña activa
@@ -452,16 +465,39 @@
 
             let startX = 0;
             let endX = 0;
+            let isSwiping = false;
 
             document.addEventListener('touchstart', (event) => {
                 startX = event.touches[0].clientX;
+                isSwiping = true;
             });
 
             document.addEventListener('touchmove', (event) => {
+                if (!isSwiping) return;
                 endX = event.touches[0].clientX;
+                const deltaX = endX - startX;
+                const activeTab = document.querySelector('.tabs a.active');
+                const activeIndex = Array.from(tabs).indexOf(activeTab);
+
+                tabContents.forEach(content => {
+                    content.classList.remove('active', 'prev', 'next');
+                    content.style.transform = 'translateX(0)';
+                });
+
+                if (deltaX < 0 && activeIndex < tabs.length - 1) {
+                    // Deslizamiento hacia la derecha (siguiente pestaña)
+                    document.getElementById(tabs[activeIndex + 1].id.replace('Tab', 'Content')).classList.add('next');
+                    document.getElementById(tabs[activeIndex].id.replace('Tab', 'Content')).classList.add('active');
+                } else if (deltaX > 0 && activeIndex > 0) {
+                    // Deslizamiento hacia la izquierda (anterior pestaña)
+                    document.getElementById(tabs[activeIndex - 1].id.replace('Tab', 'Content')).classList.add('prev');
+                    document.getElementById(tabs[activeIndex].id.replace('Tab', 'Content')).classList.add('active');
+                }
             });
 
             document.addEventListener('touchend', () => {
+                if (!isSwiping) return;
+                isSwiping = false;
                 const deltaX = endX - startX;
                 const threshold = 50; // Umbral para considerar un deslizamiento
 
@@ -476,6 +512,14 @@
                         // Deslizamiento hacia la derecha (siguiente pestaña)
                         tabs[activeIndex + 1].click();
                     }
+                } else {
+                    tabContents.forEach(content => {
+                        content.classList.remove('active', 'prev', 'next');
+                        content.style.transform = 'translateX(0)';
+                    });
+                    const activeTab = document.querySelector('.tabs a.active');
+                    const targetId = activeTab.id.replace('Tab', 'Content');
+                    document.getElementById(targetId).classList.add('active');
                 }
             });
         });
