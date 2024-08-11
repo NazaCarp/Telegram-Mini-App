@@ -467,6 +467,7 @@
                 spaceBetween: 0,
                 slidesPerView: 1,
                 centeredSlides: true,
+                autoHeight: true, // Añade esta línea
                 on: {
                     slideChange: function () {
                         const activeTab = tabs[swiper.activeIndex];
@@ -492,6 +493,9 @@
                                 generateRectangles('africaContent', africaClubs);
                                 break;
                         }
+                    },
+                    slideChangeTransitionEnd: function () {
+                        this.update(); // Actualiza Swiper después de que la transición ha terminado
                     }
                 }
             });
