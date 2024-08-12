@@ -28,12 +28,11 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            margin-bottom: 70px; /* Añadido para evitar que la barra de navegación tape el contenido */
         }
         .score {
             font-weight: bold;
             text-align: center;
-            margin-top: 50px;
+            margin-top: 70px;
             font-size: 80px;
         }
         .navbar {
@@ -242,7 +241,6 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-button"><iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>Back</a>
     <div class="container">
         <div class="score" id="score" style="color: rgb(255, 255, 255)"><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>0</div>
         <h5>Balance</h5>
@@ -291,8 +289,7 @@
             const rows = Math.ceil(clubs.length / 2);
 
             const containernorth = document.getElementById('northAmericaContent');
-
-            containernorth.style = `display: flex; flex-direction: column; align-items: center; width: 100%; height: ${157 + 218 * rows}px; margin-bottom: 70px;` // Limpiar contenido anterior
+            containernorth.style = `display: flex; flex-direction: column; align-items: center; width: 100%; height: ${218 * rows}px; margin-bottom: 70px;` // Limpiar contenido anterior
             
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Limpiar contenido anterior
@@ -480,15 +477,15 @@
             let endX = 0;
             let currentIndex = 0;
 
-            document.addEventListener('touchstart', (event) => {
+            tabSlider.addEventListener('touchstart', (event) => {
                 startX = event.touches[0].clientX;
             });
 
-            document.addEventListener('touchmove', (event) => {
+            tabSlider.addEventListener('touchmove', (event) => {
                 endX = event.touches[0].clientX;
             });
 
-            document.addEventListener('touchend', () => {
+            tabSlider.addEventListener('touchend', () => {
                 const deltaX = endX - startX;
                 const threshold = 50; // Umbral para considerar un deslizamiento
 
