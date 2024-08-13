@@ -534,7 +534,9 @@
                         // Deslizamiento hacia la derecha (siguiente pestaña)
                         currentIndex++;
                     }
-                    tabs[currentIndex].click();
+                    if (currentIndex >= 0 && currentIndex < tabs.length) {
+                        tabs[currentIndex].click();
+                    }
                 }
             });
         });
