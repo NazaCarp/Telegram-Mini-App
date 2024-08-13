@@ -223,7 +223,8 @@
 
         .tab-container {
             width: 100%;
-            overflow-x: hidden;
+            overflow: hidden;
+            position: relative;
         }
 
         .tab-slider {
@@ -233,7 +234,9 @@
 
         .tab-slide {
             flex: 0 0 100%;
-            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     </style>
 </head>
@@ -532,11 +535,7 @@
                         // Deslizamiento hacia la derecha (siguiente pestaña)
                         newIndex++;
                     }
-                    
-                    if (newIndex !== currentIndex) {
-                        currentIndex = newIndex;
-                        tabs[currentIndex].click();
-                    }
+                    tabs[currentIndex].click();
                 }
             });
         });
