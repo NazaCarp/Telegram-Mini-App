@@ -255,6 +255,19 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
         }
+        .alert-menu .icon {
+            margin: 20px auto; /* Centrar el ícono */
+            width: 100%; /* Aumentar el ancho del ícono */
+            height: 100%; /* Aumentar la altura del ícono */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .alert-menu .icon img {
+            max-width: 100%;
+            max-height: 100%;
+        }
         .alert-menu .close {
             position: absolute;
             top: 10px;
@@ -720,7 +733,7 @@
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
 
-            document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 80px; height: 80px;">`;
+            document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
             document.getElementById('alertSecondSubtitle').innerText = 'Cost';
