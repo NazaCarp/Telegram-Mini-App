@@ -247,9 +247,10 @@
         <div class="tabs">
             <a href="#" id="northAmericaTab" class="active"><iconify-icon icon="simple-icons:mls"></iconify-icon><span>North America</span></a>
             <a href="#" id="southAmericaTab"><iconify-icon icon="simple-icons:conmebol"></iconify-icon><span>South America</span></a>
-            <a href="#" id="europeTab"><iconify-icon icon="simple-icons:uefa"></iconify-icon><span>Europa</span></a>
+            <a href="#" id="europeTab"><iconify-icon icon="simple-icons:uefa"></iconify-icon><span>Europe</span></a>
             <a href="#" id="asiaTab"><iconify-icon icon="simple-icons:afc"></iconify-icon><span>Asia</span></a>
-            <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>África</span></a>
+            <a href="#" id="africaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>Africa</span></a>
+            <a href="#" id="oceaniaTab"><iconify-icon icon="simple-icons:caf"></iconify-icon><span>Oceania</span></a>
         </div>
         <div class="tab-container">
             <div class="tab-slider" id="tabSlider">
@@ -258,6 +259,7 @@
                 <div class="tab-slide" id="europeContent"></div>
                 <div class="tab-slide" id="asiaContent"></div>
                 <div class="tab-slide" id="africaContent"></div>
+                <div class="tab-slide" id="oceaniaContent"></div>
             </div>
         </div>
     </div>
@@ -305,6 +307,9 @@
             
             const containerafrica = document.getElementById('africaContent');
             containerafrica.style = `height: ${height}px;`
+
+            const containeroceania = document.getElementById('oceaniaContent');
+            containeroceania.style = `height: ${height}px;`
             
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Limpiar contenido anterior
@@ -499,9 +504,49 @@
             ];
 
             const africaClubs = [
-                { name: 'CAF', image: '/static/images/caf.png' },
-                { name: 'Al Ahly', image: '/static/images/alahly.png' },
-                { name: 'Eskişehirspor', image: '/static/images/eskisehirspor.png' }
+                { name: 'Al-Ahly SC', image: '/static/images/Africa/Al-Ahly SC.svg' },
+                { name: 'Esperance de Tunis', image: '/static/images/Africa/Esperance de Tunis.svg' },
+                { name: 'Kaizer Chiefs FC', image: '/static/images/Africa/Kaizer Chiefs FC.svg' },
+                { name: 'Mamelodi Sundowns FC', image: '/static/images/Africa/Mamelodi Sundowns FC.svg' },
+                { name: 'Wydad AC', image: '/static/images/Africa/Wydad AC.svg' },
+                { name: 'TP Mazembe', image: '/static/images/Africa/TP Mazembe.svg' },
+                { name: 'ES Setif', image: '/static/images/Africa/ES Setif.svg' },
+                { name: 'Al-Hilal Omdurman', image: '/static/images/Africa/Al-Hilal Omdurman.svg' },
+                { name: 'Zamalek SC', image: '/static/images/Africa/Zamalek SC.svg' },
+                { name: 'Orlando Pirates FC', image: '/static/images/Africa/Orlando Pirates FC.svg' },
+                { name: 'Asante Kotoko SC', image: '/static/images/Africa/Asante Kotoko SC.svg' },
+                { name: 'JS Kabylie', image: '/static/images/Africa/JS Kabylie.svg' },
+                { name: 'CS Sfaxien', image: '/static/images/Africa/CS Sfaxien.svg' },
+                { name: 'ASEC Mimosas', image: '/static/images/Africa/ASEC Mimosas.svg' },
+                { name: 'Club Africain', image: '/static/images/Africa/Club Africain.svg' },
+                { name: 'Al-Merrikh SC', image: '/static/images/Africa/Al-Merrikh SC.svg' },
+                { name: 'Enyimba FC', image: '/static/images/Africa/Enyimba FC.svg' },
+                { name: 'Raja CA', image: '/static/images/Africa/Raja CA.svg' },
+                { name: 'Cotonsport FC', image: '/static/images/Africa/Cotonsport FC.svg' },
+                { name: 'Horoya AC', image: '/static/images/Africa/Horoya AC.svg' }
+            ];
+
+            const oceaniaClubs = [
+                { name: 'Sydney FC', image: '/static/images/Oceania/Sydney FC.svg' },
+                { name: 'Wellington Phoenix FC', image: '/static/images/Oceania/Wellington Phoenix FC.svg' },
+                { name: 'Melbourne Victory FC', image: '/static/images/Oceania/Melbourne Victory FC.svg' },
+                { name: 'Perth Glory FC', image: '/static/images/Oceania/Perth Glory FC.svg' },
+                { name: 'Auckland City FC', image: '/static/images/Oceania/Auckland City FC.svg' },
+                { name: 'Team Wellington', image: '/static/images/Oceania/Team Wellington.svg' },
+                { name: 'Hobart Zebras FC', image: '/static/images/Oceania/Hobart Zebras FC.svg' },
+                { name: 'Canberra United FC', image: '/static/images/Oceania/Canberra United FC.svg' },
+                { name: 'Brisbane Roar FC', image: '/static/images/Oceania/Brisbane Roar FC.svg' },
+                { name: 'Central Coast Mariners FC', image: '/static/images/Oceania/Central Coast Mariners FC.svg' },
+                { name: 'Tasmania United FC', image: '/static/images/Oceania/Tasmania United FC.svg' },
+                { name: 'Waitakere United FC', image: '/static/images/Oceania/Waitakere United FC.svg' },
+                { name: 'Eastern Suburbs AFC', image: '/static/images/Oceania/Eastern Suburbs AFC.svg' },
+                { name: 'South Melbourne FC', image: '/static/images/Oceania/South Melbourne FC.svg' },
+                { name: 'Heidelberg United FC', image: '/static/images/Oceania/Heidelberg United FC.svg' },
+                { name: 'Oakleigh Cannons FC', image: '/static/images/Oceania/Oakleigh Cannons FC.svg' },
+                { name: 'Lae City Dwellers FC', image: '/static/images/Oceania/Lae City Dwellers FC.svg' },
+                { name: 'Hekari United FC', image: '/static/images/Oceania/Hekari United FC.svg' },
+                { name: 'Tafea FC', image: '/static/images/Oceania/Tafea FC.svg' },
+                { name: 'Amicale FC', image: '/static/images/Oceania/Amicale FC.svg' }
             ];
 
             tabs.forEach(tab => {
@@ -530,6 +575,9 @@
                             break;
                         case 'africaContent':
                             generateRectangles('africaContent', africaClubs);
+                            break;
+                        case 'oceaniaContent':
+                            generateRectangles('oceaniaContent', oceaniaClubs);
                             break;
                     }
                 });
