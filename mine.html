@@ -381,7 +381,14 @@
             }
         }
 
-        function generateRectangles(containerId, clubs) {
+        async function loadMineLevels() {
+            const user_id = tg.initDataUnsafe.user.id;
+            const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
+            const levels = await response.json();
+            return levels;
+        }
+
+        function generateRectangles(containerId, clubs, levels) {
             const rows = Math.ceil(clubs.length / 2);
 
             // Limpiar contenido anterior
@@ -421,6 +428,7 @@
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
                     rectangle.setAttribute('data-cost', club.cost); // Añadir el costo como atributo
+                    rectangle.setAttribute('data-club-id', club.name); // Añadir el identificador del club
 
                     const imageElement = document.createElement('img');
                     imageElement.className = 'icon';
@@ -456,7 +464,7 @@
 
                     const sectionLeft = document.createElement('div');
                     sectionLeft.className = 'section-left';
-                    sectionLeft.textContent = 'lvl 1';
+                    sectionLeft.textContent = `lvl ${levels[club.name] || 1}`;
 
                     const verticalDivider = document.createElement('div');
                     verticalDivider.className = 'vertical-divider';
@@ -495,8 +503,10 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadScore();
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadScore();
+
+            const levels = await loadMineLevels();
 
             const tabs = document.querySelectorAll('.tabs a');
             const tabSlider = document.getElementById('tabSlider');
@@ -662,29 +672,29 @@
                     // Generar rectángulos según la pestaña activa
                     switch (targetId) {
                         case 'northAmericaContent':
-                            generateRectangles('northAmericaContent', northAmericaClubs);
+                            generateRectangles('northAmericaContent', northAmericaClubs, levels);
                             break;
                         case 'southAmericaContent':
-                            generateRectangles('southAmericaContent', southAmericaClubs);
+                            generateRectangles('southAmericaContent', southAmericaClubs, levels);
                             break;
                         case 'europeContent':
-                            generateRectangles('europeContent', europeClubs);
+                            generateRectangles('europeContent', europeClubs, levels);
                             break;
                         case 'asiaContent':
-                            generateRectangles('asiaContent', asiaClubs);
+                            generateRectangles('asiaContent', asiaClubs, levels);
                             break;
                         case 'africaContent':
-                            generateRectangles('africaContent', africaClubs);
+                            generateRectangles('africaContent', africaClubs, levels);
                             break;
                         case 'oceaniaContent':
-                            generateRectangles('oceaniaContent', oceaniaClubs);
+                            generateRectangles('oceaniaContent', oceaniaClubs, levels);
                             break;
                     }
                 });
             });
 
             // Generar rectángulos iniciales para la pestaña activa por defecto
-            generateRectangles('northAmericaContent', northAmericaClubs);
+            generateRectangles('northAmericaContent', northAmericaClubs, levels);
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
@@ -727,7 +737,18 @@
             });
         });
 
-        function showAlert(club) {
+        async function updateMineLevel(user_id, club_id, level) {
+            const response = await fetch('/update_mine_level', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id, club_id, level })
+            });
+            return await response.json();
+        }
+        
+        async function showAlert(club) {
             const currentScore = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
             const cost = club.cost;
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
@@ -745,6 +766,40 @@
             document.getElementById('alertMenu').style.display = 'block';
             document.querySelector('.container').classList.add('blur-content');
             document.querySelector('.navbar').classList.add('blur-content');
+
+            document.getElementById('actionButton').addEventListener('click', async () => {
+                const tg = window.Telegram.WebApp;
+                const user = tg.initDataUnsafe.user;
+                const user_id = user.id;
+                const club_id = club.name;
+                const currentLevel = levels[club_id] || 1;
+                const newLevel = currentLevel + 1;
+
+                if (currentScore >= cost) {
+                    const newScore = currentScore - cost;
+                    const response = await fetch('/update_counters', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: secondaryCount })
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        document.getElementById('score').innerText = newScore;
+                        closeAlertMenu();
+                        await updateMineLevel(user_id, club_id, newLevel);
+                        loadScore();
+                        loadMineLevels();
+                        localStorage.setItem('score', newScore);
+                    } else {
+                        alert('Error al actualizar el score');
+                    }
+                } else {
+                    alert('No tienes suficientes monedas para comprar este boost');
+                }
+            });
         }
 
         function closeAlertMenu() {

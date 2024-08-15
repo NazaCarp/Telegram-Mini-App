@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
-from models import Counter, Referral
+from models import Counter, Referral, MineLevels
 import logging
 
 app = Flask(__name__, template_folder='.')
@@ -199,7 +199,47 @@ def update_boost():
     except Exception as e:
         logging.error(f"Error in update_boost: {e}")
         return jsonify({'error': str(e)}), 500
-    
+
+
+@app.route('/get_mine_levels', methods=['GET'])
+def get_mine_levels():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+
+    try:
+        db = SessionLocal()
+        levels = db.query(MineLevels).filter_by(user_id=user_id).all()
+        return jsonify({level.club_id: level.level for level in levels})
+    except Exception as e:
+        logging.error(f"Error in get_mine_levels: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/update_mine_level', methods=['POST'])
+def update_mine_level():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    club_id = data.get('club_id')
+    level = data.get('level')
+
+    if not all([user_id, club_id, level]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    try:
+        db = SessionLocal()
+        mine_level = db.query(MineLevels).filter_by(user_id=user_id, club_id=club_id).first()
+        if not mine_level:
+            mine_level = MineLevels(user_id=user_id, club_id=club_id, level=level)
+            db.add(mine_level)
+        else:
+            mine_level.level = level
+        db.commit()
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        logging.error(f"Error in update_mine_level: {e}")
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
