@@ -238,6 +238,78 @@
             flex-direction: column;
             align-items: center;
         }
+
+        /* Estilos para la alerta */
+        .alert-menu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 400px;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .alert-menu .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .blur-content {
+            filter: blur(5px);
+            pointer-events: none;
+            transition: filter 0.3s ease;
+        }
+        .alert-text {
+            font-size: 24px; /* Tamaño del título en los rectángulos */
+        }
+        .subtitle {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .second-subtitle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .cost {
+            font-size: 48px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+        .cost.yellow {
+            color: yellow;
+        }
+        .cost.gray {
+            color: gray;
+        }
+        .action-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .action-button.active {
+            background-color: #0066ff;
+            color: white;
+        }
+        .action-button.inactive {
+            background-color: #808080;
+            color: white;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -269,6 +341,15 @@
         <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
         <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
+    </div>
+    <div class="alert-menu" id="alertMenu">
+        <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+        <div class="icon" id="alertIcon"></div>
+        <div class="alert-text" id="alertText"></div>
+        <div class="subtitle" id="alertSubtitle"></div>
+        <div class="second-subtitle" id="alertSecondSubtitle"></div>
+        <div class="cost" id="alertCost"></div>
+        <button class="action-button" id="actionButton">Buy</button>
     </div>
     <script>
         const tg = window.Telegram.WebApp;
@@ -326,6 +407,7 @@
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
+                    rectangle.setAttribute('data-cost', club.cost); // Añadir el costo como atributo
 
                     const imageElement = document.createElement('img');
                     imageElement.className = 'icon';
@@ -371,7 +453,7 @@
                     const sectionRightIcon = document.createElement('iconify-icon');
                     sectionRightIcon.icon = 'twemoji:coin';
                     const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = '1000';
+                    sectionRightSpan.textContent = club.cost; // Mostrar el valor de 'cost' aquí
 
                     sectionRight.appendChild(sectionRightIcon);
                     sectionRight.appendChild(sectionRightSpan);
@@ -389,6 +471,11 @@
                     rectangle.appendChild(imageElement);
                     rectangle.appendChild(textContent);
                     row.appendChild(rectangle);
+
+                    // Añadir evento de clic para mostrar la alerta
+                    rectangle.addEventListener('click', () => {
+                        showAlert(club);
+                    });
                 }
 
                 container.appendChild(row);
@@ -402,151 +489,151 @@
             const tabSlider = document.getElementById('tabSlider');
 
             const northAmericaClubs = [
-                { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg' },
-                { name: 'Houston Dynamo FC', image: '/static/images/North America/Houston Dynamo FC.svg' },
-                { name: 'Los Angeles Galaxy', image: '/static/images/North America/Los Angeles Galaxy.svg' },
-                { name: 'CF Montreal', image: '/static/images/North America/CF Montreal.svg' },
-                { name: 'New York Red Bulls', image: '/static/images/North America/New York Red Bulls.svg' },
-                { name: 'Seattle Sounders FC', image: '/static/images/North America/Seattle Sounders FC.svg' },
-                { name: 'Atlanta United FC', image: '/static/images/North America/Atlanta United FC.svg' },
-                { name: 'DC United', image: '/static/images/North America/DC United.svg' },
-                { name: 'FC Dallas', image: '/static/images/North America/FC Dallas.svg' },
-                { name: 'Los Angeles FC', image: '/static/images/North America/Los Angeles FC.svg' },
-                { name: 'Minnesota United FC', image: '/static/images/North America/Minnesota United FC.svg' },
-                { name: 'Nashville SC', image: '/static/images/North America/Nashville SC.svg' },
-                { name: 'Orlando City SC', image: '/static/images/North America/Orlando City SC.svg' },
-                { name: 'Philadelphia Union', image: '/static/images/North America/Philadelphia Union.svg' },
-                { name: 'Portland Timbers', image: '/static/images/North America/Portland Timbers.svg' },
-                { name: 'San Jose Earthquakes', image: '/static/images/North America/San Jose Earthquakes.svg' },
-                { name: 'Club America', image: '/static/images/North America/Club America.svg' },
-                { name: 'Cruz Azul', image: '/static/images/North America/Cruz Azul.svg' },
-                { name: 'Chivas Guadalajara', image: '/static/images/North America/Chivas Guadalajara.svg' },
-                { name: 'Monterrey', image: '/static/images/North America/Monterrey.svg' },
-                { name: 'Necaxa', image: '/static/images/North America/Necaxa.svg' },
-                { name: 'Pachuca', image: '/static/images/North America/Pachuca.svg' },
-                { name: 'Pumas UNAM', image: '/static/images/North America/Pumas UNAM.svg' },
-                { name: 'Tigres UANL', image: '/static/images/North America/Tigres UANL.svg' },
-                { name: 'Toluca', image: '/static/images/North America/Toluca.svg' }
+                { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg', cost: 1000 },
+                { name: 'Houston Dynamo FC', image: '/static/images/North America/Houston Dynamo FC.svg', cost: 1500 },
+                { name: 'Los Angeles Galaxy', image: '/static/images/North America/Los Angeles Galaxy.svg', cost: 2000 },
+                { name: 'CF Montreal', image: '/static/images/North America/CF Montreal.svg', cost: 2500 },
+                { name: 'New York Red Bulls', image: '/static/images/North America/New York Red Bulls.svg', cost: 3000 },
+                { name: 'Seattle Sounders FC', image: '/static/images/North America/Seattle Sounders FC.svg', cost: 3500 },
+                { name: 'Atlanta United FC', image: '/static/images/North America/Atlanta United FC.svg', cost: 4000 },
+                { name: 'DC United', image: '/static/images/North America/DC United.svg', cost: 4500 },
+                { name: 'FC Dallas', image: '/static/images/North America/FC Dallas.svg', cost: 5000 },
+                { name: 'Los Angeles FC', image: '/static/images/North America/Los Angeles FC.svg', cost: 5500 },
+                { name: 'Minnesota United FC', image: '/static/images/North America/Minnesota United FC.svg', cost: 6000 },
+                { name: 'Nashville SC', image: '/static/images/North America/Nashville SC.svg', cost: 6500 },
+                { name: 'Orlando City SC', image: '/static/images/North America/Orlando City SC.svg', cost: 7000 },
+                { name: 'Philadelphia Union', image: '/static/images/North America/Philadelphia Union.svg', cost: 7500 },
+                { name: 'Portland Timbers', image: '/static/images/North America/Portland Timbers.svg', cost: 8000 },
+                { name: 'San Jose Earthquakes', image: '/static/images/North America/San Jose Earthquakes.svg', cost: 8500 },
+                { name: 'Club America', image: '/static/images/North America/Club America.svg', cost: 9000 },
+                { name: 'Cruz Azul', image: '/static/images/North America/Cruz Azul.svg', cost: 9500 },
+                { name: 'Chivas Guadalajara', image: '/static/images/North America/Chivas Guadalajara.svg', cost: 10000 },
+                { name: 'Monterrey', image: '/static/images/North America/Monterrey.svg', cost: 10500 },
+                { name: 'Necaxa', image: '/static/images/North America/Necaxa.svg', cost: 11000 },
+                { name: 'Pachuca', image: '/static/images/North America/Pachuca.svg', cost: 11500 },
+                { name: 'Pumas UNAM', image: '/static/images/North America/Pumas UNAM.svg', cost: 12000 },
+                { name: 'Tigres UANL', image: '/static/images/North America/Tigres UANL.svg', cost: 12500 },
+                { name: 'Toluca', image: '/static/images/North America/Toluca.svg', cost: 13000 }
             ];
 
             const southAmericaClubs = [
-                { name: 'Santos FC', image: '/static/images/South America/Santos FC.svg' },
-                { name: 'Club Libertad', image: '/static/images/South America/Club Libertad.svg' },
-                { name: 'Boca Juniors', image: '/static/images/South America/Boca Juniors.svg' },
-                { name: 'River Plate', image: '/static/images/South America/River Plate.svg' },
-                { name: 'Colo-Colo', image: '/static/images/South America/Colo-Colo.svg' },
-                { name: 'Independiente', image: '/static/images/South America/Independiente.svg' },
-                { name: 'Flamengo', image: '/static/images/South America/Flamengo.svg' },
-                { name: 'Palmeiras', image: '/static/images/South America/Palmeiras.svg' },
-                { name: 'Nacional', image: '/static/images/South America/Nacional.svg' },
-                { name: 'Peñarol', image: '/static/images/South America/Peñarol.svg' },
-                { name: 'São Paulo FC', image: '/static/images/South America/São Paulo FC.svg' },
-                { name: 'Cruzeiro EC', image: '/static/images/South America/Cruzeiro EC.svg' },
-                { name: 'Grêmio FBPA', image: '/static/images/South America/Gremio FPBA.svg' },
-                { name: 'Internacional', image: '/static/images/South America/Internacional.svg' },
-                { name: 'Estudiantes de La Plata', image: '/static/images/South America/Estudiantes de La Plata.svg' },
-                { name: 'Racing Club', image: '/static/images/South America/Racing Club.svg' },
-                { name: 'Olimpia', image: '/static/images/South America/Olimpia.svg' },
-                { name: 'Cerro Porteño', image: '/static/images/South America/Cerro Porteño.svg' },
-                { name: 'Universidad de Chile', image: '/static/images/South America/Universidad de Chile.svg' },
-                { name: 'Universitario', image: '/static/images/South America/Universitario.svg' },
-                { name: 'Alianza Lima', image: '/static/images/South America/Alianza Lima.svg' },
-                { name: 'The Strongest', image: '/static/images/South America/The Strongest.svg' },
-                { name: 'Club Bolívar', image: '/static/images/South America/Club Bolivar.svg' },
-                { name: 'Emelec', image: '/static/images/South America/Emelec.svg' },
-                { name: 'LDU Quito', image: '/static/images/South America/LDU Quito.svg' }
+                { name: 'Santos FC', image: '/static/images/South America/Santos FC.svg', cost: 1000 },
+                { name: 'Club Libertad', image: '/static/images/South America/Club Libertad.svg', cost: 1500 },
+                { name: 'Boca Juniors', image: '/static/images/South America/Boca Juniors.svg', cost: 2000 },
+                { name: 'River Plate', image: '/static/images/South America/River Plate.svg', cost: 2500 },
+                { name: 'Colo-Colo', image: '/static/images/South America/Colo-Colo.svg', cost: 3000 },
+                { name: 'Independiente', image: '/static/images/South America/Independiente.svg', cost: 3500 },
+                { name: 'Flamengo', image: '/static/images/South America/Flamengo.svg', cost: 4000 },
+                { name: 'Palmeiras', image: '/static/images/South America/Palmeiras.svg', cost: 4500 },
+                { name: 'Nacional', image: '/static/images/South America/Nacional.svg', cost: 5000 },
+                { name: 'Peñarol', image: '/static/images/South America/Peñarol.svg', cost: 5500 },
+                { name: 'São Paulo FC', image: '/static/images/South America/São Paulo FC.svg', cost: 6000 },
+                { name: 'Cruzeiro EC', image: '/static/images/South America/Cruzeiro EC.svg', cost: 6500 },
+                { name: 'Grêmio FBPA', image: '/static/images/South America/Gremio FPBA.svg', cost: 7000 },
+                { name: 'Internacional', image: '/static/images/South America/Internacional.svg', cost: 7500 },
+                { name: 'Estudiantes de La Plata', image: '/static/images/South America/Estudiantes de La Plata.svg', cost: 8000 },
+                { name: 'Racing Club', image: '/static/images/South America/Racing Club.svg', cost: 8500 },
+                { name: 'Olimpia', image: '/static/images/South America/Olimpia.svg', cost: 9000 },
+                { name: 'Cerro Porteño', image: '/static/images/South America/Cerro Porteño.svg', cost: 9500 },
+                { name: 'Universidad de Chile', image: '/static/images/South America/Universidad de Chile.svg', cost: 10000 },
+                { name: 'Universitario', image: '/static/images/South America/Universitario.svg', cost: 10500 },
+                { name: 'Alianza Lima', image: '/static/images/South America/Alianza Lima.svg', cost: 11000 },
+                { name: 'The Strongest', image: '/static/images/South America/The Strongest.svg', cost: 11500 },
+                { name: 'Club Bolívar', image: '/static/images/South America/Club Bolivar.svg', cost: 12000 },
+                { name: 'Emelec', image: '/static/images/South America/Emelec.svg', cost: 12500 },
+                { name: 'LDU Quito', image: '/static/images/South America/LDU Quito.svg', cost: 13000 }
             ];
 
             const europeClubs = [
-                { name: 'FC Barcelona', image: '/static/images/Europe/FC Barcelona.svg' },
-                { name: 'Real Madrid CF', image: '/static/images/Europe/Real Madrid CF.svg' },
-                { name: 'Manchester United FC', image: '/static/images/Europe/Manchester United FC.svg' },
-                { name: 'Bayern Munich', image: '/static/images/Europe/Bayern Munich.svg' },
-                { name: 'Paris Saint-Germain FC', image: '/static/images/Europe/Paris Saint-Germain FC.svg' },
-                { name: 'Liverpool FC', image: '/static/images/Europe/Liverpool FC.svg' },
-                { name: 'Chelsea FC', image: '/static/images/Europe/Chelsea FC.svg' },
-                { name: 'Arsenal FC', image: '/static/images/Europe/Arsenal FC.svg' },
-                { name: 'AC Milan', image: '/static/images/Europe/AC Milan.svg' },
-                { name: 'Inter Milan', image: '/static/images/Europe/Inter Milan.svg' },
-                { name: 'Juventus FC', image: '/static/images/Europe/Juventus FC.svg' },
-                { name: 'Borussia Dortmund', image: '/static/images/Europe/Borussia Dortmund.svg' },
-                { name: 'Atletico Madrid', image: '/static/images/Europe/Atletico Madrid.svg' },
-                { name: 'Manchester City FC', image: '/static/images/Europe/Manchester City FC.svg' },
-                { name: 'Tottenham Hotspur FC', image: '/static/images/Europe/Tottenham Hotspur FC.svg' },
-                { name: 'Napoli', image: '/static/images/Europe/Napoli.svg' },
-                { name: 'AS Roma', image: '/static/images/Europe/AS Roma.svg' },
-                { name: 'FC Porto', image: '/static/images/Europe/FC Porto.svg' },
-                { name: 'Benfica', image: '/static/images/Europe/Benfica.svg' },
-                { name: 'Ajax Amsterdam', image: '/static/images/Europe/Ajax Amsterdam.svg' }
+                { name: 'FC Barcelona', image: '/static/images/Europe/FC Barcelona.svg', cost: 1000 },
+                { name: 'Real Madrid CF', image: '/static/images/Europe/Real Madrid CF.svg', cost: 1500 },
+                { name: 'Manchester United FC', image: '/static/images/Europe/Manchester United FC.svg', cost: 2000 },
+                { name: 'Bayern Munich', image: '/static/images/Europe/Bayern Munich.svg', cost: 2500 },
+                { name: 'Paris Saint-Germain FC', image: '/static/images/Europe/Paris Saint-Germain FC.svg', cost: 3000 },
+                { name: 'Liverpool FC', image: '/static/images/Europe/Liverpool FC.svg', cost: 3500 },
+                { name: 'Chelsea FC', image: '/static/images/Europe/Chelsea FC.svg', cost: 4000 },
+                { name: 'Arsenal FC', image: '/static/images/Europe/Arsenal FC.svg', cost: 4500 },
+                { name: 'AC Milan', image: '/static/images/Europe/AC Milan.svg', cost: 5000 },
+                { name: 'Inter Milan', image: '/static/images/Europe/Inter Milan.svg', cost: 5500 },
+                { name: 'Juventus FC', image: '/static/images/Europe/Juventus FC.svg', cost: 6000 },
+                { name: 'Borussia Dortmund', image: '/static/images/Europe/Borussia Dortmund.svg', cost: 6500 },
+                { name: 'Atletico Madrid', image: '/static/images/Europe/Atletico Madrid.svg', cost: 7000 },
+                { name: 'Manchester City FC', image: '/static/images/Europe/Manchester City FC.svg', cost: 7500 },
+                { name: 'Tottenham Hotspur FC', image: '/static/images/Europe/Tottenham Hotspur FC.svg', cost: 8000 },
+                { name: 'Napoli', image: '/static/images/Europe/Napoli.svg', cost: 8500 },
+                { name: 'AS Roma', image: '/static/images/Europe/AS Roma.svg', cost: 9000 },
+                { name: 'FC Porto', image: '/static/images/Europe/FC Porto.svg', cost: 9500 },
+                { name: 'Benfica', image: '/static/images/Europe/Benfica.svg', cost: 10000 },
+                { name: 'Ajax Amsterdam', image: '/static/images/Europe/Ajax Amsterdam.svg', cost: 10500 }
             ];
 
             const asiaClubs = [
-                { name: 'Al-Hilal SFC', image: '/static/images/Asia/Al-Hilal SFC.svg' },
-                { name: 'Al-Ain FC', image: '/static/images/Asia/Al-Ain FC.svg' },
-                { name: 'Persepolis FC', image: '/static/images/Asia/Persepolis FC.svg' },
-                { name: 'Al-Sadd SC', image: '/static/images/Asia/Al-Sadd SC.svg' },
-                { name: 'Urawa Red Diamonds', image: '/static/images/Asia/Urawa Red Diamonds.svg' },
-                { name: 'Jeonbuk Hyundai Motors FC', image: '/static/images/Asia/Jeonbuk Hyundai Motors FC.svg' },
-                { name: 'Guangzhou Evergrande FC', image: '/static/images/Asia/Guangzhou Evergrande FC.svg' },
-                { name: 'Al-Nassr FC', image: '/static/images/Asia/Al-Nassr FC.svg' },
-                { name: 'FC Tokyo', image: '/static/images/Asia/FC Tokyo.svg' },
-                { name: 'Al-Jazira Club', image: '/static/images/Asia/Al-Jazira Club.svg' },
-                { name: 'Esteghlal FC', image: '/static/images/Asia/Esteghlal FC.svg' },
-                { name: 'Sepahan FC', image: '/static/images/Asia/Sepahan FC.svg' },
-                { name: 'Al-Rayyan SC', image: '/static/images/Asia/Al-Rayyan SC.svg' },
-                { name: 'Al-Wahda FC', image: '/static/images/Asia/Al-Wahda FC.svg' },
-                { name: 'Shanghai SIPG FC', image: '/static/images/Asia/Shanghai SIPG FC.svg' },
-                { name: 'Jeju United FC', image: '/static/images/Asia/Jeju United FC.svg' },
-                { name: 'FC Seoul', image: '/static/images/Asia/FC Seoul.svg' },
-                { name: 'Suwon Samsung Bluewings', image: '/static/images/Asia/Suwon Samsung Bluewings.svg' },
-                { name: 'Al-Ittihad FC', image: '/static/images/Asia/Al-Ittihad FC.svg' },
-                { name: 'Al-Ahli SC', image: '/static/images/Asia/Al-Ahli SC.svg' }
+                { name: 'Al-Hilal SFC', image: '/static/images/Asia/Al-Hilal SFC.svg', cost: 1000 },
+                { name: 'Al-Ain FC', image: '/static/images/Asia/Al-Ain FC.svg', cost: 1500 },
+                { name: 'Persepolis FC', image: '/static/images/Asia/Persepolis FC.svg', cost: 2000 },
+                { name: 'Al-Sadd SC', image: '/static/images/Asia/Al-Sadd SC.svg', cost: 2500 },
+                { name: 'Urawa Red Diamonds', image: '/static/images/Asia/Urawa Red Diamonds.svg', cost: 3000 },
+                { name: 'Jeonbuk Hyundai Motors FC', image: '/static/images/Asia/Jeonbuk Hyundai Motors FC.svg', cost: 3500 },
+                { name: 'Guangzhou Evergrande FC', image: '/static/images/Asia/Guangzhou Evergrande FC.svg', cost: 4000 },
+                { name: 'Al-Nassr FC', image: '/static/images/Asia/Al-Nassr FC.svg', cost: 4500 },
+                { name: 'FC Tokyo', image: '/static/images/Asia/FC Tokyo.svg', cost: 5000 },
+                { name: 'Al-Jazira Club', image: '/static/images/Asia/Al-Jazira Club.svg', cost: 5500 },
+                { name: 'Esteghlal FC', image: '/static/images/Asia/Esteghlal FC.svg', cost: 6000 },
+                { name: 'Sepahan FC', image: '/static/images/Asia/Sepahan FC.svg', cost: 6500 },
+                { name: 'Al-Rayyan SC', image: '/static/images/Asia/Al-Rayyan SC.svg', cost: 7000 },
+                { name: 'Al-Wahda FC', image: '/static/images/Asia/Al-Wahda FC.svg', cost: 7500 },
+                { name: 'Shanghai SIPG FC', image: '/static/images/Asia/Shanghai SIPG FC.svg', cost: 8000 },
+                { name: 'Jeju United FC', image: '/static/images/Asia/Jeju United FC.svg', cost: 8500 },
+                                { name: 'FC Seoul', image: '/static/images/Asia/FC Seoul.svg', cost: 9000 },
+                { name: 'Suwon Samsung Bluewings', image: '/static/images/Asia/Suwon Samsung Bluewings.svg', cost: 9500 },
+                { name: 'Al-Ittihad FC', image: '/static/images/Asia/Al-Ittihad FC.svg', cost: 10000 },
+                { name: 'Al-Ahli SC', image: '/static/images/Asia/Al-Ahli SC.svg', cost: 10500 }
             ];
 
             const africaClubs = [
-                { name: 'Al-Ahly SC', image: '/static/images/Africa/Al-Ahly SC.svg' },
-                { name: 'Esperance de Tunis', image: '/static/images/Africa/Esperance de Tunis.svg' },
-                { name: 'Kaizer Chiefs FC', image: '/static/images/Africa/Kaizer Chiefs FC.svg' },
-                { name: 'Mamelodi Sundowns FC', image: '/static/images/Africa/Mamelodi Sundowns FC.svg' },
-                { name: 'Wydad AC', image: '/static/images/Africa/Wydad AC.svg' },
-                { name: 'TP Mazembe', image: '/static/images/Africa/TP Mazembe.svg' },
-                { name: 'ES Setif', image: '/static/images/Africa/ES Setif.svg' },
-                { name: 'Al-Hilal Omdurman', image: '/static/images/Africa/Al-Hilal Omdurman.svg' },
-                { name: 'Zamalek SC', image: '/static/images/Africa/Zamalek SC.svg' },
-                { name: 'Orlando Pirates FC', image: '/static/images/Africa/Orlando Pirates FC.svg' },
-                { name: 'Asante Kotoko SC', image: '/static/images/Africa/Asante Kotoko SC.svg' },
-                { name: 'JS Kabylie', image: '/static/images/Africa/JS Kabylie.svg' },
-                { name: 'CS Sfaxien', image: '/static/images/Africa/CS Sfaxien.svg' },
-                { name: 'ASEC Mimosas', image: '/static/images/Africa/ASEC Mimosas.svg' },
-                { name: 'Club Africain', image: '/static/images/Africa/Club Africain.svg' },
-                { name: 'Al-Merrikh SC', image: '/static/images/Africa/Al-Merrikh SC.svg' },
-                { name: 'Enyimba FC', image: '/static/images/Africa/Enyimba FC.svg' },
-                { name: 'Raja CA', image: '/static/images/Africa/Raja CA.svg' },
-                { name: 'Cotonsport FC', image: '/static/images/Africa/Cotonsport FC.svg' },
-                { name: 'Horoya AC', image: '/static/images/Africa/Horoya AC.svg' }
+                { name: 'Al-Ahly SC', image: '/static/images/Africa/Al-Ahly SC.svg', cost: 1000 },
+                { name: 'Esperance de Tunis', image: '/static/images/Africa/Esperance de Tunis.svg', cost: 1500 },
+                { name: 'Kaizer Chiefs FC', image: '/static/images/Africa/Kaizer Chiefs FC.svg', cost: 2000 },
+                { name: 'Mamelodi Sundowns FC', image: '/static/images/Africa/Mamelodi Sundowns FC.svg', cost: 2500 },
+                { name: 'Wydad AC', image: '/static/images/Africa/Wydad AC.svg', cost: 3000 },
+                { name: 'TP Mazembe', image: '/static/images/Africa/TP Mazembe.svg', cost: 3500 },
+                { name: 'ES Setif', image: '/static/images/Africa/ES Setif.svg', cost: 4000 },
+                { name: 'Al-Hilal Omdurman', image: '/static/images/Africa/Al-Hilal Omdurman.svg', cost: 4500 },
+                { name: 'Zamalek SC', image: '/static/images/Africa/Zamalek SC.svg', cost: 5000 },
+                { name: 'Orlando Pirates FC', image: '/static/images/Africa/Orlando Pirates FC.svg', cost: 5500 },
+                { name: 'Asante Kotoko SC', image: '/static/images/Africa/Asante Kotoko SC.svg', cost: 6000 },
+                { name: 'JS Kabylie', image: '/static/images/Africa/JS Kabylie.svg', cost: 6500 },
+                { name: 'CS Sfaxien', image: '/static/images/Africa/CS Sfaxien.svg', cost: 7000 },
+                { name: 'ASEC Mimosas', image: '/static/images/Africa/ASEC Mimosas.svg', cost: 7500 },
+                { name: 'Club Africain', image: '/static/images/Africa/Club Africain.svg', cost: 8000 },
+                { name: 'Al-Merrikh SC', image: '/static/images/Africa/Al-Merrikh SC.svg', cost: 8500 },
+                { name: 'Enyimba FC', image: '/static/images/Africa/Enyimba FC.svg', cost: 9000 },
+                { name: 'Raja CA', image: '/static/images/Africa/Raja CA.svg', cost: 9500 },
+                { name: 'Cotonsport FC', image: '/static/images/Africa/Cotonsport FC.svg', cost: 10000 },
+                { name: 'Horoya AC', image: '/static/images/Africa/Horoya AC.svg', cost: 10500 }
             ];
 
             const oceaniaClubs = [
-                { name: 'Sydney FC', image: '/static/images/Oceania/Sydney FC.svg' },
-                { name: 'Wellington Phoenix FC', image: '/static/images/Oceania/Wellington Phoenix FC.svg' },
-                { name: 'Melbourne Victory FC', image: '/static/images/Oceania/Melbourne Victory FC.svg' },
-                { name: 'Perth Glory FC', image: '/static/images/Oceania/Perth Glory FC.svg' },
-                { name: 'Auckland City FC', image: '/static/images/Oceania/Auckland City FC.svg' },
-                { name: 'Team Wellington', image: '/static/images/Oceania/Team Wellington.svg' },
-                { name: 'Hobart Zebras FC', image: '/static/images/Oceania/Hobart Zebras FC.svg' },
-                { name: 'Canberra United FC', image: '/static/images/Oceania/Canberra United FC.svg' },
-                { name: 'Brisbane Roar FC', image: '/static/images/Oceania/Brisbane Roar FC.svg' },
-                { name: 'Central Coast Mariners FC', image: '/static/images/Oceania/Central Coast Mariners FC.svg' },
-                { name: 'Tasmania United FC', image: '/static/images/Oceania/Tasmania United FC.svg' },
-                { name: 'Waitakere United FC', image: '/static/images/Oceania/Waitakere United FC.svg' },
-                { name: 'Eastern Suburbs AFC', image: '/static/images/Oceania/Eastern Suburbs AFC.svg' },
-                { name: 'South Melbourne FC', image: '/static/images/Oceania/South Melbourne FC.svg' },
-                { name: 'Heidelberg United FC', image: '/static/images/Oceania/Heidelberg United FC.svg' },
-                { name: 'Oakleigh Cannons FC', image: '/static/images/Oceania/Oakleigh Cannons FC.svg' },
-                { name: 'Lae City Dwellers FC', image: '/static/images/Oceania/Lae City Dwellers FC.svg' },
-                { name: 'Hekari United FC', image: '/static/images/Oceania/Hekari United FC.svg' },
-                { name: 'Tafea FC', image: '/static/images/Oceania/Tafea FC.svg' },
-                { name: 'Amicale FC', image: '/static/images/Oceania/Amicale FC.svg' }
+                { name: 'Sydney FC', image: '/static/images/Oceania/Sydney FC.svg', cost: 1000 },
+                { name: 'Wellington Phoenix FC', image: '/static/images/Oceania/Wellington Phoenix FC.svg', cost: 1500 },
+                { name: 'Melbourne Victory FC', image: '/static/images/Oceania/Melbourne Victory FC.svg', cost: 2000 },
+                { name: 'Perth Glory FC', image: '/static/images/Oceania/Perth Glory FC.svg', cost: 2500 },
+                { name: 'Auckland City FC', image: '/static/images/Oceania/Auckland City FC.svg', cost: 3000 },
+                { name: 'Team Wellington', image: '/static/images/Oceania/Team Wellington.svg', cost: 3500 },
+                { name: 'Hobart Zebras FC', image: '/static/images/Oceania/Hobart Zebras FC.svg', cost: 4000 },
+                { name: 'Canberra United FC', image: '/static/images/Oceania/Canberra United FC.svg', cost: 4500 },
+                { name: 'Brisbane Roar FC', image: '/static/images/Oceania/Brisbane Roar FC.svg', cost: 5000 },
+                { name: 'Central Coast Mariners FC', image: '/static/images/Oceania/Central Coast Mariners FC.svg', cost: 5500 },
+                { name: 'Tasmania United FC', image: '/static/images/Oceania/Tasmania United FC.svg', cost: 6000 },
+                { name: 'Waitakere United FC', image: '/static/images/Oceania/Waitakere United FC.svg', cost: 6500 },
+                { name: 'Eastern Suburbs AFC', image: '/static/images/Oceania/Eastern Suburbs AFC.svg', cost: 7000 },
+                { name: 'South Melbourne FC', image: '/static/images/Oceania/South Melbourne FC.svg', cost: 7500 },
+                { name: 'Heidelberg United FC', image: '/static/images/Oceania/Heidelberg United FC.svg', cost: 8000 },
+                { name: 'Oakleigh Cannons FC', image: '/static/images/Oceania/Oakleigh Cannons FC.svg', cost: 8500 },
+                { name: 'Lae City Dwellers FC', image: '/static/images/Oceania/Lae City Dwellers FC.svg', cost: 9000 },
+                { name: 'Hekari United FC', image: '/static/images/Oceania/Hekari United FC.svg', cost: 9500 },
+                { name: 'Tafea FC', image: '/static/images/Oceania/Tafea FC.svg', cost: 10000 },
+                { name: 'Amicale FC', image: '/static/images/Oceania/Amicale FC.svg', cost: 10500 }
             ];
 
             tabs.forEach(tab => {
@@ -626,6 +713,32 @@
                 }
             });
         });
+
+        function showAlert(club) {
+            const currentScore = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
+            const cost = club.cost;
+            const costColor = cost <= currentScore ? 'yellow' : 'gray';
+            const buttonClass = cost <= currentScore ? 'active' : 'inactive';
+
+            document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 80px; height: 80px;">`;
+            document.getElementById('alertText').innerText = club.name;
+            document.getElementById('alertSubtitle').innerText = 'Profit per hour';
+            document.getElementById('alertSecondSubtitle').innerText = 'Cost';
+            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
+            document.getElementById('alertCost').classList.remove('yellow', 'gray');
+            document.getElementById('alertCost').classList.add(costColor);
+            document.getElementById('actionButton').classList.remove('active', 'inactive');
+            document.getElementById('actionButton').classList.add(buttonClass);
+            document.getElementById('alertMenu').style.display = 'block';
+            document.querySelector('.container').classList.add('blur-content');
+            document.querySelector('.navbar').classList.add('blur-content');
+        }
+
+        function closeAlertMenu() {
+            document.getElementById('alertMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
+        }
     </script>
 </body>
 </html>
