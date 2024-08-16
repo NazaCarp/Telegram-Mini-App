@@ -607,7 +607,7 @@
                 { name: 'Al-Wahda FC', image: '/static/images/Asia/Al-Wahda FC.svg', cost: 7500 },
                 { name: 'Shanghai SIPG FC', image: '/static/images/Asia/Shanghai SIPG FC.svg', cost: 8000 },
                 { name: 'Jeju United FC', image: '/static/images/Asia/Jeju United FC.svg', cost: 8500 },
-                                { name: 'FC Seoul', image: '/static/images/Asia/FC Seoul.svg', cost: 9000 },
+                { name: 'FC Seoul', image: '/static/images/Asia/FC Seoul.svg', cost: 9000 },
                 { name: 'Suwon Samsung Bluewings', image: '/static/images/Asia/Suwon Samsung Bluewings.svg', cost: 9500 },
                 { name: 'Al-Ittihad FC', image: '/static/images/Asia/Al-Ittihad FC.svg', cost: 10000 },
                 { name: 'Al-Ahli SC', image: '/static/images/Asia/Al-Ahli SC.svg', cost: 10500 }
@@ -748,6 +748,8 @@
             return await response.json();
         }
         
+        let currentActionButtonListener = null;
+
         async function showAlert(club) {
             const currentScore = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
             const cost = club.cost;
@@ -767,11 +769,15 @@
             document.querySelector('.container').classList.add('blur-content');
             document.querySelector('.navbar').classList.add('blur-content');
 
-            document.getElementById('actionButton').addEventListener('click', async () => {
+            // Eliminar el evento anterior si existe
+            if (currentActionButtonListener) {
+                document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
+            }
 
+            // Asignar un nuevo evento
+            currentActionButtonListener = async () => {
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
-                alert('Botón Buy pulsado');
                 const newLevel = currentLevel + 1;
 
                 if (currentScore >= cost) {
@@ -798,13 +804,21 @@
                 } else {
                     alert('No tienes suficientes monedas para comprar este boost');
                 }
-            });
+            };
+
+            document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
         }
 
         function closeAlertMenu() {
             document.getElementById('alertMenu').style.display = 'none';
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
+
+            // Eliminar el evento del botón "Buy" al cerrar la alerta
+            if (currentActionButtonListener) {
+                document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
+                currentActionButtonListener = null;
+            }
         }
     </script>
 </body>
