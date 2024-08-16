@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, Integer, DateTime, String, ForeignKey
+from sqlalchemy import Column, BigInteger, Integer, DateTime, String, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
@@ -32,9 +32,5 @@ class Referral(Base):
 
 class MineLevels(Base):
     __tablename__ = 'mine_levels'
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(BigInteger, ForeignKey('counters.user_id'), index=True)
-    club_id = Column(String, index=True)  # Identificador único del rectángulo
-    level = Column(Integer, default=1)
-
-    user = relationship('Counter', backref='mine_levels')
+    user_id = Column(BigInteger, primary_key=True, index=True)
+    clubs = Column(JSON, default={})

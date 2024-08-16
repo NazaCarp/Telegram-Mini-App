@@ -232,12 +232,12 @@ def update_mine_level():
 
     try:
         db = SessionLocal()
-        mine_level = db.query(MineLevels).filter_by(user_id=user_id, club_id=club_id).first()
+        mine_level = db.query(MineLevels).filter_by(user_id=user_id).first()
         if not mine_level:
-            mine_level = MineLevels(user_id=user_id, club_id=club_id, level=level)
+            mine_level = MineLevels(user_id=user_id, clubs={club_id: level})
             db.add(mine_level)
         else:
-            mine_level.level = level
+            mine_level.clubs[club_id] = level
         db.commit()
         return jsonify({'status': 'success'})
     except Exception as e:
