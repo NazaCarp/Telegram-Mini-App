@@ -365,30 +365,27 @@
         <button class="action-button" id="actionButton">Buy</button>
     </div>
     <script>
-        let levels;
+        let levels
         const tg = window.Telegram.WebApp;
+        const user_id = tg.initDataUnsafe.user.id;
 
         async function loadScore() {
             const storedScore = localStorage.getItem('score');
             if (storedScore !== null) {
                 document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore}`;
-                alert('Loaded score from localStorage: ' + storedScore);
             } else {
-                const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score}`;
-                alert('Loaded score from server: ' + data.score);
+                // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
         }
 
         async function loadMineLevels() {
-            const user_id = tg.initDataUnsafe.user.id;
             const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
-            const data = await response.json();
-            alert('Loaded levels: ' + JSON.stringify(data));
-            return data;
+            const levels = await response.json();
+            return levels;
         }
 
         function generateRectangles(containerId, clubs, levels) {
@@ -508,12 +505,9 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             await loadScore();
-            levels = await loadMineLevels();
-            if (Object.keys(levels).length === 0) {
-                alert('Initialized levels is empty: ' + JSON.stringify(levels));
-            } else {
-                alert('Initialized levels: ' + JSON.stringify(levels));
-            }
+
+            const levels = await loadMineLevels();
+
             const tabs = document.querySelectorAll('.tabs a');
             const tabSlider = document.getElementById('tabSlider');
 
@@ -613,7 +607,7 @@
                 { name: 'Al-Wahda FC', image: '/static/images/Asia/Al-Wahda FC.svg', cost: 7500 },
                 { name: 'Shanghai SIPG FC', image: '/static/images/Asia/Shanghai SIPG FC.svg', cost: 8000 },
                 { name: 'Jeju United FC', image: '/static/images/Asia/Jeju United FC.svg', cost: 8500 },
-                { name: 'FC Seoul', image: '/static/images/Asia/FC Seoul.svg', cost: 9000 },
+                                { name: 'FC Seoul', image: '/static/images/Asia/FC Seoul.svg', cost: 9000 },
                 { name: 'Suwon Samsung Bluewings', image: '/static/images/Asia/Suwon Samsung Bluewings.svg', cost: 9500 },
                 { name: 'Al-Ittihad FC', image: '/static/images/Asia/Al-Ittihad FC.svg', cost: 10000 },
                 { name: 'Al-Ahli SC', image: '/static/images/Asia/Al-Ahli SC.svg', cost: 10500 }
@@ -744,24 +738,14 @@
         });
 
         async function updateMineLevel(user_id, club_id, level) {
-            alert('Calling /update_mine_level with user_id: ' + user_id + ', club_id: ' + club_id + ', level: ' + level);
             const response = await fetch('/update_mine_level', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id: user_id, club_id: club_id, level: level })
+                body: JSON.stringify({ user_id, club_id, level })
             });
-
-            const result = await response.json();
-            if (result.debug) {
-                alert('Debug from server: ' + result.debug);
-            }
-            if (result.error) {
-                alert('Error from server: ' + result.error);
-            }
-            alert('Response from /update_mine_level: ' + JSON.stringify(result));
-            return result;
+            return await response.json();
         }
         
         async function showAlert(club) {
@@ -784,28 +768,14 @@
             document.querySelector('.navbar').classList.add('blur-content');
 
             document.getElementById('actionButton').addEventListener('click', async () => {
-                if (!levels) {
-                    alert('Levels no está cargado. Por favor, espera un momento e inténtalo de nuevo.');
-                    return;
-                }
 
-                const tg = window.Telegram.WebApp;
-                const user = tg.initDataUnsafe.user;
-                const user_id = user.id;
                 const club_id = club.name;
-                alert('club_id: ' + club_id);
-                const currentLevel = levels[club_id] || 1;
-                alert('currentLevel: ' + currentLevel);
                 alert('Botón Buy pulsado');
-
-                const currentScore = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
-                const cost = club.cost;
-                alert('Current score: ' + currentScore);
-                alert('Cost: ' + cost);
+                const currentLevel = levels[club_id] || 1;
+                const newLevel = currentLevel + 1;
 
                 if (currentScore >= cost) {
                     const newScore = currentScore - cost;
-                    alert('New score: ' + newScore);
                     const response = await fetch('/update_counters', {
                         method: 'POST',
                         headers: {
@@ -815,13 +785,10 @@
                     });
 
                     const result = await response.json();
-                    alert('Response from /update_counters: ' + JSON.stringify(result));
                     if (result.status === 'success') {
                         document.getElementById('score').innerText = newScore;
-                        alert('Score updated in UI: ' + newScore);
                         closeAlertMenu();
-                        await updateMineLevel(user_id, club_id, currentLevel + 1);
-                        alert('Mine level updated for club: ' + club_id);
+                        await updateMineLevel(user_id, club_id, newLevel);
                         loadScore();
                         loadMineLevels();
                         localStorage.setItem('score', newScore);
