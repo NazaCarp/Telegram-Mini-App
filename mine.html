@@ -813,6 +813,7 @@
                         },
                         body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: secondaryCount })
                     });
+                    alert('Pasó el const response');
 
                     const result = await response.json();
                     alert('Response from /update_counters: ' + JSON.stringify(result));
