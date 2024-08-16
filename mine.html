@@ -384,9 +384,8 @@
 
         async function loadMineLevels() {
             const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
-            const data = await response.json();
-            alert('Loaded levels: ' + JSON.stringify(data));
-            return data;
+            const levels = await response.json();
+            return levels;
         }
 
         function generateRectangles(containerId, clubs, levels) {
@@ -506,9 +505,14 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             await loadScore();
-            levels = await loadMineLevels();
 
             const levels = await loadMineLevels();
+            
+            if (Object.keys(levels).length === 0) {
+                alert('Initialized levels is empty: ' + JSON.stringify(levels));
+            } else {
+                alert('Initialized levels: ' + JSON.stringify(levels));
+            }
 
             const tabs = document.querySelectorAll('.tabs a');
             const tabSlider = document.getElementById('tabSlider');
