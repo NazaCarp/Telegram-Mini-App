@@ -744,14 +744,24 @@
         });
 
         async function updateMineLevel(user_id, club_id, level) {
+            alert('Calling /update_mine_level with user_id: ' + user_id + ', club_id: ' + club_id + ', level: ' + level);
             const response = await fetch('/update_mine_level', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id, club_id, level })
+                body: JSON.stringify({ user_id: user_id, club_id: club_id, level: level })
             });
-            return await response.json();
+
+            const result = await response.json();
+            if (result.debug) {
+                alert('Debug from server: ' + result.debug);
+            }
+            if (result.error) {
+                alert('Error from server: ' + result.error);
+            }
+            alert('Response from /update_mine_level: ' + JSON.stringify(result));
+            return result;
         }
         
         async function showAlert(club) {

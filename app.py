@@ -217,6 +217,8 @@ def get_mine_levels():
         return jsonify({'error': str(e)}), 500
 
 
+app = Flask(__name__)
+
 @app.route('/update_mine_level', methods=['POST'])
 def update_mine_level():
     data = request.get_json()
@@ -224,8 +226,13 @@ def update_mine_level():
     club_id = data.get('club_id')
     level = data.get('level')
 
+    response = {
+        'debug': f'Received data in /update_mine_level: user_id: {user_id}, club_id: {club_id}, level: {level}'
+    }
+
     if not all([user_id, club_id, level]):
-        return jsonify({'error': 'Missing required fields'}), 400
+        response['error'] = 'Missing required fields'
+        return jsonify(response), 400
 
     try:
         db = SessionLocal()
@@ -233,14 +240,16 @@ def update_mine_level():
         if not mine_level:
             mine_level = MineLevels(user_id=user_id, club_id=club_id, level=level)
             db.add(mine_level)
+            response['debug'] += f'\nInserting new mine level: user_id={user_id}, club_id={club_id}, level={level}'
         else:
             mine_level.level = level
+            response['debug'] += f'\nUpdating mine level: user_id={user_id}, club_id={club_id}, level={level}'
         db.commit()
-        return jsonify({'status': 'success'})
+        response['status'] = 'success'
+        return jsonify(response)
     except Exception as e:
-        logging.error(f"Error in update_mine_level: {e}")
-        return jsonify({'error': str(e)}), 500
-
+        response['error'] = str(e)
+        return jsonify(response), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
