@@ -768,7 +768,10 @@
             document.querySelector('.navbar').classList.add('blur-content');
 
             document.getElementById('actionButton').addEventListener('click', async () => {
-
+                if (!levels) {
+                    alert('Levels no está cargado. Por favor, espera un momento e inténtalo de nuevo.');
+                    return;
+                }
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
                 alert('Botón Buy pulsado');
