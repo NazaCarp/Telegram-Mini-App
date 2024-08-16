@@ -806,13 +806,12 @@
                 if (currentScore >= cost) {
                     const newScore = currentScore - cost;
                     alert('New score: ' + newScore);
-                    alert('Va a entrar al const response');
                     const response = await fetch('/update_counters', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ user_id: user_id, score: newScore, secondarycount: secondaryCount })
+                        body: JSON.stringify({ user_id: user_id, score: newScore })
                     });
 
                     const result = await response.json();
