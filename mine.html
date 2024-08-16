@@ -506,13 +506,7 @@
         document.addEventListener('DOMContentLoaded', async function() {
             await loadScore();
 
-            const levels = await loadMineLevels();
-            
-            if (Object.keys(levels).length === 0) {
-                alert('Initialized levels is empty: ' + JSON.stringify(levels));
-            } else {
-                alert('Initialized levels: ' + JSON.stringify(levels));
-            }
+            levels = await loadMineLevels();
 
             const tabs = document.querySelectorAll('.tabs a');
             const tabSlider = document.getElementById('tabSlider');
