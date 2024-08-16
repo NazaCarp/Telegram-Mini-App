@@ -789,9 +789,9 @@
                         document.getElementById('score').innerText = newScore;
                         closeAlertMenu();
                         await updateMineLevel(user_id, club_id, newLevel);
+                        localStorage.setItem('score', newScore);
                         loadScore();
                         loadMineLevels();
-                        localStorage.setItem('score', newScore);
                     } else {
                         alert('Error al actualizar el score');
                     }
