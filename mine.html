@@ -384,8 +384,9 @@
 
         async function loadMineLevels() {
             const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
-            const levels = await response.json();
-            return levels;
+            const data = await response.json();
+            alert('Loaded levels: ' + JSON.stringify(data));
+            return data;
         }
 
         function generateRectangles(containerId, clubs, levels) {
@@ -505,6 +506,7 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             await loadScore();
+            levels = await loadMineLevels();
 
             const levels = await loadMineLevels();
 
@@ -768,10 +770,7 @@
             document.querySelector('.navbar').classList.add('blur-content');
 
             document.getElementById('actionButton').addEventListener('click', async () => {
-                if (!levels) {
-                    alert('Levels no está cargado. Por favor, espera un momento e inténtalo de nuevo.');
-                    return;
-                }
+
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
                 alert('Botón Buy pulsado');
