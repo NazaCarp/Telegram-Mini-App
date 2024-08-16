@@ -365,6 +365,7 @@
         <button class="action-button" id="actionButton">Buy</button>
     </div>
     <script>
+        let levels;
         const tg = window.Telegram.WebApp;
 
         async function loadScore() {
@@ -384,8 +385,9 @@
         async function loadMineLevels() {
             const user_id = tg.initDataUnsafe.user.id;
             const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
-            const levels = await response.json();
-            return levels;
+            const data = await response.json();
+            alert('Loaded levels: ' + JSON.stringify(data));
+            return data;
         }
 
         function generateRectangles(containerId, clubs, levels) {
@@ -505,9 +507,8 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             await loadScore();
-
-            const levels = await loadMineLevels();
-
+            levels = await loadMineLevels();
+            alert('Initialized levels: ' + JSON.stringify(levels));
             const tabs = document.querySelectorAll('.tabs a');
             const tabSlider = document.getElementById('tabSlider');
 
@@ -768,12 +769,18 @@
             document.querySelector('.navbar').classList.add('blur-content');
 
             document.getElementById('actionButton').addEventListener('click', async () => {
+                if (!levels) {
+                    alert('Levels no está cargado. Por favor, espera un momento e inténtalo de nuevo.');
+                    return;
+                }
 
                 const tg = window.Telegram.WebApp;
                 const user = tg.initDataUnsafe.user;
                 const user_id = user.id;
                 const club_id = club.name;
+                alert('club_id: ' + club_id);
                 const currentLevel = levels[club_id] || 1;
+                alert('currentLevel: ' + currentLevel);
                 alert('Botón Buy pulsado');
                 const newLevel = currentLevel + 1;
 
