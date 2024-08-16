@@ -210,7 +210,8 @@ def get_mine_levels():
     try:
         db = SessionLocal()
         levels = db.query(MineLevels).filter_by(user_id=user_id).all()
-        return jsonify({level.club_id: level.level for level in levels})
+        result = {level.club_id: level.level for level in levels}
+        return jsonify(result)
     except Exception as e:
         logging.error(f"Error in get_mine_levels: {e}")
         return jsonify({'error': str(e)}), 500
