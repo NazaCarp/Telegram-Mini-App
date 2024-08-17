@@ -372,7 +372,7 @@
         async function loadScore() {
             const storedScore = localStorage.getItem('score');
             if (storedScore !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore.toFixed(3)}`;
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(storedScore).toFixed(3)}`;
             } else {
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
@@ -751,7 +751,7 @@
         let currentActionButtonListener = null;
 
         async function showAlert(club) {
-            const currentScore = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
+            const currentScore = parseFloat(document.getElementById('score').innerText.replace(/\D/g, ''));
             const cost = club.cost;
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
