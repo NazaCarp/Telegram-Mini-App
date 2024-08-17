@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, Integer, DateTime, String, ForeignKey, JSON
+from sqlalchemy import Column, BigInteger, Integer, Float, DateTime, String, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
@@ -11,7 +11,7 @@ class Counter(Base):
     user_id = Column(BigInteger, unique=True, index=True)
     name = Column(String)
     username = Column(String)
-    score = Column(Integer, default=0)
+    score = Column(Float, default=0)
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
     tap = Column(Integer, default=1)

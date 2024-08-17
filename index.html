@@ -211,7 +211,7 @@
       }
 
       // Actualizar la interfaz de usuario
-      document.getElementById('score').textContent = score;
+      document.getElementById('score').textContent = score.toFixed(3);
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
 
       // Guardar el score en localStorage
@@ -243,7 +243,7 @@
         }
         score += amountToAdd;
         lastTimestamp = Date.now();
-        document.getElementById('score').textContent = score;
+        document.getElementById('score').textContent = score.toFixed(3);
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`;
 
         // Mostrar "+amountToAdd" en el lugar del clic
@@ -285,18 +285,17 @@
     }
 
     function incrementSecondaryCounter() {
-      score += profit_per_hour / 360
+      score += profit_per_hour / 3600;
       if (secondaryCount < energyLimit) { // Usar energyLimit
         if (secondaryCount + rechargeSpeed > energyLimit) {
-          secondaryCount = energyLimit
-        }
-        else {
+          secondaryCount = energyLimit;
+        } else {
           secondaryCount += rechargeSpeed; // Usar rechargeSpeed
           lastTimestamp = Date.now();
         }
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
       }
-      document.getElementById('score').textContent = score;
+      document.getElementById('score').textContent = score.toFixed(3);  // Mostrar sólo 3 decimales
       saveCounts();
     }
 

@@ -443,13 +443,13 @@
         async function loadScore() {
             const storedScore = localStorage.getItem('score');
             if (storedScore !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore}`;
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore.toFixed(3)}`;
             }
             else{
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score}`;
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score.toFixed(3)}`;
                 // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
