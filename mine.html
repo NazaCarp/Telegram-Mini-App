@@ -385,10 +385,10 @@
             score = storedScore
             profitPerHour = storedProfitPerHour
 
-            alert(`score = ${storedProfitPerHour}`)
-            
             // Actualizar la interfaz del usuario
             document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
+            
+            alert(`score = ${storedProfitPerHour}`)
             
             // Guardar score y profitPerHour en localStorage
             localStorage.setItem('score', score);
