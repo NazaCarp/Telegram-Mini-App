@@ -373,6 +373,7 @@
         score = 0
 
         async function loadScore() {
+            alert(`score = ${score}`)
             let storedScore = localStorage.getItem('score');
             let storedProfitPerHour = localStorage.getItem('profit_per_hour');
             
@@ -384,7 +385,7 @@
             }
             score = storedScore
             profitPerHour = storedProfitPerHour
-            
+
             // Actualizar la interfaz del usuario
             document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
             
