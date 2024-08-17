@@ -184,23 +184,36 @@
     let secondaryCount = 0;
     let lastTimestamp = 0;
     let profit_per_hour= 0;
+    let tap = 1;
+    let energyLimit = 1000;
+    let rechargeSpeed = 1;
 
     // Manejar el parámetro startapp
     const startParam = tg.initDataUnsafe.start_param;
 
     async function loadAndUpdateCounters() {
-      // Primero, obtener los contadores
-      const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
-      const data = await response.json();
-      
-      // Actualizar las variables de contadores con los datos obtenidos
-      score = data.score;
-      secondaryCount = data.secondarycount;
-      profit_per_hour = data.profit_per_hour;
-      tap = data.tap;
-      energyLimit = data.energy_limit;
-      rechargeSpeed = data.recharge_speed;
-      lastTimestamp = new Date(data.timestamp).getTime();
+      // Cargar valores desde localStorage si están disponibles
+      const storedScore = localStorage.getItem('score');
+      const storedSecondaryCount = localStorage.getItem('secondaryCount');
+      const storedLastTimestamp = localStorage.getItem('lastTimestamp');
+
+      if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null) {
+        // Primero, obtener los contadores
+        const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
+        const data = await response.json();
+        
+        // Actualizar las variables de contadores con los datos obtenidos
+        storedScore = data.score;
+        storedSecondaryCount = data.secondarycount;
+        storedProfit_per_hour = data.profit_per_hour;
+        storedTap = data.tap;
+        storedEnergyLimit = data.energy_limit;
+        storedRechargeSpeed = data.recharge_speed;
+        storedLastTimestamp = new Date(data.timestamp).getTime();
+      }
+      score = parseFloat(storedScore);
+      secondaryCount = parseInt(storedSecondaryCount);
+      lastTimestamp = parseInt(storedLastTimestamp);
 
       // Calcular el tiempo transcurrido y actualizar secondaryCount
       const currentTime = Date.now();
@@ -216,6 +229,8 @@
 
       // Guardar el score en localStorage
       localStorage.setItem('score', score);
+      localStorage.setItem('secondaryCount', secondaryCount);
+      localStorage.setItem('lastTimestamp', currentTime);
 
       // Iniciar el intervalo para incrementar el contador secundario cada segundo
       setInterval(incrementSecondaryCounter, 1000);
@@ -268,9 +283,6 @@
         setTimeout(() => {
           image.style.transform = 'scale(1)';
         }, 500);
-
-        // Guardar el score en localStorage
-        localStorage.setItem('score', score);
       }
     }
 
@@ -296,6 +308,9 @@
       }
       document.getElementById('score').textContent = score.toFixed(3);  // Mostrar sólo 3 decimales
       saveCounts();
+      localStorage.setItem('score', score);
+      localStorage.setItem('secondaryCount', secondaryCount);
+      localStorage.setItem('lastTimestamp', Date.now());
     }
 
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
