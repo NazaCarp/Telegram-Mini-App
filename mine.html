@@ -385,14 +385,10 @@
             }
         }
 
-        let lastTimestamp = Date.now();
-
         function incrementScore() {
-            const currentTime = Date.now();
-            const elapsedTime = (currentTime - lastTimestamp) / 1000; // Tiempo transcurrido en segundos
             const scoreElement = document.getElementById('score');
             let score = parseFloat(scoreElement.innerText.replace(/\D/g, ''));
-            const increment = (profitPerHour / 3600) * elapsedTime;
+            const increment = (profitPerHour / 3600);
             score += increment;
             scoreElement.innerText = score.toFixed(2);
             localStorage.setItem('score', score);
