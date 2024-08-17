@@ -203,14 +203,15 @@
         
         // Actualizar las variables de contadores con los datos obtenidos
         alert(`Entró`)
-        storedScore = data.score;
-        alert(`Pero no salió`)
         storedSecondaryCount = data.secondarycount;
         storedProfit_per_hour = data.profit_per_hour;
         storedTap = data.tap;
         storedEnergyLimit = data.energy_limit;
         storedRechargeSpeed = data.recharge_speed;
         storedLastTimestamp = new Date(data.timestamp).getTime();
+        alert(`Pasó el timestamp`)
+        storedScore = data.score;
+        alert(`Pero no salió`)
       }
       score = parseFloat(storedScore);
       secondaryCount = parseInt(storedSecondaryCount);
