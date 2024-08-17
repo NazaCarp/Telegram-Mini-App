@@ -39,7 +39,7 @@ def get_counters():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, name=name, username=username, score=0, secondarycount=0, tap=1, energy_limit=1000, recharge_speed=1)
+            counter = Counter(user_id=user_id, name=name, username=username, score=0, secondarycount=0, tap=1, energy_limit=1000, recharge_speed=1, profit_per_hour=0)
             db.add(counter)
             db.commit()
 
@@ -73,7 +73,8 @@ def get_counters():
             'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat(),  # Convertir a ISO 8601 con UTC
             'tap': counter.tap,
             'energy_limit': counter.energy_limit,
-            'recharge_speed': counter.recharge_speed
+            'recharge_speed': counter.recharge_speed,
+            'profit_per_hour': counter.profit_per_hour
         })
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
