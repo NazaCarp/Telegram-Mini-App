@@ -17,7 +17,7 @@ class Counter(Base):
     tap = Column(Integer, default=1)
     energy_limit = Column(Integer, default=1000)
     recharge_speed = Column(Integer, default=1)
-    profit_per_hour = Column(BigInteger, default=0)
+    profit_per_hour = Column(BigInteger, default=10)
 
 
 class Referral(Base):
