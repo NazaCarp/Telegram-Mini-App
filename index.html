@@ -183,7 +183,7 @@
     let score = 0;
     let secondaryCount = 0;
     let lastTimestamp = 0;
-    let profit_per_hour= 0;
+    let profitPerHour = 0;
     let tap = 1;
     let energyLimit = 1000;
     let rechargeSpeed = 1;
@@ -194,17 +194,21 @@
     async function loadAndUpdateCounters() {
       // Cargar valores desde localStorage si están disponibles
       const storedScore = localStorage.getItem('score');
+      const storedProfitPerHour = localStorage.getItem('profitPerHour');
       const storedSecondaryCount = localStorage.getItem('secondaryCount');
+      const storedTap = localStorage.getItem('tap');
+      const storedEnergyLimit = localStorage.getItem('energyLimit');
+      const storedRechargeSpeed = localStorage.getItem('rechargeSpeed');
       const storedLastTimestamp = localStorage.getItem('lastTimestamp');
-      if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null) {
+      if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
         // Primero, obtener los contadores
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
         const data = await response.json();
         
         // Actualizar las variables de contadores con los datos obtenidos
         alert(`Entró`)
+        storedProfitPerHour = data.profit_per_hour;
         storedSecondaryCount = data.secondarycount;
-        storedProfit_per_hour = data.profit_per_hour;
         storedTap = data.tap;
         storedEnergyLimit = data.energy_limit;
         storedRechargeSpeed = data.recharge_speed;
@@ -214,7 +218,11 @@
         alert(`Pero no salió`)
       }
       score = parseFloat(storedScore);
+      profitPerHour = parseFloat(storedProfitPerHour);
       secondaryCount = parseInt(storedSecondaryCount);
+      tap = parseInt(storedTap);
+      energyLimit = parseInt(storedEnergyLimit);
+      rechargeSpeed = parseInt(storedRechargeSpeed);
       lastTimestamp = parseInt(storedLastTimestamp);
 
       // Calcular el tiempo transcurrido y actualizar secondaryCount
@@ -231,7 +239,11 @@
 
       // Guardar el score en localStorage
       localStorage.setItem('score', score);
+      localStorage.setItem('profitPerHour', profitPerHour);
       localStorage.setItem('secondaryCount', secondaryCount);
+      localStorage.setItem('tap', tap);
+      localStorage.setItem('energyLimit', energyLimit);
+      localStorage.setItem('rechargeSpeed', rechargeSpeed);
       localStorage.setItem('lastTimestamp', currentTime);
 
       // Iniciar el intervalo para incrementar el contador secundario cada segundo
