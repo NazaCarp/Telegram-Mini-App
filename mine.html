@@ -372,29 +372,40 @@
         let profitPerHour = 0;
 
         async function loadScore() {
-            const storedScore = localStorage.getItem('score');
-            if (storedScore !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(storedScore).toFixed(3)}`;
+            let score = localStorage.getItem('score');
+            let ProfitPerHour = localStorage.getItem('profit_per_hour');
+            
+            if (score !== null) {
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(score).toFixed(3)}`;
             } else {
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score.toFixed(3)}`;
-                // Guardar el score en localStorage
-                localStorage.setItem('score', data.score);
-                profitPerHour = data.profit_per_hour; // Almacenar el valor de profit_per_hour
+                score = data.score
+                profitPerHour = data.profit_per_hour;
+
+                // Actualizar la interfaz del usuario
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
+                
+                // Guardar score y profitPerHour en localStorage
+                localStorage.setItem('score', score);
+                localStorage.setItem('profit_per_hour', profitPerHour);
             }
+            setInterval(incrementScore, 1000);
         }
 
         function incrementScore() {
             const scoreElement = document.getElementById('score');
             let score = parseFloat(scoreElement.innerText.replace(/\D/g, ''));
-            const increment = (profitPerHour);
-            score = increment;
-            scoreElement.innerText = score.toFixed(2);
+            const increment = (profitPerHour / 3600);
+            score += increment;
+            scoreElement.innerText = score.toFixed(3);
             localStorage.setItem('score', score);
-            lastTimestamp = currentTime;
 
             // Actualizar el score en la base de datos
+            saveCounts();
+        }
+
+        async function saveCounts() {
             fetch('/update_counters', {
                 method: 'POST',
                 headers: {
@@ -762,12 +773,6 @@
             setInterval(incrementScore, 1000);
         });
 
-        async function loadUserData() {
-            const response = await fetch(`/get_user_data?user_id=${user_id}`);
-            const data = await response.json();
-            profitPerHour = data.profit_per_hour; // Actualizar el valor de profit_per_hour
-        }
-
         async function updateMineLevel(user_id, club_id, level) {
             const response = await fetch('/update_mine_level', {
                 method: 'POST',
@@ -812,21 +817,15 @@
                 const newLevel = currentLevel + 1;
 
                 if (currentScore >= cost) {
-                    const newScore = currentScore - cost;
-                    const response = await fetch('/update_counters', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ user_id: user_id, score: newScore })
-                    });
+                    const score = currentScore - cost;
+                    saveCounts();
 
                     const result = await response.json();
                     if (result.status === 'success') {
-                        document.getElementById('score').innerText = newScore.toFixed(3);
+                        localStorage.setItem('score', score);
+                        document.getElementById('score').innerText = score.toFixed(3);
                         closeAlertMenu();
                         await updateMineLevel(user_id, club_id, newLevel);
-                        localStorage.setItem('score', newScore);
                         loadScore();
                         loadMineLevels();
                     } else {

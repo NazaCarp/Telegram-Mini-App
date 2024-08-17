@@ -441,14 +441,15 @@
         const tg = window.Telegram.WebApp;
         
         async function loadScore() {
-            const storedScore = localStorage.getItem('score');
-            if (storedScore !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(storedScore).toFixed(3)}`;
+            let score = localStorage.getItem('score');
+            if (score !== null) {
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(score).toFixed(3)}`;
             } else {
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${data.score.toFixed(3)}`;
+                score = data.score
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
                 // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
