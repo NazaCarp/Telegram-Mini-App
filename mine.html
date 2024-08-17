@@ -385,7 +385,7 @@
         async function loadMineLevels() {
             const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
             levels = await response.json();
-            return levels;
+            return levels.clubs;
         }
 
         function generateRectangles(containerId, clubs, levels) {
