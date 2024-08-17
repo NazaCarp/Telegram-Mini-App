@@ -202,9 +202,10 @@
         const data = await response.json();
         
         // Actualizar las variables de contadores con los datos obtenidos
-        storedScore = data.score;
-        storedSecondaryCount = data.secondarycount;
         alert(`Entró`)
+        storedScore = data.score;
+        alert(`Pero no salió`)
+        storedSecondaryCount = data.secondarycount;
         storedProfit_per_hour = data.profit_per_hour;
         storedTap = data.tap;
         storedEnergyLimit = data.energy_limit;
