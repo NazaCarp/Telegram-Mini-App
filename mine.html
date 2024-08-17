@@ -389,118 +389,102 @@
         }
 
         function generateRectangles(containerId, clubs, levels) {
-            const rows = Math.ceil(clubs.length / 2);
-
-            // Limpiar contenido anterior
-            const height = 233 * rows + 85;
-
-            const containernorth = document.getElementById('northAmericaContent');
-            containernorth.style = `height: ${height}px;`
-            
-            const containersouth = document.getElementById('southAmericaContent');
-            containersouth.style = `height: ${height}px;`
-
-            const containereurope = document.getElementById('europeContent');
-            containereurope.style = `height: ${height}px;`
-            
-            const containerasia = document.getElementById('asiaContent');
-            containerasia.style = `height: ${height}px;`
-            
-            const containerafrica = document.getElementById('africaContent');
-            containerafrica.style = `height: ${height}px;`
-
-            const containeroceania = document.getElementById('oceaniaContent');
-            containeroceania.style = `height: ${height}px;`
-            
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Limpiar contenido anterior
 
-            for (let i = 0; i < rows; i++) {
-                const row = document.createElement('div');
-                row.className = 'row';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const club = entry.target.dataset.club;
+                        const rectangle = createRectangle(club, levels);
+                        entry.target.appendChild(rectangle);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
 
-                for (let j = 0; j < 2; j++) {
-                    const index = i * 2 + j;
-                    if (index >= clubs.length) break; // Salir si no hay más clubes
+            clubs.forEach(club => {
+                const placeholder = document.createElement('div');
+                placeholder.dataset.club = club;
+                container.appendChild(placeholder);
+                observer.observe(placeholder);
+            });
+        }
 
-                    const club = clubs[index];
+        function createRectangle(club, levels) {
+            const rectangle = document.createElement('div');
+            rectangle.className = 'rectangle';
+            rectangle.setAttribute('data-cost', club.cost); // Añadir el costo como atributo
+            rectangle.setAttribute('data-club-id', club.name); // Añadir el identificador del club
 
-                    const rectangle = document.createElement('div');
-                    rectangle.className = 'rectangle';
-                    rectangle.setAttribute('data-cost', club.cost); // Añadir el costo como atributo
-                    rectangle.setAttribute('data-club-id', club.name); // Añadir el identificador del club
+            const imageElement = document.createElement('img');
+            imageElement.className = 'icon';
+            imageElement.src = club.image;
+            imageElement.alt = club.name;
 
-                    const imageElement = document.createElement('img');
-                    imageElement.className = 'icon';
-                    imageElement.src = club.image;
-                    imageElement.alt = club.name;
+            const textContent = document.createElement('div');
+            textContent.className = 'text-content';
 
-                    const textContent = document.createElement('div');
-                    textContent.className = 'text-content';
+            const title = document.createElement('h3');
+            title.style.fontSize = '14px'; // Tamaño de letra más chico
+            title.textContent = club.name;
 
-                    const title = document.createElement('h3');
-                    title.style.fontSize = '14px'; // Tamaño de letra más chico
-                    title.textContent = club.name;
+            const subtitle = document.createElement('div');
+            subtitle.className = 'subtitle';
+            subtitle.textContent = 'Profit per hour';
 
-                    const subtitle = document.createElement('div');
-                    subtitle.className = 'subtitle';
-                    subtitle.textContent = 'Profit per hour';
+            const profitInfo = document.createElement('div');
+            profitInfo.className = 'profit-info';
+            const profitIcon = document.createElement('iconify-icon');
+            profitIcon.icon = 'twemoji:coin';
+            const profitSpan = document.createElement('span');
+            profitSpan.textContent = '1000';
 
-                    const profitInfo = document.createElement('div');
-                    profitInfo.className = 'profit-info';
-                    const profitIcon = document.createElement('iconify-icon');
-                    profitIcon.icon = 'twemoji:coin';
-                    const profitSpan = document.createElement('span');
-                    profitSpan.textContent = '1000';
+            profitInfo.appendChild(profitIcon);
+            profitInfo.appendChild(profitSpan);
 
-                    profitInfo.appendChild(profitIcon);
-                    profitInfo.appendChild(profitSpan);
+            const divider = document.createElement('div');
+            divider.className = 'divider';
 
-                    const divider = document.createElement('div');
-                    divider.className = 'divider';
+            const section = document.createElement('div');
+            section.className = 'section';
 
-                    const section = document.createElement('div');
-                    section.className = 'section';
+            const sectionLeft = document.createElement('div');
+            sectionLeft.className = 'section-left';
+            sectionLeft.textContent = `lvl ${levels[club.name] || 1}`;
 
-                    const sectionLeft = document.createElement('div');
-                    sectionLeft.className = 'section-left';
-                    sectionLeft.textContent = `lvl ${levels[club.name] || 1}`;
+            const verticalDivider = document.createElement('div');
+            verticalDivider.className = 'vertical-divider';
 
-                    const verticalDivider = document.createElement('div');
-                    verticalDivider.className = 'vertical-divider';
+            const sectionRight = document.createElement('div');
+            sectionRight.className = 'section-right';
+            const sectionRightIcon = document.createElement('iconify-icon');
+            sectionRightIcon.icon = 'twemoji:coin';
+            const sectionRightSpan = document.createElement('span');
+            sectionRightSpan.textContent = club.cost; // Mostrar el valor de 'cost' aquí
 
-                    const sectionRight = document.createElement('div');
-                    sectionRight.className = 'section-right';
-                    const sectionRightIcon = document.createElement('iconify-icon');
-                    sectionRightIcon.icon = 'twemoji:coin';
-                    const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = club.cost; // Mostrar el valor de 'cost' aquí
+            sectionRight.appendChild(sectionRightIcon);
+            sectionRight.appendChild(sectionRightSpan);
 
-                    sectionRight.appendChild(sectionRightIcon);
-                    sectionRight.appendChild(sectionRightSpan);
+            section.appendChild(sectionLeft);
+            section.appendChild(verticalDivider);
+            section.appendChild(sectionRight);
 
-                    section.appendChild(sectionLeft);
-                    section.appendChild(verticalDivider);
-                    section.appendChild(sectionRight);
+            textContent.appendChild(title);
+            textContent.appendChild(subtitle);
+            textContent.appendChild(profitInfo);
+            textContent.appendChild(divider);
+            textContent.appendChild(section);
 
-                    textContent.appendChild(title);
-                    textContent.appendChild(subtitle);
-                    textContent.appendChild(profitInfo);
-                    textContent.appendChild(divider);
-                    textContent.appendChild(section);
+            rectangle.appendChild(imageElement);
+            rectangle.appendChild(textContent);
 
-                    rectangle.appendChild(imageElement);
-                    rectangle.appendChild(textContent);
-                    row.appendChild(rectangle);
+            // Añadir evento de clic para mostrar la alerta
+            rectangle.addEventListener('click', () => {
+                showAlert(club);
+            });
 
-                    // Añadir evento de clic para mostrar la alerta
-                    rectangle.addEventListener('click', () => {
-                        showAlert(club);
-                    });
-                }
-
-                container.appendChild(row);
-            }
+            return rectangle;
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
