@@ -373,7 +373,6 @@
         score = 0
 
         async function loadScore() {
-            let score = localStorage.getItem('score');
             let ProfitPerHour = localStorage.getItem('profit_per_hour');
             
             const response = await fetch(`/get_counters?user_id=${user_id}`);
