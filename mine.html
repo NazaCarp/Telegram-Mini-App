@@ -405,12 +405,23 @@
                 rootMargin: '0px 0px 200px 0px' // Cargar imágenes un poco antes de que sean visibles
             });
 
-            clubs.forEach(club => {
-                const placeholder = document.createElement('div');
-                placeholder.dataset.club = JSON.stringify(club);
-                container.appendChild(placeholder);
-                observer.observe(placeholder);
-            });
+            const rows = Math.ceil(clubs.length / 2);
+            for (let i = 0; i < rows; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                container.appendChild(row);
+
+                for (let j = 0; j < 2; j++) {
+                    const index = i * 2 + j;
+                    if (index >= clubs.length) break; // Salir si no hay más clubes
+
+                    const club = clubs[index];
+                    const placeholder = document.createElement('div');
+                    placeholder.dataset.club = JSON.stringify(club);
+                    row.appendChild(placeholder);
+                    observer.observe(placeholder);
+                }
+            }
         }
 
         function createRectangle(club, levels) {
