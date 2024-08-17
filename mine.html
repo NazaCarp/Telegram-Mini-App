@@ -379,9 +379,12 @@
             if (storedScore === null || storedProfitPerHour === null){
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
-                score = data.score
-                profitPerHour = data.profit_per_hour;
+                storedScore = data.score
+                storedProfitPerHour = data.profit_per_hour;
             }
+            score = storedScore
+            profitPerHour = storedProfitPerHour
+            
             // Actualizar la interfaz del usuario
             document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
             
