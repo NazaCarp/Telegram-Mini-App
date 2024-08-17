@@ -377,12 +377,12 @@
             let storedProfitPerHour = localStorage.getItem('profit_per_hour');
             
             if (storedScore === null || storedProfitPerHour === null){
-                alert(`score = ${storedProfitPerHour}`)
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 storedScore = data.score
                 storedProfitPerHour = data.profit_per_hour;
             }
+            alert(`score = ${storedProfitPerHour}`)
             score = storedScore
             profitPerHour = storedProfitPerHour
 
