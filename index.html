@@ -176,13 +176,14 @@
 
   <script>
     const tg = window.Telegram.WebApp;
-    let score = 0;
-    let secondaryCount = 0;
-    let lastTimestamp = 0;
     const user = tg.initDataUnsafe.user;
     const user_id = user.id;
     const name = user.first_name + ' ' + (user.last_name || '')
     const username = (user.username || '')
+    let score = 0;
+    let secondaryCount = 0;
+    let lastTimestamp = 0;
+    let profit_per_hour= 0;
 
     // Manejar el parámetro startapp
     const startParam = tg.initDataUnsafe.start_param;
