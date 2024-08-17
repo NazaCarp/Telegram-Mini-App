@@ -382,7 +382,7 @@
             const user = tg.initDataUnsafe.user;
             const user_id = user.id;
             const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
-            const currentScore = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
+            const currentScore = parseFloat(document.getElementById('score').innerText.replace(/\D/g, ''));
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
 
             if (currentScore >= cost) {
@@ -402,7 +402,7 @@
 
                 const result = await response.json();
                 if (result.status === 'success') {
-                    document.getElementById('score').innerText = newScore;
+                    document.getElementById('score').innerText = newScore.toFixed(3);
                     closeAlertMenu();
                     loadUserData();
                     localStorage.setItem('score', newScore);
@@ -443,9 +443,8 @@
         async function loadScore() {
             const storedScore = localStorage.getItem('score');
             if (storedScore !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${storedScore.toFixed(3)}`;
-            }
-            else{
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(storedScore).toFixed(3)}`;
+            } else {
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
