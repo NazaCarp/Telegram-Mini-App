@@ -196,7 +196,9 @@
       const storedScore = localStorage.getItem('score');
       const storedSecondaryCount = localStorage.getItem('secondaryCount');
       const storedLastTimestamp = localStorage.getItem('lastTimestamp');
-
+      alert(`storedScore = ${storedScore}`)
+      alert(`storedSecondaryCount = ${storedSecondaryCount}`)
+      alert(`storedLastTimestamp = ${storedLastTimestamp}`)
       if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null) {
         // Primero, obtener los contadores
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
