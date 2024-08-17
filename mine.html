@@ -392,6 +392,7 @@
         function incrementScore() {
             const scoreElement = document.getElementById('score');
             let score = parseFloat(scoreElement.innerText.replace(/\D/g, ''));
+            alert(`${score}`)
             let increment = (profitPerHour / 3600);
             score += increment;
             scoreElement.innerText = score.toFixed(3);
