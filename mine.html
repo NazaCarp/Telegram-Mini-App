@@ -369,8 +369,8 @@
         const tg = window.Telegram.WebApp;
         const user_id = tg.initDataUnsafe.user.id;
 
+        let score = 0;
         let profitPerHour = 0;
-        score = 0
 
         async function loadScore() {
             let storedScore = localStorage.getItem('score');
@@ -379,11 +379,13 @@
             if (storedScore === null || storedProfitPerHour === null){
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
-                storedScore = data.score
+                storedScore = data.score;
                 storedProfitPerHour = data.profit_per_hour;
             }
-            score = storedScore
-            profitPerHour = storedProfitPerHour
+            
+            // Convertir los valores almacenados en números
+            score = parseFloat(storedScore);
+            profitPerHour = parseFloat(storedProfitPerHour);
 
             // Actualizar la interfaz del usuario
             document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
@@ -391,6 +393,8 @@
             // Guardar score y profitPerHour en localStorage
             localStorage.setItem('score', score);
             localStorage.setItem('profit_per_hour', profitPerHour);
+            
+            // Iniciar el intervalo para incrementar el score cada segundo
             setInterval(incrementScore, 1000);
         }
 
@@ -403,7 +407,6 @@
             // Actualizar el score en la base de datos
             saveCounts();
         }
-
         async function saveCounts() {
             fetch('/update_counters', {
                 method: 'POST',
