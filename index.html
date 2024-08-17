@@ -206,16 +206,13 @@
         const data = await response.json();
         
         // Actualizar las variables de contadores con los datos obtenidos
-        alert(`Entró`)
         storedProfitPerHour = data.profit_per_hour;
         storedSecondaryCount = data.secondarycount;
         storedTap = data.tap;
         storedEnergyLimit = data.energy_limit;
         storedRechargeSpeed = data.recharge_speed;
         storedLastTimestamp = new Date(data.timestamp).getTime();
-        alert(`Pasó el timestamp`)
         storedScore = data.score;
-        alert(`Pero no salió`)
       }
       score = parseFloat(storedScore);
       profitPerHour = parseFloat(storedProfitPerHour);
@@ -312,7 +309,7 @@
 
     function incrementSecondaryCounter() {
       alert(`score=${score}`)
-      score += profit_per_hour / 3600;
+      score += profitPerHour / 3600;
       if (secondaryCount < energyLimit) { // Usar energyLimit
         if (secondaryCount + rechargeSpeed > energyLimit) {
           secondaryCount = energyLimit;
