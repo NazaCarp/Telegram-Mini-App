@@ -193,7 +193,7 @@
       const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
       const data = await response.json();
       
-            // Actualizar las variables de contadores con los datos obtenidos
+      // Actualizar las variables de contadores con los datos obtenidos
       score = data.score;
       secondaryCount = data.secondarycount;
       profit_per_hour = data.profit_per_hour;
