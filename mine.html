@@ -388,7 +388,7 @@
         function incrementScore() {
             const scoreElement = document.getElementById('score');
             let score = parseFloat(scoreElement.innerText.replace(/\D/g, ''));
-            const increment = (profitPerHour / 360);
+            const increment = (profitPerHour / 36);
             score = increment;
             scoreElement.innerText = score.toFixed(2);
             localStorage.setItem('score', score);
