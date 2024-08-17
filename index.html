@@ -213,6 +213,8 @@
       // Guardar el score en localStorage
       localStorage.setItem('score', score);
 
+      alert('Error al actualizar el boost');
+
       // Iniciar el intervalo para incrementar el contador secundario cada segundo
       setInterval(incrementSecondaryCounter, 1000);
     }
@@ -281,7 +283,6 @@
     }
 
     function incrementSecondaryCounter() {
-      alert('Error al actualizar el boost');
       score += profit_per_hour
       if (secondaryCount < energyLimit) { // Usar energyLimit
         if (secondaryCount + rechargeSpeed > energyLimit) {
