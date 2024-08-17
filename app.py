@@ -71,6 +71,9 @@ def get_counters():
             'score': counter.score,
             'secondarycount': counter.secondarycount,
             'timestamp': counter.timestamp.replace(tzinfo=timezone.utc).isoformat(),  # Convertir a ISO 8601 con UTC
+            'tap': counter.tap,
+            'energy_limit': counter.energy_limit,
+            'recharge_speed': counter.recharge_speed,
             'profit_per_hour': counter.profit_per_hour
         })
     except Exception as e:
