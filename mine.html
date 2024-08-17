@@ -385,7 +385,7 @@
             score = storedScore
             profitPerHour = storedProfitPerHour
 
-            alert(`score = ${score}`)
+            alert(`score = ${score.toFixed(3)}`)
 
             // Actualizar la interfaz del usuario
             document.getElementById('score').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}</p>`;
