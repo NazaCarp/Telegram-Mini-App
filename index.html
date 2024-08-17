@@ -308,7 +308,6 @@
     }
 
     function incrementSecondaryCounter() {
-      alert(`score=${score}`)
       score += profitPerHour / 3600;
       if (secondaryCount < energyLimit) { // Usar energyLimit
         if (secondaryCount + rechargeSpeed > energyLimit) {
