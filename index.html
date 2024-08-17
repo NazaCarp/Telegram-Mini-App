@@ -190,8 +190,8 @@
     async function loadAndUpdateCounters() {
       // Primero, obtener los contadores
       const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
-      alert('Error al actualizar el boost');
       const data = await response.json();
+      alert('Error al actualizar el boost');
       
       // Actualizar las variables de contadores con los datos obtenidos
       score = data.score;
