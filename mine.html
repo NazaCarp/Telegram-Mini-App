@@ -817,8 +817,8 @@
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
-                alert('Se detectó la pulsación en el botón "Buy"');
                 if (currentScore >= cost) {
+                    alert('Pasó el if');
                     const score = currentScore - cost;
                     saveCounts();
 
