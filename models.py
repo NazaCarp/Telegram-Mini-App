@@ -11,7 +11,7 @@ class Counter(Base):
     user_id = Column(BigInteger, unique=True, index=True)
     name = Column(String)
     username = Column(String)
-    score = Column(Float, default=0)
+    score = Column(Float, default=0.00)
     secondarycount = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
     tap = Column(Integer, default=1)
