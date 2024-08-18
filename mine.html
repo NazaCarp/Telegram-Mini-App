@@ -832,6 +832,11 @@
                             localStorage.setItem('score', score);
                             document.getElementById('score').innerText = score.toFixed(3);
                             closeAlertMenu();
+
+                            // Actualizar el nivel del club en el objeto levels
+                            levels[club_id] = newLevel;
+
+                            // Recargar los niveles de los clubes y el score
                             loadScore();
                             loadMineLevels();
                         } else {
