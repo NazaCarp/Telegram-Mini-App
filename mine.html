@@ -818,8 +818,8 @@
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
                 if (currentScore >= cost) {
-                    alert('Pasó el if');
                     const score = currentScore - cost;
+                    alert('A punto de entrar a saveCounts()');
                     saveCounts();
 
                     const result = await response.json();
