@@ -420,7 +420,15 @@
         async function loadMineLevels() {
             const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
             const data = await response.json();
-            return data.clubs; // Asegúrate de que estás accediendo al campo correcto
+            levels = data.clubs; // Actualizar el objeto levels con los datos de la base de datos
+
+            // Generar los rectángulos nuevamente para reflejar los cambios
+            generateRectangles('northAmericaContent', northAmericaClubs, levels);
+            generateRectangles('southAmericaContent', southAmericaClubs, levels);
+            generateRectangles('europeContent', europeClubs, levels);
+            generateRectangles('asiaContent', asiaClubs, levels);
+            generateRectangles('africaContent', africaClubs, levels);
+            generateRectangles('oceaniaContent', oceaniaClubs, levels);
         }
 
         function generateRectangles(containerId, clubs, levels) {
