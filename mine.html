@@ -818,7 +818,7 @@
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
                 if (currentScore >= cost) {
-                    let score = currentScore - cost;
+                    score = currentScore - cost;
                     alert(`score = ${score}`)
                     alert(`currentScore = ${currentScore}`)
                     let resultsaveCounts = await saveCounts();
