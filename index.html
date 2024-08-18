@@ -227,6 +227,7 @@
       const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
       if (elapsedTime < 10800) {
         alert(`elapsedTime = ${elapsedTime}`)
+        alert(`score = ${profitPerHour}`)
         alert(`score = ${score}`)
         score += elapsedTime * profitPerHour / 3600
         alert(`score = ${score}`)
