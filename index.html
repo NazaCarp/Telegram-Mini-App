@@ -193,13 +193,13 @@
 
     async function loadAndUpdateCounters() {
       // Cargar valores desde localStorage si están disponibles
-      let storedScore = null;
-      let storedProfitPerHour = null;
-      let storedSecondaryCount = null;
-      let storedTap = null;
-      let storedEnergyLimit = null;
-      let storedRechargeSpeed = null;
-      let storedLastTimestamp = null;
+      let storedScore = 99990;
+      let storedProfitPerHour = localStorage.getItem('profitPerHour');
+      let storedSecondaryCount = localStorage.getItem('secondaryCount');
+      let storedTap = localStorage.getItem('tap');
+      let storedEnergyLimit = localStorage.getItem('energyLimit');
+      let storedRechargeSpeed = localStorage.getItem('rechargeSpeed');
+      let storedLastTimestamp = localStorage.getItem('lastTimestamp');
       if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
         // Primero, obtener los contadores
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
@@ -230,7 +230,7 @@
       } else {
         alert(`elapsedTime es igual a ${elapsedTime}`)
         alert(`score es igual a ${score}`)
-        score += elapsedTime * 10800
+        score += profitPerHour * 3
         alert(`score ahora es igual a ${score}`)
       }
       secondaryCount += elapsedTime * rechargeSpeed; // Usar rechargeSpeed
@@ -327,9 +327,9 @@
       }
       document.getElementById('score').textContent = score.toFixed(3);  // Mostrar sólo 3 decimales
       saveCounts();
-      localStorage.setItem('score', null);
-      localStorage.setItem('secondaryCount', null);
-      localStorage.setItem('lastTimestamp', null);
+      localStorage.setItem('score', score);
+      localStorage.setItem('secondaryCount', secondaryCount);
+      localStorage.setItem('lastTimestamp', Date.now());
     }
 
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
