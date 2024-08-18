@@ -813,31 +813,33 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async () => {
-                
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
+
+                const currentScore = parseFloat(document.getElementById('score').textContent);
+
                 if (currentScore >= cost) {
                     const score = currentScore - cost;
                     saveCounts();
-                    const result = await updateMineLevel(user_id, club_id, newLevel);
-                    alert('Pasó updateMineLevel()');
-                    if (result.status === 'success') {
-                        alert('Pasó el segundo if');
-                        localStorage.setItem('score', score);
-                        alert('Guardó "score" en localstorage');
-                        document.getElementById('score').innerText = score.toFixed(3);
-                        alert('Se cambió el valor de "score" en pantalla');
-                        closeAlertMenu();
-                        alert('Se cerró la alerta');
-                        await updateMineLevel(user_id, club_id, newLevel);
-                        alert('Entró al segundo updateMineLevel');
-                        loadScore();
-                        alert('Pasó loadScore()');
-                        loadMineLevels();
-                        alert('Pasó loadMineLevels()');
-                    } else {
-                        alert('Error al actualizar el score');
+                    alert('Pasó saveCounts()');
+
+                    try {
+                        const result = await updateMineLevel(user_id, club_id, newLevel);
+                        alert('Pasó updateMineLevel');
+
+                        if (result.status === 'success') {
+                            localStorage.setItem('score', score);
+                            document.getElementById('score').innerText = score.toFixed(3);
+                            closeAlertMenu();
+                            loadScore();
+                            loadMineLevels();
+                        } else {
+                            alert('Error al actualizar el score');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Hubo un error al procesar la solicitud');
                     }
                 } else {
                     alert('No tienes suficientes monedas para comprar este boost');
