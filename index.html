@@ -194,12 +194,12 @@
     async function loadAndUpdateCounters() {
       // Cargar valores desde localStorage si están disponibles
       let storedScore = null;
-      let storedProfitPerHour = localStorage.getItem('profitPerHour');
-      let storedSecondaryCount = localStorage.getItem('secondaryCount');
-      let storedTap = localStorage.getItem('tap');
-      let storedEnergyLimit = localStorage.getItem('energyLimit');
-      let storedRechargeSpeed = localStorage.getItem('rechargeSpeed');
-      let storedLastTimestamp = localStorage.getItem('lastTimestamp');
+      let storedProfitPerHour = null;
+      let storedSecondaryCount = null;
+      let storedTap = null;
+      let storedEnergyLimit = null;
+      let storedRechargeSpeed = null;
+      let storedLastTimestamp = null;
       if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
         // Primero, obtener los contadores
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
