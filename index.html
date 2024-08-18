@@ -327,9 +327,9 @@
       }
       document.getElementById('score').textContent = score.toFixed(3);  // Mostrar sólo 3 decimales
       saveCounts();
-      localStorage.setItem('score', score);
-      localStorage.setItem('secondaryCount', secondaryCount);
-      localStorage.setItem('lastTimestamp', Date.now());
+      localStorage.setItem('score', null);
+      localStorage.setItem('secondaryCount', null);
+      localStorage.setItem('lastTimestamp', null);
     }
 
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
