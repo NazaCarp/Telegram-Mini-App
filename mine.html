@@ -821,20 +821,15 @@
                     score = currentScore - cost;
                     alert(`score = ${score}`)
                     alert(`currentScore = ${currentScore}`)
-                    let resultsaveCounts = await saveCounts();
-                    if (resultsaveCounts.status === 'success') {
-                        alert('saveCounts() dió satisfactorio')
-                        resultupdateMineLevel = await updateMineLevel(user_id, club_id, newLevel);
-                        if (resultupdateMineLevel.status === 'success') {
-                            localStorage.setItem('score', score);
-                            document.getElementById('score').innerText = score.toFixed(3);
-                            closeAlertMenu();
-                            await updateMineLevel(user_id, club_id, newLevel);
-                            loadScore();
-                            loadMineLevels();
-                        } else {
-                            alert('Error al actualizar el score')
-                        }
+                    saveCounts();
+                    result = await updateMineLevel(user_id, club_id, newLevel);
+                    if (result.status === 'success') {
+                        localStorage.setItem('score', score);
+                        document.getElementById('score').innerText = score.toFixed(3);
+                        closeAlertMenu();
+                        await updateMineLevel(user_id, club_id, newLevel);
+                        loadScore();
+                        loadMineLevels();
                     } else {
                         alert('Error al actualizar el score');
                     }
