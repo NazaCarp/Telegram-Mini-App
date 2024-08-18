@@ -193,7 +193,7 @@
 
     async function loadAndUpdateCounters() {
       // Cargar valores desde localStorage si están disponibles
-      let storedScore = 99990;
+      let storedScore = localStorage.getItem('score');
       let storedProfitPerHour = localStorage.getItem('profitPerHour');
       let storedSecondaryCount = localStorage.getItem('secondaryCount');
       let storedTap = localStorage.getItem('tap');
@@ -230,7 +230,7 @@
       } else {
         alert(`elapsedTime es igual a ${elapsedTime}`)
         alert(`score es igual a ${score}`)
-        score += profitPerHour * 3
+        score += elapsedTime * 10800
         alert(`score ahora es igual a ${score}`)
       }
       secondaryCount += elapsedTime * rechargeSpeed; // Usar rechargeSpeed
