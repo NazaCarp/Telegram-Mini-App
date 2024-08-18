@@ -486,7 +486,10 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-                    profitSpan.textContent = '1000';
+
+                    // Calcular el 'Profit per hour' como el 10% del 'cost'
+                    const profitPerHour = Math.round(club.cost * 0.1);
+                    profitSpan.textContent = profitPerHour;
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
