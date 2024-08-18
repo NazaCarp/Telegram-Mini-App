@@ -225,6 +225,17 @@
       // Calcular el tiempo transcurrido y actualizar secondaryCount
       const currentTime = Date.now();
       const elapsedTime = Math.floor((currentTime - lastTimestamp) / 1000);
+      if (elapsedTime < 10800) {
+        alert(`elapsedTime = ${elapsedTime}`)
+        alert(`score = ${score}`)
+        score += elapsedTime * profitPerHour / 3600
+        alert(`score = ${score}`)
+      } else {
+        alert(`elapsedTime es igual a ${elapsedTime}`)
+        alert(`score es igual a ${score}`)
+        score += elapsedTime * 10800
+        alert(`score ahora es igual a ${score}`)
+      }
       secondaryCount += elapsedTime * rechargeSpeed; // Usar rechargeSpeed
       if (secondaryCount > energyLimit) { // Usar energyLimit
         secondaryCount = energyLimit; // Asegurarse de que no exceda energyLimit
