@@ -788,7 +788,7 @@
         let currentActionButtonListener = null;
 
         async function showAlert(club) {
-            const currentScore = parseFloat(document.getElementById('score').innerText.replace(/\D/g, ''));
+            const currentScore = parseFloat(document.getElementById('score').textContent);
             const cost = club.cost;
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
