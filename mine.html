@@ -772,9 +772,6 @@
                     }
                 }
             });
-
-            // Iniciar el intervalo para incrementar el score cada segundo
-            // setInterval(incrementScore, 1000);
         });
 
         async function updateMineLevel(user_id, club_id, level) {
@@ -816,10 +813,11 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async () => {
+                
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
-
+                alert('Se detectó la pulsación en el botón "Buy"');
                 if (currentScore >= cost) {
                     const score = currentScore - cost;
                     saveCounts();
