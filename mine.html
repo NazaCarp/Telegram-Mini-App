@@ -819,10 +819,11 @@
                 const newLevel = currentLevel + 1;
                 if (currentScore >= cost) {
                     let score = currentScore - cost;
-                    let result = await saveCounts();
-                    if (result.status === 'success') {
-                        result = await updateMineLevel(user_id, club_id, newLevel);
-                        if (result.status === 'success') {
+                    let resultsaveCounts = await saveCounts();
+                    if (resultsaveCounts.status === 'success') {
+                        alert('saveCounts() dió satisfactorio')
+                        resultupdateMineLevel = await updateMineLevel(user_id, club_id, newLevel);
+                        if (resultupdateMineLevel.status === 'success') {
                             localStorage.setItem('score', score);
                             document.getElementById('score').innerText = score.toFixed(3);
                             closeAlertMenu();
