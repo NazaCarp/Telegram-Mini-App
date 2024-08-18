@@ -819,8 +819,6 @@
                 const newLevel = currentLevel + 1;
                 if (currentScore >= cost) {
                     score = currentScore - cost;
-                    alert(`score = ${score}`)
-                    alert(`currentScore = ${currentScore}`)
                     result = await updateMineLevel(user_id, club_id, newLevel);
                     if (result.status === 'success') {
                         document.getElementById('score').innerText = score.toFixed(3);
