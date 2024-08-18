@@ -820,10 +820,9 @@
                 if (currentScore >= cost) {
                     const score = currentScore - cost;
                     saveCounts();
-
+                    alert('Pasó saveCounts()');
                     const result = await response.json();
                     if (result.status === 'success') {
-                        alert('Pasó el segundo if');
                         localStorage.setItem('score', score);
                         document.getElementById('score').innerText = score.toFixed(3);
                         closeAlertMenu();
