@@ -819,15 +819,19 @@
                 const newLevel = currentLevel + 1;
                 if (currentScore >= cost) {
                     let score = currentScore - cost;
-                    saveCounts();
-                    const result = await updateMineLevel(user_id, club_id, newLevel);
+                    let result = await saveCounts();
                     if (result.status === 'success') {
-                        localStorage.setItem('score', score);
-                        document.getElementById('score').innerText = score.toFixed(3);
-                        closeAlertMenu();
-                        await updateMineLevel(user_id, club_id, newLevel);
-                        loadScore();
-                        loadMineLevels();
+                        result = await updateMineLevel(user_id, club_id, newLevel);
+                        if (result.status === 'success') {
+                            localStorage.setItem('score', score);
+                            document.getElementById('score').innerText = score.toFixed(3);
+                            closeAlertMenu();
+                            await updateMineLevel(user_id, club_id, newLevel);
+                            loadScore();
+                            loadMineLevels();
+                        } else {
+                            alert('Error al actualizar el score')
+                        }
                     } else {
                         alert('Error al actualizar el score');
                     }
