@@ -820,9 +820,7 @@
                 if (currentScore >= cost) {
                     const score = currentScore - cost;
                     saveCounts();
-                    alert('Pasó saveCounts()');
                     const result = await updateMineLevel(user_id, club_id, newLevel);
-                    alert('Pasó const result');
                     if (result.status === 'success') {
                         localStorage.setItem('score', score);
                         document.getElementById('score').innerText = score.toFixed(3);
