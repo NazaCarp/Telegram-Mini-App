@@ -420,15 +420,7 @@
         async function loadMineLevels() {
             const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
             const data = await response.json();
-            levels = data.clubs; // Actualizar el objeto levels con los datos de la base de datos
-
-            // Generar los rectángulos nuevamente para reflejar los cambios
-            generateRectangles('northAmericaContent', northAmericaClubs, levels);
-            generateRectangles('southAmericaContent', southAmericaClubs, levels);
-            generateRectangles('europeContent', europeClubs, levels);
-            generateRectangles('asiaContent', asiaClubs, levels);
-            generateRectangles('africaContent', africaClubs, levels);
-            generateRectangles('oceaniaContent', oceaniaClubs, levels);
+            return data.clubs; // Asegúrate de que estás accediendo al campo correcto
         }
 
         function generateRectangles(containerId, clubs, levels) {
@@ -494,10 +486,7 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-
-                    // Calcular el 'Profit per hour' como el 10% del 'cost'
-                    const profitPerHour = Math.round(club.cost * 0.1);
-                    profitSpan.textContent = profitPerHour;
+                    profitSpan.textContent = '1000';
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
@@ -780,6 +769,9 @@
                     }
                 }
             });
+
+            // Iniciar el intervalo para incrementar el score cada segundo
+            // setInterval(incrementScore, 1000);
         });
 
         async function updateMineLevel(user_id, club_id, level) {
@@ -796,7 +788,7 @@
         let currentActionButtonListener = null;
 
         async function showAlert(club) {
-            const currentScore = parseFloat(document.getElementById('score').textContent);
+            const currentScore = parseFloat(document.getElementById('score').innerText.replace(/\D/g, ''));
             const cost = club.cost;
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
@@ -825,34 +817,20 @@
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
 
-                const currentScore = parseFloat(document.getElementById('score').textContent);
-
                 if (currentScore >= cost) {
                     const score = currentScore - cost;
                     saveCounts();
-                    alert('Pasó saveCounts()');
 
-                    try {
-                        const result = await updateMineLevel(user_id, club_id, newLevel);
-                        alert('Pasó updateMineLevel');
-
-                        if (result.status === 'success') {
-                            localStorage.setItem('score', score);
-                            document.getElementById('score').innerText = score.toFixed(3);
-                            closeAlertMenu();
-
-                            // Actualizar el nivel del club en el objeto levels
-                            levels[club_id] = newLevel;
-
-                            // Recargar los niveles de los clubes y el score
-                            loadScore();
-                            loadMineLevels();
-                        } else {
-                            alert('Error al actualizar el score');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Hubo un error al procesar la solicitud');
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        localStorage.setItem('score', score);
+                        document.getElementById('score').innerText = score.toFixed(3);
+                        closeAlertMenu();
+                        await updateMineLevel(user_id, club_id, newLevel);
+                        loadScore();
+                        loadMineLevels();
+                    } else {
+                        alert('Error al actualizar el score');
                     }
                 } else {
                     alert('No tienes suficientes monedas para comprar este boost');
