@@ -821,10 +821,8 @@
                     score = currentScore - cost;
                     alert(`score = ${score}`)
                     alert(`currentScore = ${currentScore}`)
-                    saveCounts();
                     result = await updateMineLevel(user_id, club_id, newLevel);
                     if (result.status === 'success') {
-                        localStorage.setItem('score', score);
                         document.getElementById('score').innerText = score.toFixed(3);
                         closeAlertMenu();
                         await updateMineLevel(user_id, club_id, newLevel);
