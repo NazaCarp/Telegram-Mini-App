@@ -1,18 +1,17 @@
-from datetime import datetime, timezone
+import os
 from flask import Flask, jsonify, request, render_template
-from db import SessionLocal
-from models import Counter, Referral, MineLevels
-import logging
+from db import SessionLocal  # Importa SessionLocal desde db.py
+from models import Base, Counter, Referral, MineLevels
+from datetime import datetime, timezone
 import json
+import logging
 
 app = Flask(__name__, template_folder='.')
-
 
 @app.route('/')
 @app.route('/index.html')
 def index():
     return render_template('index.html')
-
 
 @app.route('/friends.html')
 def serve_friends():
@@ -25,7 +24,6 @@ def mine():
 @app.route('/boosts.html')
 def serve_boosts():
     return render_template('boosts.html')
-
 
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
@@ -80,7 +78,8 @@ def get_counters():
     except Exception as e:
         logging.error(f"Error in get_counters: {e}")
         return jsonify({'error': str(e)}), 500
-
+    finally:
+        db.close()
 
 @app.route('/update_counters', methods=['POST'])
 def update_counters():
@@ -109,7 +108,8 @@ def update_counters():
     except Exception as e:
         logging.error(f"Error in update_counters: {e}")
         return jsonify({'error': str(e)}), 500
-
+    finally:
+        db.close()
 
 @app.route('/get_referrals', methods=['GET'])
 def get_referrals():
@@ -146,7 +146,8 @@ def get_referrals():
     except Exception as e:
         logging.error(f"Error in get_referrals: {e}")
         return jsonify({'error': str(e)}), 500
-
+    finally:
+        db.close()
 
 @app.route('/get_user_data', methods=['GET'])
 def get_user_data():
@@ -169,7 +170,8 @@ def get_user_data():
     except Exception as e:
         logging.error(f"Error in get_user_data: {e}")
         return jsonify({'error': str(e)}), 500
-
+    finally:
+        db.close()
 
 @app.route('/update_boost', methods=['POST'])
 def update_boost():
@@ -202,7 +204,8 @@ def update_boost():
     except Exception as e:
         logging.error(f"Error in update_boost: {e}")
         return jsonify({'error': str(e)}), 500
-
+    finally:
+        db.close()
 
 @app.route('/get_mine_levels', methods=['GET'])
 def get_mine_levels():
@@ -220,10 +223,11 @@ def get_mine_levels():
     except Exception as e:
         logging.error(f"Error in get_mine_levels: {e}")
         return jsonify({'error': str(e)}), 500
-
+    finally:
+        db.close()
 
 @app.route('/update_mine_level', methods=['POST'])
-def update_mine_level():
+def update_mine_level_route():
     data = request.get_json()
     user_id = data.get('user_id')
     club_id = data.get('club_id')
@@ -232,8 +236,15 @@ def update_mine_level():
     if not all([user_id, club_id, level]):
         return jsonify({'error': 'Missing required fields'}), 400
 
+    result = update_mine_level(user_id, club_id, level)
+    if result['status'] == 'success':
+        return jsonify(result)
+    else:
+        return jsonify(result), 500
+
+def update_mine_level(user_id, club_id, level):
+    db = SessionLocal()
     try:
-        db = SessionLocal()
         mine_level = db.query(MineLevels).filter_by(user_id=user_id).first()
 
         if not mine_level:
@@ -247,11 +258,12 @@ def update_mine_level():
             mine_level.clubs = clubs
 
         db.commit()
-        return jsonify({'status': 'success'})
+        return {'status': 'success'}
     except Exception as e:
-        logging.error(f"Error in update_mine_level: {e}")
-        return jsonify({'error': str(e)}), 500
-
+        db.rollback()
+        return {'error': str(e)}
+    finally:
+        db.close()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
