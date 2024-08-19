@@ -245,7 +245,7 @@ def update_mine_level():
                 mine_level.clubs[club_id] = level
             else:
                 # Si el club no existe, agrégalo
-                mine_level.clubs[club_id] = level
+                mine_level.clubs += f'{club_id: level}'
 
         db.commit()
         return jsonify({'status': 'success'})
