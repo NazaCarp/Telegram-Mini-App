@@ -241,11 +241,11 @@ def update_mine_level():
             db.add(mine_level)
         else:
             # Si el club ya existe, actualiza su nivel
-            if f'{club_id}' in mine_level.clubs:
-                mine_level.clubs[f'{club_id}'] = level
+            if club_id in mine_level.clubs:
+                mine_level.clubs[club_id] = level
             else:
                 # Si el club no existe, agrégalo
-                mine_level.clubs[f'{club_id}'] = 1
+                mine_level.clubs += f"{mine_level}, '{club_id}': 1"
 
         db.commit()
         return jsonify({'status': 'success'})
