@@ -408,25 +408,13 @@
             saveCounts();
         }
         async function saveCounts() {
-            try {
-                const response = await fetch('/update_counters', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ user_id: user_id, score: score })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error in saveCounts:', error);
-                throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-            }
+            fetch('/update_counters', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: user_id, score: score })
+            });
         }
 
         async function loadMineLevels() {
@@ -825,31 +813,20 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async () => {
+                
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
                 if (currentScore >= cost) {
-                    let score = currentScore - cost;
-                    try {
-                        let resultsaveCounts = await saveCounts();
-                        if (resultsaveCounts.status === 'success') {
-                            let resultupdateMineLevel = await updateMineLevel(user_id, club_id, newLevel);
-                            if (resultupdateMineLevel.status === 'success') {
-                                localStorage.setItem('score', score);
-                                document.getElementById('score').innerText = score.toFixed(3);
-                                closeAlertMenu();
-                                await updateMineLevel(user_id, club_id, newLevel);
-                                loadScore();
-                                loadMineLevels();
-                            } else {
-                                alert('Error al actualizar el score');
-                            }
-                        } else {
-                            alert('Error al actualizar el score');
-                        }
-                    } catch (error) {
-                        console.error('Error al guardar los contadores:', error);
-                        alert('Hubo un error al guardar los contadores. Por favor, inténtalo de nuevo.');
+                    score = currentScore - cost;
+                    result = await updateMineLevel(user_id, club_id, newLevel);
+                    if (result.status === 'success') {
+                        document.getElementById('score').innerText = score.toFixed(3);
+                        closeAlertMenu();
+                        loadScore();
+                        loadMineLevels();
+                    } else {
+                        alert('Error al actualizar el score');
                     }
                 } else {
                     alert('No tienes suficientes monedas para comprar este boost');
