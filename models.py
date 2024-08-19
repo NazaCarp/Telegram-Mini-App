@@ -34,4 +34,4 @@ class Referral(Base):
 class MineLevels(Base):
     __tablename__ = 'mine_levels'
     user_id = Column(BigInteger, primary_key=True, index=True)
-    clubs = Column(JSON, default=dict)  # Asegúrate de que el valor por defecto es un diccionario vacío
+    clubs = Column(JSON, default={})
