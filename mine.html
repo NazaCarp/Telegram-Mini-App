@@ -813,11 +813,14 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async () => {
+                
                 const club_id = club.name;
                 const currentLevel = levels[club_id] || 1;
                 const newLevel = currentLevel + 1;
                 if (currentScore >= cost) {
                     score = currentScore - cost;
+                    alert(`club_id= ${club_id}`)
+                    alert(`newLevel = ${newLevel}`)
                     result = await updateMineLevel(user_id, club_id, newLevel);
                     if (result.status === 'success') {
                         document.getElementById('score').innerText = score.toFixed(3);
