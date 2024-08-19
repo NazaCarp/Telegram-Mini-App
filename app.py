@@ -1,3 +1,4 @@
+from sqlalchemy.orm.attributes import flag_modified
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
@@ -240,18 +241,19 @@ def update_mine_level():
             mine_level = MineLevels(user_id=user_id, clubs={club_id: level})
             db.add(mine_level)
         else:
-            # Si el club ya existe, actualiza su nivel
-            if club_id in mine_level.clubs:
-                mine_level.clubs[club_id] = level
-            else:
-                # Si el club no existe, agrégalo
-                mine_level.clubs[club_id] = level
+            # Actualiza el nivel del club, ya sea nuevo o existente
+            mine_level.clubs[club_id] = level
+            # Marca el campo 'clubs' como modificado
+            flag_modified(mine_level, "clubs")
 
         db.commit()
-        return jsonify({'status': 'success'})
+        return jsonify({'status': 'success', 'updated_clubs': mine_level.clubs})
     except Exception as e:
+        db.rollback()
         logging.error(f"Error in update_mine_level: {e}")
         return jsonify({'error': str(e)}), 500
+    finally:
+        db.close()
 
 
 if __name__ == '__main__':
