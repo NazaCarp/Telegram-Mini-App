@@ -1,10 +1,8 @@
-from sqlalchemy.orm.attributes import flag_modified
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter, Referral, MineLevels
 import logging
-
 
 app = Flask(__name__, template_folder='.')
 
@@ -233,11 +231,11 @@ def update_mine_level(user_id, club_id, level):
             mine_level = MineLevels(user_id=user_id, clubs={club_id: level})
             db.add(mine_level)
         else:
-            # Actualiza el nivel del club, ya sea nuevo o existente
-            if mine_level.clubs is None:
-                mine_level.clubs = {}
-            mine_level.clubs[club_id] = level
-            flag_modified(mine_level, "clubs")  # Marca el campo 'clubs' como modificado
+            # Asegúrate de que clubs es un diccionario válido
+            clubs = mine_level.clubs if isinstance(mine_level.clubs, dict) else {}
+            # Actualiza el nivel del club
+            clubs[club_id] = level
+            mine_level.clubs = clubs
 
         db.commit()
         return {'status': 'success'}

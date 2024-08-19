@@ -1,6 +1,6 @@
-from sqlalchemy import Column, BigInteger, Integer, Float, DateTime, String
+from sqlalchemy import Column, BigInteger, Integer, Float, DateTime, String, ForeignKey, JSON
+from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime
 
 Base = declarative_base()
@@ -34,4 +34,4 @@ class Referral(Base):
 class MineLevels(Base):
     __tablename__ = 'mine_levels'
     user_id = Column(BigInteger, primary_key=True, index=True)
-    clubs = Column(JSONB, default={})
+    clubs = Column(JSON, default=dict)  # Asegúrate de que el valor por defecto es un diccionario vacío
