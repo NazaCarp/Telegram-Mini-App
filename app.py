@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter, Referral, MineLevels
 import logging
+import json
 
 app = Flask(__name__, template_folder='.')
 
@@ -241,11 +242,9 @@ def update_mine_level():
             db.add(mine_level)
         else:
             # Si el club ya existe, actualiza su nivel
-            if club_id in mine_level.clubs:
-                mine_level.clubs[club_id] = level
-            else:
-                # Si el club no existe, agrégalo
-                mine_level.clubs += f"{mine_level.clubs}, '{club_id}': 1"
+            clubs = mine_level.clubs
+            clubs[club_id] = level
+            mine_level.clubs = clubs
 
         db.commit()
         return jsonify({'status': 'success'})
