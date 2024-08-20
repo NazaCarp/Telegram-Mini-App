@@ -446,12 +446,12 @@
                     const index = i * 2 + j;
                     if (index >= clubs.length) break; // Salir si no hay más clubes
 
-                    const club = clubs[index];
-                    const level = levels[club.name] || 1;
+                    let club = clubs[index];
+                    let level = levels[club.name] || 1;
 
                     // Calcular cost y profitPerHour basados en el nivel
-                    const cost = calculateCost(club.cost, level);
-                    const profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
+                    let cost = calculateCost(club.cost, level);
+                    let profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
