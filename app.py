@@ -260,7 +260,7 @@ def update_mine_level():
 def update_profit_per_hour():
     data = request.get_json()
     user_id = data.get('user_id')
-    profitPerHour = data.get('profitPerHour')
+    profitPerHour = data.get('clubProfitPerHour')
 
     if not all([user_id, profitPerHour]):
         return jsonify({'error': 'user_id and profitPerHour are required'}), 400
