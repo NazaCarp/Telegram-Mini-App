@@ -256,7 +256,7 @@ def update_mine_level():
         db.close()
 
 
-@app.route('/update_profi_per_hour', methods=['POST'])
+@app.route('/update_profit_per_hour', methods=['POST'])
 def update_profit_per_hour():
     data = request.get_json()
     user_id = data.get('user_id')
