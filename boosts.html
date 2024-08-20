@@ -409,6 +409,7 @@
 
                     // Activar la animación correspondiente
                     if (boostType === 'multitap') {
+                        localStorage.setItem('tap', tap);
                         document.getElementById('multitapAnimationContainer').classList.add('active');
                         document.querySelector('.container').classList.add('blur-content');
                         setTimeout(() => {
@@ -416,6 +417,7 @@
                             document.querySelector('.container').classList.remove('blur-content');
                         }, 500);
                     } else if (boostType === 'energy_limit') {
+                        localStorage.setItem('energyLimit', energyLimit);
                         document.getElementById('energyLimitAnimationContainer').classList.add('active');
                         document.querySelector('.container').classList.add('blur-content');
                         setTimeout(() => {
@@ -423,6 +425,7 @@
                             document.querySelector('.container').classList.remove('blur-content');
                         }, 1000);
                     } else if (boostType === 'recharge_speed') {
+                        localStorage.setItem('rechargeSpeed', rechargeSpeed);
                         document.getElementById('rechargeSpeedAnimationContainer').classList.add('active');
                         document.querySelector('.container').classList.add('blur-content');
                         setTimeout(() => {
