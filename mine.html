@@ -479,7 +479,7 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-                    profitSpan.textContent = profitPerHour.toFixed(3);
+                    profitSpan.textContent = Math.floor(profitPerHour)
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
