@@ -820,6 +820,7 @@
                     score = currentScore - cost;
                     result = await updateMineLevel(user_id, club_id, newLevel);
                     if (result.status === 'success') {
+                        alert(newLevel)
                         document.getElementById('score').innerText = score.toFixed(3);
                         levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
                         updateClubLevel(club_id, newLevel); // Actualizar el nivel en la interfaz
