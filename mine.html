@@ -473,7 +473,7 @@
 
                     // Calcular cost y profitPerHour basados en el nivel
                     let cost = calculateCost(club.cost, level);
-                    let profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
+                    let clubProfitPerHour = calculateProfitPerHour(club.cost, level, club.name);
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
@@ -501,7 +501,7 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-                    profitSpan.textContent = Math.floor(profitPerHour);
+                    profitSpan.textContent = Math.floor(clubProfitPerHour);
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
@@ -546,8 +546,8 @@
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
                         cost = calculateCost(club.cost, levels[club.name] || 1);
-                        profitPerHour = calculateProfitPerHour(club.cost, levels[club.name], club.name);
-                        showAlert(club, cost, profitPerHour, clubs, levels);
+                        clubProfitPerHour = calculateProfitPerHour(club.cost, levels[club.name], club.name);
+                        showAlert(club, cost, clubProfitPerHour, clubs, levels);
                     });
                 }
 
@@ -560,11 +560,11 @@
         }
 
         function calculateProfitPerHour(initialCost, level, name) {
-            let profitPerHour = Math.round(initialCost * ((simpleHash(name) % 1200) / 10000 + 0.01)) // Inicialmente, profitPerHour vale entre el 1% y el 12% del costo inicial
+            let clubProfitPerHour = Math.round(initialCost * ((simpleHash(name) % 1200) / 10000 + 0.01)) // Inicialmente, clubProfitPerHour vale entre el 1% y el 12% del costo inicial
             for (let i = 2; i <= level; i++) {
-                profitPerHour += initialCost * (0.003 + i * 0.001);
+                clubProfitPerHour += initialCost * (0.003 + i * 0.001);
             }
-            return profitPerHour;
+            return clubProfitPerHour;
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
@@ -825,20 +825,20 @@
             return await response.json();
         }
         
-        async function updateProfitPerHour(user_id, profitPerHour) {
+        async function updateProfitPerHour(user_id, clubProfitPerHour) {
             const response = await fetch('/update_profit_per_hour', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id, profitPerHour })
+                body: JSON.stringify({ user_id, clubProfitPerHour })
             });
             return await response.json();
         }
 
         let currentActionButtonListener = null;
 
-        async function showAlert(club, cost, profitPerHour, clubs, levels) {
+        async function showAlert(club, cost, clubProfitPerHour, clubs, levels) {
             const currentScore = parseFloat(document.getElementById('score').textContent);
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
@@ -846,7 +846,7 @@
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
-            document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(profitPerHour)}`;
+            document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(clubProfitPerHour)}`;
             document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${Math.floor(cost)}</p>`;
             document.getElementById('alertCost').classList.remove('yellow', 'gray');
             document.getElementById('alertCost').classList.add(costColor);
@@ -883,7 +883,9 @@
 
                         closeAlertMenu();
 
-                        updateProfitPerHour(user_id, profitPerHour) // Actualizar el profitPerHour de la cuenta actual
+                        updateProfitPerHour(user_id, clubProfitPerHour) // Actualizar el profitPerHour de la cuenta actual
+                        let storedprofitPerHour = parseFloat(localStorage.getItem('profit_per_hour'));
+                        localStorage.setItem('profit_per_hour', storedprofitPerHour + clubProfitPerHour);
                     } else {
                         alert('Error al actualizar el score');
                     }
@@ -909,7 +911,7 @@
                     if (club) {
                         // Calcular el nuevo costo y profitPerHour
                         const cost = calculateCost(club.cost, newLevel);
-                        const profitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
+                        clubProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
 
                         // Actualizar el costo y profitPerHour en la interfaz
                         const sectionRightSpan = rectangle.querySelector('.section-right span');
@@ -919,7 +921,7 @@
 
                         const profitSpan = rectangle.querySelector('.profit-info span');
                         if (profitSpan) {
-                            profitSpan.textContent = Math.floor(profitPerHour);
+                            profitSpan.textContent = Math.floor(clubProfitPerHour);
                         }
                     }
                 }
