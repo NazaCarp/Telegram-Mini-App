@@ -779,7 +779,7 @@
 
             tabSlider.addEventListener('touchend', () => {
                 const deltaX = endX - startX;
-                const threshold = 100; // Umbral para considerar un deslizamiento
+                const threshold = 50; // Umbral para considerar un deslizamiento
 
                 if (Math.abs(deltaX) > threshold) {
                     let newIndex = currentIndex;
