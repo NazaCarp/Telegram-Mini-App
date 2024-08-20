@@ -523,7 +523,7 @@
 
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
-                        showAlert(club, cost, profitPerHour, levels[club.name] || 1);
+                        showAlert(club, cost, profitPerHour);
                     });
                 }
 
@@ -789,7 +789,7 @@
         
         let currentActionButtonListener = null;
 
-        async function showAlert(club, cost, profitPerHour, level) {
+        async function showAlert(club, cost, profitPerHour) {
             const currentScore = parseFloat(document.getElementById('score').textContent);
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
@@ -815,8 +815,8 @@
             // Asignar un nuevo evento
             currentActionButtonListener = async () => {
                 const club_id = club.name;
-                const newLevel = level + 1;
                 if (currentScore >= cost) {
+                    let newLevel = levels[club_id] + 1 || 2;
                     score = currentScore - cost;
                     result = await updateMineLevel(user_id, club_id, newLevel);
                     if (result.status === 'success') {
