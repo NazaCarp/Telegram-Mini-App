@@ -823,6 +823,15 @@
                         document.getElementById('score').innerText = score.toFixed(3);
                         levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
                         updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
+
+                        // Recalcular cost y profitPerHour para la alerta
+                        const newCost = calculateCost(club.cost, newLevel);
+                        const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
+
+                        // Actualizar la alerta con los nuevos valores
+                        document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(newProfitPerHour)}`;
+                        document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${Math.floor(newCost)}</p>`;
+
                         closeAlertMenu();
                     } else {
                         alert('Error al actualizar el score');
