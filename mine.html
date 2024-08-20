@@ -435,28 +435,6 @@
 
         function generateRectangles(containerId, clubs, levels) {
             const rows = Math.ceil(clubs.length / 2);
-
-            // Limpiar contenido anterior
-            const height = 233 * rows + 85;
-
-            const containernorth = document.getElementById('northAmericaContent');
-            containernorth.style = `height: ${height}px;`
-            
-            const containersouth = document.getElementById('southAmericaContent');
-            containersouth.style = `height: ${height}px;`
-
-            const containereurope = document.getElementById('europeContent');
-            containereurope.style = `height: ${height}px;`
-            
-            const containerasia = document.getElementById('asiaContent');
-            containerasia.style = `height: ${height}px;`
-            
-            const containerafrica = document.getElementById('africaContent');
-            containerafrica.style = `height: ${height}px;`
-
-            const containeroceania = document.getElementById('oceaniaContent');
-            containeroceania.style = `height: ${height}px;`
-            
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Limpiar contenido anterior
 
@@ -469,10 +447,15 @@
                     if (index >= clubs.length) break; // Salir si no hay más clubes
 
                     const club = clubs[index];
+                    const level = levels[club.name] || 1;
+
+                    // Calcular cost y profitPerHour basados en el nivel
+                    const cost = calculateCost(club.cost, level);
+                    const profitPerHour = calculateProfitPerHour(club.cost, level);
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
-                    rectangle.setAttribute('data-cost', club.cost); // Añadir el costo como atributo
+                    rectangle.setAttribute('data-cost', cost); // Añadir el costo como atributo
                     rectangle.setAttribute('data-club-id', club.name); // Añadir el identificador del club
 
                     const imageElement = document.createElement('img');
@@ -496,13 +479,6 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-
-                    // Genera un porcentaje consistente entre 1% y 12% basado en el nombre del club
-                    const hashValue = simpleHash(club.name);
-                    const percentage = (hashValue % 1200) / 10000 + 0.01; // Entre 0.01 y 0.12
-
-                    // Calcula el 'Profit per hour' usando el porcentaje generado
-                    const profitPerHour = Math.round(club.cost * percentage);
                     profitSpan.textContent = profitPerHour;
 
                     profitInfo.appendChild(profitIcon);
@@ -516,7 +492,7 @@
 
                     const sectionLeft = document.createElement('div');
                     sectionLeft.className = 'section-left';
-                    sectionLeft.textContent = `lvl ${levels[club.name] || 1}`;
+                    sectionLeft.textContent = `lvl ${level}`;
 
                     const verticalDivider = document.createElement('div');
                     verticalDivider.className = 'vertical-divider';
@@ -526,7 +502,7 @@
                     const sectionRightIcon = document.createElement('iconify-icon');
                     sectionRightIcon.icon = 'twemoji:coin';
                     const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = club.cost; // Mostrar el valor de 'cost' aquí
+                    sectionRightSpan.textContent = cost; // Mostrar el valor de 'cost' aquí
 
                     sectionRight.appendChild(sectionRightIcon);
                     sectionRight.appendChild(sectionRightSpan);
@@ -547,12 +523,24 @@
 
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
-                        showAlert(club);
+                        showAlert(club, cost, profitPerHour, level);
                     });
                 }
 
                 container.appendChild(row);
             }
+        }
+
+        function calculateCost(initialCost, level) {
+            return initialCost * Math.pow(1.1, (level * (level - 1)) / 2);
+        }
+
+        function calculateProfitPerHour(initialCost, level) {
+            let profitPerHour = initialCost * 0.01; // Inicialmente, profitPerHour es 1% del costo inicial
+            for (let i = 2; i <= level; i++) {
+                profitPerHour += initialCost * (0.003 + i * 0.001);
+            }
+            return profitPerHour;
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
@@ -801,17 +789,11 @@
         
         let currentActionButtonListener = null;
 
-        async function showAlert(club) {
+        async function showAlert(club, cost, profitPerHour, level) {
             const currentScore = parseFloat(document.getElementById('score').textContent);
-            const cost = club.cost;
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
 
-            const hashValue = simpleHash(club.name);
-            const percentage = (hashValue % 1200) / 10000 + 0.01;
-            const profitPerHour = Math.round(club.cost * percentage);
-
-            
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
@@ -833,8 +815,7 @@
             // Asignar un nuevo evento
             currentActionButtonListener = async () => {
                 const club_id = club.name;
-                const currentLevel = levels[club_id] || 1;
-                const newLevel = currentLevel + 1;
+                const newLevel = level + 1;
                 if (currentScore >= cost) {
                     score = currentScore - cost;
                     result = await updateMineLevel(user_id, club_id, newLevel);
