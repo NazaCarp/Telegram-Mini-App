@@ -765,6 +765,8 @@
 
             tg.BackButton.show();
 
+            document.addEventListener('DOMContentLoaded', function() {
+    
             let startX = 0;
             let endX = 0;
             let currentIndex = 0;
@@ -781,24 +783,25 @@
                 const deltaX = endX - startX;
                 const threshold = 50; // Umbral para considerar un deslizamiento
 
-                if (Math.abs(deltaX) > threshold) {
-                    let newIndex = currentIndex;
-                    if (deltaX > 0 && currentIndex > 0) {
-                        // Deslizamiento hacia la izquierda (anterior pestaña)
-                        newIndex--;
-                    } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
-                        // Deslizamiento hacia la derecha (siguiente pestaña)
-                        newIndex++;
-                    }
-                    
-                    // Solo actualizamos si el índice ha cambiado
-                    if (newIndex !== currentIndex) {
-                        currentIndex = newIndex;
-                        tabs[currentIndex].click();
-                    }
-                }
+                // Deshabilitar el cambio de pestaña basado en el desplazamiento lateral
+                // if (Math.abs(deltaX) > threshold) {
+                //     let newIndex = currentIndex;
+                //     if (deltaX > 0 && currentIndex > 0) {
+                //         // Deslizamiento hacia la izquierda (anterior pestaña)
+                //         newIndex--;
+                //     } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
+                //         // Deslizamiento hacia la derecha (siguiente pestaña)
+                //         newIndex++;
+                //     }
+                //     
+                //     // Solo actualizamos si el índice ha cambiado
+                //     if (newIndex !== currentIndex) {
+                //         currentIndex = newIndex;
+                //         tabs[currentIndex].click();
+                //     }
+                // }
             });
-
+            
             // Agregar evento para cerrar la alerta al hacer clic fuera de ella
             document.addEventListener('click', function(event) {
                 const alertMenu = document.getElementById('alertMenu');
