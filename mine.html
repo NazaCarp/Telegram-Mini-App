@@ -536,7 +536,7 @@
         }
 
         function calculateProfitPerHour(initialCost, level) {
-            let profitPerHour = initialCost * 0.01; // Inicialmente, profitPerHour es 1% del costo inicial
+            let profitPerHour = Math.round(club.cost * ((simpleHash(club.name) % 1200) / 10000 + 0.01)) // Inicialmente, profitPerHour vale entre el 1% y el 12% del costo inicial
             for (let i = 2; i <= level; i++) {
                 profitPerHour += initialCost * (0.003 + i * 0.001);
             }
