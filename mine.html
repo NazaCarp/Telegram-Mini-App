@@ -479,7 +479,7 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-                    profitSpan.textContent = profitPerHour;
+                    profitSpan.textContent = profitPerHour.toFixed(3);
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
@@ -502,7 +502,7 @@
                     const sectionRightIcon = document.createElement('iconify-icon');
                     sectionRightIcon.icon = 'twemoji:coin';
                     const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = cost; // Mostrar el valor de 'cost' aquí
+                    sectionRightSpan.textContent = cost.toFixed(3); // Mostrar el valor de 'cost' aquí
 
                     sectionRight.appendChild(sectionRightIcon);
                     sectionRight.appendChild(sectionRightSpan);
