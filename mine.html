@@ -884,8 +884,7 @@
                         closeAlertMenu();
 
                         updateProfitPerHour(user_id, clubProfitPerHour) // Actualizar el profitPerHour de la cuenta actual
-                        let storedprofitPerHour = parseFloat(localStorage.getItem('profit_per_hour'));
-                        localStorage.setItem('profit_per_hour', storedprofitPerHour + clubProfitPerHour);
+                        localStorage.setItem('profit_per_hour', profitPerHour + clubProfitPerHour);
                         profitPerHour = parseFloat(localStorage.getItem('profit_per_hour'));
                     } else {
                         alert('Error al actualizar el score');
