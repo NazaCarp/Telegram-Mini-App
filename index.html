@@ -193,7 +193,7 @@
 
     async function loadAndUpdateCounters() {
       // Cargar valores desde localStorage si están disponibles
-      let storedScore = 99990.00;
+      let storedScore = localStorage.getItem('score');
       let storedProfitPerHour = localStorage.getItem('profit_per_hour');
       let storedSecondaryCount = localStorage.getItem('secondaryCount');
       let storedTap = localStorage.getItem('tap');
