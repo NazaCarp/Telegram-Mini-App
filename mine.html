@@ -472,7 +472,7 @@
                     const clubLevel = levels[club.name] || { level: 1, cost: club.cost, profit_per_hour: Math.round(club.cost * ((simpleHash(club.name) % 1200) / 10000 + 0.01)) };
                     
                     // Depuración para verificar el valor de clubLevel
-                    alert('clubLevel for ' + club.name + ': ' + JSON.stringify(clubLevel));
+                    console.log('clubLevel for ' + club.name + ': ', clubLevel);
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
@@ -811,16 +811,16 @@
 
         async function showAlert(club) {
             const currentScore = parseFloat(document.getElementById('score').textContent);
-            const currentLevel = levels[club.name] || 1;
+            const currentLevel = levels[club.name]?.level || 1;
             const newLevel = currentLevel + 1;
             
             // Calcular nuevo costo
             const newCost = club.cost * Math.pow(1.1, (newLevel * (newLevel - 1) / 2));
-            const costColor = cost <= currentScore ? 'yellow' : 'gray';
-            const buttonClass = cost <= currentScore ? 'active' : 'inactive';
+            const costColor = newCost <= currentScore ? 'yellow' : 'gray';
+            const buttonClass = newCost <= currentScore ? 'active' : 'inactive';
             
             // Calcular nuevo profitPerHour
-            const currentProfitPerHour = Math.round(club.cost * ((simpleHash(club.name) % 1200) / 10000 + 0.01));
+            const currentProfitPerHour = levels[club.name]?.profit_per_hour || Math.round(club.cost * ((simpleHash(club.name) % 1200) / 10000 + 0.01));
             const newProfitPerHour = currentProfitPerHour + club.cost * (0.003 + newLevel * 0.001);
 
             
@@ -849,7 +849,7 @@
                     result = await updateMineLevel(user_id, club.name, newLevel, newCost, newProfitPerHour);
                     if (result.status === 'success') {
                         document.getElementById('score').innerText = score.toFixed(3);
-                        levels[club.name] = newLevel;
+                        levels[club.name] = { level: newLevel, cost: newCost, profit_per_hour: newProfitPerHour };
                         club.cost = newCost; // Actualizar el costo del club
                         updateClubLevel(club.name, newLevel, newCost, newProfitPerHour);
                         closeAlertMenu();
