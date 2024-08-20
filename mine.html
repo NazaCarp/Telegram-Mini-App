@@ -500,14 +500,6 @@
                     const profitSpan = document.createElement('span');
                     profitSpan.textContent = Math.round(clubLevel.profit_per_hour);
 
-                    // Genera un porcentaje consistente entre 1% y 12% basado en el nombre del club
-                    const hashValue = simpleHash(club.name);
-                    const percentage = (hashValue % 1200) / 10000 + 0.01; // Entre 0.01 y 0.12
-
-                    // Calcula el 'Profit per hour' usando el porcentaje generado
-                    const profitPerHour = Math.round(club.cost * percentage);
-                    profitSpan.textContent = profitPerHour;
-
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
 
@@ -815,7 +807,7 @@
             const newLevel = currentLevel + 1;
             
             // Calcular nuevo costo
-            const newCost = club.cost * Math.pow(1.1, (newLevel * (newLevel - 1) / 2));
+            const newCost = club.cost * Math.pow(1.1, (newLevel - 1));
             const costColor = newCost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = newCost <= currentScore ? 'active' : 'inactive';
             
@@ -823,7 +815,6 @@
             const currentProfitPerHour = levels[club.name]?.profit_per_hour || Math.round(club.cost * ((simpleHash(club.name) % 1200) / 10000 + 0.01));
             const newProfitPerHour = currentProfitPerHour + club.cost * (0.003 + newLevel * 0.001);
 
-            
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
