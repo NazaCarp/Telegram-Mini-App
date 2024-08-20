@@ -798,6 +798,13 @@
                     }
                 }
             });
+
+            document.addEventListener('click', (event) => {
+                const alertMenu = document.getElementById('alertMenu');
+                if (alertMenu.style.display === 'block' && !alertMenu.contains(event.target)) {
+                    closeAlertMenu();
+                }
+            });
         });
 
         async function updateMineLevel(user_id, club_id, level) {
@@ -866,12 +873,6 @@
             };
 
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
-            document.addEventListener('click', (event) => {
-                const alertMenu = document.getElementById('alertMenu');
-                if (alertMenu.style.display === 'block' && !alertMenu.contains(event.target)) {
-                    closeAlertMenu();
-                }
-            });
         }
         
         function updateClubLevel(clubId, newLevel, clubs, levels) {
