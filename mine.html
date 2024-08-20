@@ -526,7 +526,8 @@
                     const sectionRightIcon = document.createElement('iconify-icon');
                     sectionRightIcon.icon = 'twemoji:coin';
                     const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = 10; // Mostrar el valor de 'cost' aquí
+                    alert(clubLevel)
+                    sectionRightSpan.textContent = Math.round(clubLevel.cost); // Mostrar el valor de 'cost' aquí
 
                     sectionRight.appendChild(sectionRightIcon);
                     sectionRight.appendChild(sectionRightSpan);
