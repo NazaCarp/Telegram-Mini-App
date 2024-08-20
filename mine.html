@@ -469,14 +469,12 @@
                     if (index >= clubs.length) break; // Salir si no hay más clubes
 
                     const club = clubs[index];
-                    const clubLevel = levels[club.name] || { level: 1, cost: club.cost, profit_per_hour: Math.round(club.cost * ((simpleHash(club.name) % 1200) / 10000 + 0.01)) };
-                    
-                    // Depuración para verificar el valor de clubLevel
-                    console.log('clubLevel for ' + club.name + ': ', clubLevel);
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
-                
+                    rectangle.setAttribute('data-cost', club.cost); // Añadir el costo como atributo
+                    rectangle.setAttribute('data-club-id', club.name); // Añadir el identificador del club
+
                     const imageElement = document.createElement('img');
                     imageElement.className = 'icon';
                     imageElement.src = club.image;
@@ -498,7 +496,14 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-                    profitSpan.textContent = Math.round(clubLevel.profit_per_hour);
+
+                    // Genera un porcentaje consistente entre 1% y 12% basado en el nombre del club
+                    const hashValue = simpleHash(club.name);
+                    const percentage = (hashValue % 1200) / 10000 + 0.01; // Entre 0.01 y 0.12
+
+                    // Calcula el 'Profit per hour' usando el porcentaje generado
+                    const profitPerHour = Math.round(club.cost * percentage);
+                    profitSpan.textContent = profitPerHour;
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
@@ -511,7 +516,7 @@
 
                     const sectionLeft = document.createElement('div');
                     sectionLeft.className = 'section-left';
-                    sectionLeft.textContent = `lvl ${clubLevel.level}`;
+                    sectionLeft.textContent = `lvl ${levels[club.name] || 1}`;
 
                     const verticalDivider = document.createElement('div');
                     verticalDivider.className = 'vertical-divider';
@@ -521,7 +526,7 @@
                     const sectionRightIcon = document.createElement('iconify-icon');
                     sectionRightIcon.icon = 'twemoji:coin';
                     const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = Math.round(clubLevel.cost); // Mostrar el valor de 'cost' aquí
+                    sectionRightSpan.textContent = club.cost; // Mostrar el valor de 'cost' aquí
 
                     sectionRight.appendChild(sectionRightIcon);
                     sectionRight.appendChild(sectionRightSpan);
@@ -538,8 +543,6 @@
 
                     rectangle.appendChild(imageElement);
                     rectangle.appendChild(textContent);
-                    rectangle.setAttribute('data-cost', clubLevel.cost);
-                    rectangle.setAttribute('data-club-id', club.name);
                     row.appendChild(rectangle);
 
                     // Añadir evento de clic para mostrar la alerta
@@ -555,9 +558,6 @@
         document.addEventListener('DOMContentLoaded', async function() {
             await loadScore();
             levels = await loadMineLevels();
-
-            // Depuración para verificar la estructura de levels
-            alert('levels: ' + JSON.stringify(levels));
 
             const tabs = document.querySelectorAll('.tabs a');
             const tabSlider = document.getElementById('tabSlider');
@@ -788,13 +788,13 @@
             });
         });
 
-        async function updateMineLevel(user_id, club_id, level, currentCost, currentProfitPerHour) {
+        async function updateMineLevel(user_id, club_id, level) {
             const response = await fetch('/update_mine_level', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id, club_id, level, currentCost, currentProfitPerHour })
+                body: JSON.stringify({ user_id, club_id, level })
             });
             return await response.json();
         }
@@ -803,23 +803,20 @@
 
         async function showAlert(club) {
             const currentScore = parseFloat(document.getElementById('score').textContent);
-            const currentLevel = levels[club.name]?.level || 1;
-            const newLevel = currentLevel + 1;
-            
-            // Calcular nuevo costo
-            const newCost = club.cost * Math.pow(1.1, (newLevel - 1));
-            const costColor = newCost <= currentScore ? 'yellow' : 'gray';
-            const buttonClass = newCost <= currentScore ? 'active' : 'inactive';
-            
-            // Calcular nuevo profitPerHour
-            const currentProfitPerHour = levels[club.name]?.profit_per_hour || Math.round(club.cost * ((simpleHash(club.name) % 1200) / 10000 + 0.01));
-            const newProfitPerHour = currentProfitPerHour + club.cost * (0.003 + newLevel * 0.001);
+            const cost = club.cost;
+            const costColor = cost <= currentScore ? 'yellow' : 'gray';
+            const buttonClass = cost <= currentScore ? 'active' : 'inactive';
 
+            const hashValue = simpleHash(club.name);
+            const percentage = (hashValue % 1200) / 10000 + 0.01;
+            const profitPerHour = Math.round(club.cost * percentage);
+
+            
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
-            document.getElementById('alertSecondSubtitle').innerText = `${newProfitPerHour}`;
-            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${newCost}</p>`;
+            document.getElementById('alertSecondSubtitle').innerText = `${profitPerHour}`;
+            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
             document.getElementById('alertCost').classList.remove('yellow', 'gray');
             document.getElementById('alertCost').classList.add(costColor);
             document.getElementById('actionButton').classList.remove('active', 'inactive');
@@ -835,14 +832,16 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async () => {
-                if (currentScore >= newCost) {
-                    score = currentScore - newCost;
-                    result = await updateMineLevel(user_id, club.name, newLevel, newCost, newProfitPerHour);
+                const club_id = club.name;
+                const currentLevel = levels[club_id] || 1;
+                const newLevel = currentLevel + 1;
+                if (currentScore >= cost) {
+                    score = currentScore - cost;
+                    result = await updateMineLevel(user_id, club_id, newLevel);
                     if (result.status === 'success') {
                         document.getElementById('score').innerText = score.toFixed(3);
-                        levels[club.name] = { level: newLevel, cost: newCost, profit_per_hour: newProfitPerHour };
-                        club.cost = newCost; // Actualizar el costo del club
-                        updateClubLevel(club.name, newLevel, newCost, newProfitPerHour);
+                        levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
+                        updateClubLevel(club_id, newLevel); // Actualizar el nivel en la interfaz
                         closeAlertMenu();
                     } else {
                         alert('Error al actualizar el score');
@@ -855,21 +854,13 @@
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
         }
         
-        function updateClubLevel(clubId, newLevel, newCost, newProfitPerHour) {
+        function updateClubLevel(clubId, newLevel) {
             const rectangles = document.querySelectorAll('.rectangle');
             rectangles.forEach(rectangle => {
                 if (rectangle.getAttribute('data-club-id') === clubId) {
                     const levelElement = rectangle.querySelector('.section-left');
                     if (levelElement) {
                         levelElement.textContent = `lvl ${newLevel}`;
-                    }
-                    const costElement = rectangle.querySelector('.section-right span');
-                    if (costElement) {
-                        costElement.textContent = Math.round(newCost);
-                    }
-                    const profitElement = rectangle.querySelector('.profit-info span');
-                    if (profitElement) {
-                        profitElement.textContent = Math.round(newProfitPerHour);
                     }
                 }
             });
