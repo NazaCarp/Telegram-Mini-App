@@ -446,12 +446,12 @@
                     const index = i * 2 + j;
                     if (index >= clubs.length) break; // Salir si no hay más clubes
 
-                    let club = clubs[index];
-                    let level = levels[club.name] || 1;
+                    const club = clubs[index];
+                    const level = levels[club.name] || 1;
 
                     // Calcular cost y profitPerHour basados en el nivel
-                    let cost = calculateCost(club.cost, level);
-                    let profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
+                    const cost = calculateCost(club.cost, level);
+                    const profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
@@ -479,7 +479,7 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-                    profitSpan.textContent = Math.floor(profitPerHour)
+                    profitSpan.textContent = Math.floor(profitPerHour);
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
@@ -523,7 +523,7 @@
 
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
-                        showAlert(club, cost, profitPerHour);
+                        showAlert(club, cost, profitPerHour, clubs, levels);
                     });
                 }
 
@@ -789,7 +789,7 @@
         
         let currentActionButtonListener = null;
 
-        async function showAlert(club, cost, profitPerHour) {
+        async function showAlert(club, cost, profitPerHour, clubs, levels) {
             const currentScore = parseFloat(document.getElementById('score').textContent);
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
@@ -822,8 +822,7 @@
                     if (result.status === 'success') {
                         document.getElementById('score').innerText = score.toFixed(3);
                         levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
-                        updateClubLevel(club_id, newLevel); // Actualizar el nivel en la interfaz
-                        levels = await loadMineLevels();
+                        updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
                         closeAlertMenu();
                     } else {
                         alert('Error al actualizar el score');
@@ -836,13 +835,32 @@
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
         }
         
-        function updateClubLevel(clubId, newLevel) {
+        function updateClubLevel(clubId, newLevel, clubs, levels) {
             const rectangles = document.querySelectorAll('.rectangle');
             rectangles.forEach(rectangle => {
                 if (rectangle.getAttribute('data-club-id') === clubId) {
                     const levelElement = rectangle.querySelector('.section-left');
                     if (levelElement) {
                         levelElement.textContent = `lvl ${newLevel}`;
+                    }
+
+                    // Encontrar el club correspondiente
+                    const club = clubs.find(c => c.name === clubId);
+                    if (club) {
+                        // Calcular el nuevo costo y profitPerHour
+                        const cost = calculateCost(club.cost, newLevel);
+                        const profitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
+
+                        // Actualizar el costo y profitPerHour en la interfaz
+                        const sectionRightSpan = rectangle.querySelector('.section-right span');
+                        if (sectionRightSpan) {
+                            sectionRightSpan.textContent = Math.floor(cost);
+                        }
+
+                        const profitSpan = rectangle.querySelector('.profit-info span');
+                        if (profitSpan) {
+                            profitSpan.textContent = Math.floor(profitPerHour);
+                        }
                     }
                 }
             });
