@@ -473,8 +473,8 @@
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
-                    rectangle.setAttribute('data-cost', clubLevel.cost);
-                    rectangle.setAttribute('data-club-id', club.name);
+                    rectangle.setAttribute('data-cost', club.cost); // Añadir el costo como atributo
+                    rectangle.setAttribute('data-club-id', club.name); // Añadir el identificador del club
 
                     const imageElement = document.createElement('img');
                     imageElement.className = 'icon';
@@ -545,6 +545,8 @@
 
                     rectangle.appendChild(imageElement);
                     rectangle.appendChild(textContent);
+                    rectangle.setAttribute('data-cost', clubLevel.cost);
+                    rectangle.setAttribute('data-club-id', club.name);
                     row.appendChild(rectangle);
 
                     // Añadir evento de clic para mostrar la alerta
