@@ -523,7 +523,7 @@
 
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
-                        showAlert(club, cost, profitPerHour, level);
+                        showAlert(club, cost, profitPerHour, levels[club.name] || 1);
                     });
                 }
 
