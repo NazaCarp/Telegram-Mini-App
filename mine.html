@@ -867,11 +867,11 @@
 
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
             document.addEventListener('click', (event) => {
-            const alertMenu = document.getElementById('alertMenu');
-            if (alertMenu.style.display === 'block' && !alertMenu.contains(event.target)) {
-                closeAlertMenu();
-            }
-        });
+                const alertMenu = document.getElementById('alertMenu');
+                if (alertMenu.style.display === 'block' && !alertMenu.contains(event.target)) {
+                    closeAlertMenu();
+                }
+            });
         }
         
         function updateClubLevel(clubId, newLevel, clubs, levels) {
