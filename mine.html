@@ -502,7 +502,7 @@
                     const sectionRightIcon = document.createElement('iconify-icon');
                     sectionRightIcon.icon = 'twemoji:coin';
                     const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = cost.toFixed(3); // Mostrar el valor de 'cost' aquí
+                    sectionRightSpan.textContent = Math.floor(cost); // Mostrar la parte entera del costo
 
                     sectionRight.appendChild(sectionRightIcon);
                     sectionRight.appendChild(sectionRightSpan);
