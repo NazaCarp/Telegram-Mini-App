@@ -228,10 +228,8 @@ def update_mine_level():
     user_id = data.get('user_id')
     club_id = data.get('club_id')
     level = data.get('level')
-    new_cost = data.get('currentCost')
-    new_profit_per_hour = data.get('currentProfitPerHour')
 
-    if not all([user_id, club_id, level, new_cost, new_profit_per_hour]):
+    if not all([user_id, club_id, level]):
         return jsonify({'error': 'Missing required fields'}), 400
 
     try:
@@ -239,10 +237,13 @@ def update_mine_level():
         mine_level = db.query(MineLevels).filter_by(user_id=user_id).first()
 
         if not mine_level:
-            mine_level = MineLevels(user_id=user_id, clubs={club_id: {'level': level, 'cost': new_cost, 'profit_per_hour': new_profit_per_hour}})
+            # Si no existe un registro para este user_id, crea uno nuevo
+            mine_level = MineLevels(user_id=user_id, clubs={club_id: level})
             db.add(mine_level)
         else:
-            mine_level.clubs[club_id] = {'level': level, 'cost': new_cost, 'profit_per_hour': new_profit_per_hour}
+            # Actualiza el nivel del club, ya sea nuevo o existente
+            mine_level.clubs[club_id] = level
+            # Marca el campo 'clubs' como modificado
             flag_modified(mine_level, "clubs")
 
         db.commit()
