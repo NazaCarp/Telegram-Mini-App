@@ -799,9 +799,10 @@
                 }
             });
 
-            document.addEventListener('click', (event) => {
+            // Agregar evento para cerrar la alerta al hacer clic fuera de ella
+            document.addEventListener('click', function(event) {
                 const alertMenu = document.getElementById('alertMenu');
-                if (alertMenu.style.display === 'block' && !alertMenu.contains(event.target)) {
+                if (alertMenu && !alertMenu.contains(event.target) && !event.target.closest('.rectangle')) {
                     closeAlertMenu();
                 }
             });
