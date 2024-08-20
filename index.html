@@ -194,7 +194,7 @@
     async function loadAndUpdateCounters() {
       // Cargar valores desde localStorage si están disponibles
       let storedScore = 99990.00;
-      let storedProfitPerHour = localStorage.getItem('profitPerHour');
+      let storedProfitPerHour = localStorage.getItem('profit_per_hour');
       let storedSecondaryCount = localStorage.getItem('secondaryCount');
       let storedTap = localStorage.getItem('tap');
       let storedEnergyLimit = localStorage.getItem('energyLimit');
@@ -244,7 +244,7 @@
 
       // Guardar el score en localStorage
       localStorage.setItem('score', score);
-      localStorage.setItem('profitPerHour', profitPerHour);
+      localStorage.setItem('profit_per_hour', profitPerHour);
       localStorage.setItem('secondaryCount', secondaryCount);
       localStorage.setItem('tap', tap);
       localStorage.setItem('energyLimit', energyLimit);
