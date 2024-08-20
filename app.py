@@ -256,5 +256,30 @@ def update_mine_level():
         db.close()
 
 
+@app.route('/update_profi_per_hour', methods=['POST'])
+def update_profit_per_hour():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    profitPerHour = data.get('profitPerHour')
+
+    if not all([user_id, profitPerHour]):
+        return jsonify({'error': 'user_id and profitPerHour are required'}), 400
+
+    try:
+        db = SessionLocal()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        if not counter:
+            counter = Counter(user_id=user_id, profitPerHour=profitPerHour)
+            db.add(counter)
+        else:
+            counter.profit_per_hour += profitPerHour
+        db.commit()
+        return jsonify({'status': 'success'})
+    
+    except Exception as e:
+        logging.error(f"Error in update_counters: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
