@@ -771,35 +771,40 @@
 
             tabSlider.addEventListener('touchstart', (event) => {
                 startX = event.touches[0].clientX;
-            });
-
-            tabSlider.addEventListener('touchmove', (event) => {
-                endX = event.touches[0].clientX;
+                isSliding = true;
             });
 
             tabSlider.addEventListener('touchend', () => {
+                endX = event.changedTouches[0].clientX;
+                isSliding = false;
+
                 const deltaX = endX - startX;
                 const threshold = 50; // Umbral para considerar un deslizamiento
 
-                // Deshabilitar el cambio de pestaña basado en el desplazamiento lateral
-                // if (Math.abs(deltaX) > threshold) {
-                //     let newIndex = currentIndex;
-                //     if (deltaX > 0 && currentIndex > 0) {
-                //         // Deslizamiento hacia la izquierda (anterior pestaña)
-                //         newIndex--;
-                //     } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
-                //         // Deslizamiento hacia la derecha (siguiente pestaña)
-                //         newIndex++;
-                //     }
-                //     
-                //     // Solo actualizamos si el índice ha cambiado
-                //     if (newIndex !== currentIndex) {
-                //         currentIndex = newIndex;
-                //         tabs[currentIndex].click();
-                //     }
-                // }
+                if (Math.abs(deltaX) > threshold) {
+                    let newIndex = currentIndex;
+                    if (deltaX > 0 && currentIndex > 0) {
+                        // Deslizamiento hacia la izquierda (anterior pestaña)
+                        newIndex--;
+                    } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
+                        // Deslizamiento hacia la derecha (siguiente pestaña)
+                        newIndex++;
+                    }
+
+                    // Solo actualizamos si el índice ha cambiado
+                    if (newIndex !== currentIndex) {
+                        currentIndex = newIndex;
+                        tabs[currentIndex].click();
+                    }
+                }
             });
-            
+
+            tabSlider.addEventListener('touchmove', (event) => {
+                if (isSliding) {
+                    endX = event.touches[0].clientX;
+                }
+            });
+
             // Agregar evento para cerrar la alerta al hacer clic fuera de ella
             document.addEventListener('click', function(event) {
                 const alertMenu = document.getElementById('alertMenu');
