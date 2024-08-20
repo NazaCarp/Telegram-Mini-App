@@ -866,14 +866,13 @@
             };
 
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
-        }
-
-        document.addEventListener('click', (event) => {
+            document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             if (alertMenu.style.display === 'block' && !alertMenu.contains(event.target)) {
                 closeAlertMenu();
             }
         });
+        }
         
         function updateClubLevel(clubId, newLevel, clubs, levels) {
             const rectangles = document.querySelectorAll('.rectangle');
