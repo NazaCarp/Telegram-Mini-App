@@ -450,8 +450,8 @@
                     const level = levels[club.name] || 1;
 
                     // Calcular cost y profitPerHour basados en el nivel
-                    const cost = calculateCost(club.cost, level);
-                    const profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
+                    let cost = calculateCost(club.cost, level);
+                    let profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
 
                     const rectangle = document.createElement('div');
                     rectangle.className = 'rectangle';
@@ -523,6 +523,8 @@
 
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
+                        cost = calculateCost(club.cost, level);
+                        profitPerHour = calculateProfitPerHour(club.cost, level, club.name);
                         showAlert(club, cost, profitPerHour, clubs, levels);
                     });
                 }
@@ -794,14 +796,11 @@
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
 
-            const newCost = calculateCost(club.cost, newLevel);
-            const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
-
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
-            document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(newProfitPerHour)}`;
-            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${Math.floor(newCost)}</p>`;
+            document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(profitPerHour)}`;
+            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${Math.floor(cost)}</p>`;
             document.getElementById('alertCost').classList.remove('yellow', 'gray');
             document.getElementById('alertCost').classList.add(costColor);
             document.getElementById('actionButton').classList.remove('active', 'inactive');
