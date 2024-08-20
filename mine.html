@@ -435,6 +435,28 @@
 
         function generateRectangles(containerId, clubs, levels) {
             const rows = Math.ceil(clubs.length / 2);
+
+            // Limpiar contenido anterior
+            const height = 233 * rows + 85;
+
+            const containernorth = document.getElementById('northAmericaContent');
+            containernorth.style = `height: ${height}px;`
+            
+            const containersouth = document.getElementById('southAmericaContent');
+            containersouth.style = `height: ${height}px;`
+
+            const containereurope = document.getElementById('europeContent');
+            containereurope.style = `height: ${height}px;`
+            
+            const containerasia = document.getElementById('asiaContent');
+            containerasia.style = `height: ${height}px;`
+            
+            const containerafrica = document.getElementById('africaContent');
+            containerafrica.style = `height: ${height}px;`
+
+            const containeroceania = document.getElementById('oceaniaContent');
+            containeroceania.style = `height: ${height}px;`
+            
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Limpiar contenido anterior
 
