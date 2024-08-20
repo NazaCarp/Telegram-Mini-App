@@ -423,6 +423,16 @@
             return data.clubs; // Asegúrate de que estás accediendo al campo correcto
         }
 
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return Math.abs(hash);
+        }
+
         function generateRectangles(containerId, clubs, levels) {
             const rows = Math.ceil(clubs.length / 2);
 
@@ -487,8 +497,12 @@
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
 
-                    // Calcular el 'Profit per hour' como el 10% del 'cost'
-                    const profitPerHour = Math.round(club.cost * 0.1);
+                    // Genera un porcentaje consistente entre 1% y 12% basado en el nombre del club
+                    const hashValue = simpleHash(club.name);
+                    const percentage = (hashValue % 1200) / 10000 + 0.01; // Entre 0.01 y 0.12
+
+                    // Calcula el 'Profit per hour' usando el porcentaje generado
+                    const profitPerHour = Math.round(club.cost * percentage);
                     profitSpan.textContent = profitPerHour;
 
                     profitInfo.appendChild(profitIcon);
@@ -793,10 +807,15 @@
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
 
+            const hashValue = simpleHash(club.name);
+            const percentage = (hashValue % 1200) / 10000 + 0.01;
+            const profitPerHour = Math.round(club.cost * percentage);
+
+            
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
-            document.getElementById('alertSecondSubtitle').innerText = 'Cost';
+            document.getElementById('alertSecondSubtitle').innerText = `${profitPerHour}`;
             document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
             document.getElementById('alertCost').classList.remove('yellow', 'gray');
             document.getElementById('alertCost').classList.add(costColor);
