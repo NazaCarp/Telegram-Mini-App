@@ -822,8 +822,8 @@
                     if (result.status === 'success') {
                         document.getElementById('score').innerText = score.toFixed(3);
                         levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
-                        alert(levels[club_id])
                         updateClubLevel(club_id, newLevel); // Actualizar el nivel en la interfaz
+                        levels = await loadMineLevels();
                         closeAlertMenu();
                     } else {
                         alert('Error al actualizar el score');
