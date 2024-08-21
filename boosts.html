@@ -354,7 +354,7 @@
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertSubtitle').innerText = subtitle;
                 document.getElementById('alertSecondSubtitle').innerText = secondSubtitle;
-                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
+                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(cost)}</p>`;
                 document.getElementById('alertCost').classList.remove('yellow', 'gray');
                 document.getElementById('alertCost').classList.add(costColor);
                 document.getElementById('actionButton').classList.remove('active', 'inactive');
@@ -449,13 +449,13 @@
         async function loadScore() {
             score = localStorage.getItem('score');
             if (score !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(score).toFixed(3)}`;
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatNumber(score)}`;
             } else {
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 score = data.score
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatNumber(score)}`;
                 // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
