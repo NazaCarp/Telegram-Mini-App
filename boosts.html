@@ -501,6 +501,8 @@
         function incrementScore() {
             const scoreElement = document.getElementById('score');
             score += profitPerHour / 3600;
+            alert(`score: ${score}`)
+            alert(`profitPerHour: ${profitPerHour}`)
             scoreElement.innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(score).toFixed(3)}`;
             localStorage.setItem('score', score);
             localStorage.setItem('lastTimestamp', Date.now());
