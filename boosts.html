@@ -249,7 +249,10 @@
 <body>
     <a href="index.html" class="back-button"><iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>Back</a>
     <div class="container">
-        <div class="score" id="score" style="color: rgb(255, 255, 255)"><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>0</div>
+        <div class="score" id="scoreContainer">
+            <iconify-icon icon="twemoji:coin" style="font-size: 60px;" id="coinIcon"></iconify-icon>
+            <span id="scoreText">0</span>
+        </div>
         <h5>Balance</h5>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Boosters</h2>
         <div class="rectangles">
@@ -346,7 +349,7 @@
                 const subtitle = subtitles[target];
                 const secondSubtitle = secondSubtitles[target];
                 const cost = rectangle.getAttribute('data-cost');
-                const score = parseInt(document.getElementById('score').innerText.replace(/\D/g, ''));
+                const score = parseInt(document.getElementById('scoreText').innerText.replace(/\D/g, ''));
                 const costColor = parseInt(cost) <= score ? 'yellow' : 'gray';
                 const buttonClass = parseInt(cost) <= score ? 'active' : 'inactive';
 
@@ -385,7 +388,7 @@
             const user = tg.initDataUnsafe.user;
             const user_id = user.id;
             const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
-            const currentScore = parseFloat(document.getElementById('score').innerText.match(/\d+(\.\d+)?/)[0]);
+            const currentScore = parseFloat(document.getElementById('scoreText').innerText.match(/\d+(\.\d+)?/)[0]);
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
 
             if (currentScore >= cost) {
@@ -405,7 +408,7 @@
 
                 const result = await response.json();
                 if (result.status === 'success') {
-                    document.getElementById('score').innerText = newScore.toFixed(3);
+                    document.getElementById('scoreText').innerText = newScore.toFixed(3);
                     closeAlertMenu();
                     loadUserData();
                     localStorage.setItem('score', newScore);
@@ -448,17 +451,16 @@
         
         async function loadScore() {
             score = localStorage.getItem('score');
-            if (score !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatNumber(score)}`;
-            } else {
+            if (score === null) {
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 score = data.score
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatNumber(score)}`;
+                
                 // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
+            document.getElementById('scoreText').innerText = formatNumber(parseFloat(score));
             score = parseFloat(score);
         }
 
@@ -500,9 +502,9 @@
         }
 
         function incrementScore() {
-            const scoreElement = document.getElementById('score');
+            const scoreElement = document.getElementById('scoreText');
             score += profitPerHour / 3600;
-            scoreElement.innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatNumber(score)}`;
+            scoreElement.innerHTML = formatNumber(score);
             localStorage.setItem('score', score);
             localStorage.setItem('lastTimestamp', Date.now());
 
