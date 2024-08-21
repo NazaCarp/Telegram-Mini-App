@@ -164,7 +164,8 @@ def get_user_data():
             'score': counter.score,
             'tap': counter.tap,
             'energy_limit': counter.energy_limit,
-            'recharge_speed': counter.recharge_speed
+            'recharge_speed': counter.recharge_speed,
+            'profit_per_hour': counter.profit_per_hour
         })
     except Exception as e:
         logging.error(f"Error in get_user_data: {e}")

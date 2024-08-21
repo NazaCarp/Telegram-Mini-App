@@ -323,6 +323,9 @@
     </div>
 
     <script>
+        let score = 0
+        let profitPerHour = 0
+
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
             "energy-limit": "Increase the amount of total energy",
@@ -444,7 +447,7 @@
         const tg = window.Telegram.WebApp;
         
         async function loadScore() {
-            let score = localStorage.getItem('score');
+            score = localStorage.getItem('score');
             if (score !== null) {
                 document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(score).toFixed(3)}`;
             } else {
@@ -471,6 +474,7 @@
             const multitapCost = 2000 * Math.pow(2, data.tap - 1);
             const energyLimitCost = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
             const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
+            profitPerHour = data.profit_per_hour
 
             document.getElementById('multitapCost').innerText = multitapCost;
             document.getElementById('energyLimitCost').innerText = energyLimitCost;
@@ -488,6 +492,28 @@
             localStorage.setItem('multitapCost', multitapCost);
             localStorage.setItem('energyLimitCost', energyLimitCost);
             localStorage.setItem('rechargeSpeedCost', rechargeSpeedCost);
+            localStorage.setItem('profitPerHour', profitPerHour);
+        }
+
+        function incrementScore() {
+            const scoreElement = document.getElementById('score');
+            score += profitPerHour / 3600;
+            scoreElement.innerText = score.toFixed(3);
+            localStorage.setItem('score', score);
+            localStorage.setItem('lastTimestamp', Date.now());
+
+            // Actualizar el score en la base de datos
+            saveCounts();
+        }
+
+        async function saveCounts() {
+            fetch('/update_counters', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: user_id, score: score })
+            });
         }
 
         window.onload = function() {
