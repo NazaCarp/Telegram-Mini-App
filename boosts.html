@@ -323,8 +323,8 @@
     </div>
 
     <script>
-        let score = 0;
-        let profitPerHour = 0;
+        let score = 0
+        let profitPerHour = 0
 
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
@@ -354,7 +354,7 @@
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertSubtitle').innerText = subtitle;
                 document.getElementById('alertSecondSubtitle').innerText = secondSubtitle;
-                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatScore(cost)}</p>`;
+                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
                 document.getElementById('alertCost').classList.remove('yellow', 'gray');
                 document.getElementById('alertCost').classList.add(costColor);
                 document.getElementById('actionButton').classList.remove('active', 'inactive');
@@ -405,7 +405,7 @@
 
                 const result = await response.json();
                 if (result.status === 'success') {
-                    document.getElementById('score').innerText = formatScore(newScore);
+                    document.getElementById('score').innerText = newScore.toFixed(3);
                     closeAlertMenu();
                     loadUserData();
                     localStorage.setItem('score', newScore);
@@ -449,13 +449,13 @@
         async function loadScore() {
             score = localStorage.getItem('score');
             if (score !== null) {
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatScore(parseFloat(score))}`;
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${parseFloat(score).toFixed(3)}`;
             } else {
                 const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
-                score = data.score;
-                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatScore(score)}`;
+                score = data.score
+                document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
                 // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
@@ -475,11 +475,11 @@
             const multitapCost = 2000 * Math.pow(2, data.tap - 1);
             const energyLimitCost = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
             const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
-            profitPerHour = data.profit_per_hour;
+            profitPerHour = data.profit_per_hour
 
-            document.getElementById('multitapCost').innerText = formatScore(multitapCost);
-            document.getElementById('energyLimitCost').innerText = formatScore(energyLimitCost);
-            document.getElementById('rechargeSpeedCost').innerText = formatScore(rechargeSpeedCost);
+            document.getElementById('multitapCost').innerText = multitapCost;
+            document.getElementById('energyLimitCost').innerText = energyLimitCost;
+            document.getElementById('rechargeSpeedCost').innerText = rechargeSpeedCost;
 
             // Actualizar los datos de costo en los rectángulos
             document.querySelector('[data-target="multitap"]').setAttribute('data-cost', multitapCost);
@@ -502,7 +502,9 @@
         function incrementScore() {
             const scoreElement = document.getElementById('score');
             score += profitPerHour / 3600;
-            scoreElement.innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatScore(score)}`;
+            alert(`score: ${score}`)
+            alert(`profitPerHour: ${profitPerHour}`)
+            scoreElement.innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${formatNumber(score)}`;
             localStorage.setItem('score', score);
             localStorage.setItem('lastTimestamp', Date.now());
 
@@ -511,6 +513,7 @@
         }
 
         async function saveCounts() {
+            
             fetch('/update_counters', {
                 method: 'POST',
                 headers: {
