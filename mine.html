@@ -752,7 +752,6 @@
 
             tabs.forEach((tab, index) => {
                 tab.addEventListener('click', (event) => {
-                    alert(`${currentTabIndex} ${index}`)
                     event.preventDefault();
                     if (currentTabIndex === index) return; // Si la pestaña activa es la misma, no hacer nada
                     tabs.forEach(t => t.classList.remove('active'));
@@ -822,8 +821,6 @@
 
                     if (nextTab !== currentTabIndex) {
                         // Comprobar que la pestaña sea una diferente a la que ya se encuentra actualmente
-                        currentTabIndex = nextTab;
-                        alert(`${currentTabIndex}`)
                         tabs[currentTabIndex].click();
                     }
                 }
