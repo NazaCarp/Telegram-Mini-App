@@ -521,10 +521,23 @@
         }
 
         function formatScore(score) {
-            if (score >= 1000) {
-                return (score / 1000).toFixed(1) + 'k';
+            const suffixes = ["", "k", "M", "B", "T", "Q"];
+            let suffixNum = Math.floor(("" + score).length / 3);
+            let shortValue = parseFloat((suffixNum !== 0 ? (score / Math.pow(1000, suffixNum)) : score).toPrecision(2));
+            if (shortValue % 1 !== 0) {
+                shortValue = shortValue.toFixed(1);
+            }
+
+            if (suffixNum < suffixes.length) {
+                return shortValue + suffixes[suffixNum];
             } else {
-                return score.toFixed(3);
+                let suffix = "";
+                let suffixIndex = suffixNum - suffixes.length;
+                while (suffixIndex >= 0) {
+                    suffix = String.fromCharCode(65 + (suffixIndex % 26)) + suffix;
+                    suffixIndex = Math.floor(suffixIndex / 26) - 1;
+                }
+                return shortValue + suffix;
             }
         }
 
