@@ -943,12 +943,12 @@
                         // Actualizar el costo y profitPerHour en la interfaz
                         const sectionRightSpan = rectangle.querySelector('.section-right span');
                         if (sectionRightSpan) {
-                            sectionRightSpan.textContent = Math.floor(cost);
+                            sectionRightSpan.textContent = formatNumber(cost);
                         }
 
                         const profitSpan = rectangle.querySelector('.profit-info span');
                         if (profitSpan) {
-                            profitSpan.textContent = Math.floor(clubProfitPerHour);
+                            profitSpan.textContent = formatNumber(clubProfitPerHour);
                         }
                     }
                 }
