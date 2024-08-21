@@ -504,13 +504,16 @@
             scoreElement.innerText = score.toFixed(3);
             localStorage.setItem('score', score);
             localStorage.setItem('lastTimestamp', Date.now());
+            alert('Hola')
 
             // Actualizar el score en la base de datos
             saveCounts();
+            alert('Chau')
+            
         }
 
         async function saveCounts() {
-            alert('CHAU')
+            
             fetch('/update_counters', {
                 method: 'POST',
                 headers: {
