@@ -528,7 +528,7 @@
                     const profitIcon = document.createElement('iconify-icon');
                     profitIcon.icon = 'twemoji:coin';
                     const profitSpan = document.createElement('span');
-                    profitSpan.textContent = Math.floor(clubProfitPerHour);
+                    profitSpan.textContent = formatNumber(clubProfitPerHour);
 
                     profitInfo.appendChild(profitIcon);
                     profitInfo.appendChild(profitSpan);
@@ -551,7 +551,7 @@
                     const sectionRightIcon = document.createElement('iconify-icon');
                     sectionRightIcon.icon = 'twemoji:coin';
                     const sectionRightSpan = document.createElement('span');
-                    sectionRightSpan.textContent = Math.floor(cost); // Mostrar la parte entera del costo
+                    sectionRightSpan.textContent = formatNumber(cost);
 
                     sectionRight.appendChild(sectionRightIcon);
                     sectionRight.appendChild(sectionRightSpan);
