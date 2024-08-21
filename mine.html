@@ -808,22 +808,18 @@
 
                 const deltaX = endX - startX;
                 const threshold = 50; // Umbral para considerar un deslizamiento
-                let nextTab = currentTabIndex
 
                 if (Math.abs(deltaX) > threshold) {
                     if (deltaX > 0 && currentTabIndex > 0) {
                         // Deslizamiento hacia la izquierda (anterior pestaña)
-                        nextTab--;
+                        currentTabIndex--;
                     } else if (deltaX < 0 && currentTabIndex < tabs.length - 1) {
                         // Deslizamiento hacia la derecha (siguiente pestaña)
-                        nextTab++;
+                        currentTabIndex++;
                     }
 
-                    if (nextTab !== currentTabIndex) {
-                        // Comprobar que la pestaña sea una diferente a la que ya se encuentra actualmente
-                        currentTabIndex = nextTab;
-                        tabs[currentTabIndex].click();
-                    }
+                    // Actualizar la pestaña activa
+                    tabs[currentTabIndex].click();
                 }
             });
 
