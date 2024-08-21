@@ -477,9 +477,9 @@
             const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
             profitPerHour = data.profit_per_hour
 
-            document.getElementById('multitapCost').innerText = multitapCost;
-            document.getElementById('energyLimitCost').innerText = energyLimitCost;
-            document.getElementById('rechargeSpeedCost').innerText = rechargeSpeedCost;
+            document.getElementById('multitapCost').innerText = formatNumber(multitapCost);
+            document.getElementById('energyLimitCost').innerText = formatNumber(energyLimitCost);
+            document.getElementById('rechargeSpeedCost').innerText = formatNumber(rechargeSpeedCost);
 
             // Actualizar los datos de costo en los rectángulos
             document.querySelector('[data-target="multitap"]').setAttribute('data-cost', multitapCost);
