@@ -499,12 +499,17 @@
         }
 
         function incrementScore() {
-            const scoreElement = document.getElementById('score');
-            score += profitPerHour / 3600;
-            scoreElement.innerText = score.toFixed(3);
-            localStorage.setItem('score', score);
-            localStorage.setItem('lastTimestamp', Date.now());
             alert('Hola')
+            const scoreElement = document.getElementById('score');
+            alert('Hola2')
+            score += profitPerHour / 3600;
+            alert('Hola3')
+            scoreElement.innerText = score.toFixed(3);
+            alert('Hola4')
+            localStorage.setItem('score', score);
+            alert('Hola5')
+            localStorage.setItem('lastTimestamp', Date.now());
+            alert('Hola6')
 
             // Actualizar el score en la base de datos
             saveCounts();
