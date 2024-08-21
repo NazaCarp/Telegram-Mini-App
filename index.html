@@ -31,13 +31,18 @@
       text-align: center;
       margin-top: -25%;
     }
-    #score {
+    #scoreContainer {
       font-size: 48px;
       position: absolute;
       top: 30%;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 1;
+      display: flex;
+      align-items: center;
+    }
+    #scoreText {
+      margin-left: 10px;
     }
     .user-info {
       display: flex;
@@ -162,7 +167,10 @@
     <div class="container">
       <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="coin Image" class="coin-image" id="coinImage">
     </div>
-    <div class="score" id="score">0</div>
+    <div class="score" id="scoreContainer">
+      <iconify-icon icon="twemoji:coin" style="font-size: 50px;" id="coinIcon"></iconify-icon>
+      <span id="scoreText">0</span>
+    </div>
     <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
     <iconify-icon id="rocketIcon" icon="openmoji:rocket"></iconify-icon>
   </div>
@@ -239,7 +247,7 @@
       }
 
       // Actualizar la interfaz de usuario
-      document.getElementById('score').textContent = score.toFixed(3);
+      document.getElementById('scoreText').textContent = formatNumber(parseFloat(score));
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
 
       // Guardar el score en localStorage
@@ -277,7 +285,7 @@
         }
         score += amountToAdd;
         lastTimestamp = Date.now();
-        document.getElementById('score').textContent = score.toFixed(3);
+        document.getElementById('scoreText').textContent = formatNumber(parseFloat(score));
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`;
 
         // Mostrar "+amountToAdd" en el lugar del clic
@@ -325,11 +333,31 @@
         }
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
       }
-      document.getElementById('score').textContent = score.toFixed(3);  // Mostrar sólo 3 decimales
+      document.getElementById('scoreText').innerHTML = formatNumber(score);
       saveCounts();
       localStorage.setItem('score', score);
       localStorage.setItem('secondaryCount', secondaryCount);
       localStorage.setItem('lastTimestamp', Date.now());
+    }
+
+    function formatNumber(num) {
+      const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
+      
+      function generateUnit(n) {
+        if (n < basicUnits.length) return basicUnits[n];
+          
+        let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+        let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+        return firstChar + secondChar;
+      }
+
+      let unitIndex = 0;
+      while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+        num /= 1000;
+        unitIndex++;
+      }
+
+      return num.toFixed(2) + generateUnit(unitIndex);
     }
 
     document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });

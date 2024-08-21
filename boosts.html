@@ -326,6 +326,7 @@
     </div>
 
     <script>
+        const tg = window.Telegram.WebApp;
         let score = 0
         let profitPerHour = 0
 
@@ -447,8 +448,6 @@
             }
         });
         
-        const tg = window.Telegram.WebApp;
-        
         async function loadScore() {
             score = localStorage.getItem('score');
             if (score === null) {
@@ -460,8 +459,8 @@
                 // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
-            document.getElementById('scoreText').innerText = formatNumber(parseFloat(score));
             score = parseFloat(score);
+            document.getElementById('scoreText').innerText = formatNumber(score);
         }
 
         async function loadUserData() {
