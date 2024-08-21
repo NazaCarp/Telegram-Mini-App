@@ -520,25 +520,24 @@
             });
         }
 
-        function formatScore(num) {
-            const suffixes = ["", "K", "M", "B", "T", "Q"];
-            let suffixNum = Math.floor(("" + num).length / 3);
-            let shortValue = parseFloat((suffixNum !== 0 ? (num / Math.pow(1000, suffixNum)) : num).toPrecision(2));
-            if (shortValue % 1 !== 0) {
-                shortValue = shortValue.toFixed(1);
+        function formatNumber(num) {
+            const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
+            
+            function generateUnit(n) {
+                if (n < basicUnits.length) return basicUnits[n];
+                
+                let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+                let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+                return firstChar + secondChar;
             }
 
-            if (suffixNum < suffixes.length) {
-                return shortValue + suffixes[suffixNum];
-            } else {
-                let suffix = "";
-                let suffixIndex = suffixNum - suffixes.length;
-                while (suffixIndex >= 0) {
-                    suffix = String.fromCharCode(65 + (suffixIndex % 26)) + suffix;
-                    suffixIndex = Math.floor(suffixIndex / 26) - 1;
-                }
-                return shortValue + suffix;
+            let unitIndex = 0;
+            while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+                num /= 1000;
+                unitIndex++;
             }
+
+            return num.toFixed(2) + generateUnit(unitIndex);
         }
 
         window.onload = function() {
