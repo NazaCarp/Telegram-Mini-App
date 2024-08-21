@@ -394,7 +394,7 @@
 
                         const scoreText = document.createElement('p');
                         scoreText.style = 'margin: 10px; color: yellow';
-                        scoreText.innerHTML = `<p style="font-weight: bolder"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> ${scores[index]}</p>`;
+                        scoreText.innerHTML = `<p style="font-weight: bolder"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> ${formatNumber(scores[index])}</p>`;
                         referralItem.appendChild(scoreText);
 
                         scrollableContent.appendChild(referralItem);
@@ -402,6 +402,26 @@
                 }
 
                 friendsListLabel.textContent = `List of your friends (${data.referrals_count})`;
+            }
+
+            function formatNumber(num) {
+                const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
+                
+                function generateUnit(n) {
+                    if (n < basicUnits.length) return basicUnits[n];
+                    
+                    let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+                    let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+                    return firstChar + secondChar;
+                }
+
+                let unitIndex = 0;
+                while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+                    num /= 1000;
+                    unitIndex++;
+                }
+
+                return num.toFixed(2) + generateUnit(unitIndex);
             }
 
             loadReferrals();
