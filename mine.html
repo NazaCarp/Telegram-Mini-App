@@ -818,8 +818,11 @@
                         currentTabIndex++;
                     }
 
-                    // Actualizar la pestaña activa
-                    tabs[currentTabIndex].click();
+                    // Verificar si el índice de la pestaña es válido
+                    if (currentTabIndex >= 0 && currentTabIndex < tabs.length) {
+                        // Actualizar la pestaña activa
+                        tabs[currentTabIndex].click();
+                    }
                 }
             });
 
