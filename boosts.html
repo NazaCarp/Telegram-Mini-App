@@ -354,7 +354,7 @@
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertSubtitle').innerText = subtitle;
                 document.getElementById('alertSecondSubtitle').innerText = secondSubtitle;
-                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
+                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatScore(cost)}</p>`;
                 document.getElementById('alertCost').classList.remove('yellow', 'gray');
                 document.getElementById('alertCost').classList.add(costColor);
                 document.getElementById('actionButton').classList.remove('active', 'inactive');
@@ -477,9 +477,9 @@
             const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
             profitPerHour = data.profit_per_hour;
 
-            document.getElementById('multitapCost').innerText = multitapCost;
-            document.getElementById('energyLimitCost').innerText = energyLimitCost;
-            document.getElementById('rechargeSpeedCost').innerText = rechargeSpeedCost;
+            document.getElementById('multitapCost').innerText = formatScore(multitapCost);
+            document.getElementById('energyLimitCost').innerText = formatScore(energyLimitCost);
+            document.getElementById('rechargeSpeedCost').innerText = formatScore(rechargeSpeedCost);
 
             // Actualizar los datos de costo en los rectángulos
             document.querySelector('[data-target="multitap"]').setAttribute('data-cost', multitapCost);
@@ -520,10 +520,10 @@
             });
         }
 
-        function formatScore(score) {
-            const suffixes = ["", "k", "M", "B", "T", "Q"];
-            let suffixNum = Math.floor(("" + score).length / 3);
-            let shortValue = parseFloat((suffixNum !== 0 ? (score / Math.pow(1000, suffixNum)) : score).toPrecision(2));
+        function formatScore(num) {
+            const suffixes = ["", "K", "M", "B", "T", "Q"];
+            let suffixNum = Math.floor(("" + num).length / 3);
+            let shortValue = parseFloat((suffixNum !== 0 ? (num / Math.pow(1000, suffixNum)) : num).toPrecision(2));
             if (shortValue % 1 !== 0) {
                 shortValue = shortValue.toFixed(1);
             }
