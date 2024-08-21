@@ -753,6 +753,7 @@
             tabs.forEach((tab, index) => {
                 tab.addEventListener('click', (event) => {
                     event.preventDefault();
+                    if (currentTabIndex === index) return; // Si la pestaña activa es la misma, no hacer nada
                     tabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
 
