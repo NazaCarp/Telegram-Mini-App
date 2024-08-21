@@ -34,8 +34,6 @@
             text-align: center;
             margin-top: 70px;
             font-size: 80px;
-            display: flex;
-            align-items: center;
         }
         .navbar {
             display: flex;
@@ -329,10 +327,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="score" id="scoreContainer">
-            <iconify-icon icon="twemoji:coin" style="font-size: 60px;" id="coinIcon"></iconify-icon>
-            <span id="scoreText">0</span>
-        </div>
+        <div class="score" id="score" style="color: rgb(255, 255, 255)"><iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>0</div>
         <h5>Balance</h5>
         <div class="tabs">
             <a href="#" id="northAmericaTab" class="active"><iconify-icon icon="simple-icons:mls"></iconify-icon><span>North America</span></a>
@@ -381,7 +376,7 @@
             let storedScore = localStorage.getItem('score');
             let storedProfitPerHour = localStorage.getItem('profit_per_hour');
             
-            if (storedScore === null || storedProfitPerHour === null){
+            if (0 === 0 || storedScore === null || storedProfitPerHour === null){
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 storedScore = data.score;
@@ -393,7 +388,7 @@
             profitPerHour = parseFloat(storedProfitPerHour);
 
             // Actualizar la interfaz del usuario
-            document.getElementById('scoreText').textContent = formatNumber(score);
+            document.getElementById('score').innerHTML = `<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon> ${score.toFixed(3)}`;
             
             // Guardar score y profitPerHour en localStorage
             localStorage.setItem('score', score);
@@ -405,35 +400,15 @@
         }
 
         function incrementScore() {
+            const scoreElement = document.getElementById('score');
             score += profitPerHour / 3600;
-            document.getElementById('scoreText').textContent = formatNumber(score);
+            scoreElement.innerText = score.toFixed(3);
             localStorage.setItem('score', score);
             localStorage.setItem('lastTimestamp', Date.now());
 
             // Actualizar el score en la base de datos
             saveCounts();
         }
-
-        function formatNumber(num) {
-            const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
-            
-            function generateUnit(n) {
-                if (n < basicUnits.length) return basicUnits[n];
-                
-                let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
-                let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
-                return firstChar + secondChar;
-            }
-
-            let unitIndex = 0;
-            while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
-                num /= 1000;
-                unitIndex++;
-            }
-
-            return num.toFixed(2) + generateUnit(unitIndex);
-        }
-
         async function saveCounts() {
             fetch('/update_counters', {
                 method: 'POST',
@@ -866,7 +841,7 @@
         let currentActionButtonListener = null;
 
         async function showAlert(club, cost, clubProfitPerHour, clubs, levels) {
-            const currentScore = parseFloat(document.getElementById('scoreText').textContent);
+            const currentScore = parseFloat(document.getElementById('score').textContent);
             const costColor = cost <= currentScore ? 'yellow' : 'gray';
             const buttonClass = cost <= currentScore ? 'active' : 'inactive';
 
@@ -896,7 +871,7 @@
                     score = currentScore - cost;
                     result = await updateMineLevel(user_id, club_id, newLevel);
                     if (result.status === 'success') {
-                        document.getElementById('scoreText').textContent = formatNumber(score)
+                        document.getElementById('score').innerText = score.toFixed(3);
                         levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
                         updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
 
