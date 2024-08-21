@@ -389,7 +389,7 @@
             const user = tg.initDataUnsafe.user;
             const user_id = user.id;
             const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
-            const currentScore = parseFloat(document.getElementById('scoreText').innerText.match(/\d+(\.\d+)?/)[0]);
+            const currentScore = score;
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
 
             if (currentScore >= cost) {
