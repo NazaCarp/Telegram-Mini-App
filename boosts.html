@@ -499,7 +499,6 @@
         }
 
         function incrementScore() {
-            alert('Hola')
             const scoreElement = document.getElementById('score');
             score += profitPerHour / 3600;
             scoreElement.innerText = score.toFixed(3);
@@ -511,6 +510,7 @@
         }
 
         async function saveCounts() {
+            alert('CHAU')
             fetch('/update_counters', {
                 method: 'POST',
                 headers: {
