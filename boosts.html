@@ -459,6 +459,7 @@
                 // Guardar el score en localStorage
                 localStorage.setItem('score', data.score);
             }
+            score = parseFloat(storedScore);
         }
 
         async function loadUserData() {
