@@ -65,7 +65,7 @@ def get_counters():
                     db.commit()
 
                 referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
-                referrer_counter.score += 100
+                referrer_counter.score += 5000
                 db.commit()
 
         return jsonify({
