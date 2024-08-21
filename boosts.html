@@ -493,6 +493,9 @@
             localStorage.setItem('energyLimitCost', energyLimitCost);
             localStorage.setItem('rechargeSpeedCost', rechargeSpeedCost);
             localStorage.setItem('profitPerHour', profitPerHour);
+
+            // Iniciar el intervalo para incrementar el score cada segundo
+            setInterval(incrementScore, 1000);
         }
 
         function incrementScore() {
