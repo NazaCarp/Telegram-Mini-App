@@ -392,6 +392,8 @@
             const currentScore = score;
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
 
+            alert(cost);
+            
             if (currentScore >= cost) {
                 const newScore = currentScore - cost;
                 const response = await fetch('/update_boost', {
