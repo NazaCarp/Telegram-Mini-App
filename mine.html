@@ -20,15 +20,18 @@
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
             transition: filter 0.3s ease;
         }
+
         * {
             margin: 0px;
         }
+
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
         }
+        
         .score {
             font-weight: bold;
             text-align: center;
@@ -37,6 +40,7 @@
             display: flex;
             align-items: center;
         }
+        
         .navbar {
             display: flex;
             justify-content: space-around;
@@ -52,6 +56,7 @@
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
             z-index: 1000; /* Asegura que la barra de navegación esté por encima del contenido */
         }
+        
         .navbar a {
             color: gray;
             text-decoration: none;
@@ -61,12 +66,15 @@
             font-size: 14px;
             position: relative;
         }
+        
         .navbar a.active span, .navbar a.active iconify-icon {
             color: white;
         }
+        
         .navbar a iconify-icon {
             font-size: 24px;
         }
+        
         .navbar a.active::before {
             content: '';
             position: absolute;
@@ -78,6 +86,7 @@
             background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
+        
         .tabs {
             display: flex;
             justify-content: space-around;
@@ -91,6 +100,7 @@
             right: 0;
             z-index: 1000;
         }
+        
         .tabs a {
             color: gray;
             text-decoration: none;
@@ -100,12 +110,15 @@
             font-size: 14px;
             position: relative;
         }
+        
         .tabs a.active span, .tabs a.active iconify-icon {
             color: white;
         }
+        
         .tabs a iconify-icon {
             font-size: 24px;
         }
+        
         .tabs a.active::before {
             content: '';
             position: absolute;
@@ -117,6 +130,7 @@
             background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
+        
         .tab-content {
             display: none;
             flex-direction: column;
@@ -125,9 +139,37 @@
             margin-top: 60px;
             margin-bottom: 70px; /* Añadido para evitar que la barra de navegación tape el contenido */
         }
+        
         .tab-content.active {
             display: flex;
         }
+        
+        .tab-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-text {
+            display: none;
+        }
+        
+        .tabs a.active .tab-text {
+            display: inline;
+        }
+
+        .tab-slider {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tab-slide {
+            flex: 0 0 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
         .rectangle {
             display: flex;
             flex-direction: column;
@@ -140,37 +182,42 @@
             padding: 5px;
             cursor: pointer;
         }
+        
         .icon {
             margin: 10px;
-            width: 75px; /* Ajusta el ancho de la imagen */
-            height: 75px; /* Ajusta la altura de la imagen */
+            width: 75px;
+            height: 75px;
             object-fit: contain; /* Asegura que la imagen se ajuste sin deformarse */
         }
+        
         .row {
             display: flex;
             justify-content: space-around;
             width: 100%;
         }
-        /* Añadir estilos para el subtítulo y el contenido adicional */
+        
         .subtitle {
             font-size: 14px;
             color: gray;
             margin-top: 5px;
         }
+        
         .profit-info {
             display: flex;
             align-items: center;
             margin-top: 5px;
         }
+        
         .profit-info iconify-icon {
             font-size: 18px;
             margin-right: 5px;
         }
+        
         .profit-info span {
             font-size: 16px;
             color: yellow;
         }
-        /* Añadir estilos para la línea divisora y las secciones adicionales */
+
         .divider {
             width: 100%;
             height: 1px;
@@ -197,13 +244,13 @@
             display: flex;
             justify-content: flex-end; /* Alinea el contenido a la derecha */
             align-items: center;
-            flex: 4; /* 70% del espacio */
+            flex: 4; /* 40% del espacio */
         }
 
         .section-right {
             display: flex;
             align-items: center;
-            flex: 6; /* 30% del espacio */
+            flex: 6; /* 60% del espacio */
         }
 
         .section-right iconify-icon {
@@ -223,25 +270,12 @@
             align-items: center;
         }
 
-        .tab-container {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
+        .blur-content {
+            filter: blur(5px);
+            pointer-events: none;
+            transition: filter 0.3s ease;
         }
 
-        .tab-slider {
-            display: flex;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .tab-slide {
-            flex: 0 0 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Estilos para la alerta */
         .alert-menu {
             display: none;
             position: fixed;
@@ -257,10 +291,11 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
         }
+        
         .alert-menu .icon {
             margin: 20px auto; /* Centrar el ícono */
-            width: 100%; /* Aumentar el ancho del ícono */
-            height: 100%; /* Aumentar la altura del ícono */
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -270,6 +305,7 @@
             max-width: 100%;
             max-height: 100%;
         }
+
         .alert-menu .close {
             position: absolute;
             top: 10px;
@@ -277,35 +313,37 @@
             cursor: pointer;
             font-size: 20px;
         }
-        .blur-content {
-            filter: blur(5px);
-            pointer-events: none;
-            transition: filter 0.3s ease;
-        }
+        
         .alert-text {
-            font-size: 24px; /* Tamaño del título en los rectángulos */
+            font-size: 24px;
         }
+        
         .subtitle {
             margin-top: 20px;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
         }
+
         .second-subtitle {
             margin-top: 10px;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
         }
+        
         .cost {
             font-size: 48px;
             margin-top: 25px;
             font-weight: bold;
         }
+        
         .cost.yellow {
             color: yellow;
         }
+        
         .cost.gray {
             color: gray;
         }
+        
         .action-button {
             width: 100%;
             margin-top: 10px;
@@ -316,21 +354,16 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+        
         .action-button.active {
             background-color: #0066ff;
             color: white;
         }
+        
         .action-button.inactive {
             background-color: #808080;
             color: white;
             cursor: not-allowed;
-        }
-        /* Nueva clase para ocultar el texto de las pestañas */
-        .tab-text {
-            display: none;
-        }
-        .tabs a.active .tab-text {
-            display: inline;
         }
     </style>
 </head>

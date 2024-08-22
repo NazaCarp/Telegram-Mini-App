@@ -17,6 +17,7 @@
       color: white;
       transition: filter 0.3s;
     }
+    
     .container {
       display: flex;
       justify-content: center;
@@ -26,11 +27,13 @@
       user-select: none; /* Evita que los textos / imagen sean seleccionables */
       -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
+    
     .score {
       font-weight: bold;
       text-align: center;
       margin-top: -25%;
     }
+    
     #scoreContainer {
       font-size: 48px;
       position: absolute;
@@ -41,9 +44,11 @@
       display: flex;
       align-items: center;
     }
+    
     #scoreText {
       margin-left: 10px;
     }
+    
     .user-info {
       display: flex;
       font-size: 20px;
@@ -52,18 +57,21 @@
       top: 10px;
       left: 10px;
     }
+    
     .user-photo {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       margin-right: 10px;
     }
+    
     .coin-image {
       width: 350px;
       height: auto;
       cursor: pointer;
       position: relative;
     }
+    
     .plus-one {
       position: absolute;
       font-size: 45px;
@@ -72,6 +80,7 @@
       pointer-events: none;
       animation: moveUp 1s forwards;
     }
+    
     @keyframes moveUp {
       from {
         transform: translateY(0);
@@ -82,6 +91,7 @@
         opacity: 0;
       }
     }
+    
     .navbar {
       display: flex;
       justify-content: space-around;
@@ -96,6 +106,7 @@
       user-select: none; /* Evita que la imagen sea seleccionable */
       -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
+    
     .navbar a {
       color: gray;
       text-decoration: none;
@@ -105,12 +116,15 @@
       font-size: 14px;
       position: relative;
     }
+    
     .navbar a.active span, .navbar a.active iconify-icon {
       color: white;
     }
+    
     .navbar a iconify-icon {
       font-size: 24px;
     }
+    
     .navbar a.active::before {
       content: '';
       position: absolute;
@@ -122,6 +136,7 @@
       background-color: rgba(0, 0, 0, 0.267);
       z-index: -1;
     }
+    
     #secondaryCounter {
       font-size: 20px;
       position: absolute;
@@ -130,13 +145,13 @@
       display: flex;
       align-items: center;
     }
+    
     #secondaryCounter iconify-icon {
       font-size: 30px;
       color: orange;
       transform: rotate(15deg);
     }
 
-    /* Estilos para las secciones */
     .section {
       display: none;
       flex-direction: column;
@@ -150,7 +165,6 @@
       display: flex;
     }
 
-    /* Estilos para el ícono de cohete */
     #rocketIcon {
       position: absolute;
       bottom: 75px;
