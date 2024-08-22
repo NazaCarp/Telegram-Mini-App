@@ -350,6 +350,7 @@
                 const subtitle = subtitles[target];
                 const secondSubtitle = secondSubtitles[target];
                 const cost = rectangle.getAttribute('data-cost');
+                alert(cost);
                 const score = parseInt(document.getElementById('scoreText').innerText.replace(/\D/g, ''));
                 const costColor = parseInt(cost) <= score ? 'yellow' : 'gray';
                 const buttonClass = parseInt(cost) <= score ? 'active' : 'inactive';
