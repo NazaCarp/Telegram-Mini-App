@@ -327,8 +327,9 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        let score = 0
-        let profitPerHour = 0
+        let score = 0;
+        let profitPerHour = 0;
+        let cost;
 
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
@@ -349,8 +350,7 @@
                 const text = rectangle.querySelector('.text h3').innerText;
                 const subtitle = subtitles[target];
                 const secondSubtitle = secondSubtitles[target];
-                const cost = rectangle.getAttribute('data-cost');
-                alert(cost);
+                cost = rectangle.getAttribute('data-cost');
                 const score = parseInt(document.getElementById('scoreText').innerText.replace(/\D/g, ''));
                 const costColor = parseInt(cost) <= score ? 'yellow' : 'gray';
                 const buttonClass = parseInt(cost) <= score ? 'active' : 'inactive';
@@ -389,7 +389,6 @@
             const tg = window.Telegram.WebApp;
             const user = tg.initDataUnsafe.user;
             const user_id = user.id;
-            const cost = parseInt(document.getElementById('alertCost').innerText.replace(/\D/g, ''));
             const currentScore = score;
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
 
