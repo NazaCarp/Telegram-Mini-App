@@ -444,7 +444,7 @@
                     alert('Error al actualizar el boost');
                 }
             } else {
-                alert('No tienes suficientes monedas para comprar este boost');
+                shakeButton();
             }
         });
         
@@ -512,7 +512,6 @@
         }
 
         async function saveCounts() {
-            
             fetch('/update_counters', {
                 method: 'POST',
                 headers: {
@@ -540,6 +539,25 @@
             }
 
             return num.toFixed(2) + generateUnit(unitIndex);
+        }
+
+        function shakeButton() {
+            const button = document.getElementById('actionButton');
+            const originalPosition = button.style.transform || 'translateX(0)';
+            const shakeAnimation = [
+                { transform: originalPosition },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: originalPosition }
+            ];
+            const shakeTiming = {
+                duration: 500,
+                iterations: 1
+            };
+
+            button.animate(shakeAnimation, shakeTiming);
         }
 
         window.onload = function() {
