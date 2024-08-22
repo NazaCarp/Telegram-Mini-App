@@ -924,7 +924,7 @@
                         alert('Error al actualizar el score');
                     }
                 } else {
-                    alert('No tienes suficientes monedas para comprar este boost');
+                    shakeButton();
                 }
             };
 
@@ -972,6 +972,25 @@
                 document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
                 currentActionButtonListener = null;
             }
+        }
+
+        function shakeButton() {
+            const button = document.getElementById('actionButton');
+            const originalPosition = button.style.transform || 'translateX(0)';
+            const shakeAnimation = [
+                { transform: originalPosition },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: originalPosition }
+            ];
+            const shakeTiming = {
+                duration: 500,
+                iterations: 1
+            };
+
+            button.animate(shakeAnimation, shakeTiming);
         }
     </script>
 </body>
