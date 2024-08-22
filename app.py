@@ -23,9 +23,12 @@ def mine():
     return render_template('mine.html')
 
 @app.route('/boosts.html')
-def serve_boosts():
+def boosts():
     return render_template('boosts.html')
 
+@app.route('/earn.html')
+def earn():
+    return render_template('earn.html')
 
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
