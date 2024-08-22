@@ -327,6 +327,7 @@
 
     <script>
         const tg = window.Telegram.WebApp;
+        const user_id = tg.initDataUnsafe.user.id;
         let score = 0;
         let profitPerHour = 0;
         let cost;
@@ -386,9 +387,6 @@
         }
 
         document.getElementById('actionButton').addEventListener('click', async function() {
-            const tg = window.Telegram.WebApp;
-            const user = tg.initDataUnsafe.user;
-            const user_id = user.id;
             const currentScore = score;
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
             
@@ -451,7 +449,6 @@
         async function loadScore() {
             score = localStorage.getItem('score');
             if (score === null) {
-                const user_id = tg.initDataUnsafe.user.id;
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 score = data.score
@@ -464,7 +461,6 @@
         }
 
         async function loadUserData() {
-            const user_id = tg.initDataUnsafe.user.id;
             const response = await fetch(`/get_user_data?user_id=${user_id}`);
             const data = await response.json();
 
