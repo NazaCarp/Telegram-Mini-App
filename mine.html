@@ -636,18 +636,18 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
-            await loadScore();
-            levels = await loadMineLevels();
-
-            const tabs = document.querySelectorAll('.tabs a');
-            const tabSlider = document.getElementById('tabSlider');
             const mineNav = document.getElementById('mineNav');
-
             mineNav.addEventListener('click', function(event) {
                 if (window.location.pathname.includes('mine.html')) {
                     event.preventDefault();
                 }
             });
+
+            await loadScore();
+            levels = await loadMineLevels();
+
+            const tabs = document.querySelectorAll('.tabs a');
+            const tabSlider = document.getElementById('tabSlider');
 
             const northAmericaClubs = [
                 { name: 'Inter Miami CF', image: '/static/images/North America/Inter Miami CF.svg', cost: 7823 },
