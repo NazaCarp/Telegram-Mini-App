@@ -20,13 +20,16 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
+        
         * {
             margin: 0px;
         }
+        
         h4 {
             margin: 10px;
             margin-bottom: 20px;
         }
+        
         .container {
             display: flex;
             flex: 1;
@@ -35,12 +38,14 @@
             width: 100%;
             position: relative;
         }
+        
         .rectangles {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
         }
+        
         .rectangle {
             display: flex;
             align-items: center;
@@ -50,10 +55,12 @@
             margin: 5px;
             padding: 5px;
         }
+        
         .icon {
             margin: 10px;
             font-size: 52px;
         }
+        
         .reload-icon {
             cursor: pointer;
             transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
@@ -61,17 +68,21 @@
             right: 20px;
             opacity: 1;
         }
+        
         .reload-icon.rotate {
             transform: rotate(360deg);
         }
+        
         .reload-icon.disabled {
             opacity: 0.5;
             pointer-events: none;
         }
+        
         .bottom-buttons {
             display: flex;
             padding: 10px 0;
         }
+        
         .bottom-rectangle {
             background-color: rgb(11, 62, 121);
             padding: 12px;
@@ -81,6 +92,7 @@
             flex: 1;
             animation: zoom 0.5s infinite alternate;
         }
+        
         .square-button {
             background-color: rgb(11, 62, 121);
             color: white;
@@ -95,6 +107,7 @@
             justify-content: center;
 
         }
+        
         @keyframes zoom {
             0% {
                 transform: scale(0.98);
@@ -103,15 +116,18 @@
                 transform: scale(0.94);
             }
         }
+        
         .scrollable-content {
             max-height: 200px; /* Aumenta la altura máxima */
             overflow-y: auto;
             scrollbar-width: none; /* Firefox */
             -ms-overflow-style: none; /* IE and Edge */
         }
+        
         .scrollable-content::-webkit-scrollbar {
             display: none; /* Chrome, Safari and Opera */
         }
+        
         .navbar {
             display: flex;
             justify-content: space-around;
@@ -129,6 +145,7 @@
             user-select: none; /* Evita que la imagen sea seleccionable */
             -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
         }
+        
         .navbar a {
             color: gray;
             text-decoration: none;
@@ -138,12 +155,15 @@
             font-size: 14px;
             position: relative;
         }
+        
         .navbar a.active span, .navbar a.active iconify-icon {
             color: white;
         }
+        
         .navbar a iconify-icon {
             font-size: 24px;
         }
+        
         .navbar a.active::before {
             content: '';
             position: absolute;
@@ -155,39 +175,19 @@
             background-color: rgba(0, 0, 0, 0.267);
             z-index: -1;
         }
-        .loading-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100px;
-        }
-        .loading-spinner {
-            border-radius: 50%;
-            border-top: 4px solid white;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .timer {
-            position: absolute;
-            right: 50px;
-            color: white;
-            opacity: 0.5;
-        }
+        
         .user-photo {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             margin-right: 10px;
         }
+        
         .score {
             color: yellow;
             margin-left: auto; /* Alinea el score a la derecha */
         }
+        
         .no-invites-message {
             display: flex;
             justify-content: center;
@@ -195,6 +195,33 @@
             height: 100%;
             font-weight: bold;
             color: rgba(255, 255, 255, 0.5);
+        }
+
+        .timer {
+            position: absolute;
+            right: 50px;
+            color: white;
+            opacity: 0.5;
+        }
+        
+        .loading-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100px;
+        }
+        
+        .loading-spinner {
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -256,9 +283,11 @@
     </div>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
+        const tg = window.Telegram.WebApp;
+        const user_id = tg.initDataUnsafe.user.id;
+
         document.addEventListener('DOMContentLoaded', function() {
             const mainContainer = document.getElementById('main-container');
-            const tg = window.Telegram.WebApp;
             const reloadIcon = document.querySelector('.reload-icon');
             const scrollableContent = document.getElementById('scrollable-content');
             const scrollableRectangle = document.getElementById('scrollable-rectangle');
@@ -317,7 +346,6 @@
             }
 
             async function loadReferrals(forceReload = false) {
-                const user_id = tg.initDataUnsafe.user.id;
                 const cacheKey = `referrals_${user_id}`;
 
                 // Verificar si los datos están en caché y no se fuerza una recarga
@@ -463,8 +491,6 @@
                     requestAnimationFrame(applyInertia);
                 }
             }
-
-            const user_id = tg.initDataUnsafe.user.id;
             
             copyButton.addEventListener('click', async function() {
                 try {
