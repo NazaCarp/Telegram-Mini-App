@@ -422,84 +422,10 @@
       loadAndUpdateCounters();
     };
 
-    // Agregar eventos de clic a los íconos de la barra de navegación
-    const navbarItems = document.querySelectorAll('.navbar a');
-    const sections = document.querySelectorAll('.section');
-
-    navbarItems.forEach(item => {
-      item.addEventListener('click', (event) => {
-        event.preventDefault();
-        navbarItems.forEach(navItem => navItem.classList.remove('active'));
-        item.classList.add('active');
-
-        const targetId = item.id.replace('Nav', '');
-        if (targetId === 'exchange') {
-          sections.forEach(section => {
-            if (section.id === 'home') {
-              section.classList.add('active');
-            } else {
-              section.classList.remove('active');
-            }
-          });
-        } else {
-          sections.forEach(section => {
-            if (section.id === targetId) {
-              section.classList.add('active');
-            } else {
-               section.classList.remove('active');
-            }
-          });
-        }
-
-        // Manejo del botón de retroceso
-        if (targetId === 'home') {
-          tg.BackButton.hide();
-        } else {
-          tg.BackButton.show();
-        }
-      });
-    });
-
     document.getElementById('rocketIcon').addEventListener('click', function(event) {
       event.preventDefault();
       window.location.href = 'boosts.html'; // Redirige a la nueva página Boosts
     });
-
-    document.getElementById('friendsNav').addEventListener('click', function(event) {
-      event.preventDefault();
-      window.location.href = 'friends.html'; // Redirige a la página Friends
-    });
-
-    document.getElementById('mineNav').addEventListener('click', function(event) {
-      event.preventDefault();
-      window.location.href = 'mine.html'; // Redirige a la página Mine
-    });
-
-    document.getElementById('earnNav').addEventListener('click', function(event) {
-      event.preventDefault();
-      window.location.href = 'earn.html'; // Redirige a la página Earn
-    });
-
-    tg.onEvent('backButtonClicked', () => {
-      const activeSection = document.querySelector('.section.active');
-      if (activeSection && activeSection.id !== 'home') {
-        navigateTo('home');
-      }
-    });
-
-    function navigateTo(sectionId) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(section => section.classList.remove('active'));
-
-      const targetSection = document.getElementById(sectionId);
-      targetSection.classList.add('active');
-
-      if (sectionId === 'home') {
-        tg.BackButton.hide();
-      } else {
-        tg.BackButton.show();
-      }
-    }
 
     // Ocultar el botón de retroceso en index.html
     tg.BackButton.hide();
