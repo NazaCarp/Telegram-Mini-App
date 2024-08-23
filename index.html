@@ -457,6 +457,11 @@
         } else {
           tg.BackButton.show();
         }
+
+        // Redirección inmediata
+        if (targetId !== 'home') {
+          window.location.href = `${targetId}.html`;
+        }
       });
     });
 
@@ -473,6 +478,11 @@
     document.getElementById('mineNav').addEventListener('click', function(event) {
       event.preventDefault();
       window.location.href = 'mine.html'; // Redirige a la página Mine
+    });
+
+    document.getElementById('earnNav').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'earn.html'; // Redirige a la página Earn
     });
 
     tg.onEvent('backButtonClicked', () => {
