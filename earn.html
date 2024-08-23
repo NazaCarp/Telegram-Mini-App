@@ -361,6 +361,12 @@
     
         let timerIntervals = {};
         let actionButtons = {};
+
+        earnNav.addEventListener('click', function(event) {
+            if (window.location.pathname.includes('earn.html')) {
+                event.preventDefault();
+            }
+        });
     
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
             rectangle.id = `rectangle-${index}`;
