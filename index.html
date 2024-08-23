@@ -192,7 +192,7 @@
     <a href="index.html" id="exchangeNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
     <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
     <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-    <a href="index.html#earn" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+    <a href="earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
     <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
   </div>
 
@@ -473,6 +473,11 @@
     document.getElementById('mineNav').addEventListener('click', function(event) {
       event.preventDefault();
       window.location.href = 'mine.html'; // Redirige a la página Mine
+    });
+
+    document.getElementById('earnNav').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'earn.html'; // Redirige a la página Earn
     });
 
     tg.onEvent('backButtonClicked', () => {
