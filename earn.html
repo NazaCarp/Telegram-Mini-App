@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mine</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at center, #0047ab, #002357, #000000);
+            color: white;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+            transition: filter 0.3s ease;
+        }
+
+        * {
+            margin: 0px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 80px;
+        }
+
+        .score {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 70px;
+            font-size: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 60px;
+            border-radius: 50px;
+            margin: 0 auto; /* Centra la barra de navegación */
+            background-color: #222222;
+            position: fixed;
+            bottom: 0;
+            user-select: none; /* Evita que los íconos sean seleccionables */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+            z-index: 1000; /* Asegura que la barra de navegación esté por encima del contenido */
+        }
+
+        .navbar a {
+            color: gray;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .navbar a.active span, .navbar a.active iconify-icon {
+            color: white;
+        }
+
+        .navbar a iconify-icon {
+            font-size: 24px;
+        }
+
+        .navbar a.active::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: -14px;
+            right: -14px;
+            bottom: -7px;
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.267);
+            z-index: -1;
+        }
+
+        .rectangles {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .rectangle {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            border-radius: 50px;
+            border: 2px solid white;
+            width: 95%;
+            margin: 5px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .icon {
+            margin: 10px;
+            font-size: 45px;
+        }
+
+        .text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .reward {
+            margin-top: 25px;
+            font-weight: bold;
+            color: yellow;
+        }
+
+        .subtitle {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .second-subtitle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cost {
+            font-size: 48px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .cost.yellow {
+            color: yellow;
+        }
+
+        .cost.gray {
+            color: gray;
+        }
+
+        .action-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-button.active {
+            background-color: #0066ff;
+            color: white;
+        }
+
+        .action-button.inactive {
+            background-color: #808080;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .alert-menu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 400px;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .alert-menu .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .alert-text {
+            font-size: 24px;
+        }
+
+        .subtitle {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .second-subtitle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cost {
+            font-size: 48px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .cost.yellow {
+            color: yellow;
+        }
+
+        .cost.gray {
+            color: gray;
+        }
+
+        .action-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-button.active {
+            background-color: #0066ff;
+            color: white;
+        }
+
+        .action-button.inactive {
+            background-color: #808080;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .blur-content {
+            filter: blur(5px);
+            pointer-events: none;
+            transition: filter 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="score" id="scoreContainer">
+            <iconify-icon icon="twemoji:coin" style="font-size: 60px;" id="coinIcon"></iconify-icon>
+        </div>
+        <h5 style="margin-top: 15px; font-size: 30px;">Earn more coins</h5>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Youtube</h2>
+        <div class="rectangles">
+            <div class="rectangle" data-reward="100000" data-action="Watch">
+                <div class="icon">
+                    <iconify-icon icon="logos:youtube-icon"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3 style="margin-bottom: 5px;">Video 1</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+            <div class="rectangle" data-reward="100000" data-action="Watch">
+                <div class="icon">
+                    <iconify-icon icon="logos:youtube-icon"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3 style="margin-bottom: 5px;">Video 2</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Daily Tasks</h2>
+        <div class="rectangles">
+            <div class="rectangle" data-reward="500">
+                <div class="icon">
+                    <iconify-icon icon="mdi:calendar"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3 style="margin-bottom: 5px;">Daily reward</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">500</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Tasks list</h2>
+        <div class="rectangles">
+            <div class="rectangle" data-reward="100000" data-action="Follow">
+                <div class="icon">
+                    <iconify-icon icon="logos:telegram"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h4 style="margin-bottom: 5px;">Follow us on our Telegram channel</h4>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+            <div class="rectangle" data-reward="100000" data-action="Join">
+                <div class="icon">
+                    <iconify-icon icon="logos:telegram"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h4 style="margin-bottom: 5px;">Join our Telegram group</h4>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar">
+        <a href="index.html" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+        <a href="mine.html" id="mineNav" class="active"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+        <a href="Earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+        <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
+    </div>
+    <div class="alert-menu" id="alertMenu">
+        <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+        <div class="icon" id="alertIcon"></div>
+        <div class="alert-text" id="alertText"></div>
+        <div class="subtitle" id="alertSubtitle"></div>
+        <div class="second-subtitle" id="alertSecondSubtitle"></div>
+        <div class="cost" id="alertCost"></div>
+        <button class="action-button" id="actionButton">Follow</button>
+    </div>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+    
+        tg.onEvent('backButtonClicked', () => {
+            window.location.href = 'index.html';
+        });
+    
+        tg.BackButton.show();
+    
+        let timerIntervals = {};
+        let actionButtons = {};
+    
+        document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
+            rectangle.id = `rectangle-${index}`;
+            rectangle.addEventListener('click', () => {
+                const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
+                const text = rectangle.querySelector('.text h3, .text h4').innerText;
+                const reward = rectangle.getAttribute('data-reward');
+                const action = rectangle.getAttribute('data-action');
+    
+                document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
+                document.getElementById('alertText').innerText = text;
+                document.getElementById('alertSubtitle').innerText = 'Reward';
+                document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(reward)}`;
+                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+                
+                // Obtener o crear el botón de acción para este rectángulo
+                let actionButton = actionButtons[rectangle.id];
+                if (!actionButton) {
+                    actionButton = document.createElement('button');
+                    actionButton.className = 'action-button active';
+                    actionButton.dataset.rectangleId = rectangle.id;
+                    actionButton.addEventListener('click', handleActionButtonClick);
+                    actionButtons[rectangle.id] = actionButton;
+                }
+    
+                // Actualizar el texto del botón
+                actionButton.innerText = actionButton.disabled ? `${Math.ceil((timerIntervals[rectangle.id].endTime - Date.now()) / 1000)}s` : action;
+    
+                // Reemplazar el botón existente con el botón actualizado
+                const alertMenu = document.getElementById('alertMenu');
+                const oldButton = alertMenu.querySelector('.action-button');
+                if (oldButton) {
+                    alertMenu.replaceChild(actionButton, oldButton);
+                } else {
+                    alertMenu.appendChild(actionButton);
+                }
+    
+                document.getElementById('alertMenu').style.display = 'block';
+                document.querySelector('.container').classList.add('blur-content');
+                document.querySelector('.navbar').classList.add('blur-content');
+            });
+        });
+    
+        function handleActionButtonClick() {
+            const rectangleId = this.dataset.rectangleId;
+            const actionButton = this;
+            let timerSeconds = 60;
+    
+            if (actionButton.disabled) return; // Si ya está deshabilitado, no hacer nada
+    
+            actionButton.classList.remove('active');
+            actionButton.classList.add('inactive');
+            actionButton.disabled = true;
+            actionButton.innerText = `${timerSeconds}s`;
+    
+            if (timerIntervals[rectangleId]) {
+                clearInterval(timerIntervals[rectangleId].interval);
+            }
+    
+            const endTime = Date.now() + timerSeconds * 1000;
+            const intervalId = setInterval(() => {
+                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
+                if (remainingSeconds <= 0) {
+                    clearInterval(intervalId);
+                    actionButton.disabled = false;
+                    actionButton.classList.remove('inactive');
+                    actionButton.classList.add('active');
+                    actionButton.innerText = 'Follow';
+                    delete timerIntervals[rectangleId];
+                } else {
+                    actionButton.innerText = `${remainingSeconds}s`;
+                }
+            }, 1000);
+    
+            timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+            closeAlertMenu();
+        }
+    
+        function closeAlertMenu() {
+            document.getElementById('alertMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
+        }
+    
+        function formatNumber(num) {
+            const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
+            
+            function generateUnit(n) {
+                if (n < basicUnits.length) return basicUnits[n];
+                
+                let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+                let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+                return firstChar + secondChar;
+            }
+
+            let unitIndex = 0;
+            while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+                num /= 1000;
+                unitIndex++;
+            }
+
+            return num.toFixed(2) + generateUnit(unitIndex);
+        }
+
+        document.addEventListener('click', (event) => {
+            const alertMenu = document.getElementById('alertMenu');
+            if (!alertMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
+                closeAlertMenu();
+            }
+        });
+    </script>
+</body>
+</html>
