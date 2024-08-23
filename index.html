@@ -457,12 +457,34 @@
         } else {
           tg.BackButton.show();
         }
-
-        // Redirección inmediata
-        if (targetId !== 'home') {
-          window.location.href = `${targetId}.html`;
-        }
       });
+    });
+
+    document.getElementById('rocketIcon').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'boosts.html'; // Redirige a la nueva página Boosts
+    });
+
+    document.getElementById('friendsNav').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'friends.html'; // Redirige a la página Friends
+    });
+
+    document.getElementById('mineNav').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'mine.html'; // Redirige a la página Mine
+    });
+
+    document.getElementById('earnNav').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'earn.html'; // Redirige a la página Earn
+    });
+
+    tg.onEvent('backButtonClicked', () => {
+      const activeSection = document.querySelector('.section.active');
+      if (activeSection && activeSection.id !== 'home') {
+        navigateTo('home');
+      }
     });
 
     function navigateTo(sectionId) {
