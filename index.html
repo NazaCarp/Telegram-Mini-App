@@ -366,6 +366,12 @@
     
     // Mostrar el nombre del usuario
     window.onload = function() {
+      indexNav.addEventListener('click', function(event) {
+        if (window.location.pathname.includes('index.html')) {
+          event.preventDefault();
+        }
+      });
+      
       if (user) {
         const userInfo = document.getElementById('user-info');
         
