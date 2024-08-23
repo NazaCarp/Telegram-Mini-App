@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mine</title>
+    <title>Earn</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     <style>
@@ -126,29 +126,17 @@
             color: yellow;
         }
 
-        .subtitle {
-            margin-top: 20px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .second-subtitle {
-            margin-top: 10px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .cost {
+        .alertReward {
             font-size: 48px;
             margin-top: 25px;
             font-weight: bold;
         }
 
-        .cost.yellow {
+        .alertReward.yellow {
             color: yellow;
         }
 
-        .cost.gray {
+        .alertReward.gray {
             color: gray;
         }
 
@@ -200,54 +188,6 @@
 
         .alert-text {
             font-size: 24px;
-        }
-
-        .subtitle {
-            margin-top: 20px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .second-subtitle {
-            margin-top: 10px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .cost {
-            font-size: 48px;
-            margin-top: 25px;
-            font-weight: bold;
-        }
-
-        .cost.yellow {
-            color: yellow;
-        }
-
-        .cost.gray {
-            color: gray;
-        }
-
-        .action-button {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .action-button.active {
-            background-color: #0066ff;
-            color: white;
-        }
-
-        .action-button.inactive {
-            background-color: #808080;
-            color: white;
-            cursor: not-allowed;
         }
 
         .blur-content {
@@ -345,20 +285,20 @@
         <div class="icon" id="alertIcon"></div>
         <div class="alert-text" id="alertText"></div>
         <div class="subtitle" id="alertSubtitle"></div>
-        <div class="second-subtitle" id="alertSecondSubtitle"></div>
-        <div class="cost" id="alertCost"></div>
+        <div class="alertReward" id="alertReward"></div>
         <button class="action-button" id="actionButton">Follow</button>
+        <button class="action-button" id="checkButton">Check</button>
     </div>
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-    
+
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
         });
-    
+
         tg.BackButton.show();
-    
+
         let timerIntervals = {};
         let actionButtons = {};
 
@@ -367,7 +307,7 @@
                 event.preventDefault();
             }
         });
-    
+
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
             rectangle.id = `rectangle-${index}`;
             rectangle.addEventListener('click', () => {
@@ -375,101 +315,140 @@
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
                 const reward = rectangle.getAttribute('data-reward');
                 const action = rectangle.getAttribute('data-action');
-    
+
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
-                document.getElementById('alertSubtitle').innerText = 'Reward';
-                document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(reward)}`;
-                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+                document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
                 
                 // Obtener o crear el botón de acción para este rectángulo
                 let actionButton = actionButtons[rectangle.id];
                 if (!actionButton) {
                     actionButton = document.createElement('button');
                     actionButton.className = 'action-button active';
+                    actionButton.id = 'actionButton';
                     actionButton.dataset.rectangleId = rectangle.id;
                     actionButton.addEventListener('click', handleActionButtonClick);
                     actionButtons[rectangle.id] = actionButton;
                 }
-    
-                // Actualizar el texto del botón
-                actionButton.innerText = actionButton.disabled ? `${Math.ceil((timerIntervals[rectangle.id].endTime - Date.now()) / 1000)}s` : action;
-    
-                // Reemplazar el botón existente con el botón actualizado
-                const alertMenu = document.getElementById('alertMenu');
-                const oldButton = alertMenu.querySelector('.action-button');
-                if (oldButton) {
-                    alertMenu.replaceChild(actionButton, oldButton);
-                } else {
-                    alertMenu.appendChild(actionButton);
+
+                // Actualizar el texto del botón de acción
+                actionButton.innerText = action;
+
+                // Crear el botón de verificación
+                let checkButton = document.createElement('button');
+                checkButton.className = 'action-button active';
+                checkButton.id = 'checkButton';
+                checkButton.innerText = 'Check';
+                checkButton.dataset.rectangleId = rectangle.id;
+                checkButton.addEventListener('click', handleCheckButtonClick);
+
+                // Verificar si el contador ya ha comenzado
+                const endTime = rectangle.dataset.endTime;
+                if (endTime) {
+                    const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                    if (remainingSeconds > 0) {
+                        checkButton.classList.remove('active');
+                        checkButton.classList.add('inactive');
+                        checkButton.disabled = true;
+                        checkButton.innerText = `${remainingSeconds}s`;
+                        const intervalId = setInterval(() => {
+                            const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                            if (remainingSeconds <= 0) {
+                                clearInterval(intervalId);
+                                checkButton.disabled = false;
+                                checkButton.classList.remove('inactive');
+                                checkButton.classList.add('active');
+                                checkButton.innerText = 'Check';
+                                delete rectangle.dataset.endTime;
+                            } else {
+                                checkButton.innerText = `${remainingSeconds}s`;
+                            }
+                        }, 1000);
+                    }
                 }
-    
+
+                // Reemplazar los botones existentes con los botones actualizados
+                const alertMenu = document.getElementById('alertMenu');
+                const oldActionButton = alertMenu.querySelector('#actionButton');
+                const oldCheckButton = alertMenu.querySelector('#checkButton');
+                if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                alertMenu.appendChild(actionButton);
+                alertMenu.appendChild(checkButton);
+
                 document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
             });
         });
-    
+
         function handleActionButtonClick() {
+            // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
+            console.log("Action button clicked");
+        }
+
+        function handleCheckButtonClick() {
             const rectangleId = this.dataset.rectangleId;
-            const actionButton = this;
+            const rectangle = document.getElementById(rectangleId);
+            const checkButton = this;
             let timerSeconds = 60;
-    
-            if (actionButton.disabled) return; // Si ya está deshabilitado, no hacer nada
-    
-            actionButton.classList.remove('active');
-            actionButton.classList.add('inactive');
-            actionButton.disabled = true;
-            actionButton.innerText = `${timerSeconds}s`;
-    
+
+            if (checkButton.disabled) return; // Si ya está deshabilitado, no hacer nada
+
+            checkButton.classList.remove('active');
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+            checkButton.innerText = `${timerSeconds}s`;
+
             if (timerIntervals[rectangleId]) {
                 clearInterval(timerIntervals[rectangleId].interval);
             }
-    
-            const endTime = Date.now() + timerSeconds * 1000;
+
+            const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
+            rectangle.dataset.endTime = endTime;
+
             const intervalId = setInterval(() => {
-                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
+                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
                 if (remainingSeconds <= 0) {
                     clearInterval(intervalId);
-                    actionButton.disabled = false;
-                    actionButton.classList.remove('inactive');
-                    actionButton.classList.add('active');
-                    actionButton.innerText = 'Follow';
-                    delete timerIntervals[rectangleId];
+                    checkButton.disabled = false;
+                    checkButton.classList.remove('inactive');
+                    checkButton.classList.add('active');
+                    checkButton.innerText = 'Check';
+                    delete rectangle.dataset.endTime;
                 } else {
-                    actionButton.innerText = `${remainingSeconds}s`;
+                    checkButton.innerText = `${remainingSeconds}s`;
                 }
             }, 1000);
-    
+
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
-            closeAlertMenu();
         }
-    
+
         function closeAlertMenu() {
             document.getElementById('alertMenu').style.display = 'none';
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
-    
+
         function formatNumber(num) {
-            const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
-            
-            function generateUnit(n) {
-                if (n < basicUnits.length) return basicUnits[n];
-                
-                let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
-                let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
-                return firstChar + secondChar;
-            }
+                    const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
+                    
+                    function generateUnit(n) {
+                        if (n < basicUnits.length) return basicUnits[n];
+                        
+                        let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+                        let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+                        return firstChar + secondChar;
+                    }
 
-            let unitIndex = 0;
-            while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
-                num /= 1000;
-                unitIndex++;
-            }
+                    let unitIndex = 0;
+                    while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+                        num /= 1000;
+                        unitIndex++;
+                    }
 
-            return num.toFixed(2) + generateUnit(unitIndex);
-        }
+                    return num.toFixed(2) + generateUnit(unitIndex);
+                }
 
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
