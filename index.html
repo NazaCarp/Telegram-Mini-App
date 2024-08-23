@@ -475,10 +475,6 @@
       window.location.href = 'mine.html'; // Redirige a la página Mine
     });
 
-    document.getElementById('earnNav').addEventListener('click', function(event) {
-      window.location.href = 'earn.html'; // Redirige a la página Earn
-    });
-
     tg.onEvent('backButtonClicked', () => {
       const activeSection = document.querySelector('.section.active');
       if (activeSection && activeSection.id !== 'home') {
