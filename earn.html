@@ -226,6 +226,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            /*background-color: #004dc0;*/
             background-color: rgb(11, 62, 121);
             border: 3px solid #0066ff;
             border-radius: 20px;
@@ -271,7 +272,7 @@
         <div class="rectangles">
             <div class="rectangle" data-reward="500" id="dailyRewardRectangle">
                 <div class="icon">
-                    <iconify-icon icon="mdi:calendar"></iconify-icon>
+                    <iconify-icon icon="line-md:calendar"></iconify-icon>
                 </div>
                 <div class="text">
                     <h3 style="margin-bottom: 5px;">Daily reward</h3>
@@ -326,216 +327,220 @@
         <button class="action-button" id="actionButton">Follow</button>
         <button class="action-button" id="checkButton">Check</button>
     </div>
-    <div class="daily-reward-menu" id="dailyRewardMenu">
-        <div class="close" onclick="closeDailyRewardMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
-        <h2>Daily Rewards</h2>
-        <div class="calendar" id="dailyRewardsList"></div>
+</div>
+<div class="daily-reward-menu" id="dailyRewardMenu">
+    <div class="close" onclick="closeDailyRewardMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+    <div class="icon">
+        <iconify-icon icon="line-md:calendar"></iconify-icon>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tg = window.Telegram.WebApp;
-            tg.ready();
+    <h2>Daily Rewards</h2>
+    <div class="calendar" id="dailyRewardsList"></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
 
-            tg.onEvent('backButtonClicked', () => {
-                window.location.href = 'index.html';
-            });
+        tg.onEvent('backButtonClicked', () => {
+            window.location.href = 'index.html';
+        });
 
-            tg.BackButton.show();
+        tg.BackButton.show();
 
-            let timerIntervals = {};
-            let actionButtons = {};
+        let timerIntervals = {};
+        let actionButtons = {};
 
-            earnNav.addEventListener('click', function(event) {
-                if (window.location.pathname.includes('earn.html')) {
-                    event.preventDefault();
-                }
-            });
-
-            document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
-                if (rectangle.id !== 'dailyRewardRectangle') {
-                    rectangle.id = `rectangle-${index}`;
-                }
-                rectangle.addEventListener('click', () => {
-                    if (rectangle.id === 'dailyRewardRectangle') {
-                        openDailyRewardMenu();
-                        return;
-                    }
-
-                    const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
-                    const text = rectangle.querySelector('.text h3, .text h4').innerText;
-                    const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
-                    const action = rectangle.getAttribute('data-action');
-
-                    document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
-                    document.getElementById('alertText').innerText = text;
-                    document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
-
-                    // Obtener o crear el botón de acción para este rectángulo
-                    let actionButton = actionButtons[rectangle.id];
-                    if (!actionButton) {
-                        actionButton = document.createElement('button');
-                        actionButton.className = 'action-button active';
-                        actionButton.id = 'actionButton';
-                        actionButton.dataset.rectangleId = rectangle.id;
-                        actionButton.addEventListener('click', handleActionButtonClick);
-                        actionButtons[rectangle.id] = actionButton;
-                    }
-
-                    // Actualizar el texto del botón de acción
-                    actionButton.innerText = action;
-
-                    // Crear el botón de verificación
-                    let checkButton = document.createElement('button');
-                    checkButton.className = 'action-button active';
-                    checkButton.id = 'checkButton';
-                    checkButton.innerText = 'Check';
-                    checkButton.dataset.rectangleId = rectangle.id;
-                    checkButton.addEventListener('click', handleCheckButtonClick);
-
-                    // Verificar si el contador ya ha comenzado
-                    const endTime = rectangle.dataset.endTime;
-                    if (endTime) {
-                        const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                        if (remainingSeconds > 0) {
-                            checkButton.classList.remove('active');
-                            checkButton.classList.add('inactive');
-                            checkButton.disabled = true;
-                            checkButton.innerText = `${remainingSeconds}s`;
-                            const intervalId = setInterval(() => {
-                                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                                if (remainingSeconds <= 0) {
-                                    clearInterval(intervalId);
-                                    checkButton.disabled = false;
-                                    checkButton.classList.remove('inactive');
-                                    checkButton.classList.add('active');
-                                    checkButton.innerText = 'Check';
-                                    delete rectangle.dataset.endTime;
-                                } else {
-                                    checkButton.innerText = `${remainingSeconds}s`;
-                                }
-                            }, 1000);
-                        }
-                    }
-
-                    // Reemplazar los botones existentes con los botones actualizados
-                    const alertMenu = document.getElementById('alertMenu');
-                    const oldActionButton = alertMenu.querySelector('#actionButton');
-                    const oldCheckButton = alertMenu.querySelector('#checkButton');
-                    if (oldActionButton) alertMenu.removeChild(oldActionButton);
-                    if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
-                    alertMenu.appendChild(actionButton);
-                    alertMenu.appendChild(checkButton);
-
-                    document.getElementById('alertMenu').style.display = 'block';
-                    document.querySelector('.container').classList.add('blur-content');
-                    document.querySelector('.navbar').classList.add('blur-content');
-                });
-            });
-
-            function handleActionButtonClick() {
-                // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
-                console.log("Action button clicked");
-            }
-
-            function handleCheckButtonClick() {
-                const rectangleId = this.dataset.rectangleId;
-                const rectangle = document.getElementById(rectangleId);
-                const checkButton = this;
-                let timerSeconds = 60;
-
-                if (checkButton.disabled) return; // Si ya está deshabilitado, no hacer nada
-
-                checkButton.classList.remove('active');
-                checkButton.classList.add('inactive');
-                checkButton.disabled = true;
-                checkButton.innerText = `${timerSeconds}s`;
-
-                if (timerIntervals[rectangleId]) {
-                    clearInterval(timerIntervals[rectangleId].interval);
-                }
-
-                const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
-                rectangle.dataset.endTime = endTime;
-
-                const intervalId = setInterval(() => {
-                    const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                    if (remainingSeconds <= 0) {
-                        clearInterval(intervalId);
-                        checkButton.disabled = false;
-                        checkButton.classList.remove('inactive');
-                        checkButton.classList.add('active');
-                        checkButton.innerText = 'Check';
-                        delete rectangle.dataset.endTime;
-                    } else {
-                        checkButton.innerText = `${remainingSeconds}s`;
-                    }
-                }, 1000);
-
-                timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
-            }
-
-            function closeAlertMenu() {
-                document.getElementById('alertMenu').style.display = 'none';
-                document.querySelector('.container').classList.remove('blur-content');
-                document.querySelector('.navbar').classList.remove('blur-content');
-            }
-
-            function formatNumber(num) {
-                const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
-
-                function generateUnit(n) {
-                    if (n < basicUnits.length) return basicUnits[n];
-
-                    let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
-                    let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
-                    return firstChar + secondChar;
-                }
-
-                let unitIndex = 0;
-                while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
-                    num /= 1000;
-                    unitIndex++;
-                }
-
-                return num.toFixed(2) + generateUnit(unitIndex);
-            }
-
-            document.addEventListener('click', (event) => {
-                const alertMenu = document.getElementById('alertMenu');
-                const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-                if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
-                    closeAlertMenu();
-                    closeDailyRewardMenu();
-                }
-            });
-
-            function openDailyRewardMenu() {
-                const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-                const dailyRewardsList = document.getElementById('dailyRewardsList');
-                dailyRewardsList.innerHTML = '';
-
-                for (let i = 1; i <= 10; i++) {
-                    const day = document.createElement('div');
-                    day.className = 'day';
-                    day.innerHTML = `
-                        <h5 style="margin-bottom: 5px;">Day ${i}</h5>
-                        <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 5px, 10px"></iconify-icon></span>
-                        <h5>${i * 500}</h5>
-                    `;
-                    dailyRewardsList.appendChild(day);
-                }
-
-                dailyRewardMenu.style.display = 'block';
-                document.querySelector('.container').classList.add('blur-content');
-                document.querySelector('.navbar').classList.add('blur-content');
-            }
-
-            function closeDailyRewardMenu() {
-                document.getElementById('dailyRewardMenu').style.display = 'none';
-                document.querySelector('.container').classList.remove('blur-content');
-                document.querySelector('.navbar').classList.remove('blur-content');
+        earnNav.addEventListener('click', function(event) {
+            if (window.location.pathname.includes('earn.html')) {
+                event.preventDefault();
             }
         });
-    </script>
+
+        document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
+            if (rectangle.id !== 'dailyRewardRectangle') {
+                rectangle.id = `rectangle-${index}`;
+            }
+            rectangle.addEventListener('click', () => {
+                if (rectangle.id === 'dailyRewardRectangle') {
+                    openDailyRewardMenu();
+                    return;
+                }
+
+                const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
+                const text = rectangle.querySelector('.text h3, .text h4').innerText;
+                const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
+                const action = rectangle.getAttribute('data-action');
+
+                document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
+                document.getElementById('alertText').innerText = text;
+                document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+
+                // Obtener o crear el botón de acción para este rectángulo
+                let actionButton = actionButtons[rectangle.id];
+                if (!actionButton) {
+                    actionButton = document.createElement('button');
+                    actionButton.className = 'action-button active';
+                    actionButton.id = 'actionButton';
+                    actionButton.dataset.rectangleId = rectangle.id;
+                    actionButton.addEventListener('click', handleActionButtonClick);
+                    actionButtons[rectangle.id] = actionButton;
+                }
+
+                // Actualizar el texto del botón de acción
+                actionButton.innerText = action;
+
+                // Crear el botón de verificación
+                let checkButton = document.createElement('button');
+                checkButton.className = 'action-button active';
+                checkButton.id = 'checkButton';
+                checkButton.innerText = 'Check';
+                checkButton.dataset.rectangleId = rectangle.id;
+                checkButton.addEventListener('click', handleCheckButtonClick);
+
+                // Verificar si el contador ya ha comenzado
+                const endTime = rectangle.dataset.endTime;
+                if (endTime) {
+                    const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                    if (remainingSeconds > 0) {
+                        checkButton.classList.remove('active');
+                        checkButton.classList.add('inactive');
+                        checkButton.disabled = true;
+                        checkButton.innerText = `${remainingSeconds}s`;
+                        const intervalId = setInterval(() => {
+                            const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                            if (remainingSeconds <= 0) {
+                                clearInterval(intervalId);
+                                checkButton.disabled = false;
+                                checkButton.classList.remove('inactive');
+                                checkButton.classList.add('active');
+                                checkButton.innerText = 'Check';
+                                delete rectangle.dataset.endTime;
+                            } else {
+                                checkButton.innerText = `${remainingSeconds}s`;
+                            }
+                        }, 1000);
+                    }
+                }
+
+                // Reemplazar los botones existentes con los botones actualizados
+                const alertMenu = document.getElementById('alertMenu');
+                const oldActionButton = alertMenu.querySelector('#actionButton');
+                const oldCheckButton = alertMenu.querySelector('#checkButton');
+                if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                alertMenu.appendChild(actionButton);
+                alertMenu.appendChild(checkButton);
+
+                document.getElementById('alertMenu').style.display = 'block';
+                document.querySelector('.container').classList.add('blur-content');
+                document.querySelector('.navbar').classList.add('blur-content');
+            });
+        });
+
+        function handleActionButtonClick() {
+            // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
+            console.log("Action button clicked");
+        }
+
+        function handleCheckButtonClick() {
+            const rectangleId = this.dataset.rectangleId;
+            const rectangle = document.getElementById(rectangleId);
+            const checkButton = this;
+            let timerSeconds = 60;
+
+            if (checkButton.disabled) return; // Si ya está deshabilitado, no hacer nada
+
+            checkButton.classList.remove('active');
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+            checkButton.innerText = `${timerSeconds}s`;
+
+            if (timerIntervals[rectangleId]) {
+                clearInterval(timerIntervals[rectangleId].interval);
+            }
+
+            const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
+            rectangle.dataset.endTime = endTime;
+
+            const intervalId = setInterval(() => {
+                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                if (remainingSeconds <= 0) {
+                    clearInterval(intervalId);
+                    checkButton.disabled = false;
+                    checkButton.classList.remove('inactive');
+                    checkButton.classList.add('active');
+                    checkButton.innerText = 'Check';
+                    delete rectangle.dataset.endTime;
+                } else {
+                    checkButton.innerText = `${remainingSeconds}s`;
+                }
+            }, 1000);
+
+            timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+        }
+
+        function closeAlertMenu() {
+            document.getElementById('alertMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
+        }
+
+        function formatNumber(num) {
+            const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
+
+            function generateUnit(n) {
+                if (n < basicUnits.length) return basicUnits[n];
+
+                let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+                let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+                return firstChar + secondChar;
+            }
+
+            let unitIndex = 0;
+            while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+                num /= 1000;
+                unitIndex++;
+            }
+
+            return num.toFixed(2) + generateUnit(unitIndex);
+        }
+
+        document.addEventListener('click', (event) => {
+            const alertMenu = document.getElementById('alertMenu');
+            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
+                closeAlertMenu();
+                closeDailyRewardMenu();
+            }
+        });
+
+        function openDailyRewardMenu() {
+            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+            const dailyRewardsList = document.getElementById('dailyRewardsList');
+            dailyRewardsList.innerHTML = '';
+
+            for (let i = 1; i <= 10; i++) {
+                const day = document.createElement('div');
+                day.className = 'day';
+                day.innerHTML = `
+                    <h5 style="margin-bottom: 5px;">Day ${i}</h5>
+                    <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 5px, 10px"></iconify-icon></span>
+                    <h5>+ ${i * 500}</h5>
+                `;
+                dailyRewardsList.appendChild(day);
+            }
+
+            dailyRewardMenu.style.display = 'block';
+            document.querySelector('.container').classList.add('blur-content');
+            document.querySelector('.navbar').classList.add('blur-content');
+        }
+
+        function closeDailyRewardMenu() {
+            document.getElementById('dailyRewardMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
+        }
+    });
+</script>
 </body>
 </html>
