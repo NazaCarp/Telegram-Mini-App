@@ -319,7 +319,7 @@
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
     </div>
     <div class="alert-menu" id="alertMenu">
-        <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+        <div class="close" data-close="alert"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
         <div class="icon" id="alertIcon"></div>
         <div class="alert-text" id="alertText"></div>
         <div class="subtitle" id="alertSubtitle"></div>
@@ -329,7 +329,7 @@
     </div>
 </div>
 <div class="daily-reward-menu" id="dailyRewardMenu">
-    <div class="close" onclick="closeDailyRewardMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+    <div class="close" data-close="alert"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
     <div class="icon">
         <iconify-icon icon="line-md:calendar"></iconify-icon>
     </div>
@@ -479,6 +479,25 @@
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
         }
 
+        document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
+        document.addEventListener('click', (event) => {
+            const alertMenu = document.getElementById('alertMenu');
+            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
+                closeAlertMenu();
+                closeDailyRewardMenu();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            const alertMenu = document.getElementById('alertMenu');
+            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
+                closeAlertMenu();
+                closeDailyRewardMenu();
+            }
+        });
+
         function closeAlertMenu() {
             document.getElementById('alertMenu').style.display = 'none';
             document.querySelector('.container').classList.remove('blur-content');
@@ -504,15 +523,6 @@
 
             return num.toFixed(2) + generateUnit(unitIndex);
         }
-
-        document.addEventListener('click', (event) => {
-            const alertMenu = document.getElementById('alertMenu');
-            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
-                closeAlertMenu();
-                closeDailyRewardMenu();
-            }
-        });
 
         function openDailyRewardMenu() {
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
@@ -540,6 +550,9 @@
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
+
+        // Asegúrate de que la "X" cierre el menú de recompensa diaria
+        document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
     });
 </script>
 </body>
