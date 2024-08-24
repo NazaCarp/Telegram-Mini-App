@@ -227,7 +227,6 @@
             align-items: center;
             justify-content: center;
             background-color: rgb(11, 62, 121);
-            background-color: #444;
             border: 3px solid #0066ff;
             border-radius: 20px;
             padding: 5px;
@@ -455,7 +454,10 @@
             const checkButton = this;
             let timerSeconds = 60;
 
-            if (checkButton.disabled) return; // Si ya está deshabilitado, no hacer nada
+            if (checkButton.disabled) {
+                shakeButton(checkButton); // Llamar a la función shakeButton si el botón está deshabilitado
+                return; // Si ya está deshabilitado, no hacer nada
+            }
 
             checkButton.classList.remove('active');
             checkButton.classList.add('inactive');
@@ -486,6 +488,23 @@
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
         }
 
+        function shakeButton(button) {
+            const originalPosition = button.style.transform || 'translateX(0)';
+            const shakeAnimation = [
+                { transform: originalPosition },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: originalPosition }
+            ];
+            const shakeTiming = {
+                duration: 500,
+                iterations: 1
+            };
+
+            button.animate(shakeAnimation, shakeTiming);
+        }
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
         
@@ -572,24 +591,6 @@
             console.log(`Day ${dayNumber} clicked`);
             // Por ejemplo, puedes mostrar una alerta o realizar alguna acción específica para ese día
             alert(`You clicked on Day ${dayNumber}`);
-        }
-
-        function shakeButton(button) {
-            const originalPosition = button.style.transform || 'translateX(0)';
-            const shakeAnimation = [
-                { transform: originalPosition },
-                { transform: 'translateX(10px)' },
-                { transform: 'translateX(-10px)' },
-                { transform: 'translateX(10px)' },
-                { transform: 'translateX(-10px)' },
-                { transform: originalPosition }
-            ];
-            const shakeTiming = {
-                duration: 500,
-                iterations: 1
-            };
-
-            button.animate(shakeAnimation, shakeTiming);
         }
     });
 </script>
