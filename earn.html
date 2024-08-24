@@ -484,14 +484,11 @@
             }, 1000);
 
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
-
-            // Aplicar la animación de "shaking"
-            checkButton.classList.add('shake');
         }
 
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
-
+        
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
@@ -575,6 +572,24 @@
             console.log(`Day ${dayNumber} clicked`);
             // Por ejemplo, puedes mostrar una alerta o realizar alguna acción específica para ese día
             alert(`You clicked on Day ${dayNumber}`);
+        }
+
+        function shakeButton(button) {
+            const originalPosition = button.style.transform || 'translateX(0)';
+            const shakeAnimation = [
+                { transform: originalPosition },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: originalPosition }
+            ];
+            const shakeTiming = {
+                duration: 500,
+                iterations: 1
+            };
+
+            button.animate(shakeAnimation, shakeTiming);
         }
     });
 </script>
