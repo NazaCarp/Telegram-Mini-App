@@ -241,6 +241,18 @@
         .daily-reward-menu .day:last-child:nth-child(3n - 2) {
             grid-column: 1 / 4;
         }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(10px); }
+            50% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -484,9 +496,10 @@
 
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
         }
+
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
-        
+
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
