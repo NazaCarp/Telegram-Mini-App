@@ -226,11 +226,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: rgb(11, 62, 121);
             border: 3px solid #0066ff;
             border-radius: 20px;
             padding: 5px;
             font-size: 18px;
+            cursor: pointer;
         }
 
         .daily-reward-menu .day:last-child:nth-child(3n - 1) {
@@ -526,14 +526,18 @@
             const dailyRewardsList = document.getElementById('dailyRewardsList');
             dailyRewardsList.innerHTML = '';
 
+            const colors = ['rgb(11, 62, 121)', '#444'];
+
             for (let i = 1; i <= 10; i++) {
                 const day = document.createElement('div');
                 day.className = 'day';
+                day.style.backgroundColor = colors[(i - 1) % 2];
                 day.innerHTML = `
                     <h5 style="margin-bottom: 5px;">Day ${i}</h5>
-                    <span><iconify-icon icon="twemoji:coin" style="font-size: 30px;"></iconify-icon></span>
+                    <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 10px, 10px"></iconify-icon></span>
                     <h5>${i * 500}</h5>
                 `;
+                day.addEventListener('click', () => handleDayClick(i));
                 dailyRewardsList.appendChild(day);
             }
 
@@ -561,6 +565,13 @@
                     lastDay.style.gridColumn = '1 / 4';
                 }
             }
+        }
+
+        function handleDayClick(dayNumber) {
+            // Aquí puedes agregar la lógica para manejar el clic en un día específico
+            console.log(`Day ${dayNumber} clicked`);
+            // Por ejemplo, puedes mostrar una alerta o realizar alguna acción específica para ese día
+            alert(`You clicked on Day ${dayNumber}`);
         }
     });
 </script>
