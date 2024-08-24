@@ -227,7 +227,7 @@
             align-items: center;
             justify-content: center;
             background-color: #444;
-            border: 2px solid white;
+            border: 3px solid #0066ff;
             border-radius: 20px;
             padding: 10px;
             font-size: 18px;
@@ -353,7 +353,7 @@
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
             rectangle.id = `rectangle-${index}`;
             rectangle.addEventListener('click', () => {
-                if (1 === 1) {
+                if (rectangle.id === 'dailyRewardRectangle') {
                     openDailyRewardMenu();
                     return;
                 }
