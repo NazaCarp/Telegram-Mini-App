@@ -353,7 +353,7 @@
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
             rectangle.id = `rectangle-${index}`;
             rectangle.addEventListener('click', () => {
-                if (rectangle.id === 'dailyRewardRectangle') {
+                if (rectangle.id === 'dailyRewardRectangle' || rectangle.id === `rectangle-${index}`) {
                     openDailyRewardMenu();
                     return;
                 }
