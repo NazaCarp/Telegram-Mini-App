@@ -222,7 +222,7 @@
 
         .daily-reward-menu .calendar {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-top: 20px;
         }
@@ -525,8 +525,9 @@
                 const day = document.createElement('div');
                 day.className = 'day';
                 day.innerHTML = `
-                    <span>Day ${i}</span>
-                    <span class="reward">${i * 500}</span>
+                    <span style="margin: 5px">Day ${i}</span>
+                    <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 5px, 10px"></iconify-icon></span>
+                    <span class="reward" style="margin: 0px">+ ${i * 500}</span>
                 `;
                 dailyRewardsList.appendChild(day);
             }
