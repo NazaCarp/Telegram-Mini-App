@@ -478,21 +478,13 @@
 
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
         }
-
+        document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
+        
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
             if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
-                closeAlertMenu();
-                closeDailyRewardMenu();
-            }
-        });
-
-        document.addEventListener('click', (event) => {
-            const alertMenu = document.getElementById('alertMenu');
-            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
                 closeAlertMenu();
                 closeDailyRewardMenu();
             }
@@ -550,9 +542,6 @@
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
-
-        // Asegúrate de que la "X" cierre el menú de recompensa diaria
-        document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
     });
 </script>
 </body>
