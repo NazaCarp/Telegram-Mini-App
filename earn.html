@@ -226,7 +226,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: #444;
+            background-color: #004dc0;
             border: 3px solid #0066ff;
             border-radius: 20px;
             padding: 10px;
@@ -332,34 +332,35 @@
         <div class="calendar" id="dailyRewardsList"></div>
     </div>
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
+        document.addEventListener('DOMContentLoaded', () => {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
 
-        tg.onEvent('backButtonClicked', () => {
-            window.location.href = 'index.html';
-        });
+            tg.onEvent('backButtonClicked', () => {
+                window.location.href = 'index.html';
+            });
 
-        tg.BackButton.show();
+            tg.BackButton.show();
 
-        let timerIntervals = {};
-        let actionButtons = {};
+            let timerIntervals = {};
+            let actionButtons = {};
 
-        earnNav.addEventListener('click', function(event) {
-            if (window.location.pathname.includes('earn.html')) {
-                event.preventDefault();
-            }
-        });
+            earnNav.addEventListener('click', function(event) {
+                if (window.location.pathname.includes('earn.html')) {
+                    event.preventDefault();
+                }
+            });
 
-        document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
-            if (rectangle.id !== 'dailyRewardRectangle') {
-                rectangle.id = `rectangle-${index}`;
-            }
-            rectangle.addEventListener('click', () => {
-                if (rectangle.id === 'dailyRewardRectangle') {
-                    openDailyRewardMenu();
-                    return;
+            document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
+                if (rectangle.id !== 'dailyRewardRectangle') {
+                    rectangle.id = `rectangle-${index}`;
                 }
                 rectangle.addEventListener('click', () => {
+                    if (rectangle.id === 'dailyRewardRectangle') {
+                        openDailyRewardMenu();
+                        return;
+                    }
+
                     const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                     const text = rectangle.querySelector('.text h3, .text h4').innerText;
                     const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
@@ -368,7 +369,7 @@
                     document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                     document.getElementById('alertText').innerText = text;
                     document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
-                    
+
                     // Obtener o crear el botón de acción para este rectángulo
                     let actionButton = actionButtons[rectangle.id];
                     if (!actionButton) {
@@ -430,111 +431,111 @@
                     document.querySelector('.navbar').classList.add('blur-content');
                 });
             });
-        });
 
-        function handleActionButtonClick() {
-            // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
-            console.log("Action button clicked");
-        }
-
-        function handleCheckButtonClick() {
-            const rectangleId = this.dataset.rectangleId;
-            const rectangle = document.getElementById(rectangleId);
-            const checkButton = this;
-            let timerSeconds = 60;
-
-            if (checkButton.disabled) return; // Si ya está deshabilitado, no hacer nada
-
-            checkButton.classList.remove('active');
-            checkButton.classList.add('inactive');
-            checkButton.disabled = true;
-            checkButton.innerText = `${timerSeconds}s`;
-
-            if (timerIntervals[rectangleId]) {
-                clearInterval(timerIntervals[rectangleId].interval);
+            function handleActionButtonClick() {
+                // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
+                console.log("Action button clicked");
             }
 
-            const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
-            rectangle.dataset.endTime = endTime;
+            function handleCheckButtonClick() {
+                const rectangleId = this.dataset.rectangleId;
+                const rectangle = document.getElementById(rectangleId);
+                const checkButton = this;
+                let timerSeconds = 60;
 
-            const intervalId = setInterval(() => {
-                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                if (remainingSeconds <= 0) {
-                    clearInterval(intervalId);
-                    checkButton.disabled = false;
-                    checkButton.classList.remove('inactive');
-                    checkButton.classList.add('active');
-                    checkButton.innerText = 'Check';
-                    delete rectangle.dataset.endTime;
-                } else {
-                    checkButton.innerText = `${remainingSeconds}s`;
+                if (checkButton.disabled) return; // Si ya está deshabilitado, no hacer nada
+
+                checkButton.classList.remove('active');
+                checkButton.classList.add('inactive');
+                checkButton.disabled = true;
+                checkButton.innerText = `${timerSeconds}s`;
+
+                if (timerIntervals[rectangleId]) {
+                    clearInterval(timerIntervals[rectangleId].interval);
                 }
-            }, 1000);
 
-            timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
-        }
+                const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
+                rectangle.dataset.endTime = endTime;
 
-        function closeAlertMenu() {
-            document.getElementById('alertMenu').style.display = 'none';
-            document.querySelector('.container').classList.remove('blur-content');
-            document.querySelector('.navbar').classList.remove('blur-content');
-        }
+                const intervalId = setInterval(() => {
+                    const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                    if (remainingSeconds <= 0) {
+                        clearInterval(intervalId);
+                        checkButton.disabled = false;
+                        checkButton.classList.remove('inactive');
+                        checkButton.classList.add('active');
+                        checkButton.innerText = 'Check';
+                        delete rectangle.dataset.endTime;
+                    } else {
+                        checkButton.innerText = `${remainingSeconds}s`;
+                    }
+                }, 1000);
 
-        function formatNumber(num) {
-            const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
-            
-            function generateUnit(n) {
-                if (n < basicUnits.length) return basicUnits[n];
-                
-                let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
-                let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
-                return firstChar + secondChar;
+                timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
             }
 
-            let unitIndex = 0;
-            while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
-                num /= 1000;
-                unitIndex++;
+            function closeAlertMenu() {
+                document.getElementById('alertMenu').style.display = 'none';
+                document.querySelector('.container').classList.remove('blur-content');
+                document.querySelector('.navbar').classList.remove('blur-content');
             }
 
-            return num.toFixed(2) + generateUnit(unitIndex);
-        }
+            function formatNumber(num) {
+                const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
 
-        document.addEventListener('click', (event) => {
-            const alertMenu = document.getElementById('alertMenu');
-            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
-                closeAlertMenu();
-                closeDailyRewardMenu();
+                function generateUnit(n) {
+                    if (n < basicUnits.length) return basicUnits[n];
+
+                    let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+                    let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+                    return firstChar + secondChar;
+                }
+
+                let unitIndex = 0;
+                while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+                    num /= 1000;
+                    unitIndex++;
+                }
+
+                return num.toFixed(2) + generateUnit(unitIndex);
+            }
+
+            document.addEventListener('click', (event) => {
+                const alertMenu = document.getElementById('alertMenu');
+                const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+                if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
+                    closeAlertMenu();
+                    closeDailyRewardMenu();
+                }
+            });
+
+            function openDailyRewardMenu() {
+                const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+                const dailyRewardsList = document.getElementById('dailyRewardsList');
+                dailyRewardsList.innerHTML = '';
+
+                for (let i = 1; i <= 10; i++) {
+                    const day = document.createElement('div');
+                    day.className = 'day';
+                    day.innerHTML = `
+                        <span style="font-size: 15px; margin-bottom: 5px; font-weight: bold">Day ${i}</span>
+                        <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 5px, 10px"></iconify-icon></span>
+                        <span style="font-size: 15px; color: yellow; font-weight: bold">+ ${i * 500}</span>
+                    `;
+                    dailyRewardsList.appendChild(day);
+                }
+
+                dailyRewardMenu.style.display = 'block';
+                document.querySelector('.container').classList.add('blur-content');
+                document.querySelector('.navbar').classList.add('blur-content');
+            }
+
+            function closeDailyRewardMenu() {
+                document.getElementById('dailyRewardMenu').style.display = 'none';
+                document.querySelector('.container').classList.remove('blur-content');
+                document.querySelector('.navbar').classList.remove('blur-content');
             }
         });
-
-        function openDailyRewardMenu() {
-            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            const dailyRewardsList = document.getElementById('dailyRewardsList');
-            dailyRewardsList.innerHTML = '';
-
-            for (let i = 1; i <= 10; i++) {
-                const day = document.createElement('div');
-                day.className = 'day';
-                day.innerHTML = `
-                    <span style="font-size: 15px; margin-bottom: 5px; font-weight: bold">Day ${i}</span>
-                    <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 5px, 10px"></iconify-icon></span>
-                    <span style="font-size: 15px; color: yellow; font-weight: bold">+ ${i * 500}</span>
-                `;
-                dailyRewardsList.appendChild(day);
-            }
-
-            dailyRewardMenu.style.display = 'block';
-            document.querySelector('.container').classList.add('blur-content');
-            document.querySelector('.navbar').classList.add('blur-content');
-        }
-
-        function closeDailyRewardMenu() {
-            document.getElementById('dailyRewardMenu').style.display = 'none';
-            document.querySelector('.container').classList.remove('blur-content');
-            document.querySelector('.navbar').classList.remove('blur-content');
-        }
     </script>
 </body>
 </html>
