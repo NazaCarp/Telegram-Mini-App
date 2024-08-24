@@ -518,9 +518,9 @@
                     const day = document.createElement('div');
                     day.className = 'day';
                     day.innerHTML = `
-                        <span style="font-size: 15px; margin-bottom: 5px; font-weight: bold">Day ${i}</span>
+                        <h5 style="margin-bottom: 5px;">Day ${i}</h5>
                         <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 5px, 10px"></iconify-icon></span>
-                        <span style="font-size: 15px; font-weight: bold">+ ${i * 500}</span>
+                        <h5>${i * 500}</h5>
                     `;
                     dailyRewardsList.appendChild(day);
                 }
