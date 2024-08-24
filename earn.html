@@ -227,6 +227,7 @@
             align-items: center;
             justify-content: center;
             background-color: rgb(11, 62, 121);
+            background-color: #444;
             border: 3px solid #0066ff;
             border-radius: 20px;
             padding: 5px;
@@ -240,18 +241,6 @@
 
         .daily-reward-menu .day:last-child:nth-child(3n - 2) {
             grid-column: 1 / 4;
-        }
-
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(10px); }
-            50% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-            100% { transform: translateX(0); }
-        }
-
-        .shake {
-            animation: shake 0.5s;
         }
     </style>
 </head>
@@ -495,6 +484,9 @@
             }, 1000);
 
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+
+            // Aplicar la animación de "shaking"
+            checkButton.classList.add('shake');
         }
 
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
