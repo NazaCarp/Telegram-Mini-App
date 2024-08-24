@@ -351,81 +351,84 @@
         });
 
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
-            rectangle.id = `rectangle-${index}`;
+            if (rectangle.id !== 'dailyRewardRectangle') {
+                rectangle.id = `rectangle-${index}`;
+            }
             rectangle.addEventListener('click', () => {
-                if (rectangle.id === 'dailyRewardRectangle' || rectangle.id === `rectangle-${index}`) {
+                if (rectangle.id === 'dailyRewardRectangle') {
                     openDailyRewardMenu();
                     return;
                 }
+                rectangle.addEventListener('click', () => {
+                    const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
+                    const text = rectangle.querySelector('.text h3, .text h4').innerText;
+                    const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
+                    const action = rectangle.getAttribute('data-action');
 
-                const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
-                const text = rectangle.querySelector('.text h3, .text h4').innerText;
-                const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
-                const action = rectangle.getAttribute('data-action');
-
-                document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
-                document.getElementById('alertText').innerText = text;
-                document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
-                
-                // Obtener o crear el botón de acción para este rectángulo
-                let actionButton = actionButtons[rectangle.id];
-                if (!actionButton) {
-                    actionButton = document.createElement('button');
-                    actionButton.className = 'action-button active';
-                    actionButton.id = 'actionButton';
-                    actionButton.dataset.rectangleId = rectangle.id;
-                    actionButton.addEventListener('click', handleActionButtonClick);
-                    actionButtons[rectangle.id] = actionButton;
-                }
-
-                // Actualizar el texto del botón de acción
-                actionButton.innerText = action;
-
-                // Crear el botón de verificación
-                let checkButton = document.createElement('button');
-                checkButton.className = 'action-button active';
-                checkButton.id = 'checkButton';
-                checkButton.innerText = 'Check';
-                checkButton.dataset.rectangleId = rectangle.id;
-                checkButton.addEventListener('click', handleCheckButtonClick);
-
-                // Verificar si el contador ya ha comenzado
-                const endTime = rectangle.dataset.endTime;
-                if (endTime) {
-                    const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                    if (remainingSeconds > 0) {
-                        checkButton.classList.remove('active');
-                        checkButton.classList.add('inactive');
-                        checkButton.disabled = true;
-                        checkButton.innerText = `${remainingSeconds}s`;
-                        const intervalId = setInterval(() => {
-                            const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                            if (remainingSeconds <= 0) {
-                                clearInterval(intervalId);
-                                checkButton.disabled = false;
-                                checkButton.classList.remove('inactive');
-                                checkButton.classList.add('active');
-                                checkButton.innerText = 'Check';
-                                delete rectangle.dataset.endTime;
-                            } else {
-                                checkButton.innerText = `${remainingSeconds}s`;
-                            }
-                        }, 1000);
+                    document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
+                    document.getElementById('alertText').innerText = text;
+                    document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+                    
+                    // Obtener o crear el botón de acción para este rectángulo
+                    let actionButton = actionButtons[rectangle.id];
+                    if (!actionButton) {
+                        actionButton = document.createElement('button');
+                        actionButton.className = 'action-button active';
+                        actionButton.id = 'actionButton';
+                        actionButton.dataset.rectangleId = rectangle.id;
+                        actionButton.addEventListener('click', handleActionButtonClick);
+                        actionButtons[rectangle.id] = actionButton;
                     }
-                }
 
-                // Reemplazar los botones existentes con los botones actualizados
-                const alertMenu = document.getElementById('alertMenu');
-                const oldActionButton = alertMenu.querySelector('#actionButton');
-                const oldCheckButton = alertMenu.querySelector('#checkButton');
-                if (oldActionButton) alertMenu.removeChild(oldActionButton);
-                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
-                alertMenu.appendChild(actionButton);
-                alertMenu.appendChild(checkButton);
+                    // Actualizar el texto del botón de acción
+                    actionButton.innerText = action;
 
-                document.getElementById('alertMenu').style.display = 'block';
-                document.querySelector('.container').classList.add('blur-content');
-                document.querySelector('.navbar').classList.add('blur-content');
+                    // Crear el botón de verificación
+                    let checkButton = document.createElement('button');
+                    checkButton.className = 'action-button active';
+                    checkButton.id = 'checkButton';
+                    checkButton.innerText = 'Check';
+                    checkButton.dataset.rectangleId = rectangle.id;
+                    checkButton.addEventListener('click', handleCheckButtonClick);
+
+                    // Verificar si el contador ya ha comenzado
+                    const endTime = rectangle.dataset.endTime;
+                    if (endTime) {
+                        const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                        if (remainingSeconds > 0) {
+                            checkButton.classList.remove('active');
+                            checkButton.classList.add('inactive');
+                            checkButton.disabled = true;
+                            checkButton.innerText = `${remainingSeconds}s`;
+                            const intervalId = setInterval(() => {
+                                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                                if (remainingSeconds <= 0) {
+                                    clearInterval(intervalId);
+                                    checkButton.disabled = false;
+                                    checkButton.classList.remove('inactive');
+                                    checkButton.classList.add('active');
+                                    checkButton.innerText = 'Check';
+                                    delete rectangle.dataset.endTime;
+                                } else {
+                                    checkButton.innerText = `${remainingSeconds}s`;
+                                }
+                            }, 1000);
+                        }
+                    }
+
+                    // Reemplazar los botones existentes con los botones actualizados
+                    const alertMenu = document.getElementById('alertMenu');
+                    const oldActionButton = alertMenu.querySelector('#actionButton');
+                    const oldCheckButton = alertMenu.querySelector('#checkButton');
+                    if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                    if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                    alertMenu.appendChild(actionButton);
+                    alertMenu.appendChild(checkButton);
+
+                    document.getElementById('alertMenu').style.display = 'block';
+                    document.querySelector('.container').classList.add('blur-content');
+                    document.querySelector('.navbar').classList.add('blur-content');
+                });
             });
         });
 
