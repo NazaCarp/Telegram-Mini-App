@@ -346,6 +346,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram.WebApp;
         tg.ready();
+        let disabled = false
 
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
@@ -448,20 +449,20 @@
             console.log("Action button clicked");
         }
 
-        function handleCheckButtonClick() {
-            const rectangleId = this.dataset.rectangleId;
+        function handleCheckButtonClick(event) {
+            const checkButton = event.target;
+            const rectangleId = checkButton.dataset.rectangleId;
             const rectangle = document.getElementById(rectangleId);
-            const checkButton = this;
             let timerSeconds = 60;
 
-            if (checkButton.disabled) {
+            if (disabled) {
                 shakeButton(checkButton); // Llamar a la función shakeButton si el botón está deshabilitado
-                return; // Si ya está deshabilitado, no hacer nada
+                return
             }
 
             checkButton.classList.remove('active');
             checkButton.classList.add('inactive');
-            checkButton.disabled = true;
+            disabled = true;
             checkButton.innerText = `${timerSeconds}s`;
 
             if (timerIntervals[rectangleId]) {
@@ -488,26 +489,16 @@
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
         }
 
-        function shakeButton(button) {
-            const originalPosition = button.style.transform || 'translateX(0)';
-            const shakeAnimation = [
-                { transform: originalPosition },
-                { transform: 'translateX(10px)' },
-                { transform: 'translateX(-10px)' },
-                { transform: 'translateX(10px)' },
-                { transform: 'translateX(-10px)' },
-                { transform: originalPosition }
-            ];
-            const shakeTiming = {
-                duration: 500,
-                iterations: 1
-            };
+        document.addEventListener('mousedown', (event) => {
+            const checkButton = event.target.closest('#checkButton');
+            if (checkButton && checkButton.disabled) {
+                shakeButton(checkButton);
+            }
+        });
 
-            button.animate(shakeAnimation, shakeTiming);
-        }
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
-        
+
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
@@ -591,6 +582,24 @@
             console.log(`Day ${dayNumber} clicked`);
             // Por ejemplo, puedes mostrar una alerta o realizar alguna acción específica para ese día
             alert(`You clicked on Day ${dayNumber}`);
+        }
+
+        function shakeButton(button) {
+            const originalPosition = button.style.transform || 'translateX(0)';
+            const shakeAnimation = [
+                { transform: originalPosition },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: originalPosition }
+            ];
+            const shakeTiming = {
+                duration: 500,
+                iterations: 1
+            };
+
+            button.animate(shakeAnimation, shakeTiming);
         }
     });
 </script>
