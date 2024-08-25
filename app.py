@@ -302,7 +302,7 @@ def claim_daily_reward():
         if counter.last_daily_reward_claimed:
             time_since_last_claim = now - counter.last_daily_reward_claimed
             if time_since_last_claim < timedelta(days=1):
-                return jsonify({'error': 'Reward already claimed today'}), 400
+                counter.daily_reward_streak += 1
             elif time_since_last_claim >= timedelta(days=2):
                 counter.daily_reward_streak = 1  # Reset streak if more than 1 day has passed
             else:
