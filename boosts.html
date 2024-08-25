@@ -433,17 +433,15 @@
                     body: JSON.stringify({
                         user_id: user_id,
                         score: newScore,
-                        boost_type: boostType,
-                        cost: cost
+                        boost_type: boostType
                     })
                 });
 
                 const result = await response.json();
                 if (result.status === 'success') {
-                    document.getElementById('scoreText').innerText = newScore.toFixed(3);
+                    score = newScore
                     closeAlertMenu();
                     loadUserData();
-                    localStorage.setItem('score', newScore);
 
                     // Activar la animación correspondiente
                     if (boostType === 'multitap') {

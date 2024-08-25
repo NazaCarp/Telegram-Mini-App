@@ -237,10 +237,7 @@
       if (elapsedTime < 10800) {
         score += elapsedTime * profitPerHour / 3600
       } else {
-        alert(`elapsedTime es igual a ${elapsedTime}`)
-        alert(`score es igual a ${score}`)
         score += profitPerHour * 3
-        alert(`score ahora es igual a ${score}`)
       }
       secondaryCount += elapsedTime * rechargeSpeed; // Usar rechargeSpeed
       if (secondaryCount > energyLimit) { // Usar energyLimit

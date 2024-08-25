@@ -183,9 +183,8 @@ def update_boost():
     user_id = data.get('user_id')
     score = data.get('score')
     boost_type = data.get('boost_type')
-    cost = data.get('cost')
 
-    if not all([user_id, score, boost_type, cost]):
+    if not all([user_id, score, boost_type]):
         return jsonify({'error': 'Missing required fields'}), 400
 
     try:
