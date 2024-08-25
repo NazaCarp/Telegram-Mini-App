@@ -1,5 +1,5 @@
 from sqlalchemy.orm.attributes import flag_modified
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter, Referral, MineLevels
@@ -300,9 +300,11 @@ def claim_daily_reward():
         if not counter:
             return jsonify({'error': 'User not found'}), 404
 
-        now = datetime.utcnow()
+        now = datetime.utcnow().replace(tzinfo=timezone.utc)
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
         if counter.last_daily_reward_claimed:
-            time_since_last_claim = now - counter.last_daily_reward_claimed
+            time_since_last_claim = today - counter.last_daily_reward_claimed.replace(tzinfo=timezone.utc)
             if time_since_last_claim < timedelta(days=1):
                 return jsonify({'error': 'Reward already claimed today'}), 400
             elif time_since_last_claim >= timedelta(days=2):

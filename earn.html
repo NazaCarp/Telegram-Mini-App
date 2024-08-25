@@ -556,8 +556,8 @@
 
             const streak = data.daily_reward_streak || 0;
             const lastClaimed = data.last_daily_reward_claimed ? new Date(data.last_daily_reward_claimed) : null;
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche para comparar solo la fecha
+            const now = new Date();
+            const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())); // Establecer la hora a medianoche UTC
 
             for (let i = 1; i <= 10; i++) {
                 const day = document.createElement('div');
@@ -571,7 +571,9 @@
                 if (i <= streak) {
                     day.classList.add('claimed');
                 } else if (i === streak + 1) {
-                    if (!lastClaimed && lastClaimed < today) {
+                    if (lastClaimed && lastClaimed >= today) {
+                        day.classList.add('claimed'); // El día actual ya ha sido reclamado
+                    } else {
                         day.classList.add('available');
                         day.addEventListener('click', () => handleDayClick(i));
                     }
