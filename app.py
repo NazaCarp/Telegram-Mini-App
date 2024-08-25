@@ -1,5 +1,5 @@
 from sqlalchemy.orm.attributes import flag_modified
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter, Referral, MineLevels
@@ -282,6 +282,43 @@ def update_profit_per_hour():
     
     except Exception as e:
         logging.error(f"Error in update_counters: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/claim_daily_reward', methods=['POST'])
+def claim_daily_reward():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+
+    try:
+        db = SessionLocal()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        if not counter:
+            return jsonify({'error': 'User not found'}), 404
+
+        now = datetime.utcnow()
+        if counter.last_daily_reward_claimed:
+            time_since_last_claim = now - counter.last_daily_reward_claimed
+            if time_since_last_claim < timedelta(days=1):
+                return jsonify({'error': 'Reward already claimed today'}), 400
+            elif time_since_last_claim >= timedelta(days=2):
+                counter.daily_reward_streak = 1  # Reset streak if more than 1 day has passed
+            else:
+                counter.daily_reward_streak += 1
+        else:
+            counter.daily_reward_streak = 1
+
+        reward_amount = counter.daily_reward_streak * 500
+        counter.score += reward_amount
+        counter.last_daily_reward_claimed = now
+        db.commit()
+
+        return jsonify({'status': 'success', 'reward_amount': reward_amount, 'streak': counter.daily_reward_streak})
+
+    except Exception as e:
+        logging.error(f"Error in claim_daily_reward: {e}")
         return jsonify({'error': str(e)}), 500
 
 

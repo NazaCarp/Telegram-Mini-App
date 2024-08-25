@@ -19,6 +19,8 @@ class Counter(Base):
     energy_limit = Column(Integer, default=1000)
     recharge_speed = Column(Integer, default=1)
     profit_per_hour = Column(BigInteger, default=10)
+    daily_reward_streak = Column(Integer, default=0)
+    last_daily_reward_claimed = Column(DateTime, default=None)
 
 
 class Referral(Base):
