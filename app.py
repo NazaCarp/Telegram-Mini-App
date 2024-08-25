@@ -43,7 +43,7 @@ def get_counters():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, name=name, username=username, score=0.0, secondarycount=0, tap=1, energy_limit=1000, recharge_speed=1, profit_per_hour=0, daily_reward_streak=0)
+            counter = Counter(user_id=user_id, name=name, username=username, score=0.0, secondarycount=0, timestamp=datetime.utcnow(), tap=1, energy_limit=1000, recharge_speed=1, profit_per_hour=0, daily_reward_streak=0, last_daily_reward_claimed=None)
             db.add(counter)
             db.commit()
 
@@ -169,7 +169,8 @@ def get_user_data():
             'energy_limit': counter.energy_limit,
             'recharge_speed': counter.recharge_speed,
             'profit_per_hour': counter.profit_per_hour,
-            'daily_reward_streak': counter.daily_reward_streak
+            'daily_reward_streak': counter.daily_reward_streak,
+            'last_daily_reward_claimed': counter.last_daily_reward_claimed
         })
     except Exception as e:
         logging.error(f"Error in get_user_data: {e}")
