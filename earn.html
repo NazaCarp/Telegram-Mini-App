@@ -565,7 +565,7 @@
             if (lastClaimed && lastClaimed >= today) {
                 arrowIconElement.setAttribute('icon', 'openmoji:check-mark');
                 arrowIconElement.style.fontSize = '35px';
-                arrowIconElement.style.transform = 'none'; // Asegurarse de que no se aplique transform: scaleX(-1)
+                arrowIconElement.style.transform = 'scaleX(-1)'; // Asegurarse de que no se aplique transform: scaleX(-1)
             } else {
                 arrowIconElement.setAttribute('icon', 'iconamoon:arrow-left-2-bold');
                 arrowIconElement.style.fontSize = '25px';
