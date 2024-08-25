@@ -572,10 +572,14 @@
                 } else if (i === streak + 1) {
                     if (lastClaimed && lastClaimed >= today) {
                         day.classList.add('claimed'); // El día actual ya ha sido reclamado
-                    } else {
+                    } else if (i === streak + 1 && today >= lastClaimed) {
                         day.classList.add('available');
                         day.addEventListener('click', () => handleDayClick(i));
+                    } else {
+                        day.style.backgroundColor = '#444'; // Día siguiente al último reclamado pero no es el día actual
                     }
+                } else {
+                    day.style.backgroundColor = '#444'; // Días no disponibles
                 }
                 dailyRewardsList.appendChild(day);
             }
