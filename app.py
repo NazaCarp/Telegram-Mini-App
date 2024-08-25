@@ -43,7 +43,7 @@ def get_counters():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, name=name, username=username, score=0.0, secondarycount=0, tap=1, energy_limit=1000, recharge_speed=1, profit_per_hour=0)
+            counter = Counter(user_id=user_id, name=name, username=username, score=0.0, secondarycount=0, tap=1, energy_limit=1000, recharge_speed=1, profit_per_hour=0, daily_reward_streak=0)
             db.add(counter)
             db.commit()
 
