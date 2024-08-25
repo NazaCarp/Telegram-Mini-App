@@ -571,9 +571,7 @@
                 if (i <= streak) {
                     day.classList.add('claimed');
                 } else if (i === streak + 1) {
-                    if (lastClaimed && lastClaimed >= today) {
-                        day.classList.add('claimed'); // El día actual ya ha sido reclamado
-                    } else {
+                    if (!lastClaimed && lastClaimed < today) {
                         day.classList.add('available');
                         day.addEventListener('click', () => handleDayClick(i));
                     }
