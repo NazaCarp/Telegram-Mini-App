@@ -565,8 +565,7 @@
             const arrowIconElement = dailyRewardRectangle.querySelector('.icon:last-child iconify-icon');
             if (lastClaimed && lastClaimed >= today) {
                 arrowIconElement.setAttribute('icon', 'openmoji:check-mark');
-                arrowIconElement.style = 'fontSize: 35px';
-                arrowIconElement.style.transform = 'none';
+                arrowIconElement.style = 'font-size: 35px';
             } else {
                 arrowIconElement.setAttribute('icon', 'iconamoon:arrow-left-2-bold');
                 arrowIconElement.style.fontSize = '25px';
