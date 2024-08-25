@@ -554,6 +554,9 @@
             const data = await response.json();
 
             const streak = data.daily_reward_streak || 0;
+            const lastClaimed = data.last_daily_reward_claimed ? new Date(data.last_daily_reward_claimed) : null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche para comparar solo la fecha
 
             for (let i = 1; i <= 10; i++) {
                 const day = document.createElement('div');
@@ -563,11 +566,16 @@
                     <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 10px, 10px"></iconify-icon></span>
                     <h5>${i * 500}</h5>
                 `;
+
                 if (i <= streak) {
                     day.classList.add('claimed');
                 } else if (i === streak + 1) {
-                    day.classList.add('available');
-                    day.addEventListener('click', () => handleDayClick(i));
+                    if (lastClaimed && lastClaimed >= today) {
+                        day.classList.add('claimed'); // El día actual ya ha sido reclamado
+                    } else {
+                        day.classList.add('available');
+                        day.addEventListener('click', () => handleDayClick(i));
+                    }
                 }
                 dailyRewardsList.appendChild(day);
             }
