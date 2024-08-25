@@ -226,12 +226,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: rgb(11, 62, 121);
+            background-color: #444; /* No disponible por defecto */
             border: 3px solid #0066ff;
             border-radius: 20px;
             padding: 5px;
             font-size: 18px;
             cursor: pointer;
+        }
+
+        .daily-reward-menu .day.claimed {
+            background-color: #0066ff; /* Ya reclamado */
+            cursor: default;
+        }
+
+        .daily-reward-menu .day.available {
+            background-color: rgb(11, 62, 121); /* Disponible para reclamar */
         }
 
         .daily-reward-menu .day:last-child:nth-child(3n - 1) {
@@ -538,14 +547,14 @@
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
             const dailyRewardsList = document.getElementById('dailyRewardsList');
             dailyRewardsList.innerHTML = '';
-    
+
             // Obtener el estado de las recompensas diarias del usuario
             const user_id = tg.initDataUnsafe.user.id;
             const response = await fetch(`/get_user_data?user_id=${user_id}`);
             const data = await response.json();
-    
+
             const streak = data.daily_reward_streak || 0;
-    
+
             for (let i = 1; i <= 10; i++) {
                 const day = document.createElement('div');
                 day.className = 'day';
@@ -557,16 +566,15 @@
                 if (i <= streak) {
                     day.classList.add('claimed');
                 } else if (i === streak + 1) {
+                    day.classList.add('available');
                     day.addEventListener('click', () => handleDayClick(i));
-                } else {
-                    day.classList.add('disabled');
                 }
                 dailyRewardsList.appendChild(day);
             }
-    
+
             // Ajustar el tamaño del último rectángulo
             adjustLastRectangle();
-    
+
             dailyRewardMenu.style.display = 'block';
             document.querySelector('.container').classList.add('blur-content');
             document.querySelector('.navbar').classList.add('blur-content');
