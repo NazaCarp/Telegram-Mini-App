@@ -393,7 +393,7 @@
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertSubtitle').innerText = subtitle;
                 document.getElementById('alertSecondSubtitle').innerText = secondSubtitle;
-                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(cost)}</p>`;
+                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${cost}</p>`;
                 document.getElementById('alertCost').classList.remove('yellow', 'gray');
                 document.getElementById('alertCost').classList.add(costColor);
                 document.getElementById('actionButton').classList.remove('active', 'inactive');
