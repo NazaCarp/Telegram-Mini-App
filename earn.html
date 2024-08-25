@@ -555,6 +555,7 @@
 
             const streak = data.daily_reward_streak || 0;
             const lastClaimed = data.last_daily_reward_claimed ? new Date(data.last_daily_reward_claimed) : null;
+            alert(lastClaimed)
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche para comparar solo la fecha
 
