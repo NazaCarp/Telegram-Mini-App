@@ -559,6 +559,19 @@
             const now = new Date();
             const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())); // Establecer la hora a medianoche UTC
 
+            // Cambiar el ícono del botón de "Daily reward" si la recompensa de hoy ya ha sido reclamada
+            const dailyRewardRectangle = document.getElementById('dailyRewardRectangle');
+            const iconElement = dailyRewardRectangle.querySelector('.icon iconify-icon');
+            if (lastClaimed && lastClaimed >= today) {
+                iconElement.setAttribute('icon', 'openmoji:check-mark');
+                iconElement.style.fontSize = '35px';
+                iconElement.style.transform = 'none';
+            } else {
+                iconElement.setAttribute('icon', 'iconamoon:arrow-left-2-bold');
+                iconElement.style.fontSize = '25px';
+                iconElement.style.transform = 'scaleX(-1)';
+            }
+
             for (let i = 1; i <= 10; i++) {
                 const day = document.createElement('div');
                 day.className = 'day';
@@ -571,7 +584,9 @@
                 if (i <= streak) {
                     day.classList.add('claimed');
                 } else if (i === streak + 1) {
-                    if (!lastClaimed && lastClaimed < today) {
+                    if (lastClaimed && lastClaimed >= today) {
+                        day.classList.add('claimed'); // El día actual ya ha sido reclamado
+                    } else {
                         day.classList.add('available');
                         day.addEventListener('click', () => handleDayClick(i));
                     }
