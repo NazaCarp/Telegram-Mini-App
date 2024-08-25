@@ -168,7 +168,8 @@ def get_user_data():
             'tap': counter.tap,
             'energy_limit': counter.energy_limit,
             'recharge_speed': counter.recharge_speed,
-            'profit_per_hour': counter.profit_per_hour
+            'profit_per_hour': counter.profit_per_hour,
+            'daily_reward_streak': counter.daily_reward_streak
         })
     except Exception as e:
         logging.error(f"Error in get_user_data: {e}")
@@ -302,7 +303,7 @@ def claim_daily_reward():
         if counter.last_daily_reward_claimed:
             time_since_last_claim = now - counter.last_daily_reward_claimed
             if time_since_last_claim < timedelta(days=1):
-                counter.daily_reward_streak += 1
+                return jsonify({'error': 'Reward already claimed today'}), 400
             elif time_since_last_claim >= timedelta(days=2):
                 counter.daily_reward_streak = 1  # Reset streak if more than 1 day has passed
             else:
