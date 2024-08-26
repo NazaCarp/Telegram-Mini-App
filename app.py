@@ -315,7 +315,7 @@ def claim_daily_reward():
 
         reward_amount = counter.daily_reward_streak * 500
         counter.score += reward_amount
-        counter.last_daily_reward_claimed = now
+        counter.last_daily_reward_claimed = today
         db.commit()
 
         return jsonify({'status': 'success', 'reward_amount': reward_amount, 'streak': counter.daily_reward_streak})
