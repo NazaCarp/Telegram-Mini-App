@@ -209,7 +209,7 @@
       let storedEnergyLimit = localStorage.getItem('energyLimit');
       let storedRechargeSpeed = localStorage.getItem('rechargeSpeed');
       let storedLastTimestamp = localStorage.getItem('lastTimestamp');
-      if (1 === 1 || storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
+      if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
         // Primero, obtener los contadores
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
         const data = await response.json();
