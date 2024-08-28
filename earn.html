@@ -402,7 +402,6 @@
         
         tg.ready();
         loadUserData();
-        alert(`${userData}`)
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
         });
@@ -502,6 +501,7 @@
         const lastClaimed = userData.last_daily_reward_claimed ? new Date(userData.last_daily_reward_claimed) : null;
         const now = new Date();
         const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())); // Establecer la hora a medianoche UTC
+        alert(`userData: ${userData}`)
         alert(`userData.last_daily_reward_claimed: ${userData.last_daily_reward_claimed}`)
         alert(`lastClaimed: ${lastClaimed}`)
         alert(`today: ${today}`)
