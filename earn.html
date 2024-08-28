@@ -662,23 +662,23 @@
         }
     
         async function handleDayClick(dayNumber) {
-    const user_id = tg.initDataUnsafe.user.id;
-    const response = await fetch('/claim_daily_reward', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id })
-    });
+            const user_id = tg.initDataUnsafe.user.id;
+            const response = await fetch('/claim_daily_reward', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id })
+            });
 
-    const data = await response.json();
-    if (data.status === 'success') {
-        alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
-        closeDailyRewardMenu();
-    } else {
-        alert(data.error);
-    }
-}
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
+                closeDailyRewardMenu();
+            } else {
+                alert(data.error);
+            }
+        }
     
         function shakeButton(button) {
             const originalPosition = button.style.transform || 'translateX(0)';
