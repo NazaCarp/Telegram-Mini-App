@@ -306,7 +306,7 @@ def claim_daily_reward():
             time_since_last_claim = today - counter.last_daily_reward_claimed.replace(tzinfo=timezone.utc)
             if today == counter.last_daily_reward_claimed:
                 return jsonify({'error': 'Reward already claimed today'}), 400
-            elif time_since_last_claim >= timedelta(days=2) | counter.daily_reward_streak > 9:
+            elif time_since_last_claim >= timedelta(days=2) or counter.daily_reward_streak > 9:
                 counter.daily_reward_streak = 1  # Reset streak if more than 1 day has passed
             else:
                 counter.daily_reward_streak += 1
