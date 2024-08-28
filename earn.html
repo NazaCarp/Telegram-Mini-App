@@ -434,7 +434,7 @@
                 arrowIconElement.setAttribute('icon', 'iconamoon:arrow-left-2-bold');
                 arrowIconElement.style.fontSize = '25px';
             }
-            
+
             if (rectangle.id !== 'dailyRewardRectangle') {
                 rectangle.id = `rectangle-${index}`;
             }
@@ -714,7 +714,7 @@
 
         async function loadUserData() {
             // Obtener el estado de las recompensas diarias del usuario
-            const datastored = localStorage.getItem('user_data');
+            let datastored = localStorage.getItem('user_data');
             if (datastored == null) {
                 const response = await fetch(`/get_user_data?user_id=${user_id}`);
                 const data = await response.json();
