@@ -620,9 +620,10 @@
 
                 const tooltip = document.createElement('div');
                 tooltip.className = 'tooltip';
-                tooltip.innerHTML = `
-                    <span class="tooltiptext">${i <= streak ? 'Day already claimed' : 'Day not available to claim'}</span>
-                `;
+                const tooltipText = document.createElement('span');
+                tooltipText.className = 'tooltiptext';
+                tooltipText.innerText = i <= streak ? 'Day already claimed' : 'Day not available to claim';
+                tooltip.appendChild(tooltipText);
                 day.appendChild(tooltip);
 
                 if (i <= streak) {
@@ -661,23 +662,23 @@
         }
     
         async function handleDayClick(dayNumber) {
-            const user_id = tg.initDataUnsafe.user.id;
-            const response = await fetch('/claim_daily_reward', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user_id })
-            });
+    const user_id = tg.initDataUnsafe.user.id;
+    const response = await fetch('/claim_daily_reward', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id })
+    });
 
-            const data = await response.json();
-            if (data.status === 'success') {
-                alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
-                closeDailyRewardMenu();
-            } else {
-                alert(data.error);
-            }
-        }
+    const data = await response.json();
+    if (data.status === 'success') {
+        alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
+        closeDailyRewardMenu();
+    } else {
+        alert(data.error);
+    }
+}
     
         function shakeButton(button) {
             const originalPosition = button.style.transform || 'translateX(0)';
