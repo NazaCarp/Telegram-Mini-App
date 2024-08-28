@@ -717,12 +717,13 @@
             let datastored = localStorage.getItem('user_data');
             if (datastored == null) {
                 const response = await fetch(`/get_user_data?user_id=${user_id}`);
-                datastored = await response.json();
+                userData = await response.json();
                 
                 // Guardar datos en localStorage
-                localStorage.setItem('user_data', JSON.stringify(datastored));
+                localStorage.setItem('user_data', JSON.stringify(userData));
+            } else {
+                userData = datastored
             }
-            userData = datastored
         }
     });
     </script>
