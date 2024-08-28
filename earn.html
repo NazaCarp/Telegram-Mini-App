@@ -397,7 +397,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram.WebApp;
         const user_id = tg.initDataUnsafe.user.id;
-        let disabled = false
+        let disabled = false;
         let userData;
         
         tg.ready();
@@ -557,6 +557,13 @@
             }, 1000);
     
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+
+            // Mostrar la alerta
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.style.display = 'block';
+            setTimeout(() => {
+                alertContainer.style.display = 'none';
+            }, 3000);
         }
     
         document.addEventListener('mousedown', (event) => {
@@ -725,6 +732,6 @@
             }
         }
     });
-    </script>
+</script>
 </body>
 </html>
