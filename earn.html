@@ -251,6 +251,44 @@
         .daily-reward-menu .day:last-child:nth-child(3n - 2) {
             grid-column: 1 / 4;
         }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -580,6 +618,13 @@
                     <h5>${i * 500}</h5>
                 `;
 
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.innerHTML = `
+                    <span class="tooltiptext">${i <= streak ? 'Day already claimed' : 'Day not available to claim'}</span>
+                `;
+                day.appendChild(tooltip);
+
                 if (i <= streak) {
                     day.classList.add('claimed');
                 } else if (i === streak + 1 && lastClaimed && lastClaimed < today) {
@@ -624,7 +669,7 @@
                 },
                 body: JSON.stringify({ user_id })
             });
-    
+
             const data = await response.json();
             if (data.status === 'success') {
                 alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
