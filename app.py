@@ -6,7 +6,7 @@ from models import Counter, Referral, MineLevels
 import logging
 import requests
 
-TELEGRAM_BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+TELEGRAM_BOT_TOKEN = '6524382787:AAHP-f1-2w-GMV3imEXPqElJStVqqJwUmus'
 TELEGRAM_GROUP_ID = '@PQP_Referidos'  # Reemplaza con el nombre de tu grupo
 app = Flask(__name__, template_folder='.')
 
@@ -287,6 +287,7 @@ def update_profit_per_hour():
     except Exception as e:
         logging.error(f"Error in update_counters: {e}")
         return jsonify({'error': str(e)}), 500
+    
 
 @app.route('/claim_daily_reward', methods=['POST'])
 def claim_daily_reward():
