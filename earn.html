@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn</title>
+    <title>Mine</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     <style>
@@ -120,17 +120,35 @@
             width: 100%;
         }
 
-        .alertReward {
+        .reward {
+            margin-top: 25px;
+            font-weight: bold;
+            color: yellow;
+        }
+
+        .subtitle {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .second-subtitle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cost {
             font-size: 48px;
             margin-top: 25px;
             font-weight: bold;
         }
 
-        .alertReward.yellow {
+        .cost.yellow {
             color: yellow;
         }
 
-        .alertReward.gray {
+        .cost.gray {
             color: gray;
         }
 
@@ -184,72 +202,58 @@
             font-size: 24px;
         }
 
+        .subtitle {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .second-subtitle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cost {
+            font-size: 48px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .cost.yellow {
+            color: yellow;
+        }
+
+        .cost.gray {
+            color: gray;
+        }
+
+        .action-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-button.active {
+            background-color: #0066ff;
+            color: white;
+        }
+
+        .action-button.inactive {
+            background-color: #808080;
+            color: white;
+            cursor: not-allowed;
+        }
+
         .blur-content {
             filter: blur(5px);
             pointer-events: none;
             transition: filter 0.3s ease;
-        }
-
-        .daily-reward-menu {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 400px;
-            border: 2px solid white;
-            background-color: #333;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .daily-reward-menu .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .daily-reward-menu .calendar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
-            margin-top: 20px;
-        }
-
-        .daily-reward-menu .day {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #444; /* No disponible por defecto */
-            border-radius: 20px;
-            padding: 5px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        .daily-reward-menu .day.claimed {
-            background-color: #0066ff; /* Ya reclamado */
-            cursor: default;
-        }
-
-        .daily-reward-menu .day.available {
-            background-color: rgb(11, 62, 121); /* Disponible para reclamar */
-            border: 3px solid #0066ff;
-        }
-
-        .daily-reward-menu .day:last-child:nth-child(3n - 1) {
-            grid-column: 2 / 4;
-        }
-
-        .daily-reward-menu .day:last-child:nth-child(3n - 2) {
-            grid-column: 1 / 4;
         }
     </style>
 </head>
@@ -288,9 +292,9 @@
         </div>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Daily Tasks</h2>
         <div class="rectangles">
-            <div class="rectangle" data-reward="500" id="dailyRewardRectangle">
+            <div class="rectangle" data-reward="500">
                 <div class="icon">
-                    <iconify-icon icon="tabler:calendar-check"></iconify-icon>
+                    <iconify-icon icon="mdi:calendar"></iconify-icon>
                 </div>
                 <div class="text">
                     <h3 style="margin-bottom: 5px;">Daily reward</h3>
@@ -331,32 +335,23 @@
     </div>
     <div class="navbar">
         <a href="index.html" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-        <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="mine.html" id="mineNav" class="active"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
         <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-        <a href="earn.html" id="earnNav" class="active"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+        <a href="Earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
     </div>
     <div class="alert-menu" id="alertMenu">
-        <div class="close" data-close="alert"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+        <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
         <div class="icon" id="alertIcon"></div>
         <div class="alert-text" id="alertText"></div>
         <div class="subtitle" id="alertSubtitle"></div>
-        <div class="alertReward" id="alertReward"></div>
+        <div class="second-subtitle" id="alertSecondSubtitle"></div>
+        <div class="cost" id="alertCost"></div>
         <button class="action-button" id="actionButton">Follow</button>
-        <button class="action-button" id="checkButton">Check</button>
     </div>
-</div>
-<div class="daily-reward-menu" id="dailyRewardMenu">
-    <div class="close" data-close="alert"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
-    <iconify-icon icon="tabler:calendar-check" style="font-size: 100px;"></iconify-icon>
-    <h2>Daily Rewards</h2>
-    <div class="calendar" id="dailyRewardsList"></div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
+    <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        let disabled = false
     
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
@@ -367,86 +362,41 @@
         let timerIntervals = {};
         let actionButtons = {};
     
-        earnNav.addEventListener('click', function(event) {
-            if (window.location.pathname.includes('earn.html')) {
-                event.preventDefault();
-            }
-        });
-    
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
-            if (rectangle.id !== 'dailyRewardRectangle') {
-                rectangle.id = `rectangle-${index}`;
-            }
+            rectangle.id = `rectangle-${index}`;
             rectangle.addEventListener('click', () => {
-                if (rectangle.id === 'dailyRewardRectangle') {
-                    openDailyRewardMenu();
-                    return;
-                }
-    
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
-                const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
+                const reward = rectangle.getAttribute('data-reward');
                 const action = rectangle.getAttribute('data-action');
     
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
-                document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
-    
+                document.getElementById('alertSubtitle').innerText = 'Reward';
+                document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(reward)}`;
+                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+                
                 // Obtener o crear el botón de acción para este rectángulo
                 let actionButton = actionButtons[rectangle.id];
                 if (!actionButton) {
                     actionButton = document.createElement('button');
                     actionButton.className = 'action-button active';
-                    actionButton.id = 'actionButton';
                     actionButton.dataset.rectangleId = rectangle.id;
                     actionButton.addEventListener('click', handleActionButtonClick);
                     actionButtons[rectangle.id] = actionButton;
                 }
     
-                // Actualizar el texto del botón de acción
-                actionButton.innerText = action;
+                // Actualizar el texto del botón
+                actionButton.innerText = actionButton.disabled ? `${Math.ceil((timerIntervals[rectangle.id].endTime - Date.now()) / 1000)}s` : action;
     
-                // Crear el botón de verificación
-                let checkButton = document.createElement('button');
-                checkButton.className = 'action-button active';
-                checkButton.id = 'checkButton';
-                checkButton.innerText = 'Check';
-                checkButton.dataset.rectangleId = rectangle.id;
-                checkButton.addEventListener('click', handleCheckButtonClick);
-    
-                // Verificar si el contador ya ha comenzado
-                const endTime = rectangle.dataset.endTime;
-                if (endTime) {
-                    const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                    if (remainingSeconds > 0) {
-                        checkButton.classList.remove('active');
-                        checkButton.classList.add('inactive');
-                        checkButton.disabled = true;
-                        checkButton.innerText = `${remainingSeconds}s`;
-                        const intervalId = setInterval(() => {
-                            const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                            if (remainingSeconds <= 0) {
-                                clearInterval(intervalId);
-                                checkButton.disabled = false;
-                                checkButton.classList.remove('inactive');
-                                checkButton.classList.add('active');
-                                checkButton.innerText = 'Check';
-                                delete rectangle.dataset.endTime;
-                            } else {
-                                checkButton.innerText = `${remainingSeconds}s`;
-                            }
-                        }, 1000);
-                    }
-                }
-    
-                // Reemplazar los botones existentes con los botones actualizados
+                // Reemplazar el botón existente con el botón actualizado
                 const alertMenu = document.getElementById('alertMenu');
-                const oldActionButton = alertMenu.querySelector('#actionButton');
-                const oldCheckButton = alertMenu.querySelector('#checkButton');
-                if (oldActionButton) alertMenu.removeChild(oldActionButton);
-                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
-                alertMenu.appendChild(actionButton);
-                alertMenu.appendChild(checkButton);
+                const oldButton = alertMenu.querySelector('.action-button');
+                if (oldButton) {
+                    alertMenu.replaceChild(actionButton, oldButton);
+                } else {
+                    alertMenu.appendChild(actionButton);
+                }
     
                 document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
@@ -455,68 +405,39 @@
         });
     
         function handleActionButtonClick() {
-            // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
-            console.log("Action button clicked");
-        }
-    
-        function handleCheckButtonClick(event) {
-            const checkButton = event.target;
-            const rectangleId = checkButton.dataset.rectangleId;
-            const rectangle = document.getElementById(rectangleId);
+            const rectangleId = this.dataset.rectangleId;
+            const actionButton = this;
             let timerSeconds = 60;
     
-            if (disabled) {
-                shakeButton(checkButton); // Llamar a la función shakeButton si el botón está deshabilitado
-                return
-            }
+            if (actionButton.disabled) return; // Si ya está deshabilitado, no hacer nada
     
-            checkButton.classList.remove('active');
-            checkButton.classList.add('inactive');
-            disabled = true;
-            checkButton.innerText = `${timerSeconds}s`;
+            actionButton.classList.remove('active');
+            actionButton.classList.add('inactive');
+            actionButton.disabled = true;
+            actionButton.innerText = `${timerSeconds}s`;
     
             if (timerIntervals[rectangleId]) {
                 clearInterval(timerIntervals[rectangleId].interval);
             }
     
-            const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
-            rectangle.dataset.endTime = endTime;
-    
+            const endTime = Date.now() + timerSeconds * 1000;
             const intervalId = setInterval(() => {
-                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
                 if (remainingSeconds <= 0) {
                     clearInterval(intervalId);
-                    checkButton.disabled = false;
-                    checkButton.classList.remove('inactive');
-                    checkButton.classList.add('active');
-                    checkButton.innerText = 'Check';
-                    delete rectangle.dataset.endTime;
+                    actionButton.disabled = false;
+                    actionButton.classList.remove('inactive');
+                    actionButton.classList.add('active');
+                    actionButton.innerText = 'Follow';
+                    delete timerIntervals[rectangleId];
                 } else {
-                    checkButton.innerText = `${remainingSeconds}s`;
+                    actionButton.innerText = `${remainingSeconds}s`;
                 }
             }, 1000);
     
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+            closeAlertMenu();
         }
-    
-        document.addEventListener('mousedown', (event) => {
-            const checkButton = event.target.closest('#checkButton');
-            if (checkButton && checkButton.disabled) {
-                shakeButton(checkButton);
-            }
-        });
-    
-        document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
-        document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
-    
-        document.addEventListener('click', (event) => {
-            const alertMenu = document.getElementById('alertMenu');
-            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
-                closeAlertMenu();
-                closeDailyRewardMenu();
-            }
-        });
     
         function closeAlertMenu() {
             document.getElementById('alertMenu').style.display = 'none';
@@ -526,122 +447,23 @@
     
         function formatNumber(num) {
             const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
-    
+            
             function generateUnit(n) {
                 if (n < basicUnits.length) return basicUnits[n];
-    
+                
                 let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
                 let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
                 return firstChar + secondChar;
             }
-    
+
             let unitIndex = 0;
             while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
                 num /= 1000;
                 unitIndex++;
             }
-    
+
             return num.toFixed(2) + generateUnit(unitIndex);
         }
-    
-        async function openDailyRewardMenu() {
-            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            const dailyRewardsList = document.getElementById('dailyRewardsList');
-            dailyRewardsList.innerHTML = '';
-
-            // Obtener el estado de las recompensas diarias del usuario
-            const user_id = tg.initDataUnsafe.user.id;
-            const response = await fetch(`/get_user_data?user_id=${user_id}`);
-            const data = await response.json();
-
-            const streak = data.daily_reward_streak || 0;
-            const lastClaimed = data.last_daily_reward_claimed ? new Date(data.last_daily_reward_claimed) : null;
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche para comparar solo la fecha
-
-            for (let i = 1; i <= 10; i++) {
-                const day = document.createElement('div');
-                day.className = 'day';
-                day.innerHTML = `
-                    <h5 style="margin-bottom: 5px;">Day ${i}</h5>
-                    <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 10px, 10px"></iconify-icon></span>
-                    <h5>${i * 500}</h5>
-                `;
-
-                if (i <= streak) {
-                    day.classList.add('claimed');
-                } else if (i === streak + 1) {
-                    if (!lastClaimed && lastClaimed < today) {
-                        day.classList.add('available');
-                        day.addEventListener('click', () => handleDayClick(i));
-                    }
-                }
-                dailyRewardsList.appendChild(day);
-            }
-
-            // Ajustar el tamaño del último rectángulo
-            adjustLastRectangle();
-
-            dailyRewardMenu.style.display = 'block';
-            document.querySelector('.container').classList.add('blur-content');
-            document.querySelector('.navbar').classList.add('blur-content');
-        }
-    
-        function closeDailyRewardMenu() {
-            document.getElementById('dailyRewardMenu').style.display = 'none';
-            document.querySelector('.container').classList.remove('blur-content');
-            document.querySelector('.navbar').classList.remove('blur-content');
-        }
-    
-        function adjustLastRectangle() {
-            const days = document.querySelectorAll('.daily-reward-menu .day');
-            if (days.length > 0) {
-                const lastDay = days[days.length - 1];
-                if (days.length % 3 === 2) {
-                    lastDay.style.gridColumn = '2 / 4';
-                } else if (days.length % 3 === 1) {
-                    lastDay.style.gridColumn = '1 / 4';
-                }
-            }
-        }
-    
-        async function handleDayClick(dayNumber) {
-            const user_id = tg.initDataUnsafe.user.id;
-            const response = await fetch('/claim_daily_reward', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user_id })
-            });
-    
-            const data = await response.json();
-            if (data.status === 'success') {
-                alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
-                closeDailyRewardMenu();
-            } else {
-                alert(data.error);
-            }
-        }
-    
-        function shakeButton(button) {
-            const originalPosition = button.style.transform || 'translateX(0)';
-            const shakeAnimation = [
-                { transform: originalPosition },
-                { transform: 'translateX(10px)' },
-                { transform: 'translateX(-10px)' },
-                { transform: 'translateX(10px)' },
-                { transform: 'translateX(-10px)' },
-                { transform: originalPosition }
-            ];
-            const shakeTiming = {
-                duration: 500,
-                iterations: 1
-            };
-    
-            button.animate(shakeAnimation, shakeTiming);
-        }
-    });
     </script>
 </body>
 </html>
