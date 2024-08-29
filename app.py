@@ -360,7 +360,7 @@ def verify_telegram_group():
         if is_member_of_channel(user_id, canal, TELEGRAM_BOT_TOKEN):
             return jsonify({'status': 'success'})
         else:
-            return jsonify({'status': match.group(1)})
+            return jsonify({'status': 'failure'})
 
     except Exception as e:
         logging.error(f"Error in verify_telegram_group: {e}")
