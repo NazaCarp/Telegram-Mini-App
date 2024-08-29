@@ -464,6 +464,13 @@
 
             return num.toFixed(2) + generateUnit(unitIndex);
         }
+
+        document.addEventListener('click', (event) => {
+            const alertMenu = document.getElementById('alertMenu');
+            if (!alertMenu.contains(event.target) && event.target.closest('.rectangle') === null) {
+                closeAlertMenu();
+            }
+        });
     </script>
 </body>
 </html>
