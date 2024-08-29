@@ -6,8 +6,8 @@ from models import Counter, Referral, MineLevels
 import logging
 import requests
 
-TELEGRAM_BOT_TOKEN = '7196618205:AAGwNHw-K0ydr3IX1s2a9Ho0KxmKq-I3qGc'
-TELEGRAM_GROUP_ID = '@QT_432'  # Reemplaza con el nombre de tu grupo
+TELEGRAM_BOT_TOKEN = '6524382787:AAHP-f1-2w-GMV3imEXPqElJStVqqJwUmus'
+TELEGRAM_GROUP_ID = '@PQP_Canal2'  # Reemplaza con el nombre de tu grupo
 app = Flask(__name__, template_folder='.')
 
 
