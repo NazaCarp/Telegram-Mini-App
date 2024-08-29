@@ -344,7 +344,7 @@
         </div>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Tasks list</h2>
         <div class="rectangles">
-            <div class="rectangle" data-reward="100000" data-action="Follow">
+            <div class="rectangle" data-reward="100000" data-action="Follow" data-url="https://t.me/PQP_Canal">
                 <div class="icon">
                     <iconify-icon icon="logos:telegram"></iconify-icon>
                 </div>
@@ -356,7 +356,7 @@
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-reward="100000" data-action="Join">
+            <div class="rectangle" data-reward="100000" data-action="Join" data-url="https://t.me/PQP_Referidos">
                 <div class="icon">
                     <iconify-icon icon="logos:telegram"></iconify-icon>
                 </div>
@@ -431,6 +431,7 @@
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
                 const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
                 const action = rectangle.getAttribute('data-action');
+                const url = rectangle.getAttribute('data-url');
     
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
@@ -443,6 +444,7 @@
                     actionButton.className = 'action-button active';
                     actionButton.id = 'actionButton';
                     actionButton.dataset.rectangleId = rectangle.id;
+                    actionButton.dataset.url = url;
                     actionButton.addEventListener('click', handleActionButtonClick);
                     actionButtons[rectangle.id] = actionButton;
                 }
@@ -456,6 +458,7 @@
                 checkButton.id = 'checkButton';
                 checkButton.innerText = 'Check';
                 checkButton.dataset.rectangleId = rectangle.id;
+                checkButton.dataset.url = url;
                 checkButton.addEventListener('click', handleCheckButtonClick);
     
                 // Verificar si el contador ya ha comenzado
@@ -518,6 +521,7 @@
             const checkButton = event.target;
             const rectangleId = checkButton.dataset.rectangleId;
             const rectangle = document.getElementById(rectangleId);
+            const url = checkButton.dataset.url;
             let timerSeconds = 60;
 
             if (disabled) {
@@ -559,7 +563,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id: user_id })
+                body: JSON.stringify({ user_id: user_id, url: url })
             });
 
             const data = await response.json();
@@ -570,65 +574,9 @@
             }
         }
 
-        function handleActionButtonClick() {
-            // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
-            window.open('https://t.me/PQP_Grupo', '_blank');
-        }
-    
-        async function handleCheckButtonClick(event) {
-            const checkButton = event.target;
-            const rectangleId = checkButton.dataset.rectangleId;
-            const rectangle = document.getElementById(rectangleId);
-            let timerSeconds = 60;
-
-            if (disabled) {
-                shakeButton(checkButton); // Llamar a la función shakeButton si el botón está deshabilitado
-                return
-            }
-
-            checkButton.classList.remove('active');
-            checkButton.classList.add('inactive');
-            disabled = true;
-            checkButton.innerText = `${timerSeconds}s`;
-
-            if (timerIntervals[rectangleId]) {
-                clearInterval(timerIntervals[rectangleId].interval);
-            }
-
-            const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
-            rectangle.dataset.endTime = endTime;
-
-            const intervalId = setInterval(() => {
-                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                if (remainingSeconds <= 0) {
-                    clearInterval(intervalId);
-                    checkButton.disabled = false;
-                    checkButton.classList.remove('inactive');
-                    checkButton.classList.add('active');
-                    checkButton.innerText = 'Check';
-                    delete rectangle.dataset.endTime;
-                } else {
-                    checkButton.innerText = `${remainingSeconds}s`;
-                }
-            }, 1000);
-
-            timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
-
-            // Llamar a la API de verificación
-            const response = await fetch('/verify_telegram_group', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user_id: user_id })
-            });
-
-            const data = await response.json();
-            if (data.status === 'success') {
-                alert('User is in the group');
-            } else {
-                alert(`${data.status}`);
-            }
+        function handleActionButtonClick(event) {
+            const url = event.target.dataset.url;
+            window.open(url, '_blank');
         }
     
         document.addEventListener('mousedown', (event) => {

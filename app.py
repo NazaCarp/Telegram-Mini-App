@@ -344,12 +344,20 @@ def is_member_of_channel(user_id, canal, bot_token):
 def verify_telegram_group():
     data = request.get_json()
     user_id = data.get('user_id')
+    url = data.get('url')
 
-    if not user_id:
-        return jsonify({'error': 'user_id is required'}), 400
+    if not user_id or not url:
+        return jsonify({'error': 'user_id and url are required'}), 400
 
     try:
-        if is_member_of_channel(user_id, TELEGRAM_GROUP_ID, TELEGRAM_BOT_TOKEN):
+        # Extraer el nombre del canal o grupo de la URL
+        import re
+        match = re.search(r'(?:t\.me/|@)([a-zA-Z0-9_]+)', url)
+        if not match:
+            return jsonify({'error': 'Invalid URL'}), 400
+
+        canal = match.group(1)
+        if is_member_of_channel(user_id, canal, TELEGRAM_BOT_TOKEN):
             return jsonify({'status': 'success'})
         else:
             return jsonify({'status': 'failure'})
