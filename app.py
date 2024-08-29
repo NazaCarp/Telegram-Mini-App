@@ -7,7 +7,7 @@ import logging
 import requests
 
 TELEGRAM_BOT_TOKEN = '6524382787:AAHP-f1-2w-GMV3imEXPqElJStVqqJwUmus'
-TELEGRAM_GROUP_ID = '@PQP_Canal2'  # Reemplaza con el nombre de tu grupo
+TELEGRAM_GROUP_ID = '@PQP_Canal'  # Reemplaza con el nombre de tu grupo
 app = Flask(__name__, template_folder='.')
 
 
