@@ -349,7 +349,7 @@ def verify_telegram_group():
         return jsonify({'error': 'user_id is required'}), 400
 
     try:
-        if is_member_of_channel(user_id, TELEGRAM_GROUP_ID, TELEGRAM_BOT_TOKEN):
+        if is_member_of_channel(user_id, 34567, '345dgfe64'):
             return jsonify({'status': 'success'})
         else:
             return jsonify({'status': 'failure'})
