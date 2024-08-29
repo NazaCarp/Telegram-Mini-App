@@ -356,7 +356,7 @@ def verify_telegram_group():
         if not match:
             return jsonify({'error': 'Invalid URL'}), 400
 
-        canal = match.group(1)
+        canal = '@' + match.group(1)
         if is_member_of_channel(user_id, canal, TELEGRAM_BOT_TOKEN):
             return jsonify({'status': 'success'})
         else:
