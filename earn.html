@@ -397,7 +397,6 @@
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram.WebApp;
         const user_id = tg.initDataUnsafe.user.id;
-        let disabled = false
         let userData;
         
         tg.ready();
@@ -405,12 +404,12 @@
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
         });
-    
+
         tg.BackButton.show();
-    
+
         let timerIntervals = {};
-        let actionButtons = {};
-    
+        let checkButtons = {};
+
         earnNav.addEventListener('click', function(event) {
             if (window.location.pathname.includes('earn.html')) {
                 event.preventDefault();
@@ -429,60 +428,41 @@
     
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
-                const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
+                const reward = parseFloat(rectangle.getAttribute('data-reward'));
                 const action = rectangle.getAttribute('data-action');
                 const url = rectangle.getAttribute('data-url');
     
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
-    
-                // Obtener o crear el botón de acción para este rectángulo
-                let actionButton = actionButtons[rectangle.id];
-                if (!actionButton) {
-                    actionButton = document.createElement('button');
-                    actionButton.className = 'action-button active';
-                    actionButton.id = 'actionButton';
-                    actionButton.dataset.rectangleId = rectangle.id;
-                    actionButton.dataset.url = url;
-                    actionButton.addEventListener('click', handleActionButtonClick);
-                    actionButtons[rectangle.id] = actionButton;
-                }
-    
-                // Actualizar el texto del botón de acción
+
+                // Crear o recuperar el botón de acción
+                let actionButton = document.createElement('button');
+                actionButton.className = 'action-button active';
+                actionButton.id = 'actionButton';
                 actionButton.innerText = action;
+                actionButton.dataset.url = url;
+                actionButton.addEventListener('click', handleActionButtonClick);
     
-                // Crear el botón de verificación
-                let checkButton = document.createElement('button');
-                checkButton.className = 'action-button active';
-                checkButton.id = 'checkButton';
-                checkButton.innerText = 'Check';
-                checkButton.dataset.rectangleId = rectangle.id;
-                checkButton.dataset.url = url;
-                checkButton.addEventListener('click', handleCheckButtonClick);
+                // Crear o recuperar el botón de verificación
+                let checkButton = checkButtons[rectangle.id];
+                if (!checkButton) {
+                    checkButton = document.createElement('button');
+                    checkButton.className = 'action-button active';
+                    checkButton.id = 'checkButton';
+                    checkButton.innerText = 'Check';
+                    checkButton.dataset.rectangleId = rectangle.id;
+                    checkButton.dataset.url = url;
+                    checkButton.addEventListener('click', handleCheckButtonClick);
+                    checkButtons[rectangle.id] = checkButton;
+                }
     
                 // Verificar si el contador ya ha comenzado
                 const endTime = rectangle.dataset.endTime;
                 if (endTime) {
                     const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
                     if (remainingSeconds > 0) {
-                        checkButton.classList.remove('active');
-                        checkButton.classList.add('inactive');
-                        checkButton.disabled = true;
-                        checkButton.innerText = `${remainingSeconds}s`;
-                        const intervalId = setInterval(() => {
-                            const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                            if (remainingSeconds <= 0) {
-                                clearInterval(intervalId);
-                                checkButton.disabled = false;
-                                checkButton.classList.remove('inactive');
-                                checkButton.classList.add('active');
-                                checkButton.innerText = 'Check';
-                                delete rectangle.dataset.endTime;
-                            } else {
-                                checkButton.innerText = `${remainingSeconds}s`;
-                            }
-                        }, 1000);
+                        updateCheckButtonState(checkButton, remainingSeconds, rectangle);
                     }
                 }
     
@@ -501,20 +481,33 @@
             });
         });
 
-        const lastClaimed = userData.last_daily_reward_claimed ? new Date(userData.last_daily_reward_claimed) : null;
-        const now = new Date();
-        const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())); // Establecer la hora a medianoche UTC
-        
-        // Cambiar el ícono del botón que abre el menú de recompensas diarias si la recompensa de hoy ya ha sido reclamada
-        const dailyRewardRectangle = document.getElementById('dailyRewardRectangle');
-        const arrowIconElement = dailyRewardRectangle.querySelector('.icon:last-child iconify-icon');
-        if (lastClaimed && lastClaimed >= today) {
-            arrowIconElement.setAttribute('icon', 'openmoji:check-mark');
-            arrowIconElement.style.fontSize = '35px';
-            arrowIconElement.style.transform = 'scaleX(-1)';
-        } else {
-            arrowIconElement.setAttribute('icon', 'iconamoon:arrow-left-2-bold');
-            arrowIconElement.style.fontSize = '25px';
+        function updateCheckButtonState(checkButton, remainingSeconds, rectangle) {
+            checkButton.classList.remove('active');
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+            checkButton.innerText = `${remainingSeconds}s`;
+            
+            if (timerIntervals[rectangle.id]) {
+                clearInterval(timerIntervals[rectangle.id].interval);
+            }
+
+            const intervalId = setInterval(() => {
+                const endTime = new Date(rectangle.dataset.endTime);
+                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
+                if (remainingSeconds <= 0) {
+                    clearInterval(intervalId);
+                    checkButton.disabled = false;
+                    checkButton.classList.remove('inactive');
+                    checkButton.classList.add('active');
+                    checkButton.innerText = 'Check';
+                    delete rectangle.dataset.endTime;
+                    delete timerIntervals[rectangle.id];
+                } else {
+                    checkButton.innerText = `${remainingSeconds}s`;
+                }
+            }, 1000);
+
+            timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
         }
     
         async function handleCheckButtonClick(event) {
@@ -524,38 +517,15 @@
             const url = checkButton.dataset.url;
             let timerSeconds = 60;
 
-            if (disabled) {
-                shakeButton(checkButton); // Llamar a la función shakeButton si el botón está deshabilitado
-                return
-            }
-
-            checkButton.classList.remove('active');
-            checkButton.classList.add('inactive');
-            disabled = true;
-            checkButton.innerText = `${timerSeconds}s`;
-
-            if (timerIntervals[rectangleId]) {
-                clearInterval(timerIntervals[rectangleId].interval);
+            if (checkButton.disabled) {
+                shakeButton(checkButton);
+                return;
             }
 
             const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
             rectangle.dataset.endTime = endTime;
 
-            const intervalId = setInterval(() => {
-                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                if (remainingSeconds <= 0) {
-                    clearInterval(intervalId);
-                    disabled = false;
-                    checkButton.classList.remove('inactive');
-                    checkButton.classList.add('active');
-                    checkButton.innerText = 'Check';
-                    delete rectangle.dataset.endTime;
-                } else {
-                    checkButton.innerText = `${remainingSeconds}s`;
-                }
-            }, 1000);
-
-            timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+            updateCheckButtonState(checkButton, timerSeconds, rectangle);
 
             // Llamar a la API de verificación
             const response = await fetch('/verify_telegram_group', {
