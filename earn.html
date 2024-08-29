@@ -415,7 +415,7 @@
                 event.preventDefault();
             }
         });
-    
+
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
             if (rectangle.id !== 'dailyRewardRectangle') {
                 rectangle.id = `rectangle-${index}`;
@@ -425,13 +425,13 @@
                     openDailyRewardMenu();
                     return;
                 }
-    
+
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
                 const reward = parseFloat(rectangle.getAttribute('data-reward'));
                 const action = rectangle.getAttribute('data-action');
                 const url = rectangle.getAttribute('data-url');
-    
+
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
@@ -443,7 +443,7 @@
                 actionButton.innerText = action;
                 actionButton.dataset.url = url;
                 actionButton.addEventListener('click', handleActionButtonClick);
-    
+
                 // Crear o recuperar el botón de verificación
                 let checkButton = checkButtons[rectangle.id];
                 if (!checkButton) {
@@ -456,7 +456,7 @@
                     checkButton.addEventListener('click', handleCheckButtonClick);
                     checkButtons[rectangle.id] = checkButton;
                 }
-    
+
                 // Verificar si el contador ya ha comenzado
                 const endTime = rectangle.dataset.endTime;
                 if (endTime) {
@@ -465,7 +465,7 @@
                         updateCheckButtonState(checkButton, remainingSeconds, rectangle);
                     }
                 }
-    
+
                 // Reemplazar los botones existentes con los botones actualizados
                 const alertMenu = document.getElementById('alertMenu');
                 const oldActionButton = alertMenu.querySelector('#actionButton');
@@ -474,7 +474,7 @@
                 if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
                 alertMenu.appendChild(actionButton);
                 alertMenu.appendChild(checkButton);
-    
+
                 document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
@@ -508,8 +508,15 @@
             }, 1000);
 
             timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
+
+            // Añadir evento mousemove para activar la animación si el botón está deshabilitado
+            checkButton.addEventListener('mousemove', () => {
+                if (checkButton.disabled) {
+                    shakeButton(checkButton);
+                }
+            });
         }
-    
+
         async function handleCheckButtonClick(event) {
             const checkButton = event.target;
             const rectangleId = checkButton.dataset.rectangleId;
@@ -548,17 +555,17 @@
             const url = event.target.dataset.url;
             window.open(url, '_blank');
         }
-    
+
         document.addEventListener('mousedown', (event) => {
             const checkButton = event.target.closest('#checkButton');
             if (checkButton && checkButton.disabled) {
                 shakeButton(checkButton);
             }
         });
-    
+
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
-    
+
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
@@ -567,33 +574,33 @@
                 closeDailyRewardMenu();
             }
         });
-    
+
         function closeAlertMenu() {
             document.getElementById('alertMenu').style.display = 'none';
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
-    
+
         function formatNumber(num) {
             const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
-    
+
             function generateUnit(n) {
                 if (n < basicUnits.length) return basicUnits[n];
-    
+
                 let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
                 let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
                 return firstChar + secondChar;
             }
-    
+
             let unitIndex = 0;
             while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
                 num /= 1000;
                 unitIndex++;
             }
-    
+
             return num.toFixed(2) + generateUnit(unitIndex);
         }
-    
+
         async function openDailyRewardMenu() {
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
             const dailyRewardsList = document.getElementById('dailyRewardsList');
@@ -646,13 +653,13 @@
             document.querySelector('.container').classList.add('blur-content');
             document.querySelector('.navbar').classList.add('blur-content');
         }
-    
+
         function closeDailyRewardMenu() {
             document.getElementById('dailyRewardMenu').style.display = 'none';
             document.querySelector('.container').classList.remove('blur-content');
             document.querySelector('.navbar').classList.remove('blur-content');
         }
-    
+
         function adjustLastRectangle() {
             const days = document.querySelectorAll('.daily-reward-menu .day');
             if (days.length > 0) {
@@ -664,7 +671,7 @@
                 }
             }
         }
-    
+
         async function handleDayClick(dayNumber) {
             const response = await fetch('/claim_daily_reward', {
                 method: 'POST',
@@ -673,7 +680,7 @@
                 },
                 body: JSON.stringify({ user_id })
             });
-    
+
             const data = await response.json();
             if (data.status === 'success') {
                 userData.daily_reward_streak = data.streak;
@@ -688,7 +695,7 @@
                 alert(data.error);
             }
         }
-    
+
         function shakeButton(button) {
             const originalPosition = button.style.transform || 'translateX(0)';
             const shakeAnimation = [
