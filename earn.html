@@ -435,6 +435,8 @@
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
                 document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+
+                alert('Hola4')
     
                 // Obtener o crear el botón de acción para este rectángulo
                 let actionButton = actionButtons[rectangle.id];
@@ -446,8 +448,6 @@
                     actionButton.addEventListener('click', handleActionButtonClick);
                     actionButtons[rectangle.id] = actionButton;
                 }
-
-                alert('Hola3')
     
                 // Actualizar el texto del botón de acción
                 actionButton.innerText = action;
