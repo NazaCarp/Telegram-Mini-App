@@ -428,97 +428,56 @@
                 }
     
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
-                alert('Hola5')
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
-                alert('Hola6')
                 const reward = parseFloat(rectangle.getAttribute('data-reward')); // Convertir a número
-                alert('Hola7')
                 const action = rectangle.getAttribute('data-action');
-                alert('Hola8')
     
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
-                alert('Hola9')
                 document.getElementById('alertText').innerText = text;
-                alert('Chau1')
                 document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
-                alert('Chau2')
     
                 // Obtener o crear el botón de acción para este rectángulo
                 let actionButton = actionButtons[rectangle.id];
-                alert('Chau3')
                 if (!actionButton) {
-                    alert('Chau4')
                     actionButton = document.createElement('button');
-                    alert('Chau5')
                     actionButton.className = 'action-button active';
-                    alert('Chau6')
                     actionButton.id = 'actionButton';
-                    alert('Chau7')
                     actionButton.dataset.rectangleId = rectangle.id;
-                    alert('Chau8')
                     actionButton.addEventListener('click', handleActionButtonClick);
-                    alert('Chau9')
                     actionButtons[rectangle.id] = actionButton;
-                    alert('Cómo1')
                 }
     
                 // Actualizar el texto del botón de acción
                 actionButton.innerText = action;
-                alert('Cómo2')
     
                 // Crear el botón de verificación
                 let checkButton = document.createElement('button');
-                alert('Cómo3')
                 checkButton.className = 'action-button active';
-                alert('Cómo4')
                 checkButton.id = 'checkButton';
-                alert('Cómo5')
                 checkButton.innerText = 'Check';
-                alert('Cómo6')
                 checkButton.dataset.rectangleId = rectangle.id;
-                alert('Cómo7')
                 checkButton.addEventListener('click', handleCheckButtonClick);
-                alert('Cómo8')
     
                 // Verificar si el contador ya ha comenzado
-                alert('Cómo9')
                 const endTime = rectangle.dataset.endTime;
-                alert('Estás1')
                 if (endTime) {
-                    alert('Estás2')
                     const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                    alert('Estás3')
                     if (remainingSeconds > 0) {
-                        alert('Estás4')
                         checkButton.classList.remove('active');
-                        alert('Estás5')
                         checkButton.classList.add('inactive');
-                        alert('Estás6')
                         checkButton.disabled = true;
-                        alert('Estás7')
                         checkButton.innerText = `${remainingSeconds}s`;
-                        alert('Estás8')
                         const intervalId = setInterval(() => {
-                            alert('Estás9')
                             const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
-                            alert('?1')
                             if (remainingSeconds <= 0) {
-                                alert('?2')
                                 clearInterval(intervalId);
-                                alert('?3')
                                 checkButton.disabled = false;
-                                alert('?4')
                                 checkButton.classList.remove('inactive');
-                                alert('?5')
                                 checkButton.classList.add('active');
-                                alert('?6')
                                 checkButton.innerText = 'Check';
-                                alert('?7')
                                 delete rectangle.dataset.endTime;
-                                alert('?8')
                             } else {
                                 checkButton.innerText = `${remainingSeconds}s`;
-                                alert('?9')
                             }
                         }, 1000);
                     }
@@ -609,6 +568,11 @@
             } else {
                 alert('User is not in the group');
             }
+        }
+
+        function handleActionButtonClick() {
+            // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
+            window.open('https://t.me/PQP_Grupo', '_blank');
         }
     
         function handleCheckButtonClick(event) {
