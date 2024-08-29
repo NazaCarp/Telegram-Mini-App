@@ -397,7 +397,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram.WebApp;
         const user_id = tg.initDataUnsafe.user.id;
-        let disabled = false;
+        let disabled = false
         let userData;
         
         tg.ready();
@@ -514,9 +514,60 @@
             arrowIconElement.style.fontSize = '25px';
         }
     
-        function handleActionButtonClick() {
-            // Aquí puedes agregar la lógica para manejar la acción (Follow, Watch, Join, etc.)
-            window.open('https://t.me/PQP_Grupo', '_blank');
+        async function handleCheckButtonClick(event) {
+            const checkButton = event.target;
+            const rectangleId = checkButton.dataset.rectangleId;
+            const rectangle = document.getElementById(rectangleId);
+            let timerSeconds = 60;
+
+            if (disabled) {
+                shakeButton(checkButton); // Llamar a la función shakeButton si el botón está deshabilitado
+                return
+            }
+
+            checkButton.classList.remove('active');
+            checkButton.classList.add('inactive');
+            disabled = true;
+            checkButton.innerText = `${timerSeconds}s`;
+
+            if (timerIntervals[rectangleId]) {
+                clearInterval(timerIntervals[rectangleId].interval);
+            }
+
+            const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
+            rectangle.dataset.endTime = endTime;
+
+            const intervalId = setInterval(() => {
+                const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                if (remainingSeconds <= 0) {
+                    clearInterval(intervalId);
+                    disabled = false;
+                    checkButton.classList.remove('inactive');
+                    checkButton.classList.add('active');
+                    checkButton.innerText = 'Check';
+                    delete rectangle.dataset.endTime;
+                } else {
+                    checkButton.innerText = `${remainingSeconds}s`;
+                }
+            }, 1000);
+
+            timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+
+            // Llamar a la API de verificación
+            const response = await fetch('/verify_telegram_group', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: user_id })
+            });
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('User is in the group');
+            } else {
+                alert('User is not in the group');
+            }
         }
     
         function handleCheckButtonClick(event) {
@@ -557,13 +608,6 @@
             }, 1000);
     
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
-
-            // Mostrar la alerta
-            const alertContainer = document.getElementById('alert-container');
-            alertContainer.style.display = 'block';
-            setTimeout(() => {
-                alertContainer.style.display = 'none';
-            }, 3000);
         }
     
         document.addEventListener('mousedown', (event) => {
@@ -693,6 +737,12 @@
     
             const data = await response.json();
             if (data.status === 'success') {
+                userData.daily_reward_streak = data.streak;
+                userData.last_daily_reward_claimed = data.lastClaim
+                
+                // Guardar datos en localStorage
+                localStorage.setItem('user_data', JSON.stringify(userData));
+                
                 alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
                 closeDailyRewardMenu();
             } else {
@@ -732,6 +782,6 @@
             }
         }
     });
-</script>
+    </script>
 </body>
 </html>

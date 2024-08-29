@@ -4,7 +4,10 @@ from flask import Flask, jsonify, request, render_template
 from db import SessionLocal
 from models import Counter, Referral, MineLevels
 import logging
+import requests
 
+TELEGRAM_BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+TELEGRAM_GROUP_ID = '@PQP_Referidos'  # Reemplaza con el nombre de tu grupo
 app = Flask(__name__, template_folder='.')
 
 
@@ -12,7 +15,6 @@ app = Flask(__name__, template_folder='.')
 @app.route('/index.html')
 def index():
     return render_template('index.html')
-
 
 @app.route('/friends.html')
 def serve_friends():
@@ -29,6 +31,7 @@ def boosts():
 @app.route('/earn.html')
 def earn():
     return render_template('earn.html')
+
 
 @app.route('/get_counters', methods=['GET'])
 def get_counters():
@@ -318,10 +321,40 @@ def claim_daily_reward():
         counter.last_daily_reward_claimed = today
         db.commit()
 
-        return jsonify({'status': 'success', 'reward_amount': reward_amount, 'streak': counter.daily_reward_streak})
+        return jsonify({'status': 'success', 'reward_amount': reward_amount, 'streak': counter.daily_reward_streak, 'lastClaim': counter.last_daily_reward_claimed})
 
     except Exception as e:
         logging.error(f"Error in claim_daily_reward: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+def is_member_of_channel(user_id, canal, bot_token):
+    url = f"https://api.telegram.org/bot{bot_token}/getChatMember"
+    params = {
+        'chat_id': canal,
+        'user_id': user_id
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    return data['ok'] and data['result']['status'] == 'member'
+
+
+@app.route('/verify_telegram_group', methods=['POST'])
+def verify_telegram_group():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+
+    try:
+        if is_member_of_channel(user_id, TELEGRAM_GROUP_ID, TELEGRAM_BOT_TOKEN):
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status': 'failure'})
+
+    except Exception as e:
+        logging.error(f"Error in verify_telegram_group: {e}")
         return jsonify({'error': str(e)}), 500
 
 
