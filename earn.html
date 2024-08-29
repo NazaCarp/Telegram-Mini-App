@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mine</title>
+    <title>Earn</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     <style>
@@ -126,29 +126,17 @@
             color: yellow;
         }
 
-        .subtitle {
-            margin-top: 20px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .second-subtitle {
-            margin-top: 10px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .cost {
+        .alertReward {
             font-size: 48px;
             margin-top: 25px;
             font-weight: bold;
         }
 
-        .cost.yellow {
+        .alertReward.yellow {
             color: yellow;
         }
 
-        .cost.gray {
+        .alertReward.gray {
             color: gray;
         }
 
@@ -200,54 +188,6 @@
 
         .alert-text {
             font-size: 24px;
-        }
-
-        .subtitle {
-            margin-top: 20px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .second-subtitle {
-            margin-top: 10px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .cost {
-            font-size: 48px;
-            margin-top: 25px;
-            font-weight: bold;
-        }
-
-        .cost.yellow {
-            color: yellow;
-        }
-
-        .cost.gray {
-            color: gray;
-        }
-
-        .action-button {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .action-button.active {
-            background-color: #0066ff;
-            color: white;
-        }
-
-        .action-button.inactive {
-            background-color: #808080;
-            color: white;
-            cursor: not-allowed;
         }
 
         .blur-content {
@@ -335,9 +275,9 @@
     </div>
     <div class="navbar">
         <a href="index.html" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-        <a href="mine.html" id="mineNav" class="active"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
         <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-        <a href="Earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+        <a href="earn.html" id="earnNav" class="active"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
         <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
     </div>
     <div class="alert-menu" id="alertMenu">
@@ -345,8 +285,8 @@
         <div class="icon" id="alertIcon"></div>
         <div class="alert-text" id="alertText"></div>
         <div class="subtitle" id="alertSubtitle"></div>
-        <div class="second-subtitle" id="alertSecondSubtitle"></div>
-        <div class="cost" id="alertCost"></div>
+        <div class="alertReward" id="alertReward"></div>
+        <button class="action-button" id="checkButton">Check</button>
         <button class="action-button" id="actionButton">Follow</button>
     </div>
     <script>
@@ -361,6 +301,12 @@
     
         let timerIntervals = {};
         let actionButtons = {};
+
+        earnNav.addEventListener('click', function(event) {
+            if (window.location.pathname.includes('earn.html')) {
+                event.preventDefault();
+            }
+        });
     
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
             rectangle.id = `rectangle-${index}`;
@@ -369,52 +315,62 @@
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
                 const reward = rectangle.getAttribute('data-reward');
                 const action = rectangle.getAttribute('data-action');
-    
+
                 document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
                 document.getElementById('alertText').innerText = text;
-                document.getElementById('alertSubtitle').innerText = 'Reward';
-                document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(reward)}`;
-                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+                document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
                 
                 // Obtener o crear el botón de acción para este rectángulo
                 let actionButton = actionButtons[rectangle.id];
                 if (!actionButton) {
                     actionButton = document.createElement('button');
                     actionButton.className = 'action-button active';
+                    actionButton.id = 'actionButton';
                     actionButton.dataset.rectangleId = rectangle.id;
-                    actionButton.addEventListener('click', handleActionButtonClick);
+                    actionButton.addEventListener('click', handleCheckButtonClick);
                     actionButtons[rectangle.id] = actionButton;
                 }
-    
+
                 // Actualizar el texto del botón
                 actionButton.innerText = actionButton.disabled ? `${Math.ceil((timerIntervals[rectangle.id].endTime - Date.now()) / 1000)}s` : action;
-    
-                // Reemplazar el botón existente con el botón actualizado
+
+                // Crear el botón de verificación
+                let checkButton = document.createElement('button');
+                checkButton.className = 'action-button active';
+                checkButton.id = 'checkButton';
+                checkButton.innerText = 'Check';
+                checkButton.addEventListener('click', handleCheckButtonClick);
+
+                // Reemplazar los botones existentes con los botones actualizados
                 const alertMenu = document.getElementById('alertMenu');
-                const oldButton = alertMenu.querySelector('.action-button');
-                if (oldButton) {
-                    alertMenu.replaceChild(actionButton, oldButton);
-                } else {
-                    alertMenu.appendChild(actionButton);
-                }
-    
+                const oldActionButton = alertMenu.querySelector('#actionButton');
+                const oldCheckButton = alertMenu.querySelector('#checkButton');
+                if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                alertMenu.appendChild(checkButton);
+                alertMenu.appendChild(actionButton);
+
                 document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
             });
         });
+
+        function handleCheckButtonClick() {
+            // Aquí puedes agregar la lógica para verificar la acción
+        }
     
-        function handleActionButtonClick() {
+        function handleCheckButtonClick() {
             const rectangleId = this.dataset.rectangleId;
-            const actionButton = this;
+            const checkButton = this;
             let timerSeconds = 60;
     
-            if (actionButton.disabled) return; // Si ya está deshabilitado, no hacer nada
+            if (checkButton.disabled) return; // Si ya está deshabilitado, no hacer nada
     
-            actionButton.classList.remove('active');
-            actionButton.classList.add('inactive');
-            actionButton.disabled = true;
-            actionButton.innerText = `${timerSeconds}s`;
+            checkButton.classList.remove('active');
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+            checkButton.innerText = `${timerSeconds}s`;
     
             if (timerIntervals[rectangleId]) {
                 clearInterval(timerIntervals[rectangleId].interval);
@@ -425,13 +381,13 @@
                 const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
                 if (remainingSeconds <= 0) {
                     clearInterval(intervalId);
-                    actionButton.disabled = false;
-                    actionButton.classList.remove('inactive');
-                    actionButton.classList.add('active');
-                    actionButton.innerText = 'Follow';
+                    checkButton.disabled = false;
+                    checkButton.classList.remove('inactive');
+                    checkButton.classList.add('active');
+                    checkButton.innerText = 'Follow';
                     delete timerIntervals[rectangleId];
                 } else {
-                    actionButton.innerText = `${remainingSeconds}s`;
+                    checkButton.innerText = `${remainingSeconds}s`;
                 }
             }, 1000);
     
