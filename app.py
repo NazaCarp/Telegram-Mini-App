@@ -327,33 +327,6 @@ def claim_daily_reward():
         logging.error(f"Error in claim_daily_reward: {e}")
         return jsonify({'error': str(e)}), 500
 
-def is_member_of_channel(user_id, canal, bot_token):
-    url = f"https://api.telegram.org/bot{bot_token}/getChatMember"
-    params = {
-        'chat_id': canal,
-        'user_id': user_id
-    }
-    response = requests.get(url, params=params)
-    data = response.json()
-    return data['ok'] and data['result']['status'] == 'member'
 
-@app.route('/verify_telegram_group', methods=['POST'])
-def verify_telegram_group():
-    data = request.get_json()
-    user_id = data.get('user_id')
-
-    if not user_id:
-        return jsonify({'error': 'user_id is required'}), 400
-
-    try:
-        if is_member_of_channel(user_id, TELEGRAM_GROUP_ID, TELEGRAM_BOT_TOKEN):
-            return jsonify({'status': 'success'})
-        else:
-            return jsonify({'status': 'failure'})
-
-    except Exception as e:
-        logging.error(f"Error in verify_telegram_group: {e}")
-        return jsonify({'error': str(e)}), 500
-        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
