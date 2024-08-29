@@ -575,29 +575,29 @@
             window.open('https://t.me/PQP_Grupo', '_blank');
         }
     
-        function handleCheckButtonClick(event) {
+        async function handleCheckButtonClick(event) {
             const checkButton = event.target;
             const rectangleId = checkButton.dataset.rectangleId;
             const rectangle = document.getElementById(rectangleId);
             let timerSeconds = 60;
-    
+
             if (disabled) {
                 shakeButton(checkButton); // Llamar a la función shakeButton si el botón está deshabilitado
                 return
             }
-    
+
             checkButton.classList.remove('active');
             checkButton.classList.add('inactive');
             disabled = true;
             checkButton.innerText = `${timerSeconds}s`;
-    
+
             if (timerIntervals[rectangleId]) {
                 clearInterval(timerIntervals[rectangleId].interval);
             }
-    
+
             const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
             rectangle.dataset.endTime = endTime;
-    
+
             const intervalId = setInterval(() => {
                 const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
                 if (remainingSeconds <= 0) {
@@ -611,8 +611,24 @@
                     checkButton.innerText = `${remainingSeconds}s`;
                 }
             }, 1000);
-    
+
             timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime };
+
+            // Llamar a la API de verificación
+            const response = await fetch('/verify_telegram_group', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: user_id })
+            });
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('User is in the group');
+            } else {
+                alert('User is not in the group');
+            }
         }
     
         document.addEventListener('mousedown', (event) => {
