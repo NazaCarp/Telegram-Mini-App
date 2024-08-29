@@ -422,10 +422,13 @@
                 rectangle.id = `rectangle-${index}`;
             }
             rectangle.addEventListener('click', () => {
+                alert('Hola1')
                 if (rectangle.id === 'dailyRewardRectangle') {
                     openDailyRewardMenu();
                     return;
                 }
+
+                alert('Hola2')
     
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
