@@ -746,30 +746,41 @@
             coinsContainer.style.zIndex = '9999';
             document.body.appendChild(coinsContainer);
 
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
+            const numCoins = 30;
+            const duration = 3000;
 
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < numCoins; i++) {
                 const coin = document.createElement('div');
                 coin.innerHTML = coinIcon;
                 coin.style.position = 'absolute';
-                coin.style.left = `${centerX}px`;
-                coin.style.top = `${centerY}px`;
-                coin.style.transform = 'translate(-50%, -50%) scale(0)';
+                coin.style.left = `${Math.random() * 100}%`;
+                coin.style.top = '-60px';
                 coinsContainer.appendChild(coin);
 
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 100 + Math.random() * 150;
-                const duration = 1500 + Math.random() * 1000;
+                const delay = Math.random() * 1500;
+                const initialRotation = Math.random() * 360;
+                const rotationSpeed = Math.random() * 720 - 360; // Entre -360 y 360 grados por segundo
 
                 coin.animate([
-                    { transform: 'translate(-50%, -50%) scale(0)', opacity: 0 },
-                    { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 1, offset: 0.1 },
-                    { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1)`, opacity: 1, offset: 0.6 },
-                    { transform: `translate(${Math.cos(angle) * distance * 1.2}px, ${Math.sin(angle) * distance * 1.2}px) scale(0)`, opacity: 0 }
+                    { transform: `translateY(0) rotate(${initialRotation}deg)`, offset: 0 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${initialRotation + rotationSpeed * 0.5}deg)`, offset: 0.5 },
+                    { transform: `translateY(${window.innerHeight - 100}px) rotate(${initialRotation + rotationSpeed * 0.75}deg)`, offset: 0.75 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${initialRotation + rotationSpeed}deg)`, offset: 1 }
                 ], {
                     duration: duration,
-                    easing: 'ease-out',
+                    delay: delay,
+                    easing: 'ease-in',
+                    fill: 'forwards'
+                });
+
+                coin.animate([
+                    { opacity: 0, offset: 0 },
+                    { opacity: 1, offset: 0.1 },
+                    { opacity: 1, offset: 0.9 },
+                    { opacity: 0, offset: 1 }
+                ], {
+                    duration: duration,
+                    delay: delay,
                     fill: 'forwards'
                 });
             }
@@ -777,7 +788,7 @@
             setTimeout(() => {
                 coinsContainer.remove();
                 alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-            }, 3000);
+            }, duration + 1500);
         }
 
         async function loadUserData() {
