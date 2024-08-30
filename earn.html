@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at center, #0047ab, #002357, #000000);
+            color: white;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none; /* Evita que la imagen sea seleccionable */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+            transition: filter 0.3s ease;
+        }
+
+        * {
+            margin: 0px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 80px;
+        }
+
+        .score {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 70px;
+            font-size: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 60px;
+            border-radius: 50px;
+            margin: 0 auto; /* Centra la barra de navegación */
+            background-color: #222222;
+            position: fixed;
+            bottom: 0;
+            user-select: none; /* Evita que los íconos sean seleccionables */
+            -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
+            z-index: 1000; /* Asegura que la barra de navegación esté por encima del contenido */
+        }
+
+        .navbar a {
+            color: gray;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .navbar a.active span, .navbar a.active iconify-icon {
+            color: white;
+        }
+
+        .navbar a iconify-icon {
+            font-size: 24px;
+        }
+
+        .navbar a.active::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: -14px;
+            right: -14px;
+            bottom: -7px;
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.267);
+            z-index: -1;
+        }
+
+        .rectangles {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .rectangle {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            border-radius: 50px;
+            border: 2px solid white;
+            width: 95%;
+            margin: 5px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .icon {
+            margin: 10px;
+            font-size: 45px;
+        }
+
+        .text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .alertReward {
+            font-size: 48px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .alertReward.yellow {
+            color: yellow;
+        }
+
+        .alertReward.gray {
+            color: gray;
+        }
+
+        .action-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-button.active {
+            background-color: #0066ff;
+            color: white;
+        }
+
+        .action-button.inactive {
+            background-color: #808080;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .alert-menu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 400px;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .alert-menu .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .alert-text {
+            font-size: 24px;
+        }
+
+        .blur-content {
+            filter: blur(5px);
+            pointer-events: none;
+            transition: filter 0.3s ease;
+        }
+
+        .daily-reward-menu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 400px;
+            border: 2px solid white;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .daily-reward-menu .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .daily-reward-menu .calendar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            margin-top: 20px;
+        }
+
+        .daily-reward-menu .day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #444; /* No disponible por defecto */
+            border-radius: 20px;
+            padding: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .daily-reward-menu .day.claimed {
+            background-color: #0066ff; /* Ya reclamado */
+            cursor: default;
+        }
+
+        .daily-reward-menu .day.available {
+            background-color: rgb(11, 62, 121); /* Disponible para reclamar */
+            border: 3px solid #0066ff;
+        }
+
+        .daily-reward-menu .day:last-child:nth-child(3n - 1) {
+            grid-column: 2 / 4;
+        }
+
+        .daily-reward-menu .day:last-child:nth-child(3n - 2) {
+            grid-column: 1 / 4;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: " ";
+            position: absolute;
+            top: 100%; /* At the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="score" id="scoreContainer">
+            <iconify-icon icon="twemoji:coin" style="font-size: 60px;" id="coinIcon"></iconify-icon>
+        </div>
+        <h5 style="margin-top: 15px; font-size: 30px;">Earn more coins</h5>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Youtube</h2>
+        <div class="rectangles">
+            <div class="rectangle" data-reward="100000" data-action="Watch">
+                <div class="icon">
+                    <iconify-icon icon="logos:youtube-icon"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3 style="margin-bottom: 5px;">Video 1</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+            <div class="rectangle" data-reward="100000" data-action="Watch">
+                <div class="icon">
+                    <iconify-icon icon="logos:youtube-icon"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3 style="margin-bottom: 5px;">Video 2</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Daily Tasks</h2>
+        <div class="rectangles">
+            <div class="rectangle" data-reward="500" id="dailyRewardRectangle">
+                <div class="icon">
+                    <iconify-icon icon="tabler:calendar-check"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h3 style="margin-bottom: 5px;">Daily reward</h3>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">500</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 40px; text-align: left; width: 95%;">Tasks list</h2>
+        <div class="rectangles">
+            <div class="rectangle" data-reward="100000" data-action="Follow" data-url="https://t.me/PQP_Canal">
+                <div class="icon">
+                    <iconify-icon icon="logos:telegram"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h4 style="margin-bottom: 5px;">Follow us on our Telegram channel</h4>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+            <div class="rectangle" data-reward="100000" data-action="Join" data-url="https://t.me/PQP_Referidos">
+                <div class="icon">
+                    <iconify-icon icon="logos:telegram"></iconify-icon>
+                </div>
+                <div class="text">
+                    <h4 style="margin-bottom: 5px;">Join our Telegram group</h4>
+                    <p style="color: rgba(255, 255, 255, 0.5)"><span style="color: yellow; font-weight: bolder;"><iconify-icon icon="twemoji:coin" style="font-size: 12px;"></iconify-icon> <span class="reward">100K</span></span></p>
+                </div>
+                <div class="icon" style="right: 5px; font-size: 25px; transform: scaleX(-1)">
+                    <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar">
+        <a href="index.html" id="exchangeNav"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+        <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+        <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+        <a href="earn.html" id="earnNav" class="active"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+        <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
+    </div>
+    <div class="alert-menu" id="alertMenu">
+        <div class="close" data-close="alert"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+        <div class="icon" id="alertIcon"></div>
+        <div class="alert-text" id="alertText"></div>
+        <div class="subtitle" id="alertSubtitle"></div>
+        <div class="alertReward" id="alertReward"></div>
+        <button class="action-button" id="actionButton">Follow</button>
+        <button class="action-button" id="checkButton">Check</button>
+    </div>
+</div>
+<div class="daily-reward-menu" id="dailyRewardMenu">
+    <div class="close" data-close="alert"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+    <iconify-icon icon="tabler:calendar-check" style="font-size: 100px;"></iconify-icon>
+    <h2>Daily Rewards</h2>
+    <div class="calendar" id="dailyRewardsList"></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tg = window.Telegram.WebApp;
+        const user_id = tg.initDataUnsafe.user.id;
+        let userData;
+        
+        tg.ready();
+        loadUserData();
+        tg.onEvent('backButtonClicked', () => {
+            window.location.href = 'index.html';
+        });
+
+        tg.BackButton.show();
+
+        let timerIntervals = {};
+        let checkButtons = {};
+
+        earnNav.addEventListener('click', function(event) {
+            if (window.location.pathname.includes('earn.html')) {
+                event.preventDefault();
+            }
+        });
+
+        document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
+            if (rectangle.id !== 'dailyRewardRectangle') {
+                rectangle.id = `rectangle-${index}`;
+            }
+            rectangle.addEventListener('click', () => {
+                if (rectangle.id === 'dailyRewardRectangle') {
+                    openDailyRewardMenu();
+                    return;
+                }
+
+                const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
+                const text = rectangle.querySelector('.text h3, .text h4').innerText;
+                const reward = parseFloat(rectangle.getAttribute('data-reward'));
+                const action = rectangle.getAttribute('data-action');
+                const url = rectangle.getAttribute('data-url');
+
+                document.getElementById('alertIcon').innerHTML = `<iconify-icon icon="${icon}" style="font-size: 80px;"></iconify-icon>`;
+                document.getElementById('alertText').innerText = text;
+                document.getElementById('alertReward').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(reward)}</p>`;
+
+                // Crear o recuperar el botón de acción
+                let actionButton = document.createElement('button');
+                actionButton.className = 'action-button active';
+                actionButton.id = 'actionButton';
+                actionButton.innerText = action;
+                actionButton.dataset.url = url;
+                actionButton.addEventListener('click', handleActionButtonClick);
+
+                // Crear o recuperar el botón de verificación
+                let checkButton = checkButtons[rectangle.id];
+                if (!checkButton) {
+                    checkButton = document.createElement('button');
+                    checkButton.className = 'action-button active';
+                    checkButton.id = 'checkButton';
+                    checkButton.innerText = 'Check';
+                    checkButton.dataset.rectangleId = rectangle.id;
+                    checkButton.dataset.url = url;
+                    checkButton.addEventListener('click', handleCheckButtonClick);
+                    checkButtons[rectangle.id] = checkButton;
+                }
+
+                // Verificar si el contador ya ha comenzado
+                const endTime = rectangle.dataset.endTime;
+                if (endTime) {
+                    const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                    if (remainingSeconds > 0) {
+                        updateCheckButtonState(checkButton, remainingSeconds, rectangle);
+                    }
+                }
+
+                // Reemplazar los botones existentes con los botones actualizados
+                const alertMenu = document.getElementById('alertMenu');
+                const oldActionButton = alertMenu.querySelector('#actionButton');
+                const oldCheckButton = alertMenu.querySelector('#checkButton');
+                if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                alertMenu.appendChild(actionButton);
+                alertMenu.appendChild(checkButton);
+
+                document.getElementById('alertMenu').style.display = 'block';
+                document.querySelector('.container').classList.add('blur-content');
+                document.querySelector('.navbar').classList.add('blur-content');
+            });
+        });
+
+        const lastClaimed = userData.last_daily_reward_claimed ? new Date(userData.last_daily_reward_claimed) : null;
+        const now = new Date();
+        const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())); // Establecer la hora a medianoche UTC
+        
+        // Cambiar el ícono del botón que abre el menú de recompensas diarias si la recompensa de hoy ya ha sido reclamada
+        const dailyRewardRectangle = document.getElementById('dailyRewardRectangle');
+        const arrowIconElement = dailyRewardRectangle.querySelector('.icon:last-child iconify-icon');
+        if (lastClaimed && lastClaimed >= today) {
+            arrowIconElement.setAttribute('icon', 'openmoji:check-mark');
+            arrowIconElement.style.fontSize = '35px';
+            arrowIconElement.style.transform = 'scaleX(-1)';
+        } else {
+            arrowIconElement.setAttribute('icon', 'iconamoon:arrow-left-2-bold');
+            arrowIconElement.style.fontSize = '25px';
+        }
+
+        function updateCheckButtonState(checkButton, remainingSeconds, rectangle) {
+            checkButton.classList.remove('active');
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+            checkButton.innerText = `${remainingSeconds}s`;
+            
+            if (timerIntervals[rectangle.id]) {
+                clearInterval(timerIntervals[rectangle.id].interval);
+            }
+
+            const intervalId = setInterval(() => {
+                const endTime = new Date(rectangle.dataset.endTime);
+                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
+                if (remainingSeconds <= 0) {
+                    clearInterval(intervalId);
+                    checkButton.disabled = false;
+                    checkButton.classList.remove('inactive');
+                    checkButton.classList.add('active');
+                    checkButton.innerText = 'Check';
+                    delete rectangle.dataset.endTime;
+                    delete timerIntervals[rectangle.id];
+                } else {
+                    checkButton.innerText = `${remainingSeconds}s`;
+                }
+            }, 1000);
+
+            timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
+
+            // Añadir evento mousemove para activar la animación si el botón está deshabilitado
+            checkButton.addEventListener('mousemove', () => {
+                if (checkButton.disabled) {
+                    shakeButton(checkButton);
+                }
+            });
+        }
+
+        async function handleCheckButtonClick(event) {
+            const checkButton = event.target;
+            const rectangleId = checkButton.dataset.rectangleId;
+            const rectangle = document.getElementById(rectangleId);
+            const url = checkButton.dataset.url;
+            let timerSeconds = 60;
+
+            if (checkButton.disabled) {
+                shakeButton(checkButton);
+                return;
+            }
+
+            const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
+            rectangle.dataset.endTime = endTime;
+
+            updateCheckButtonState(checkButton, timerSeconds, rectangle);
+
+            // Llamar a la API de verificación
+            const response = await fetch('/verify_telegram_group', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: user_id, url: url })
+            });
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('User is in the group');
+            } else {
+                alert('User is not in the group');
+            }
+        }
+
+        function handleActionButtonClick(event) {
+            const url = event.target.dataset.url;
+            window.open(url, '_blank');
+        }
+
+        document.addEventListener('mousedown', (event) => {
+            const checkButton = event.target.closest('#checkButton');
+            if (checkButton && checkButton.disabled) {
+                shakeButton(checkButton);
+            }
+        });
+
+        document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
+        document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
+
+        document.addEventListener('click', (event) => {
+            const alertMenu = document.getElementById('alertMenu');
+            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
+                closeAlertMenu();
+                closeDailyRewardMenu();
+            }
+        });
+
+        function closeAlertMenu() {
+            document.getElementById('alertMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
+        }
+
+        function formatNumber(num) {
+            const basicUnits = ['', 'K', 'M', 'B', 'T', 'Q'];
+
+            function generateUnit(n) {
+                if (n < basicUnits.length) return basicUnits[n];
+
+                let firstChar = String.fromCharCode(Math.floor((n - basicUnits.length) / 26) + 65);
+                let secondChar = String.fromCharCode((n - basicUnits.length) % 26 + 65);
+                return firstChar + secondChar;
+            }
+
+            let unitIndex = 0;
+            while (num >= 1000 && unitIndex < 702) { // 702 = 26 * 27 (AA to ZZ)
+                num /= 1000;
+                unitIndex++;
+            }
+
+            return num.toFixed(2) + generateUnit(unitIndex);
+        }
+
+        async function openDailyRewardMenu() {
+            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+            const dailyRewardsList = document.getElementById('dailyRewardsList');
+            dailyRewardsList.innerHTML = '';
+
+            const streak = userData.daily_reward_streak || 0;
+            const lastClaimed = userData.last_daily_reward_claimed ? new Date(userData.last_daily_reward_claimed) : null;
+            const now = new Date();
+            const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())); // Establecer la hora a medianoche UTC
+
+            // Cambiar el ícono del botón que abre el menú de recompensas diarias si la recompensa de hoy ya ha sido reclamada
+            const dailyRewardRectangle = document.getElementById('dailyRewardRectangle');
+            const arrowIconElement = dailyRewardRectangle.querySelector('.icon:last-child iconify-icon');
+            if (lastClaimed && lastClaimed >= today) {
+                arrowIconElement.setAttribute('icon', 'openmoji:check-mark');
+                arrowIconElement.style.fontSize = '35px';
+                arrowIconElement.style.transform = 'scaleX(-1)';
+            } else {
+                arrowIconElement.setAttribute('icon', 'iconamoon:arrow-left-2-bold');
+                arrowIconElement.style.fontSize = '25px';
+            }
+
+            for (let i = 1; i <= 10; i++) {
+                const day = document.createElement('div');
+                day.className = 'day tooltip';
+                day.innerHTML = `
+                    <h5 style="margin-bottom: 5px;">Day ${i}</h5>
+                    <span><iconify-icon icon="twemoji:coin" style="font-size: 35px; margin: 10px, 10px"></iconify-icon></span>
+                    <h5>${i * 500}</h5>
+                    <div class="tooltiptext"></div>
+                `;
+
+                if (i <= streak) {
+                    day.classList.add('claimed');
+                    day.querySelector('.tooltiptext').innerText = 'Day already claimed';
+                } else if (i === streak + 1 && lastClaimed && lastClaimed < today) {
+                    day.classList.add('available');
+                    day.querySelector('.tooltiptext').innerText = 'Day not available to claim';
+                    day.addEventListener('click', () => handleDayClick(i));
+                } else {
+                    day.querySelector('.tooltiptext').innerText = 'Day not available to claim';
+                }
+                dailyRewardsList.appendChild(day);
+            }
+
+            // Ajustar el tamaño del último rectángulo
+            adjustLastRectangle();
+
+            dailyRewardMenu.style.display = 'block';
+            document.querySelector('.container').classList.add('blur-content');
+            document.querySelector('.navbar').classList.add('blur-content');
+        }
+
+        function closeDailyRewardMenu() {
+            document.getElementById('dailyRewardMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
+        }
+
+        function adjustLastRectangle() {
+            const days = document.querySelectorAll('.daily-reward-menu .day');
+            if (days.length > 0) {
+                const lastDay = days[days.length - 1];
+                if (days.length % 3 === 2) {
+                    lastDay.style.gridColumn = '2 / 4';
+                } else if (days.length % 3 === 1) {
+                    lastDay.style.gridColumn = '1 / 4';
+                }
+            }
+        }
+
+        async function handleDayClick(dayNumber) {
+            const response = await fetch('/claim_daily_reward', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id })
+            });
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                userData.daily_reward_streak = data.streak;
+                userData.last_daily_reward_claimed = data.lastClaim
+                
+                // Guardar datos en localStorage
+                localStorage.setItem('user_data', JSON.stringify(userData));
+                
+                alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
+                closeDailyRewardMenu();
+            } else {
+                alert(data.error);
+            }
+        }
+
+        function shakeButton(button) {
+            const originalPosition = button.style.transform || 'translateX(0)';
+            const shakeAnimation = [
+                { transform: originalPosition },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: originalPosition }
+            ];
+            const shakeTiming = {
+                duration: 500,
+                iterations: 1
+            };
+
+            button.animate(shakeAnimation, shakeTiming);
+        }
+
+        async function loadUserData() {
+            // Obtener el estado de las recompensas diarias del usuario
+            let datastored = localStorage.getItem('user_data');
+            if (datastored == null) {
+                const response = await fetch(`/get_user_data?user_id=${user_id}`);
+                userData = await response.json();
+                
+                // Guardar datos en localStorage
+                localStorage.setItem('user_data', JSON.stringify(userData));
+            } else {
+                userData = JSON.parse(datastored) // Deserializar el JSON almacenado
+            }
+        }
+    });
+    </script>
+</body>
+</html>
