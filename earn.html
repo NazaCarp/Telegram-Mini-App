@@ -793,23 +793,29 @@
 				coin.style.background = 'radial-gradient(circle at 30% 30%, #ffd700, #cca300)';
 				coin.style.boxShadow = '0 0 5px gold, inset 0 0 3px rgba(0,0,0,0.2)';
 				
-				coin.style.left = `${Math.random() * 100}%`;
-				coin.style.top = '-30px';
+				const angle = (i / numCoins) * Math.PI * 2;
+				const radius = 150;
+				const startX = centerX + Math.cos(angle) * radius;
+				const startY = centerY + Math.sin(angle) * radius;
+				
+				coin.style.left = `${startX}px`;
+				coin.style.top = `${startY}px`;
 				
 				coinsContainer.appendChild(coin);
 		
-				const delay = Math.random() * 1500;
-				const endY = window.innerHeight + 30;
+				const delay = (i / numCoins) * 1000;
+				const endX = startX + (Math.random() - 0.5) * window.innerWidth;
+				const endY = startY + (Math.random() - 0.5) * window.innerHeight;
 		
 				coin.animate([
-					{ transform: 'translateY(0) rotate(0deg)', opacity: 0 },
-					{ transform: 'translateY(100px) rotate(180deg)', opacity: 1, offset: 0.1 },
-					{ transform: `translateY(${centerY}px) rotate(360deg) scale(1.5)`, opacity: 1, offset: 0.5 },
-					{ transform: `translateY(${endY}px) rotate(720deg)`, opacity: 1 }
+					{ transform: 'scale(0) rotate(0deg)', opacity: 0 },
+					{ transform: 'scale(1) rotate(360deg)', opacity: 1, offset: 0.2 },
+					{ transform: 'scale(1) rotate(360deg)', opacity: 1, offset: 0.8 },
+					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0) rotate(720deg)`, opacity: 0 }
 				], {
 					duration: duration,
 					delay: delay,
-					easing: 'ease-in',
+					easing: 'ease-in-out',
 					fill: 'forwards'
 				});
 			}
