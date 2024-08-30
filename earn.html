@@ -735,46 +735,46 @@
         }
 
         function animateCoins(reward) {
-			const coinsContainer = document.createElement('div');
-			coinsContainer.style.position = 'fixed';
-			coinsContainer.style.top = '0';
-			coinsContainer.style.left = '0';
-			coinsContainer.style.width = '100vw';
-			coinsContainer.style.height = '100vh';
-			coinsContainer.style.overflow = 'hidden';
-			coinsContainer.style.pointerEvents = 'none';
-			coinsContainer.style.zIndex = '9999';
-			document.body.appendChild(coinsContainer);
-		
-			const centerX = window.innerWidth / 2;
-			const centerY = window.innerHeight / 2;
-			const numCoins = 300;
-			const duration = 1500;  // Reducido de 3000 a 1500
-			const staggerDuration = 750;  // Reducido de 1500 a 750
-		
-			// Crear el número en el centro (invisible inicialmente)
-			const rewardText = document.createElement('div');
-			rewardText.style.position = 'absolute';
-			rewardText.style.left = '50%';
-			rewardText.style.top = '50%';
-			rewardText.style.transform = 'translate(-50%, -50%)';
-			rewardText.style.fontSize = `${Math.min(window.innerWidth / 4, 300)}px`;
-			rewardText.style.fontWeight = 'bold';
-			rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
-			rewardText.style.background = 'linear-gradient(to bottom, #ffd700 0%, #ffcc00 50%, #cca300 100%)';
-			rewardText.style.webkitBackgroundClip = 'text';
-			rewardText.style.webkitTextFillColor = 'transparent';
-			rewardText.style.textShadow = `
-				3px 3px 6px rgba(0,0,0,0.2),
-				0 0 5px rgba(255,215,0,0.5),
-				0 0 10px rgba(255,215,0,0.3)
-			`;
-			rewardText.style.filter = 'drop-shadow(0 0 2px rgba(255,215,0,0.5))';
-			rewardText.style.opacity = '0';
-			rewardText.textContent = formatNumber(reward);
-			coinsContainer.appendChild(rewardText);
-		
-			let coinsArrived = 0;
+            const coinsContainer = document.createElement('div');
+            coinsContainer.style.position = 'fixed';
+            coinsContainer.style.top = '0';
+            coinsContainer.style.left = '0';
+            coinsContainer.style.width = '100vw';
+            coinsContainer.style.height = '100vh';
+            coinsContainer.style.overflow = 'hidden';
+            coinsContainer.style.pointerEvents = 'none';
+            coinsContainer.style.zIndex = '9999';
+            document.body.appendChild(coinsContainer);
+
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const numCoins = 300;
+            const duration = 1500;  // Reducido de 3000 a 1500
+            const staggerDuration = 750;  // Reducido de 1500 a 750
+
+            // Crear el número en el centro (invisible inicialmente)
+            const rewardText = document.createElement('div');
+            rewardText.style.position = 'absolute';
+            rewardText.style.left = '50%';
+            rewardText.style.top = '50%';
+            rewardText.style.transform = 'translate(-50%, -50%)';
+            rewardText.style.fontSize = `${Math.min(window.innerWidth / 4, 300)}px`;
+            rewardText.style.fontWeight = 'bold';
+            rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
+            rewardText.style.background = 'linear-gradient(to bottom, #ffd700 0%, #ffcc00 50%, #cca300 100%)';
+            rewardText.style.webkitBackgroundClip = 'text';
+            rewardText.style.webkitTextFillColor = 'transparent';
+            rewardText.style.textShadow = `
+                3px 3px 6px rgba(0,0,0,0.2),
+                0 0 5px rgba(255,215,0,0.5),
+                0 0 10px rgba(255,215,0,0.3)
+            `;
+            rewardText.style.filter = 'drop-shadow(0 0 2px rgba(255,215,0,0.5))';
+            rewardText.style.opacity = '0';
+            rewardText.textContent = formatNumber(reward);
+            coinsContainer.appendChild(rewardText);
+
+            let coinsArrived = 0;
 		
 			// Crear y animar las monedas
 			for (let i = 0; i < numCoins; i++) {
@@ -849,9 +849,9 @@
 			}
 		
 			setTimeout(() => {
-				coinsContainer.remove();
-				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-			}, duration + staggerDuration + 500);  // Reducido el tiempo de espera final
+					coinsContainer.remove();
+					alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
+				}, duration + staggerDuration + 500);  // Reducido el tiempo de espera final
 		}
 
         async function loadUserData() {
