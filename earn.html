@@ -749,8 +749,8 @@
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
 			const numCoins = 300;
-			const duration = 3000;
-			const staggerDuration = 1500; // Duración del efecto escalonado
+			const duration = 1500;  // Reducido de 3000 a 1500
+			const staggerDuration = 750;  // Reducido de 1500 a 750
 		
 			// Crear el número en el centro (invisible inicialmente)
 			const rewardText = document.createElement('div');
@@ -851,7 +851,7 @@
 			setTimeout(() => {
 				coinsContainer.remove();
 				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-			}, duration + staggerDuration + 1000);
+			}, duration + staggerDuration + 500);  // Reducido el tiempo de espera final
 		}
 
         async function loadUserData() {
