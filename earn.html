@@ -733,81 +733,81 @@
             button.animate(shakeAnimation, shakeTiming);
         }
 
-        function animateCoins(reward) {
-            const coinsContainer = document.createElement('div');
-            coinsContainer.style.position = 'fixed';
-            coinsContainer.style.top = '0';
-            coinsContainer.style.left = '0';
-            coinsContainer.style.width = '100vw';
-            coinsContainer.style.height = '100vh';
-            coinsContainer.style.overflow = 'hidden';
-            coinsContainer.style.pointerEvents = 'none';
-            coinsContainer.style.zIndex = '9999';
-            document.body.appendChild(coinsContainer);
-
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            const numCoins = 150;
-            const duration = 2000;
-
-            // Crear el número en el centro
-            const rewardText = document.createElement('div');
-            rewardText.style.position = 'absolute';
-            rewardText.style.left = '50%';
-            rewardText.style.top = '50%';
-            rewardText.style.transform = 'translate(-50%, -50%)';
-            rewardText.style.fontSize = '120px';
-            rewardText.style.fontWeight = 'bold';
-            rewardText.style.color = 'gold';
-            rewardText.style.opacity = '0';
-            rewardText.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.7)';
-            rewardText.textContent = formatNumber(reward);
-            coinsContainer.appendChild(rewardText);
-
-            // Animar el número
-            rewardText.animate([
-                { opacity: 0, transform: 'translate(-50%, -50%) scale(0.5)' },
-                { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.7 },
-                { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }
-            ], {
-                duration: duration,
-                easing: 'ease-out',
-                fill: 'forwards'
-            });
-
-            for (let i = 0; i < numCoins; i++) {
-                const coin = document.createElement('div');
-                coin.style.position = 'absolute';
-                coin.style.width = '20px';
-                coin.style.height = '20px';
-                coin.style.borderRadius = '50%';
-                coin.style.backgroundColor = 'gold';
-                coin.style.boxShadow = '0 0 5px gold';
-                
-                coin.style.left = `${Math.random() * 100}%`;
-                coin.style.top = '-30px';
-                
-                coinsContainer.appendChild(coin);
-
-                const endX = Math.random() * window.innerWidth;
-                const endY = window.innerHeight + 30;
-
-                coin.animate([
-                    { transform: 'translateY(0) rotate(0deg)', opacity: 0 },
-                    { transform: 'translateY(100px) rotate(180deg)', opacity: 1, offset: 0.1 },
-                    { transform: `translate(${endX - coin.offsetLeft}px, ${endY}px) rotate(360deg)`, opacity: 1 }
-                ], {
-                    duration: duration + Math.random() * 1000,
-                    easing: 'ease-in',
-                    fill: 'forwards'
-                });
-            }
-
-            setTimeout(() => {
-                coinsContainer.remove();
-                alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-            }, duration + 1500);
-        }
+		function animateCoins(reward) {
+			const coinsContainer = document.createElement('div');
+			coinsContainer.style.position = 'fixed';
+			coinsContainer.style.top = '0';
+			coinsContainer.style.left = '0';
+			coinsContainer.style.width = '100vw';
+			coinsContainer.style.height = '100vh';
+			coinsContainer.style.overflow = 'hidden';
+			coinsContainer.style.pointerEvents = 'none';
+			coinsContainer.style.zIndex = '9999';
+			document.body.appendChild(coinsContainer);
+		
+			const centerX = window.innerWidth / 2;
+			const centerY = window.innerHeight / 2;
+			const numCoins = 150;
+			const duration = 2000;
+		
+			// Crear el número en el centro
+			const rewardText = document.createElement('div');
+			rewardText.style.position = 'absolute';
+			rewardText.style.left = '50%';
+			rewardText.style.top = '50%';
+			rewardText.style.transform = 'translate(-50%, -50%)';
+			rewardText.style.fontSize = '80px';
+			rewardText.style.fontWeight = 'bold';
+			rewardText.style.color = 'gold';
+			rewardText.style.opacity = '0';
+			rewardText.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.7)';
+			rewardText.textContent = formatNumber(reward);
+			coinsContainer.appendChild(rewardText);
+		
+			// Animar el número
+			rewardText.animate([
+				{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.8)' },
+				{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.7 },
+				{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }
+			], {
+				duration: duration,
+				easing: 'ease-out',
+				fill: 'forwards'
+			});
+		
+			for (let i = 0; i < numCoins; i++) {
+				const coin = document.createElement('div');
+				coin.style.position = 'absolute';
+				coin.style.width = '20px';
+				coin.style.height = '20px';
+				coin.style.borderRadius = '50%';
+				coin.style.backgroundColor = 'gold';
+				coin.style.boxShadow = '0 0 5px gold';
+				
+				coin.style.left = `${Math.random() * 100}%`;
+				coin.style.top = '-30px';
+				
+				coinsContainer.appendChild(coin);
+		
+				const endX = Math.random() * window.innerWidth;
+				const endY = window.innerHeight + 30;
+		
+				coin.animate([
+					{ transform: 'translateY(0) rotate(0deg)', opacity: 0 },
+					{ transform: 'translateY(100px) rotate(180deg)', opacity: 1, offset: 0.1 },
+					{ transform: `translate(${endX - coin.offsetLeft}px, ${endY}px) rotate(360deg)`, opacity: 1 }
+				], {
+					duration: duration + Math.random() * 1000,
+					easing: 'ease-in',
+					fill: 'forwards'
+				});
+			}
+		
+			setTimeout(() => {
+				coinsContainer.remove();
+				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
+			}, duration + 1500);
+		}
 
         async function loadUserData() {
             // Obtener el estado de las recompensas diarias del usuario
