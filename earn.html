@@ -746,99 +746,90 @@
 			coinsContainer.style.zIndex = '9999';
 			document.body.appendChild(coinsContainer);
 		
-			const canvas = document.createElement('canvas');
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-			coinsContainer.appendChild(canvas);
-			const ctx = canvas.getContext('2d');
-		
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
-			const numCoins = 2000;  // Aumentamos el número de monedas
-			const formDuration = 2000;
-			const holdDuration = 2000;
-			const disperseDuration = 1000;
-			const totalDuration = formDuration + holdDuration + disperseDuration;
+			const numCoins = 300;
+			const duration = 3000;
 		
-			// Calcular el tamaño de fuente basado en el ancho de la pantalla
-			const fontSize = Math.min(window.innerWidth / 4, 300);
+			// Crear el número en el centro (invisible inicialmente)
+			const rewardText = document.createElement('div');
+			rewardText.style.position = 'absolute';
+			rewardText.style.left = '50%';
+			rewardText.style.top = '50%';
+			rewardText.style.transform = 'translate(-50%, -50%)';
+			rewardText.style.fontSize = `${Math.min(window.innerWidth / 4, 300)}px`;
+			rewardText.style.fontWeight = 'bold';
+			rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
+			rewardText.style.background = 'linear-gradient(to bottom, #ffd700 0%, #ffcc00 50%, #cca300 100%)';
+			rewardText.style.webkitBackgroundClip = 'text';
+			rewardText.style.webkitTextFillColor = 'transparent';
+			rewardText.style.textShadow = `
+				3px 3px 6px rgba(0,0,0,0.2),
+				0 0 5px rgba(255,215,0,0.5),
+				0 0 10px rgba(255,215,0,0.3)
+			`;
+			rewardText.style.filter = 'drop-shadow(0 0 2px rgba(255,215,0,0.5))';
+			rewardText.style.opacity = '0';
+			rewardText.textContent = formatNumber(reward);
+			coinsContainer.appendChild(rewardText);
 		
-			// Obtener los puntos que forman el número
-			ctx.font = `bold ${fontSize}px 'Poppins', 'Arial', sans-serif`;
-			ctx.fillStyle = 'white';
-			const text = formatNumber(reward);
-			const textMetrics = ctx.measureText(text);
-			const textWidth = textMetrics.width;
-			const textHeight = fontSize;
-			ctx.fillText(text, (canvas.width - textWidth) / 2, (canvas.height + textHeight * 0.7) / 2);
+			// Animar el texto
+			rewardText.animate([
+				{ opacity: 0 },
+				{ opacity: 1 }
+			], {
+				duration: duration,
+				fill: 'forwards',
+				easing: 'ease-in-out'
+			});
 		
-			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-			const pixels = imageData.data;
-			const points = [];
-			
-			for (let y = 0; y < canvas.height; y += 1) {  // Aumentamos la densidad de puntos
-				for (let x = 0; x < canvas.width; x += 1) {
-					const i = (y * canvas.width + x) * 4;
-					if (pixels[i + 3] > 128) {
-						points.push({ x: x, y: y });
-					}
-				}
-			}
-		
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-		
-			const coins = [];
+			// Crear y animar las monedas
 			for (let i = 0; i < numCoins; i++) {
-				coins.push({
-					x: Math.random() * canvas.width,
-					y: Math.random() * canvas.height,
-					targetX: points[Math.floor(Math.random() * points.length)].x,
-					targetY: points[Math.floor(Math.random() * points.length)].y,
-					size: 2,  // Reducimos el tamaño de las monedas
-					opacity: 0
+				const coin = document.createElement('div');
+				coin.style.position = 'absolute';
+				coin.style.width = '30px';
+				coin.style.height = '30px';
+				coin.style.borderRadius = '50%';
+				coin.innerHTML = '🪙';
+				coin.style.fontSize = '30px';
+				
+				const angle = Math.random() * Math.PI * 2;
+				const distance = Math.max(window.innerWidth, window.innerHeight) / 2;
+				const startX = centerX + Math.cos(angle) * distance;
+				const startY = centerY + Math.sin(angle) * distance;
+				
+				coin.style.left = `${startX}px`;
+				coin.style.top = `${startY}px`;
+				
+				coinsContainer.appendChild(coin);
+		
+				const endX = centerX + (Math.random() - 0.5) * rewardText.offsetWidth * 0.8;
+				const endY = centerY + (Math.random() - 0.5) * rewardText.offsetHeight * 0.8;
+		
+				coin.animate([
+					{ transform: 'scale(1)', offset: 0 },
+					{ transform: 'scale(0.8)', offset: 0.8 },
+					{ transform: 'scale(0)', offset: 1 }
+				], {
+					duration: duration,
+					easing: 'ease-in',
+					fill: 'forwards'
+				});
+		
+				coin.animate([
+					{ left: `${startX}px`, top: `${startY}px` },
+					{ left: `${endX}px`, top: `${endY}px` }
+				], {
+					duration: duration,
+					easing: 'ease-in',
+					fill: 'forwards'
 				});
 			}
 		
-			let startTime = null;
-			function animate(timestamp) {
-				if (!startTime) startTime = timestamp;
-				const elapsed = timestamp - startTime;
-		
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';  // Añadimos un fondo semi-transparente
-				ctx.fillRect(0, 0, canvas.width, canvas.height);
-		
-				coins.forEach(coin => {
-					if (elapsed < formDuration) {
-						coin.x += (coin.targetX - coin.x) * 0.05;
-						coin.y += (coin.targetY - coin.y) * 0.05;
-						coin.opacity = Math.min(1, elapsed / formDuration);
-					} else if (elapsed < formDuration + holdDuration) {
-						// Do nothing, keep coins in place
-					} else {
-						const disperseProgress = (elapsed - formDuration - holdDuration) / disperseDuration;
-						coin.x += (Math.random() - 0.5) * 10;
-						coin.y += 5 + Math.random() * 5;
-						coin.opacity = Math.max(0, 1 - disperseProgress);
-					}
-		
-					ctx.beginPath();
-					ctx.arc(coin.x, coin.y, coin.size, 0, Math.PI * 2);
-					ctx.fillStyle = `rgba(255, 215, 0, ${coin.opacity})`;
-					ctx.fill();
-				});
-		
-				if (elapsed < totalDuration) {
-					requestAnimationFrame(animate);
-				} else {
-					setTimeout(() => {
-						coinsContainer.remove();
-						alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-					}, 500);
-				}
-			}
-		
-			requestAnimationFrame(animate);
+			setTimeout(() => {
+				coinsContainer.remove();
+				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
+			}, duration + 1000);
 		}
 
         async function loadUserData() {
