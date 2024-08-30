@@ -754,7 +754,7 @@
 		
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
-			const numCoins = 1000;
+			const numCoins = 2000;  // Aumentamos el número de monedas
 			const formDuration = 2000;
 			const holdDuration = 2000;
 			const disperseDuration = 1000;
@@ -776,8 +776,8 @@
 			const pixels = imageData.data;
 			const points = [];
 			
-			for (let y = 0; y < canvas.height; y += 2) {
-				for (let x = 0; x < canvas.width; x += 2) {
+			for (let y = 0; y < canvas.height; y += 1) {  // Aumentamos la densidad de puntos
+				for (let x = 0; x < canvas.width; x += 1) {
 					const i = (y * canvas.width + x) * 4;
 					if (pixels[i + 3] > 128) {
 						points.push({ x: x, y: y });
@@ -794,7 +794,7 @@
 					y: Math.random() * canvas.height,
 					targetX: points[Math.floor(Math.random() * points.length)].x,
 					targetY: points[Math.floor(Math.random() * points.length)].y,
-					size: 3,
+					size: 2,  // Reducimos el tamaño de las monedas
 					opacity: 0
 				});
 			}
@@ -805,6 +805,8 @@
 				const elapsed = timestamp - startTime;
 		
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';  // Añadimos un fondo semi-transparente
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
 		
 				coins.forEach(coin => {
 					if (elapsed < formDuration) {
