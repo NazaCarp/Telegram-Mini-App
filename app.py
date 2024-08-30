@@ -345,11 +345,22 @@ def verify_telegram_group():
     data = request.get_json()
     user_id = data.get('user_id')
     url = data.get('url')
+    reward = data.get('reward')
+    task_id = data.get('task_id')
 
-    if not user_id or not url:
-        return jsonify({'error': 'user_id and url are required'}), 400
+    if not all([user_id, url, reward, task_id]):
+        return jsonify({'error': 'user_id, url, reward, and task_id are required'}), 400
 
     try:
+        db = SessionLocal()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        if not counter:
+            return jsonify({'error': 'User not found'}), 404
+
+        # Verificar si la tarea ya ha sido completada
+        if counter.completed_tasks.get(task_id):
+            return jsonify({'status': 'already_completed'})
+
         # Extraer el nombre del canal o grupo de la URL
         import re
         match = re.search(r'(?:t\.me/|@)([a-zA-Z0-9_]+)', url)
@@ -358,7 +369,14 @@ def verify_telegram_group():
 
         canal = '@' + match.group(1)
         if is_member_of_channel(user_id, canal, TELEGRAM_BOT_TOKEN):
-            return jsonify({'status': 'success'})
+            # Actualizar el score y marcar la tarea como completada
+            counter.score += reward
+            if not counter.completed_tasks:
+                counter.completed_tasks = {}
+            counter.completed_tasks[task_id] = True
+            flag_modified(counter, "completed_tasks")
+            db.commit()
+            return jsonify({'status': 'success', 'new_score': counter.score})
         else:
             return jsonify({'status': 'failure'})
 
@@ -366,6 +384,24 @@ def verify_telegram_group():
         logging.error(f"Error in verify_telegram_group: {e}")
         return jsonify({'error': str(e)}), 500
 
+
+@app.route('/get_completed_tasks', methods=['GET'])
+def get_completed_tasks():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+
+    try:
+        db = SessionLocal()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        if not counter:
+            return jsonify({'error': 'User not found'}), 404
+
+        return jsonify({'completed_tasks': counter.completed_tasks or {}})
+    except Exception as e:
+        logging.error(f"Error in get_completed_tasks: {e}")
+        return jsonify({'error': str(e)}), 500
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
