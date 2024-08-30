@@ -734,7 +734,7 @@
         }
 
         function animateCoins(reward) {
-            const coinIcon = '<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>';
+            const coinIcon = '<iconify-icon icon="twemoji:coin" style="color: gold; font-size: 30px;"></iconify-icon>';
             const coinsContainer = document.createElement('div');
             coinsContainer.style.position = 'fixed';
             coinsContainer.style.top = '0';
@@ -748,62 +748,77 @@
 
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
-            const numCoins = 100;
-            const duration = 2500;
+            const numCoins = 150;
+            const duration = 2000;
+
+            // Crear el número en el centro
+            const rewardText = document.createElement('div');
+            rewardText.style.position = 'absolute';
+            rewardText.style.left = '50%';
+            rewardText.style.top = '50%';
+            rewardText.style.transform = 'translate(-50%, -50%)';
+            rewardText.style.fontSize = '120px';
+            rewardText.style.fontWeight = 'bold';
+            rewardText.style.color = 'gold';
+            rewardText.style.opacity = '0';
+            rewardText.textContent = formatNumber(reward);
+            coinsContainer.appendChild(rewardText);
+
+            // Animar el número
+            rewardText.animate([
+                { opacity: 0, transform: 'translate(-50%, -50%) scale(0.5)' },
+                { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.7 },
+                { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }
+            ], {
+                duration: duration,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
 
             for (let i = 0; i < numCoins; i++) {
                 const coin = document.createElement('div');
                 coin.innerHTML = coinIcon;
                 coin.style.position = 'absolute';
-                coin.style.left = `${centerX}px`;
-                coin.style.top = `${centerY}px`;
+                
+                // Posición inicial aleatoria en los bordes de la pantalla
+                const side = Math.floor(Math.random() * 4);
+                switch(side) {
+                    case 0: // Top
+                        coin.style.left = `${Math.random() * 100}%`;
+                        coin.style.top = '-30px';
+                        break;
+                    case 1: // Right
+                        coin.style.right = '-30px';
+                        coin.style.top = `${Math.random() * 100}%`;
+                        break;
+                    case 2: // Bottom
+                        coin.style.left = `${Math.random() * 100}%`;
+                        coin.style.bottom = '-30px';
+                        break;
+                    case 3: // Left
+                        coin.style.left = '-30px';
+                        coin.style.top = `${Math.random() * 100}%`;
+                        break;
+                }
+                
                 coinsContainer.appendChild(coin);
 
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 100 + Math.random() * 300;
-                const endX = centerX + Math.cos(angle) * distance;
-                const endY = centerY + Math.sin(angle) * distance;
-
                 coin.animate([
-                    { transform: 'translate(-50%, -50%) scale(0.1) rotate(0deg)', opacity: 0 },
-                    { transform: 'translate(-50%, -50%) scale(2) rotate(180deg)', opacity: 1, offset: 0.1 },
-                    { transform: `translate(${endX - centerX}px, ${endY - centerY}px) scale(0.5) rotate(360deg)`, opacity: 1, offset: 0.7 },
-                    { transform: `translate(${endX - centerX}px, ${endY - centerY}px) scale(0) rotate(720deg)`, opacity: 0 }
+                    { transform: 'scale(0) rotate(0deg)', opacity: 0 },
+                    { transform: 'scale(1) rotate(360deg)', opacity: 1, offset: 0.2 },
+                    { transform: `translate(${centerX - coin.offsetLeft}px, ${centerY - coin.offsetTop}px) scale(0.5) rotate(720deg)`, opacity: 1, offset: 0.8 },
+                    { transform: `translate(${centerX - coin.offsetLeft}px, ${centerY - coin.offsetTop}px) scale(0) rotate(1080deg)`, opacity: 0 }
                 ], {
                     duration: duration,
-                    easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+                    easing: 'ease-in-out',
                     fill: 'forwards'
                 });
             }
 
-            // Añadir efecto de destello
-            const flash = document.createElement('div');
-            flash.style.position = 'fixed';
-            flash.style.top = '0';
-            flash.style.left = '0';
-            flash.style.width = '100vw';
-            flash.style.height = '100vh';
-            flash.style.backgroundColor = 'white';
-            flash.style.opacity = '0';
-            flash.style.pointerEvents = 'none';
-            flash.style.zIndex = '9998';
-            document.body.appendChild(flash);
-
-            flash.animate([
-                { opacity: 0 },
-                { opacity: 0.8, offset: 0.1 },
-                { opacity: 0 }
-            ], {
-                duration: 500,
-                easing: 'ease-out',
-                fill: 'forwards'
-            });
-
             setTimeout(() => {
                 coinsContainer.remove();
-                flash.remove();
                 alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-            }, duration + 500);
+            }, duration + 1000);
         }
 
         async function loadUserData() {
