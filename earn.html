@@ -774,15 +774,7 @@
 			rewardText.textContent = formatNumber(reward);
 			coinsContainer.appendChild(rewardText);
 		
-			// Animar el texto
-			rewardText.animate([
-				{ opacity: 0 },
-				{ opacity: 1 }
-			], {
-				duration: duration,
-				fill: 'forwards',
-				easing: 'ease-in-out'
-			});
+			let coinsArrived = 0;
 		
 			// Crear y animar las monedas
 			for (let i = 0; i < numCoins; i++) {
@@ -849,7 +841,11 @@
 					delay: delay,
 					easing: 'ease-in',
 					fill: 'forwards'
-				});
+				}).onfinish = () => {
+					coinsArrived++;
+					const progress = coinsArrived / numCoins;
+					rewardText.style.opacity = progress.toString();
+				};
 			}
 		
 			setTimeout(() => {
