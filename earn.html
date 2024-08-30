@@ -793,10 +793,28 @@
 				coin.innerHTML = '🪙';
 				coin.style.fontSize = '30px';
 				
-				const angle = Math.random() * Math.PI * 2;
-				const distance = Math.max(window.innerWidth, window.innerHeight) / 2;
-				const startX = centerX + Math.cos(angle) * distance;
-				const startY = centerY + Math.sin(angle) * distance;
+				// Determinar el borde de inicio
+				const border = Math.floor(Math.random() * 4);
+				let startX, startY;
+				
+				switch(border) {
+					case 0: // Top
+						startX = Math.random() * window.innerWidth;
+						startY = -30;
+						break;
+					case 1: // Right
+						startX = window.innerWidth + 30;
+						startY = Math.random() * window.innerHeight;
+						break;
+					case 2: // Bottom
+						startX = Math.random() * window.innerWidth;
+						startY = window.innerHeight + 30;
+						break;
+					case 3: // Left
+						startX = -30;
+						startY = Math.random() * window.innerHeight;
+						break;
+				}
 				
 				coin.style.left = `${startX}px`;
 				coin.style.top = `${startY}px`;
