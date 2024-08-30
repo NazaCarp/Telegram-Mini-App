@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, DateTime, String, JSON
+from sqlalchemy import Column, BigInteger, Integer, Float, DateTime, String, JSON
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -7,8 +7,8 @@ Base = declarative_base()
 class Counter(Base):
     __tablename__ = "counters"
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String, unique=True, index=True)
+    id = Column(BigInteger, primary_key=True, index=True)
+    user_id = Column(BigInteger, unique=True, index=True)
     name = Column(String)
     username = Column(String)
     score = Column(Float)
@@ -25,8 +25,8 @@ class Counter(Base):
 
 class Referral(Base):
     __tablename__ = 'referrals'
-    id = Column(String, primary_key=True, autoincrement=True)
-    user_id = Column(String, nullable=False)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    user_id = Column(BigInteger, nullable=False)
     name = Column(String, default='')
     from_user = Column(String, default='')
     referrals_count = Column(Integer, default=0)
@@ -36,5 +36,5 @@ class Referral(Base):
 
 class MineLevels(Base):
     __tablename__ = 'mine_levels'
-    user_id = Column(String, primary_key=True, index=True)
+    user_id = Column(BigInteger, primary_key=True, index=True)
     clubs = Column(JSONB, default={})
