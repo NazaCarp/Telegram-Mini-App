@@ -365,47 +365,6 @@
             color: white;
             cursor: not-allowed;
         }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-            }
-        }
-
-        .pulse-animation {
-            animation: pulse 0.5s ease-in-out;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-50px) scale(0.5);
-                opacity: 0;
-            }
-        }
-
-        .coin {
-            position: absolute;
-            font-size: 24px;
-            color: gold;
-            pointer-events: none;
-        }
-
-        .coin-animation {
-            animation: floatUp 1s ease-out;
-        }
     </style>
 </head>
 <body>
@@ -1016,17 +975,14 @@
             const rectangles = document.querySelectorAll('.rectangle');
             rectangles.forEach(rectangle => {
                 if (rectangle.getAttribute('data-club-id') === clubId) {
+                    const levelElement = rectangle.querySelector('.section-left');
+                    if (levelElement) {
+                        levelElement.textContent = `lvl ${newLevel}`;
+                    }
+
                     // Encontrar el club correspondiente
                     const club = clubs.find(c => c.name === clubId);
                     if (club) {
-                        // Calcular el nuevo profitPerHour
-                        const oldProfitPerHour = calculateProfitPerHour(club.cost, newLevel - 1, club.name);
-                        const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
-                        const profitIncrease = newProfitPerHour - oldProfitPerHour;
-
-                        // Crear y animar monedas
-                        createFloatingCoins(rectangle, profitIncrease);
-
                         // Calcular el nuevo costo y profitPerHour
                         const cost = calculateCost(club.cost, newLevel);
                         clubProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
@@ -1075,30 +1031,6 @@
             };
 
             button.animate(shakeAnimation, shakeTiming);
-        }
-
-        function createFloatingCoins(element, profitIncrease) {
-            const numCoins = Math.min(Math.floor(profitIncrease / 10), 10); // Máximo 10 monedas
-            const rect = element.getBoundingClientRect();
-
-            for (let i = 0; i < numCoins; i++) {
-                const coin = document.createElement('div');
-                coin.className = 'coin';
-                coin.innerHTML = '<iconify-icon icon="twemoji:coin"></iconify-icon>';
-                coin.style.left = `${rect.left + Math.random() * rect.width}px`;
-                coin.style.top = `${rect.top + rect.height}px`;
-
-                document.body.appendChild(coin);
-
-                // Iniciar la animación después de un pequeño retraso aleatorio
-                setTimeout(() => {
-                    coin.classList.add('coin-animation');
-                    // Eliminar la moneda después de que termine la animación
-                    setTimeout(() => {
-                        document.body.removeChild(coin);
-                    }, 1000);
-                }, Math.random() * 500);
-            }
         }
     </script>
 </body>
