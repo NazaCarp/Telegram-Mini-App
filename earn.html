@@ -566,6 +566,12 @@
                 const reward = parseFloat(rectangle.getAttribute('data-reward'));
                 closeAlertMenu(); // Cerrar el menú de alerta antes de la animación
                 animateCoins(reward);
+                
+                // Marcar el rectángulo como verificado
+                rectangle.dataset.verified = 'true';
+                
+                // Eliminar el botón de verificación
+                checkButton.remove();
             } else {
                 alert('User is not in the group');
             }
@@ -575,6 +581,28 @@
             const url = event.target.dataset.url;
             window.open(url, '_blank');
         }
+
+        // Modificar la función que maneja el clic en los rectángulos
+        function handleRectangleClick(event) {
+            const rectangle = event.currentTarget;
+            const alertMenu = document.getElementById('alertMenu');
+            const checkButton = alertMenu.querySelector('#checkButton');
+            const actionButton = alertMenu.querySelector('#actionButton');
+            
+            // Verificar si el rectángulo ya ha sido verificado
+            if (rectangle.dataset.verified === 'true') {
+                // Si está verificado, solo mostrar el botón de acción
+                checkButton.style.display = 'none';
+                actionButton.style.display = 'block';
+            } else {
+                // Si no está verificado, mostrar ambos botones
+                checkButton.style.display = 'block';
+                actionButton.style.display = 'block';
+                
+                // Actualizar los datos del botón de verificación
+                checkButton.dataset.rectangleId = rectangle.id;
+                checkButton.dataset.url = rectangle.dataset.url;
+            }
 
         document.addEventListener('mousedown', (event) => {
             const checkButton = event.target.closest('#checkButton');
