@@ -566,12 +566,6 @@
                 const reward = parseFloat(rectangle.getAttribute('data-reward'));
                 closeAlertMenu(); // Cerrar el menú de alerta antes de la animación
                 animateCoins(reward);
-                
-                // Marcar el rectángulo como verificado
-                rectangle.dataset.verified = 'true';
-                
-                // Eliminar el botón de verificación
-                checkButton.remove();
             } else {
                 alert('User is not in the group');
             }
@@ -581,28 +575,6 @@
             const url = event.target.dataset.url;
             window.open(url, '_blank');
         }
-
-        // Modificar la función que maneja el clic en los rectángulos
-        function handleRectangleClick(event) {
-            const rectangle = event.currentTarget;
-            const alertMenu = document.getElementById('alertMenu');
-            const checkButton = alertMenu.querySelector('#checkButton');
-            const actionButton = alertMenu.querySelector('#actionButton');
-            
-            // Verificar si el rectángulo ya ha sido verificado
-            if (rectangle.dataset.verified === 'true') {
-                // Si está verificado, solo mostrar el botón de acción
-                checkButton.style.display = 'none';
-                actionButton.style.display = 'block';
-            } else {
-                // Si no está verificado, mostrar ambos botones
-                checkButton.style.display = 'block';
-                actionButton.style.display = 'block';
-                
-                // Actualizar los datos del botón de verificación
-                checkButton.dataset.rectangleId = rectangle.id;
-                checkButton.dataset.url = rectangle.dataset.url;
-            }
 
         document.addEventListener('mousedown', (event) => {
             const checkButton = event.target.closest('#checkButton');
@@ -777,8 +749,8 @@
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
 			const numCoins = 300;
-			const duration = 1500;
-			const staggerDuration = 750;
+			const duration = 1500;  // Reducido de 3000 a 1500
+			const staggerDuration = 750;  // Reducido de 1500 a 750
 		
 			// Crear el número en el centro (invisible inicialmente)
 			const rewardText = document.createElement('div');
@@ -852,7 +824,7 @@
 				coin.animate([
 					{ transform: 'scale(1)', opacity: 0, offset: 0 },
 					{ transform: 'scale(1)', opacity: 1, offset: 0.1 },
-					{ transform: 'scale(0.8)', opacity: 1, offset: 0.5 },
+					{ transform: 'scale(0.8)', opacity: 1, offset: 0.8 },
 					{ transform: 'scale(0)', opacity: 0, offset: 1 }
 				], {
 					duration: duration,
@@ -871,7 +843,7 @@
 					fill: 'forwards'
 				}).onfinish = () => {
 					coinsArrived++;
-					const progress = Math.min(coinsArrived / (numCoins * 0.7), 1);
+					const progress = coinsArrived / numCoins;
 					rewardText.style.opacity = progress.toString();
 				};
 			}
@@ -879,7 +851,7 @@
 			setTimeout(() => {
 				coinsContainer.remove();
 				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-			}, duration + staggerDuration + 500);
+			}, duration + staggerDuration + 500);  // Reducido el tiempo de espera final
 		}
 
         async function loadUserData() {
