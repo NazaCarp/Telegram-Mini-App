@@ -567,7 +567,7 @@
                 closeAlertMenu(); // Cerrar el menú de alerta antes de la animación
                 animateCoins(reward);
             } else if (data.status === 'already_completed') {
-                alert('This task has already been completed.');
+                closeAlertMenu();
             } else {
                 alert('User is not in the group');
             }
