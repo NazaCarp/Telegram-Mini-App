@@ -749,7 +749,10 @@
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
 			const numCoins = 200;
-			const duration = 3000;
+			const formDuration = 2000;
+			const holdDuration = 2000;
+			const disperseDuration = 1000;
+			const totalDuration = formDuration + holdDuration + disperseDuration;
 		
 			// Crear el número en el centro (invisible inicialmente)
 			const rewardText = document.createElement('div');
@@ -807,11 +810,11 @@
 		
 				coin.animate([
 					{ transform: `translate(0, 0) scale(0.5)`, opacity: 0 },
-					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: 0.7 },
-					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: 0.8 },
+					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: formDuration / totalDuration },
+					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: (formDuration + holdDuration) / totalDuration },
 					{ transform: `translate(${(Math.random() - 0.5) * window.innerWidth}px, ${window.innerHeight}px) scale(0.5)`, opacity: 0 }
 				], {
-					duration: duration,
+					duration: totalDuration,
 					easing: 'ease-in-out',
 					fill: 'forwards'
 				});
@@ -820,7 +823,7 @@
 			setTimeout(() => {
 				coinsContainer.remove();
 				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-			}, duration + 500);
+			}, totalDuration + 500);
 		}
 
         async function loadUserData() {
