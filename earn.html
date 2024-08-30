@@ -746,42 +746,37 @@
 			coinsContainer.style.zIndex = '9999';
 			document.body.appendChild(coinsContainer);
 		
+			const canvas = document.createElement('canvas');
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			coinsContainer.appendChild(canvas);
+			const ctx = canvas.getContext('2d');
+		
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
-			const numCoins = 1000;  // Aumentamos el número de monedas
+			const numCoins = 1000;
 			const formDuration = 2000;
 			const holdDuration = 2000;
 			const disperseDuration = 1000;
 			const totalDuration = formDuration + holdDuration + disperseDuration;
 		
 			// Calcular el tamaño de fuente basado en el ancho de la pantalla
-			const fontSize = Math.min(window.innerWidth / 4, 300);  // Aumentamos el tamaño máximo
-		
-			// Crear el número en el centro (invisible inicialmente)
-			const rewardText = document.createElement('div');
-			rewardText.style.position = 'absolute';
-			rewardText.style.left = '50%';
-			rewardText.style.top = '50%';
-			rewardText.style.transform = 'translate(-50%, -50%)';
-			rewardText.style.fontSize = `${fontSize}px`;
-			rewardText.style.fontWeight = 'bold';
-			rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
-			rewardText.style.color = 'transparent';
-			rewardText.textContent = formatNumber(reward);
-			coinsContainer.appendChild(rewardText);
+			const fontSize = Math.min(window.innerWidth / 4, 300);
 		
 			// Obtener los puntos que forman el número
-			const canvas = document.createElement('canvas');
-			const ctx = canvas.getContext('2d');
-			canvas.width = rewardText.offsetWidth;
-			canvas.height = rewardText.offsetHeight;
 			ctx.font = `bold ${fontSize}px 'Poppins', 'Arial', sans-serif`;
-			ctx.fillText(formatNumber(reward), 0, canvas.height * 0.8);
+			ctx.fillStyle = 'white';
+			const text = formatNumber(reward);
+			const textMetrics = ctx.measureText(text);
+			const textWidth = textMetrics.width;
+			const textHeight = fontSize;
+			ctx.fillText(text, (canvas.width - textWidth) / 2, (canvas.height + textHeight * 0.7) / 2);
+		
 			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			const pixels = imageData.data;
 			const points = [];
 			
-			for (let y = 0; y < canvas.height; y += 2) {  // Reducimos el paso para aumentar la densidad
+			for (let y = 0; y < canvas.height; y += 2) {
 				for (let x = 0; x < canvas.width; x += 2) {
 					const i = (y * canvas.width + x) * 4;
 					if (pixels[i + 3] > 128) {
@@ -790,43 +785,58 @@
 				}
 			}
 		
-			// Crear y animar las monedas
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		
+			const coins = [];
 			for (let i = 0; i < numCoins; i++) {
-				const coin = document.createElement('div');
-				coin.style.position = 'absolute';
-				coin.style.width = '6px';  // Reducimos el tamaño de las monedas
-				coin.style.height = '6px';
-				coin.style.borderRadius = '50%';
-				coin.style.background = 'radial-gradient(circle at 30% 30%, #ffd700, #cca300)';
-				coin.style.boxShadow = '0 0 2px gold, inset 0 0 1px rgba(0,0,0,0.2)';
-				
-				const startX = Math.random() * window.innerWidth;
-				const startY = Math.random() * window.innerHeight;
-				coin.style.left = `${startX}px`;
-				coin.style.top = `${startY}px`;
-				
-				coinsContainer.appendChild(coin);
-		
-				const point = points[Math.floor(Math.random() * points.length)];
-				const endX = centerX - canvas.width / 2 + point.x;
-				const endY = centerY - canvas.height / 2 + point.y;
-		
-				coin.animate([
-					{ transform: `translate(0, 0) scale(0.5)`, opacity: 0 },
-					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: formDuration / totalDuration },
-					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: (formDuration + holdDuration) / totalDuration },
-					{ transform: `translate(${(Math.random() - 0.5) * window.innerWidth}px, ${window.innerHeight}px) scale(0.5)`, opacity: 0 }
-				], {
-					duration: totalDuration,
-					easing: 'ease-in-out',
-					fill: 'forwards'
+				coins.push({
+					x: Math.random() * canvas.width,
+					y: Math.random() * canvas.height,
+					targetX: points[Math.floor(Math.random() * points.length)].x,
+					targetY: points[Math.floor(Math.random() * points.length)].y,
+					size: 3,
+					opacity: 0
 				});
 			}
 		
-			setTimeout(() => {
-				coinsContainer.remove();
-				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-			}, totalDuration + 500);
+			let startTime = null;
+			function animate(timestamp) {
+				if (!startTime) startTime = timestamp;
+				const elapsed = timestamp - startTime;
+		
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+		
+				coins.forEach(coin => {
+					if (elapsed < formDuration) {
+						coin.x += (coin.targetX - coin.x) * 0.05;
+						coin.y += (coin.targetY - coin.y) * 0.05;
+						coin.opacity = Math.min(1, elapsed / formDuration);
+					} else if (elapsed < formDuration + holdDuration) {
+						// Do nothing, keep coins in place
+					} else {
+						const disperseProgress = (elapsed - formDuration - holdDuration) / disperseDuration;
+						coin.x += (Math.random() - 0.5) * 10;
+						coin.y += 5 + Math.random() * 5;
+						coin.opacity = Math.max(0, 1 - disperseProgress);
+					}
+		
+					ctx.beginPath();
+					ctx.arc(coin.x, coin.y, coin.size, 0, Math.PI * 2);
+					ctx.fillStyle = `rgba(255, 215, 0, ${coin.opacity})`;
+					ctx.fill();
+				});
+		
+				if (elapsed < totalDuration) {
+					requestAnimationFrame(animate);
+				} else {
+					setTimeout(() => {
+						coinsContainer.remove();
+						alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
+					}, 500);
+				}
+			}
+		
+			requestAnimationFrame(animate);
 		}
 
         async function loadUserData() {
