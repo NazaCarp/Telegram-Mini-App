@@ -734,7 +734,7 @@
         }
 
         function animateCoins(reward) {
-            const coinIcon = '<iconify-icon icon="twemoji:coin" style="font-size: 60px;"></iconify-icon>';
+            const coinIcon = '<iconify-icon icon="twemoji:coin" style="font-size: 40px;"></iconify-icon>';
             const coinsContainer = document.createElement('div');
             coinsContainer.style.position = 'fixed';
             coinsContainer.style.top = '0';
@@ -746,49 +746,64 @@
             coinsContainer.style.zIndex = '9999';
             document.body.appendChild(coinsContainer);
 
-            const numCoins = 30;
-            const duration = 3000;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const numCoins = 50;
+            const duration = 2000;
 
             for (let i = 0; i < numCoins; i++) {
                 const coin = document.createElement('div');
                 coin.innerHTML = coinIcon;
                 coin.style.position = 'absolute';
-                coin.style.left = `${Math.random() * 100}%`;
-                coin.style.top = '-60px';
+                coin.style.left = `${centerX}px`;
+                coin.style.top = `${centerY}px`;
                 coinsContainer.appendChild(coin);
 
-                const delay = Math.random() * 1500;
-                const initialRotation = Math.random() * 360;
-                const rotationSpeed = Math.random() * 720 - 360; // Entre -360 y 360 grados por segundo
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 150;
+                const endX = centerX + Math.cos(angle) * distance;
+                const endY = centerY + Math.sin(angle) * distance;
 
                 coin.animate([
-                    { transform: `translateY(0) rotate(${initialRotation}deg)`, offset: 0 },
-                    { transform: `translateY(${window.innerHeight}px) rotate(${initialRotation + rotationSpeed * 0.5}deg)`, offset: 0.5 },
-                    { transform: `translateY(${window.innerHeight - 100}px) rotate(${initialRotation + rotationSpeed * 0.75}deg)`, offset: 0.75 },
-                    { transform: `translateY(${window.innerHeight}px) rotate(${initialRotation + rotationSpeed}deg)`, offset: 1 }
+                    { transform: 'translate(-50%, -50%) scale(0.1) rotate(0deg)', opacity: 0 },
+                    { transform: 'translate(-50%, -50%) scale(1) rotate(180deg)', opacity: 1, offset: 0.1 },
+                    { transform: `translate(${endX - centerX}px, ${endY - centerY}px) scale(0.5) rotate(360deg)`, opacity: 1, offset: 0.7 },
+                    { transform: `translate(${endX - centerX}px, ${endY - centerY}px) scale(0) rotate(720deg)`, opacity: 0 }
                 ], {
                     duration: duration,
-                    delay: delay,
-                    easing: 'ease-in',
-                    fill: 'forwards'
-                });
-
-                coin.animate([
-                    { opacity: 0, offset: 0 },
-                    { opacity: 1, offset: 0.1 },
-                    { opacity: 1, offset: 0.9 },
-                    { opacity: 0, offset: 1 }
-                ], {
-                    duration: duration,
-                    delay: delay,
+                    easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
                     fill: 'forwards'
                 });
             }
 
+            // Añadir efecto de destello
+            const flash = document.createElement('div');
+            flash.style.position = 'fixed';
+            flash.style.top = '0';
+            flash.style.left = '0';
+            flash.style.width = '100vw';
+            flash.style.height = '100vh';
+            flash.style.backgroundColor = 'white';
+            flash.style.opacity = '0';
+            flash.style.pointerEvents = 'none';
+            flash.style.zIndex = '9998';
+            document.body.appendChild(flash);
+
+            flash.animate([
+                { opacity: 0 },
+                { opacity: 0.8, offset: 0.1 },
+                { opacity: 0 }
+            ], {
+                duration: 500,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+
             setTimeout(() => {
                 coinsContainer.remove();
+                flash.remove();
                 alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-            }, duration + 1500);
+            }, duration + 500);
         }
 
         async function loadUserData() {
