@@ -1026,7 +1026,7 @@
 
                         // Crear y animar monedas
                         createFloatingCoins(rectangle, profitIncrease);
-                        
+
                         // Calcular el nuevo costo y profitPerHour
                         const cost = calculateCost(club.cost, newLevel);
                         clubProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
@@ -1075,6 +1075,30 @@
             };
 
             button.animate(shakeAnimation, shakeTiming);
+        }
+
+        function createFloatingCoins(element, profitIncrease) {
+            const numCoins = Math.min(Math.floor(profitIncrease / 10), 10); // Máximo 10 monedas
+            const rect = element.getBoundingClientRect();
+
+            for (let i = 0; i < numCoins; i++) {
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                coin.innerHTML = '<iconify-icon icon="twemoji:coin"></iconify-icon>';
+                coin.style.left = `${rect.left + Math.random() * rect.width}px`;
+                coin.style.top = `${rect.top + rect.height}px`;
+
+                document.body.appendChild(coin);
+
+                // Iniciar la animación después de un pequeño retraso aleatorio
+                setTimeout(() => {
+                    coin.classList.add('coin-animation');
+                    // Eliminar la moneda después de que termine la animación
+                    setTimeout(() => {
+                        document.body.removeChild(coin);
+                    }, 1000);
+                }, Math.random() * 500);
+            }
         }
     </script>
 </body>
