@@ -556,6 +556,9 @@
 
             const data = await response.json();
             if (data.status === 'success') {
+                // Actualizar el score
+                localStorage.setItem('score', data.new_score);
+
                 // Marcar la tarea como completada
                 completedTasks[rectangleId] = true;
                 updateRectanglesAppearance();
