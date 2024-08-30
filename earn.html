@@ -760,17 +760,16 @@
 			rewardText.style.fontSize = '80px';
 			rewardText.style.fontWeight = 'bold';
 			rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
-			rewardText.style.color = 'white';
 			rewardText.style.opacity = '0';
+			rewardText.style.background = 'linear-gradient(to bottom, #ffd700 0%, #ffcc00 50%, #cca300 100%)';
+			rewardText.style.webkitBackgroundClip = 'text';
+			rewardText.style.webkitTextFillColor = 'transparent';
 			rewardText.style.textShadow = `
-				-3px -3px 0 gold,  
-				3px -3px 0 gold,
-				-3px 3px 0 gold,
-				3px 3px 0 gold,
-				0 0 10px rgba(255, 215, 0, 0.7)
+				3px 3px 6px rgba(0,0,0,0.2),
+				0 0 5px rgba(255,215,0,0.5),
+				0 0 10px rgba(255,215,0,0.3)
 			`;
-			rewardText.style.webkitTextStroke = '3px gold';
-			rewardText.style.webkitTextFillColor = 'white';
+			rewardText.style.filter = 'drop-shadow(0 0 2px rgba(255,215,0,0.5))';
 			rewardText.textContent = formatNumber(reward);
 			coinsContainer.appendChild(rewardText);
 		
@@ -791,8 +790,8 @@
 				coin.style.width = '20px';
 				coin.style.height = '20px';
 				coin.style.borderRadius = '50%';
-				coin.style.backgroundColor = 'gold';
-				coin.style.boxShadow = '0 0 5px gold';
+				coin.style.background = 'radial-gradient(circle at 30% 30%, #ffd700, #cca300)';
+				coin.style.boxShadow = '0 0 5px gold, inset 0 0 3px rgba(0,0,0,0.2)';
 				
 				coin.style.left = `${Math.random() * 100}%`;
 				coin.style.top = '-30px';
