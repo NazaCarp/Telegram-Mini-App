@@ -746,25 +746,30 @@
             coinsContainer.style.zIndex = '9999';
             document.body.appendChild(coinsContainer);
 
-            for (let i = 0; i < 50; i++) {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            for (let i = 0; i < 30; i++) {
                 const coin = document.createElement('div');
                 coin.innerHTML = coinIcon;
                 coin.style.position = 'absolute';
-                coin.style.left = `${Math.random() * 100}%`;
-                coin.style.top = '-50px';
-                coin.style.transform = 'scale(0)';
+                coin.style.left = `${centerX}px`;
+                coin.style.top = `${centerY}px`;
+                coin.style.transform = 'translate(-50%, -50%) scale(0)';
                 coinsContainer.appendChild(coin);
 
-                const duration = 1000 + Math.random() * 500;
-                const delay = Math.random() * 200;
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 100 + Math.random() * 150;
+                const duration = 600 + Math.random() * 400;
 
                 coin.animate([
-                    { transform: 'scale(0) translateY(0)', opacity: 1 },
-                    { transform: 'scale(1) translateY(120vh)', opacity: 0 }
+                    { transform: 'translate(-50%, -50%) scale(0)', opacity: 0 },
+                    { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 1, offset: 0.1 },
+                    { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1)`, opacity: 1, offset: 0.6 },
+                    { transform: `translate(${Math.cos(angle) * distance * 1.2}px, ${Math.sin(angle) * distance * 1.2}px) scale(0)`, opacity: 0 }
                 ], {
                     duration: duration,
-                    delay: delay,
-                    easing: 'ease-in',
+                    easing: 'ease-out',
                     fill: 'forwards'
                 });
             }
@@ -772,7 +777,7 @@
             setTimeout(() => {
                 coinsContainer.remove();
                 alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-            }, 1500);
+            }, 1200);
         }
 
         async function loadUserData() {
