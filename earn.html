@@ -793,21 +793,23 @@
 				coin.style.background = 'radial-gradient(circle at 30% 30%, #ffd700, #cca300)';
 				coin.style.boxShadow = '0 0 5px gold, inset 0 0 3px rgba(0,0,0,0.2)';
 				
-				coin.style.left = `${Math.random() * 100}%`;
-				coin.style.top = '-30px';
+				coin.style.left = `${centerX}px`;
+				coin.style.top = `${centerY}px`;
 				
 				coinsContainer.appendChild(coin);
 		
-				const endX = Math.random() * window.innerWidth;
+				const angle = Math.random() * Math.PI * 2;
+				const distance = 50 + Math.random() * 150;
+				const endX = centerX + Math.cos(angle) * distance;
 				const endY = window.innerHeight + 30;
 		
 				coin.animate([
-					{ transform: 'translateY(0) rotate(0deg)', opacity: 0 },
-					{ transform: 'translateY(100px) rotate(180deg)', opacity: 1, offset: 0.1 },
-					{ transform: `translate(${endX - coin.offsetLeft}px, ${endY}px) rotate(360deg)`, opacity: 1 }
+					{ transform: 'translate(-50%, -50%) scale(0.1) rotate(0deg)', opacity: 0 },
+					{ transform: `translate(${endX - centerX}px, ${distance}px) scale(1) rotate(360deg)`, opacity: 1, offset: 0.3 },
+					{ transform: `translate(${endX - centerX}px, ${endY}px) scale(1) rotate(720deg)`, opacity: 1 }
 				], {
 					duration: duration + Math.random() * 1000,
-					easing: 'ease-in',
+					easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
 					fill: 'forwards'
 				});
 			}
