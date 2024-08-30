@@ -750,6 +750,7 @@
 			const centerY = window.innerHeight / 2;
 			const numCoins = 300;
 			const duration = 3000;
+			const staggerDuration = 1500; // Duración del efecto escalonado
 		
 			// Crear el número en el centro (invisible inicialmente)
 			const rewardText = document.createElement('div');
@@ -797,21 +798,23 @@
 				const border = Math.floor(Math.random() * 4);
 				let startX, startY;
 				
+				const offset = 100; // Distancia adicional fuera de la pantalla
+				
 				switch(border) {
 					case 0: // Top
 						startX = Math.random() * window.innerWidth;
-						startY = -30;
+						startY = -30 - offset;
 						break;
 					case 1: // Right
-						startX = window.innerWidth + 30;
+						startX = window.innerWidth + 30 + offset;
 						startY = Math.random() * window.innerHeight;
 						break;
 					case 2: // Bottom
 						startX = Math.random() * window.innerWidth;
-						startY = window.innerHeight + 30;
+						startY = window.innerHeight + 30 + offset;
 						break;
 					case 3: // Left
-						startX = -30;
+						startX = -30 - offset;
 						startY = Math.random() * window.innerHeight;
 						break;
 				}
@@ -824,12 +827,16 @@
 				const endX = centerX + (Math.random() - 0.5) * rewardText.offsetWidth * 0.8;
 				const endY = centerY + (Math.random() - 0.5) * rewardText.offsetHeight * 0.8;
 		
+				const delay = Math.random() * staggerDuration;
+		
 				coin.animate([
-					{ transform: 'scale(1)', offset: 0 },
-					{ transform: 'scale(0.8)', offset: 0.8 },
-					{ transform: 'scale(0)', offset: 1 }
+					{ transform: 'scale(1)', opacity: 0, offset: 0 },
+					{ transform: 'scale(1)', opacity: 1, offset: 0.1 },
+					{ transform: 'scale(0.8)', opacity: 1, offset: 0.8 },
+					{ transform: 'scale(0)', opacity: 0, offset: 1 }
 				], {
 					duration: duration,
+					delay: delay,
 					easing: 'ease-in',
 					fill: 'forwards'
 				});
@@ -839,6 +846,7 @@
 					{ left: `${endX}px`, top: `${endY}px` }
 				], {
 					duration: duration,
+					delay: delay,
 					easing: 'ease-in',
 					fill: 'forwards'
 				});
@@ -847,7 +855,7 @@
 			setTimeout(() => {
 				coinsContainer.remove();
 				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-			}, duration + 1000);
+			}, duration + staggerDuration + 1000);
 		}
 
         async function loadUserData() {
