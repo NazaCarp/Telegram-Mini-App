@@ -748,8 +748,8 @@
 		
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
-			const numCoins = 150;
-			const duration = 2000;
+			const numCoins = 50;
+			const duration = 3000;
 		
 			// Crear el número en el centro
 			const rewardText = document.createElement('div');
@@ -776,7 +776,7 @@
 			// Animar el número
 			rewardText.animate([
 				{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.8)' },
-				{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.7 },
+				{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.2 },
 				{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }
 			], {
 				duration: duration,
@@ -787,29 +787,29 @@
 			for (let i = 0; i < numCoins; i++) {
 				const coin = document.createElement('div');
 				coin.style.position = 'absolute';
-				coin.style.width = '20px';
-				coin.style.height = '20px';
+				coin.style.width = '30px';
+				coin.style.height = '30px';
 				coin.style.borderRadius = '50%';
 				coin.style.background = 'radial-gradient(circle at 30% 30%, #ffd700, #cca300)';
 				coin.style.boxShadow = '0 0 5px gold, inset 0 0 3px rgba(0,0,0,0.2)';
 				
-				coin.style.left = `${centerX}px`;
-				coin.style.top = `${centerY}px`;
+				coin.style.left = `${Math.random() * 100}%`;
+				coin.style.top = '-30px';
 				
 				coinsContainer.appendChild(coin);
 		
-				const angle = Math.random() * Math.PI * 2;
-				const distance = 50 + Math.random() * 150;
-				const endX = centerX + Math.cos(angle) * distance;
+				const delay = Math.random() * 1500;
 				const endY = window.innerHeight + 30;
 		
 				coin.animate([
-					{ transform: 'translate(-50%, -50%) scale(0.1) rotate(0deg)', opacity: 0 },
-					{ transform: `translate(${endX - centerX}px, ${distance}px) scale(1) rotate(360deg)`, opacity: 1, offset: 0.3 },
-					{ transform: `translate(${endX - centerX}px, ${endY}px) scale(1) rotate(720deg)`, opacity: 1 }
+					{ transform: 'translateY(0) rotate(0deg)', opacity: 0 },
+					{ transform: 'translateY(100px) rotate(180deg)', opacity: 1, offset: 0.1 },
+					{ transform: `translateY(${centerY}px) rotate(360deg) scale(1.5)`, opacity: 1, offset: 0.5 },
+					{ transform: `translateY(${endY}px) rotate(720deg)`, opacity: 1 }
 				], {
-					duration: duration + Math.random() * 1000,
-					easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+					duration: duration,
+					delay: delay,
+					easing: 'ease-in',
 					fill: 'forwards'
 				});
 			}
