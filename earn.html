@@ -754,13 +754,16 @@
 			const disperseDuration = 1000;
 			const totalDuration = formDuration + holdDuration + disperseDuration;
 		
+			// Calcular el tamaño de fuente basado en el ancho de la pantalla
+			const fontSize = Math.min(window.innerWidth / 10, 150);
+		
 			// Crear el número en el centro (invisible inicialmente)
 			const rewardText = document.createElement('div');
 			rewardText.style.position = 'absolute';
 			rewardText.style.left = '50%';
 			rewardText.style.top = '50%';
 			rewardText.style.transform = 'translate(-50%, -50%)';
-			rewardText.style.fontSize = '150px';
+			rewardText.style.fontSize = `${fontSize}px`;
 			rewardText.style.fontWeight = 'bold';
 			rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
 			rewardText.style.color = 'transparent';
@@ -772,7 +775,7 @@
 			const ctx = canvas.getContext('2d');
 			canvas.width = rewardText.offsetWidth;
 			canvas.height = rewardText.offsetHeight;
-			ctx.font = `bold 150px 'Poppins', 'Arial', sans-serif`;
+			ctx.font = `bold ${fontSize}px 'Poppins', 'Arial', sans-serif`;
 			ctx.fillText(formatNumber(reward), 0, canvas.height * 0.8);
 			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			const pixels = imageData.data;
