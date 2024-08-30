@@ -748,73 +748,70 @@
 		
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
-			const numCoins = 50;
+			const numCoins = 200;
 			const duration = 3000;
 		
-			// Crear el número en el centro
+			// Crear el número en el centro (invisible inicialmente)
 			const rewardText = document.createElement('div');
 			rewardText.style.position = 'absolute';
 			rewardText.style.left = '50%';
 			rewardText.style.top = '50%';
 			rewardText.style.transform = 'translate(-50%, -50%)';
-			rewardText.style.fontSize = '80px';
+			rewardText.style.fontSize = '150px';
 			rewardText.style.fontWeight = 'bold';
 			rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
-			rewardText.style.opacity = '0';
-			rewardText.style.background = 'linear-gradient(to bottom, #ffd700 0%, #ffcc00 50%, #cca300 100%)';
-			rewardText.style.webkitBackgroundClip = 'text';
-			rewardText.style.webkitTextFillColor = 'transparent';
-			rewardText.style.textShadow = `
-				3px 3px 6px rgba(0,0,0,0.2),
-				0 0 5px rgba(255,215,0,0.5),
-				0 0 10px rgba(255,215,0,0.3)
-			`;
-			rewardText.style.filter = 'drop-shadow(0 0 2px rgba(255,215,0,0.5))';
+			rewardText.style.color = 'transparent';
 			rewardText.textContent = formatNumber(reward);
 			coinsContainer.appendChild(rewardText);
 		
-			// Animar el número
-			rewardText.animate([
-				{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.8)' },
-				{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.2 },
-				{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }
-			], {
-				duration: duration,
-				easing: 'ease-out',
-				fill: 'forwards'
-			});
+			// Obtener los puntos que forman el número
+			const canvas = document.createElement('canvas');
+			const ctx = canvas.getContext('2d');
+			canvas.width = rewardText.offsetWidth;
+			canvas.height = rewardText.offsetHeight;
+			ctx.font = `bold 150px 'Poppins', 'Arial', sans-serif`;
+			ctx.fillText(formatNumber(reward), 0, canvas.height * 0.8);
+			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			const pixels = imageData.data;
+			const points = [];
+			
+			for (let y = 0; y < canvas.height; y += 4) {
+				for (let x = 0; x < canvas.width; x += 4) {
+					const i = (y * canvas.width + x) * 4;
+					if (pixels[i + 3] > 128) {
+						points.push({ x: x, y: y });
+					}
+				}
+			}
 		
+			// Crear y animar las monedas
 			for (let i = 0; i < numCoins; i++) {
 				const coin = document.createElement('div');
 				coin.style.position = 'absolute';
-				coin.style.width = '30px';
-				coin.style.height = '30px';
+				coin.style.width = '10px';
+				coin.style.height = '10px';
 				coin.style.borderRadius = '50%';
 				coin.style.background = 'radial-gradient(circle at 30% 30%, #ffd700, #cca300)';
-				coin.style.boxShadow = '0 0 5px gold, inset 0 0 3px rgba(0,0,0,0.2)';
+				coin.style.boxShadow = '0 0 3px gold, inset 0 0 2px rgba(0,0,0,0.2)';
 				
-				const angle = (i / numCoins) * Math.PI * 2;
-				const radius = 150;
-				const startX = centerX + Math.cos(angle) * radius;
-				const startY = centerY + Math.sin(angle) * radius;
-				
+				const startX = Math.random() * window.innerWidth;
+				const startY = Math.random() * window.innerHeight;
 				coin.style.left = `${startX}px`;
 				coin.style.top = `${startY}px`;
 				
 				coinsContainer.appendChild(coin);
 		
-				const delay = (i / numCoins) * 1000;
-				const endX = startX + (Math.random() - 0.5) * window.innerWidth;
-				const endY = startY + (Math.random() - 0.5) * window.innerHeight;
+				const point = points[Math.floor(Math.random() * points.length)];
+				const endX = centerX - canvas.width / 2 + point.x;
+				const endY = centerY - canvas.height / 2 + point.y;
 		
 				coin.animate([
-					{ transform: 'scale(0) rotate(0deg)', opacity: 0 },
-					{ transform: 'scale(1) rotate(360deg)', opacity: 1, offset: 0.2 },
-					{ transform: 'scale(1) rotate(360deg)', opacity: 1, offset: 0.8 },
-					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0) rotate(720deg)`, opacity: 0 }
+					{ transform: `translate(0, 0) scale(0.5)`, opacity: 0 },
+					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: 0.7 },
+					{ transform: `translate(${endX - startX}px, ${endY - startY}px) scale(1)`, opacity: 1, offset: 0.8 },
+					{ transform: `translate(${(Math.random() - 0.5) * window.innerWidth}px, ${window.innerHeight}px) scale(0.5)`, opacity: 0 }
 				], {
 					duration: duration,
-					delay: delay,
 					easing: 'ease-in-out',
 					fill: 'forwards'
 				});
@@ -823,7 +820,7 @@
 			setTimeout(() => {
 				coinsContainer.remove();
 				alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-			}, duration + 1500);
+			}, duration + 500);
 		}
 
         async function loadUserData() {
