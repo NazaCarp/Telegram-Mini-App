@@ -292,6 +292,35 @@
             visibility: visible;
             opacity: 1;
         }
+
+        #coinContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .coin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: url('path/to/coin-image.png') no-repeat center center;
+            background-size: contain;
+            animation: fallDown 1.5s ease-in, spin 1s linear infinite;
+        }
+
+        @keyframes fallDown {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -393,6 +422,7 @@
     <h2>Daily Rewards</h2>
     <div class="calendar" id="dailyRewardsList"></div>
 </div>
+<div id="coinContainer"></div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram.WebApp;
@@ -561,6 +591,7 @@
 
             const data = await response.json();
             if (data.status === 'success') {
+                showCoinAnimation();
                 alert('User is in the group');
                 closeAlertMenu();
             } else {
@@ -729,6 +760,24 @@
             };
 
             button.animate(shakeAnimation, shakeTiming);
+        }
+
+        function showCoinAnimation() {
+            const coinContainer = document.getElementById('coinContainer');
+            const coinCount = 20;
+
+            for (let i = 0; i < coinCount; i++) {
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                coin.style.left = `${Math.random() * 100}%`;
+                coin.style.animationDelay = `${Math.random() * 1}s`;
+                coinContainer.appendChild(coin);
+
+                // Remove coin after animation
+                setTimeout(() => {
+                    coinContainer.removeChild(coin);
+                }, 1500);
+            }
         }
 
         async function loadUserData() {
