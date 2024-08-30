@@ -564,7 +564,7 @@
                 // Animación de monedas
                 const reward = parseFloat(rectangle.getAttribute('data-reward'));
                 closeAlertMenu(); // Cerrar el menú de alerta antes de la animación
-                await animateCoins(reward);
+                animateCoins(reward);
             } else {
                 alert('User is not in the group');
             }
@@ -734,52 +734,45 @@
         }
 
         function animateCoins(reward) {
-            return new Promise((resolve) => {
-                const coinIcon = '<iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon>';
-                const coinsContainer = document.createElement('div');
-                coinsContainer.style.position = 'fixed';
-                coinsContainer.style.top = '0';
-                coinsContainer.style.left = '0';
-                coinsContainer.style.width = '100vw';
-                coinsContainer.style.height = '100vh';
-                coinsContainer.style.overflow = 'hidden';
-                coinsContainer.style.pointerEvents = 'none';
-                coinsContainer.style.zIndex = '9999';
-                document.body.appendChild(coinsContainer);
+            const coinIcon = '<iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon>';
+            const coinsContainer = document.createElement('div');
+            coinsContainer.style.position = 'fixed';
+            coinsContainer.style.top = '0';
+            coinsContainer.style.left = '0';
+            coinsContainer.style.width = '100vw';
+            coinsContainer.style.height = '100vh';
+            coinsContainer.style.overflow = 'hidden';
+            coinsContainer.style.pointerEvents = 'none';
+            coinsContainer.style.zIndex = '9999';
+            document.body.appendChild(coinsContainer);
 
-                // Ocultar el menú de alerta
-                const alertMenu = document.getElementById('alertMenu');
-                alertMenu.style.display = 'none';
+            for (let i = 0; i < 50; i++) {
+                const coin = document.createElement('div');
+                coin.innerHTML = coinIcon;
+                coin.style.position = 'absolute';
+                coin.style.left = `${Math.random() * 100}%`;
+                coin.style.top = '-50px';
+                coin.style.transform = 'scale(0)';
+                coinsContainer.appendChild(coin);
 
-                for (let i = 0; i < 50; i++) {
-                    const coin = document.createElement('div');
-                    coin.innerHTML = coinIcon;
-                    coin.style.position = 'absolute';
-                    coin.style.left = `${Math.random() * 100}%`;
-                    coin.style.top = '-50px';
-                    coin.style.transform = 'scale(0)';
-                    coinsContainer.appendChild(coin);
+                const duration = 1000 + Math.random() * 500;
+                const delay = Math.random() * 200;
 
-                    const duration = 1500 + Math.random() * 1000;
-                    const delay = Math.random() * 500;
+                coin.animate([
+                    { transform: 'scale(0) translateY(0)', opacity: 1 },
+                    { transform: 'scale(1) translateY(120vh)', opacity: 0 }
+                ], {
+                    duration: duration,
+                    delay: delay,
+                    easing: 'ease-in',
+                    fill: 'forwards'
+                });
+            }
 
-                    coin.animate([
-                        { transform: 'scale(0) translateY(0)', opacity: 1 },
-                        { transform: 'scale(1) translateY(120vh)', opacity: 0 }
-                    ], {
-                        duration: duration,
-                        delay: delay,
-                        easing: 'ease-in',
-                        fill: 'forwards'
-                    });
-                }
-
-                setTimeout(() => {
-                    coinsContainer.remove();
-                    alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-                    resolve();
-                }, 3000);
-            });
+            setTimeout(() => {
+                coinsContainer.remove();
+                alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
+            }, 1500);
         }
 
         async function loadUserData() {
