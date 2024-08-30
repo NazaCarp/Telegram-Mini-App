@@ -563,8 +563,8 @@
             if (data.status === 'success') {
                 // Animación de monedas
                 const reward = parseFloat(rectangle.getAttribute('data-reward'));
+                await closeAlertMenu();
                 await animateCoins(reward);
-                closeAlertMenu();
             } else {
                 alert('User is not in the group');
             }
