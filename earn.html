@@ -734,7 +734,7 @@
             button.animate(shakeAnimation, shakeTiming);
         }
 
-		function animateCoins(reward) {
+        function animateCoins(reward) {
 			const coinsContainer = document.createElement('div');
 			coinsContainer.style.position = 'fixed';
 			coinsContainer.style.top = '0';
@@ -759,10 +759,18 @@
 			rewardText.style.transform = 'translate(-50%, -50%)';
 			rewardText.style.fontSize = '80px';
 			rewardText.style.fontWeight = 'bold';
-			rewardText.style.fontFamily = "'Roboto', 'Arial', sans-serif";
-			rewardText.style.color = 'gold';
+			rewardText.style.fontFamily = "'Poppins', 'Arial', sans-serif";
+			rewardText.style.color = 'white';
 			rewardText.style.opacity = '0';
-			rewardText.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.7)';
+			rewardText.style.textShadow = `
+				-3px -3px 0 gold,  
+				3px -3px 0 gold,
+				-3px 3px 0 gold,
+				3px 3px 0 gold,
+				0 0 10px rgba(255, 215, 0, 0.7)
+			`;
+			rewardText.style.webkitTextStroke = '3px gold';
+			rewardText.style.webkitTextFillColor = 'white';
 			rewardText.textContent = formatNumber(reward);
 			coinsContainer.appendChild(rewardText);
 		
