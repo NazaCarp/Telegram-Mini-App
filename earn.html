@@ -748,14 +748,14 @@
 		
 			const centerX = window.innerWidth / 2;
 			const centerY = window.innerHeight / 2;
-			const numCoins = 200;
+			const numCoins = 1000;  // Aumentamos el número de monedas
 			const formDuration = 2000;
 			const holdDuration = 2000;
 			const disperseDuration = 1000;
 			const totalDuration = formDuration + holdDuration + disperseDuration;
 		
 			// Calcular el tamaño de fuente basado en el ancho de la pantalla
-			const fontSize = Math.min(window.innerWidth / 8, 180);
+			const fontSize = Math.min(window.innerWidth / 4, 300);  // Aumentamos el tamaño máximo
 		
 			// Crear el número en el centro (invisible inicialmente)
 			const rewardText = document.createElement('div');
@@ -781,8 +781,8 @@
 			const pixels = imageData.data;
 			const points = [];
 			
-			for (let y = 0; y < canvas.height; y += 4) {
-				for (let x = 0; x < canvas.width; x += 4) {
+			for (let y = 0; y < canvas.height; y += 2) {  // Reducimos el paso para aumentar la densidad
+				for (let x = 0; x < canvas.width; x += 2) {
 					const i = (y * canvas.width + x) * 4;
 					if (pixels[i + 3] > 128) {
 						points.push({ x: x, y: y });
@@ -794,11 +794,11 @@
 			for (let i = 0; i < numCoins; i++) {
 				const coin = document.createElement('div');
 				coin.style.position = 'absolute';
-				coin.style.width = '10px';
-				coin.style.height = '10px';
+				coin.style.width = '6px';  // Reducimos el tamaño de las monedas
+				coin.style.height = '6px';
 				coin.style.borderRadius = '50%';
 				coin.style.background = 'radial-gradient(circle at 30% 30%, #ffd700, #cca300)';
-				coin.style.boxShadow = '0 0 3px gold, inset 0 0 2px rgba(0,0,0,0.2)';
+				coin.style.boxShadow = '0 0 2px gold, inset 0 0 1px rgba(0,0,0,0.2)';
 				
 				const startX = Math.random() * window.innerWidth;
 				const startY = Math.random() * window.innerHeight;
