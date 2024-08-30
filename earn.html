@@ -734,7 +734,6 @@
         }
 
         function animateCoins(reward) {
-            const coinIcon = '<iconify-icon icon="twemoji:coin" style="color: gold; font-size: 30px;"></iconify-icon>';
             const coinsContainer = document.createElement('div');
             coinsContainer.style.position = 'fixed';
             coinsContainer.style.top = '0';
@@ -778,40 +777,28 @@
 
             for (let i = 0; i < numCoins; i++) {
                 const coin = document.createElement('div');
-                coin.innerHTML = coinIcon;
                 coin.style.position = 'absolute';
+                coin.style.width = '20px';
+                coin.style.height = '20px';
+                coin.style.borderRadius = '50%';
+                coin.style.backgroundColor = 'gold';
+                coin.style.boxShadow = '0 0 5px gold';
                 
-                // Posición inicial aleatoria en los bordes de la pantalla
-                const side = Math.floor(Math.random() * 4);
-                switch(side) {
-                    case 0: // Top
-                        coin.style.left = `${Math.random() * 100}%`;
-                        coin.style.top = '-30px';
-                        break;
-                    case 1: // Right
-                        coin.style.right = '-30px';
-                        coin.style.top = `${Math.random() * 100}%`;
-                        break;
-                    case 2: // Bottom
-                        coin.style.left = `${Math.random() * 100}%`;
-                        coin.style.bottom = '-30px';
-                        break;
-                    case 3: // Left
-                        coin.style.left = '-30px';
-                        coin.style.top = `${Math.random() * 100}%`;
-                        break;
-                }
+                coin.style.left = `${Math.random() * 100}%`;
+                coin.style.top = '-30px';
                 
                 coinsContainer.appendChild(coin);
 
+                const endX = Math.random() * window.innerWidth;
+                const endY = window.innerHeight + 30;
+
                 coin.animate([
-                    { transform: 'scale(0) rotate(0deg)', opacity: 0 },
-                    { transform: 'scale(1) rotate(360deg)', opacity: 1, offset: 0.2 },
-                    { transform: `translate(${centerX - coin.offsetLeft}px, ${centerY - coin.offsetTop}px) scale(0.5) rotate(720deg)`, opacity: 1, offset: 0.8 },
-                    { transform: `translate(${centerX - coin.offsetLeft}px, ${centerY - coin.offsetTop}px) scale(0) rotate(1080deg)`, opacity: 0 }
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 0 },
+                    { transform: 'translateY(100px) rotate(180deg)', opacity: 1, offset: 0.1 },
+                    { transform: `translate(${endX - coin.offsetLeft}px, ${endY}px) rotate(360deg)`, opacity: 1 }
                 ], {
-                    duration: duration,
-                    easing: 'ease-in-out',
+                    duration: duration + Math.random() * 1000,
+                    easing: 'ease-in',
                     fill: 'forwards'
                 });
             }
@@ -819,7 +806,7 @@
             setTimeout(() => {
                 coinsContainer.remove();
                 alert(`Congratulations! You've earned ${formatNumber(reward)} coins!`);
-            }, duration + 1000);
+            }, duration + 1500);
         }
 
         async function loadUserData() {
