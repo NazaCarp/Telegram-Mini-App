@@ -1033,7 +1033,6 @@
         function updateRectanglesAppearance() {
             document.querySelectorAll('.rectangle').forEach(rectangle => {
                 const taskId = rectangle.id;
-                alert(`${completedTasks}`)
                 if (completedTasks[taskId]) {
                     const arrowIconElement = rectangle.querySelector('.icon:last-child iconify-icon');
                     arrowIconElement.setAttribute('icon', 'openmoji:check-mark');
