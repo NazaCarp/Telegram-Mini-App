@@ -513,6 +513,7 @@
             const reward = parseFloat(rectangle.getAttribute('data-reward'));
 
             actionButton.addEventListener('click', () => handleVideoActionButtonClick(videoId, url));
+            checkButton.addEventListener('click', () => handleVideoCheckButtonClick(videoId, reward, checkButton));
             
             if (!videoTimers[videoId]) {
                 checkButton.classList.add('inactive');
@@ -521,8 +522,6 @@
             } else {
                 updateVideoCheckButton(videoId, checkButton);
             }
-
-            checkButton.addEventListener('click', () => handleVideoCheckButtonClick(videoId, reward, checkButton));
         }
 
         function handleVideoActionButtonClick(videoId, url) {
