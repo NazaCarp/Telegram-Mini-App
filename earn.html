@@ -851,7 +851,7 @@
 			}
 		
 			setTimeout(() => {
-                // Mantener la animación estática por 2 segundos
+                // Mantener la animación estática por 1 segundo
                 setTimeout(() => {
                     coinsContainer.remove();
                 }, 1000);  // 1 segundo de espera
@@ -873,9 +873,19 @@
         }
 
         async function loadCompletedTasks() {
-            const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
-            const data = await response.json();
-            completedTasks = data.completed_tasks;
+            // Obtener el estado de las recompensas diarias del usuario
+            let tasksStored = localStorage.getItem('user_data');
+            if (tasksStored == null) {
+                const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
+                const data = await response.json();
+                completedTasks = data.completed_tasks;
+
+                // Guardar datos en localStorage
+                localStorage.setItem('user_data', JSON.stringify(completedTasks));
+            } else {
+                completedTasks = JSON.parse(tasksStored) // Deserializar el JSON almacenado
+            }
+            
             updateRectanglesAppearance();
         }
 
