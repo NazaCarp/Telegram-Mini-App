@@ -517,13 +517,6 @@
             }, 1000);
 
             timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
-
-            // Añadir evento mousemove para activar la animación si el botón está deshabilitado
-            checkButton.addEventListener('mousemove', () => {
-                if (checkButton.disabled) {
-                    shakeButton(checkButton);
-                }
-            });
         }
 
         async function handleCheckButtonClick(event) {
@@ -567,7 +560,12 @@
             } else if (data.status === 'already_completed') {
                 closeAlertMenu();
             } else {
-                alert('User is not in the group');
+                // El usuario no está en el grupo, iniciar el temporizador
+                const timerSeconds = 60;
+                const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
+                rectangle.dataset.endTime = endTime;
+
+                updateCheckButtonState(checkButton, timerSeconds, rectangle);
             }
         }
 
