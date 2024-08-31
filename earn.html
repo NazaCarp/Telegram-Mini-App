@@ -423,6 +423,7 @@
 
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
             rectangle.addEventListener('click', (event) => {
+                alert('HOLAA')
                 event.stopPropagation(); // Evitar que el evento se propague al documento
 
                 if (rectangle.id === 'dailyRewardRectangle') {
