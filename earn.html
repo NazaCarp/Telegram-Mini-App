@@ -708,8 +708,8 @@
                 // Guardar datos en localStorage
                 localStorage.setItem('user_data', JSON.stringify(userData));
                 
-                alert(`You claimed ${data.reward_amount} coins for day ${dayNumber}`);
                 closeDailyRewardMenu();
+                animateCoins(data.reward_amount); // Añadir la animación de monedas aquí
             } else {
                 alert(data.error);
             }
