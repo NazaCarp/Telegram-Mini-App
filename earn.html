@@ -404,6 +404,8 @@
         tg.ready();
         loadUserData();
         loadCompletedTasks();
+        updateDailyRewardAmount();
+
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
         });
@@ -709,7 +711,8 @@
                 localStorage.setItem('user_data', JSON.stringify(userData));
                 
                 closeDailyRewardMenu();
-                animateCoins(data.reward_amount); // Añadir la animación de monedas aquí
+                animateCoins(data.reward_amount);
+                updateDailyRewardAmount();
             } else {
                 alert(data.error);
             }
@@ -867,6 +870,7 @@
             } else {
                 userData = JSON.parse(datastored) // Deserializar el JSON almacenado
             }
+            updateDailyRewardAmount(); // Añadir esta línea
         }
 
         async function loadCompletedTasks() {
@@ -896,6 +900,17 @@
                     arrowIconElement.style.transform = 'scaleX(-1)';
                 }
             });
+        }
+
+        function updateDailyRewardAmount() {
+            const streak = userData.daily_reward_streak || 0;
+            const baseReward = 500;
+            const rewardAmount = baseReward * (streak + 1);
+            
+            const rewardElement = document.querySelector('#dailyRewardRectangle .reward');
+            if (rewardElement) {
+                rewardElement.textContent = formatNumber(rewardAmount);
+            }
         }
     });
     </script>
