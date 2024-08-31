@@ -893,6 +893,7 @@
         async function loadCompletedTasks() {
             // Obtener el estado de las recompensas diarias del usuario
             let tasksStored = localStorage.getItem('completed_tasks');
+
             if (tasksStored == null) {
                 const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
                 const data = await response.json();
@@ -901,6 +902,7 @@
                 // Guardar datos en localStorage
                 localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
             } else {
+                alert(tasksStored)
                 completedTasks = JSON.parse(tasksStored) // Deserializar el JSON almacenado
             }
 
