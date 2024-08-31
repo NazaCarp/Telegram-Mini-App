@@ -302,7 +302,7 @@
         <h5 style="margin-top: 15px; font-size: 30px;">Earn more coins</h5>
         <h2 style="margin-top: 40px; text-align: left; width: 95%;">Youtube</h2>
         <div class="rectangles">
-            <div class="rectangle" data-reward="100000" data-action="Watch" id="video1">
+            <div class="rectangle" data-reward="100000" data-action="Watch" data-url="https://www.youtube.com/watch?v=QWDDYhMIZls" id="video1">
                 <div class="icon">
                     <iconify-icon icon="logos:youtube-icon"></iconify-icon>
                 </div>
@@ -314,7 +314,7 @@
                     <iconify-icon icon="iconamoon:arrow-left-2-bold"></iconify-icon>
                 </div>
             </div>
-            <div class="rectangle" data-reward="100000" data-action="Watch" id="video2">
+            <div class="rectangle" data-reward="100000" data-action="Watch" data-url="https://www.youtube.com/watch?v=TX2m-uzHqYM" id="video2">
                 <div class="icon">
                     <iconify-icon icon="logos:youtube-icon"></iconify-icon>
                 </div>
@@ -399,6 +399,7 @@
         const user_id = tg.initDataUnsafe.user.id;
         let userData;
         let completedTasks = {};
+        let videoTimers = {};
         
         tg.ready();
         loadUserData();
@@ -425,6 +426,11 @@
                 if (rectangle.id === 'dailyRewardRectangle') {
                     openDailyRewardMenu();
                     return;
+                }
+
+                if (rectangle.id.startsWith('video')) {
+                    handleVideoRectangleClick(rectangle, actionButton, checkButton);
+                    return
                 }
 
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
@@ -498,6 +504,118 @@
                 document.querySelector('.navbar').classList.add('blur-content');
             });
         });
+
+        function handleVideoRectangleClick(rectangle, actionButton, checkButton) {
+            const videoId = rectangle.id;
+            const url = rectangle.getAttribute('data-url');
+            const reward = parseFloat(rectangle.getAttribute('data-reward'));
+
+            actionButton.addEventListener('click', () => handleVideoActionButtonClick(videoId, url));
+            
+            if (!videoTimers[videoId]) {
+                checkButton.classList.add('inactive');
+                checkButton.disabled = true;
+                checkButton.innerText = 'Watch video first';
+            } else {
+                updateVideoCheckButton(videoId, checkButton);
+            }
+
+            checkButton.addEventListener('click', () => handleVideoCheckButtonClick(videoId, reward, checkButton));
+        }
+
+        function handleVideoActionButtonClick(videoId, url) {
+            if (!videoTimers[videoId]) {
+                videoTimers[videoId] = {
+                    startTime: Date.now(),
+                    endTime: Date.now() + 60 * 60 * 1000, // 60 minutes
+                    claimed: false
+                };
+                localStorage.setItem('videoTimers', JSON.stringify(videoTimers));
+            }
+            window.open(url, '_blank');
+        }
+
+        function updateVideoCheckButton(videoId, checkButton) {
+        const timer = videoTimers[videoId];
+        if (!timer) return;
+
+        const now = Date.now();
+        if (now < timer.endTime && !timer.claimed) {
+            const remainingMinutes = Math.ceil((timer.endTime - now) / (60 * 1000));
+            checkButton.innerText = `${remainingMinutes}m`;
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+
+            setTimeout(() => updateVideoCheckButton(videoId, checkButton), 60 * 1000); // Update every minute
+        } else if (!timer.claimed) {
+            checkButton.innerText = 'Claim';
+            checkButton.classList.remove('inactive');
+            checkButton.classList.add('active');
+            checkButton.disabled = false;
+        } else {
+            checkButton.innerText = 'Claimed';
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+        }
+    }
+
+    async function handleVideoCheckButtonClick(videoId, reward, checkButton) {
+        const timer = videoTimers[videoId];
+        if (!timer || timer.claimed || Date.now() < timer.endTime) return;
+
+        // Call API to claim reward
+        const response = await fetch('/claim_video_reward', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                user_id: user_id, 
+                video_id: videoId,
+                reward: reward
+            })
+        });
+
+        const data = await response.json();
+            if (data.status === 'success') {
+                videoTimers[videoId].claimed = true;
+                localStorage.setItem('videoTimers', JSON.stringify(videoTimers));
+                
+                // Update UI
+                checkButton.innerText = 'Claimed';
+                checkButton.classList.add('inactive');
+                checkButton.disabled = true;
+
+                // Animate coins
+                closeAlertMenu();
+                animateCoins(reward);
+
+                // Update score
+                localStorage.setItem('score', data.new_score);
+            } else {
+                alert(data.error);
+            }
+        }
+
+        // Load video timers from localStorage
+        function loadVideoTimers() {
+            const storedTimers = localStorage.getItem('videoTimers');
+            if (storedTimers) {
+                videoTimers = JSON.parse(storedTimers);
+                // Update timers for ongoing videos
+                Object.keys(videoTimers).forEach(videoId => {
+                    const rectangle = document.getElementById(videoId);
+                    if (rectangle) {
+                        const checkButton = checkButtons[videoId];
+                        if (checkButton) {
+                            updateVideoCheckButton(videoId, checkButton);
+                        }
+                    }
+                });
+            }
+        }
+
+        loadVideoTimers();
 
         const lastClaimed = userData.last_daily_reward_claimed ? new Date(userData.last_daily_reward_claimed) : null;
         const now = new Date();
