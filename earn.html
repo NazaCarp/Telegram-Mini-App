@@ -421,9 +421,6 @@
         });
 
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
-            if (rectangle.id !== 'dailyRewardRectangle') {
-                rectangle.id = `rectangle-${index}`;
-            }
             rectangle.addEventListener('click', () => {
                 if (rectangle.id === 'dailyRewardRectangle') {
                     openDailyRewardMenu();
