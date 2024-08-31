@@ -1027,7 +1027,7 @@
             let tasksStored = localStorage.getItem('completed_tasks');
             
             try {
-                if (1 == 1) {
+                if (tasksStored == 1) {
                     const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
                     const data = await response.json();
                     completedTasks = data.completed_tasks;
@@ -1069,3 +1069,5 @@
         }
     });
     </script>
+</body>
+</html>
