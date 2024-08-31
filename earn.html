@@ -420,14 +420,9 @@
                 event.preventDefault();
             }
         });
-        
-        alert('HOLAA5')
-        
-        document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
-            rectangle.addEventListener('click', (event) => {
-                alert('HOLAA')
-                event.stopPropagation(); // Evitar que el evento se propague al documento
 
+        document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
+            rectangle.addEventListener('click', () => {
                 if (rectangle.id === 'dailyRewardRectangle') {
                     openDailyRewardMenu();
                     return;
@@ -451,13 +446,17 @@
                 actionButton.dataset.url = url;
 
                 let checkButton = document.createElement('button');
-                checkButton.className = 'action-button';
+                checkButton.className = 'action-button active';
                 checkButton.id = 'checkButton';
+                checkButton.innerText = 'Check';
                 checkButton.dataset.rectangleId = rectangle.id;
                 checkButton.dataset.url = url;
 
                 const alertMenu = document.getElementById('alertMenu');
-                alertMenu.innerHTML = ''; // Limpiar el contenido anterior
+                const oldActionButton = alertMenu.querySelector('#actionButton');
+                const oldCheckButton = alertMenu.querySelector('#checkButton');
+                if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
                 alertMenu.appendChild(actionButton);
                 alertMenu.appendChild(checkButton);
 
@@ -466,10 +465,9 @@
                 } else {
                     actionButton.addEventListener('click', handleActionButtonClick);
                     checkButton.addEventListener('click', handleCheckButtonClick);
-                    updateCheckButtonState(rectangle.id, checkButton);
                 }
 
-                alertMenu.style.display = 'block';
+                document.getElementById('alertMenu').style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
             });
@@ -609,16 +607,40 @@
             arrowIconElement.style.fontSize = '25px';
         }
 
-        function updateCheckButtonState(rectangleId, checkButton) {
-            if (completedTasks[rectangleId]) {
-                checkButton.innerText = 'Claimed';
-                checkButton.classList.add('inactive');
-                checkButton.disabled = true;
-            } else {
-                checkButton.innerText = 'Check';
-                checkButton.classList.add('active');
-                checkButton.disabled = false;
+        function updateCheckButtonState(checkButton, remainingSeconds, rectangle) {
+            checkButton.classList.remove('active');
+            checkButton.classList.add('inactive');
+            checkButton.disabled = true;
+            checkButton.innerText = `${remainingSeconds}s`;
+            
+            if (timerIntervals[rectangle.id]) {
+                clearInterval(timerIntervals[rectangle.id].interval);
             }
+
+            const intervalId = setInterval(() => {
+                const endTime = new Date(rectangle.dataset.endTime);
+                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
+                if (remainingSeconds <= 0) {
+                    clearInterval(intervalId);
+                    checkButton.disabled = false;
+                    checkButton.classList.remove('inactive');
+                    checkButton.classList.add('active');
+                    checkButton.innerText = 'Check';
+                    delete rectangle.dataset.endTime;
+                    delete timerIntervals[rectangle.id];
+                } else {
+                    checkButton.innerText = `${remainingSeconds}s`;
+                }
+            }, 1000);
+
+            timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
+
+            // Añadir evento mousemove para activar la animación si el botón está deshabilitado
+            checkButton.addEventListener('mousemove', () => {
+                if (checkButton.disabled) {
+                    shakeButton(checkButton);
+                }
+            });
         }
 
         function updateVideoCheckButtonState(videoId, checkButton) {
@@ -680,7 +702,6 @@
                 completedTasks[rectangleId] = true;
                 localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
                 updateRectanglesAppearance();
-                updateCheckButtonState(rectangleId, checkButton);
 
                 // Animación de monedas
                 closeAlertMenu(); // Cerrar el menú de alerta antes de la animación
@@ -693,7 +714,7 @@
                 const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
                 rectangle.dataset.endTime = endTime;
 
-                updateCheckButtonState(rectangleId, checkButton, timerSeconds);
+                updateCheckButtonState(checkButton, timerSeconds, rectangle);
             }
         }
 
@@ -708,10 +729,7 @@
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && 
-                !dailyRewardMenu.contains(event.target) && 
-                !event.target.closest('.rectangle') && 
-                !event.target.closest('[data-close]')) {
+            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
                 closeAlertMenu();
                 closeDailyRewardMenu();
             }
@@ -982,7 +1000,7 @@
         async function loadUserData() {
             // Obtener el estado de las recompensas diarias del usuario
             let datastored = localStorage.getItem('user_data');
-            if (1 == 1) {
+            if (datastored == null) {
                 const response = await fetch(`/get_user_data?user_id=${user_id}`);
                 userData = await response.json();
                 
@@ -998,7 +1016,7 @@
             // Obtener el estado de las recompensas diarias del usuario
             let tasksStored = localStorage.getItem('completed_tasks');
             
-            if (1 == 1) {
+            if (tasksStored == null) {
                 const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
                 const data = await response.json();
                 completedTasks = data.completed_tasks;
@@ -1033,8 +1051,6 @@
             if (rewardElement) {
                 rewardElement.textContent = formatNumber(rewardAmount);
             }
-            alert('HOLAA3')
         }
     });
     </script>
-</body>
