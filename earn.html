@@ -1009,7 +1009,7 @@
         async function loadUserData() {
             // Obtener el estado de las recompensas diarias del usuario
             let datastored = localStorage.getItem('user_data');
-            if (datastored == null) {
+            if (1 == 1) {
                 const response = await fetch(`/get_user_data?user_id=${user_id}`);
                 userData = await response.json();
                 
