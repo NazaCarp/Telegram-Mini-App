@@ -534,6 +534,13 @@
             }, 1000);
 
             timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
+
+            // Añadir evento click para activar la animación si el botón está deshabilitado
+            checkButton.addEventListener('click', () => {
+                if (checkButton.disabled) {
+                    shakeButton(checkButton);
+                }
+            });
         }
 
         async function handleCheckButtonClick(event) {
@@ -736,10 +743,10 @@
             const originalPosition = button.style.transform || 'translateX(0)';
             const shakeAnimation = [
                 { transform: originalPosition },
-                { transform: 'translateX(10px)' },
                 { transform: 'translateX(-10px)' },
                 { transform: 'translateX(10px)' },
                 { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
                 { transform: originalPosition }
             ];
             const shakeTiming = {
