@@ -568,13 +568,6 @@
             window.open(url, '_blank');
         }
 
-        document.addEventListener('mousedown', (event) => {
-            const checkButton = event.target.closest('#checkButton');
-            if (checkButton && checkButton.disabled) {
-                shakeButton(checkButton);
-            }
-        });
-
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
 
