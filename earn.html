@@ -462,9 +462,8 @@
                 if (rectangle.id.startsWith('video')) {
                     handleVideoRectangleClick(rectangle, actionButton, checkButton);
                 } else {
-                    actionButton.addEventListener('click', handleCheckButtonClick);
+                    actionButton.addEventListener('click', handleActionButtonClick);
                     checkButton.addEventListener('click', handleCheckButtonClick);
-                    updateCheckButtonState(rectangle.id, checkButton);
                 }
 
                 document.getElementById('alertMenu').style.display = 'block';
