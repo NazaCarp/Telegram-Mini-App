@@ -538,47 +538,47 @@
         }
 
         function updateVideoCheckButton(videoId, checkButton) {
-        const timer = videoTimers[videoId];
-        if (!timer) return;
+            const timer = videoTimers[videoId];
+            if (!timer) return;
 
-        const now = Date.now();
-        if (now < timer.endTime && !timer.claimed) {
-            const remainingMinutes = Math.ceil((timer.endTime - now) / (60 * 1000));
-            checkButton.innerText = `${remainingMinutes}m`;
-            checkButton.classList.add('inactive');
-            checkButton.disabled = true;
+            const now = Date.now();
+            if (now < timer.endTime && !timer.claimed) {
+                const remainingMinutes = Math.ceil((timer.endTime - now) / (60 * 1000));
+                checkButton.innerText = `${remainingMinutes}m`;
+                checkButton.classList.add('inactive');
+                checkButton.disabled = true;
 
-            setTimeout(() => updateVideoCheckButton(videoId, checkButton), 60 * 1000); // Update every minute
-        } else if (!timer.claimed) {
-            checkButton.innerText = 'Claim';
-            checkButton.classList.remove('inactive');
-            checkButton.classList.add('active');
-            checkButton.disabled = false;
-        } else {
-            checkButton.innerText = 'Claimed';
-            checkButton.classList.add('inactive');
-            checkButton.disabled = true;
+                setTimeout(() => updateVideoCheckButton(videoId, checkButton), 60 * 1000); // Update every minute
+            } else if (!timer.claimed) {
+                checkButton.innerText = 'Claim';
+                checkButton.classList.remove('inactive');
+                checkButton.classList.add('active');
+                checkButton.disabled = false;
+            } else {
+                checkButton.innerText = 'Claimed';
+                checkButton.classList.add('inactive');
+                checkButton.disabled = true;
+            }
         }
-    }
 
-    async function handleVideoCheckButtonClick(videoId, reward, checkButton) {
-        const timer = videoTimers[videoId];
-        if (!timer || timer.claimed || Date.now() < timer.endTime) return;
+        async function handleVideoCheckButtonClick(videoId, reward, checkButton) {
+            const timer = videoTimers[videoId];
+            if (!timer || timer.claimed || Date.now() < timer.endTime) return;
 
-        // Call API to claim reward
-        const response = await fetch('/claim_video_reward', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                user_id: user_id, 
-                video_id: videoId,
-                reward: reward
-            })
-        });
+            // Call API to claim reward
+            const response = await fetch('/claim_video_reward', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    user_id: user_id, 
+                    video_id: videoId,
+                    reward: reward
+                })
+            });
 
-        const data = await response.json();
+            const data = await response.json();
             if (data.status === 'success') {
                 videoTimers[videoId].claimed = true;
                 localStorage.setItem('videoTimers', JSON.stringify(videoTimers));
