@@ -873,21 +873,10 @@
         }
 
         async function loadCompletedTasks() {
-            // Obtener el estado de las recompensas diarias del usuario
-            let tasksStored = localStorage.getItem('user_data');
-            if (tasksStored == null) {
-                const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
-                const data = await response.json();
-                completedTasks = data.completed_tasks;
-
-                // Guardar datos en localStorage
-                localStorage.setItem('user_data', JSON.stringify(completedTasks));
-            } else {
-                completedTasks = JSON.parse(tasksStored) // Deserializar el JSON almacenado
-            }
-
+            const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
+            const data = await response.json();
+            completedTasks = data.completed_tasks;
             alert(`${completedTasks}`)
-
             updateRectanglesAppearance();
         }
 
