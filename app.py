@@ -426,7 +426,7 @@ def claim_video_reward():
         flag_modified(counter, "completed_tasks")
         db.commit()
 
-        return jsonify({'status': 'success', 'new_score': counter.score})
+        return jsonify({'status': 'success', 'new_score': counter.score, 'completed_tasks': counter.completed_tasks or {}})
     except Exception as e:
         logging.error(f"Error in claim_video_reward: {e}")
         return jsonify({'error': str(e)}), 500

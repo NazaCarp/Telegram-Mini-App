@@ -556,12 +556,16 @@
                 checkButton.classList.add('inactive');
                 checkButton.disabled = true;
 
+                completedTasks = data.completed_tasks;
+            
+                // Guardar datos en localStorage
+                localStorage.setItem('score', data.new_score);
+                localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+                updateRectanglesAppearance();
+
                 // Close alert menu and animate coins
                 closeAlertMenu();
                 animateCoins(reward);
-
-                // Update score
-                localStorage.setItem('score', data.new_score);
             } else {
                 alert(data.error);
             }
