@@ -445,20 +445,53 @@
                 actionButton.innerText = action;
                 actionButton.dataset.url = url;
 
-                let checkButton = document.createElement('button');
-                checkButton.className = 'action-button active';
-                checkButton.id = 'checkButton';
-                checkButton.innerText = 'Check';
-                checkButton.dataset.rectangleId = rectangle.id;
-                checkButton.dataset.url = url;
+                // Verificar si la tarea ya está completada
+                if (completedTasks[rectangle.id]) {
+                    // Si la tarea está completada, no mostrar el checkButton
+                    const alertMenu = document.getElementById('alertMenu');
+                    const oldActionButton = alertMenu.querySelector('#actionButton');
+                    const oldCheckButton = alertMenu.querySelector('#checkButton');
+                    if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                    if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                    alertMenu.appendChild(actionButton);
+                } else {
+                    // Si la tarea no está completada, mostrar ambos botones
+                    let checkButton = checkButtons[rectangle.id];
+                    if (!checkButton) {
+                        checkButton = document.createElement('button');
+                        checkButton.className = 'action-button active';
+                        checkButton.id = 'checkButton';
+                        checkButton.innerText = 'Check';
+                        checkButton.dataset.rectangleId = rectangle.id;
+                        checkButton.dataset.url = url;
+                        checkButton.addEventListener('click', handleCheckButtonClick);
+                        checkButtons[rectangle.id] = checkButton;
+                    }
 
-                const alertMenu = document.getElementById('alertMenu');
-                const oldActionButton = alertMenu.querySelector('#actionButton');
-                const oldCheckButton = alertMenu.querySelector('#checkButton');
-                if (oldActionButton) alertMenu.removeChild(oldActionButton);
-                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
-                alertMenu.appendChild(actionButton);
-                alertMenu.appendChild(checkButton);
+                    // Verificar si el contador ya ha comenzado
+                    const endTime = rectangle.dataset.endTime;
+                    if (endTime) {
+                        const remainingSeconds = Math.ceil((new Date(endTime) - Date.now()) / 1000);
+                        if (remainingSeconds > 0) {
+                            updateCheckButtonState(checkButton, remainingSeconds, rectangle);
+                        } else {
+                            delete rectangle.dataset.endTime;
+                            checkButton.disabled = false;
+                            checkButton.classList.remove('inactive');
+                            checkButton.classList.add('active');
+                            checkButton.innerText = 'Check';
+                        }
+                    }
+
+                    // Reemplazar los botones existentes con los botones actualizados
+                    const alertMenu = document.getElementById('alertMenu');
+                    const oldActionButton = alertMenu.querySelector('#actionButton');
+                    const oldCheckButton = alertMenu.querySelector('#checkButton');
+                    if (oldActionButton) alertMenu.removeChild(oldActionButton);
+                    if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                    alertMenu.appendChild(actionButton);
+                    alertMenu.appendChild(checkButton);
+                }
 
                 if (rectangle.id.startsWith('video')) {
                     handleVideoRectangleClick(rectangle, actionButton, checkButton);
