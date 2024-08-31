@@ -1010,19 +1010,14 @@
             // Obtener el estado de las recompensas diarias del usuario
             let datastored = localStorage.getItem('user_data');
             if (1 == 1) {
-                alert('Hola')
                 const response = await fetch(`/get_user_data?user_id=${user_id}`);
-                alert('Hola2')
                 userData = await response.json();
-                alert('Hola3')
                 
                 // Guardar datos en localStorage
                 localStorage.setItem('user_data', JSON.stringify(userData));
-                alert('Hola4')
             } else {
                 userData = JSON.parse(datastored) // Deserializar el JSON almacenado
             }
-            alert('Hola5')
             updateDailyRewardAmount(); // Añadir esta línea
         }
 
@@ -1065,7 +1060,6 @@
             if (rewardElement) {
                 rewardElement.textContent = formatNumber(rewardAmount);
             }
-            alert('Hola6')
         }
     });
     </script>
