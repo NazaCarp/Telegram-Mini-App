@@ -446,9 +446,8 @@
                 actionButton.dataset.url = url;
 
                 let checkButton = document.createElement('button');
-                checkButton.className = 'action-button active';
+                checkButton.className = 'action-button';
                 checkButton.id = 'checkButton';
-                checkButton.innerText = 'Check';
                 checkButton.dataset.rectangleId = rectangle.id;
                 checkButton.dataset.url = url;
 
@@ -465,6 +464,7 @@
                 } else {
                     actionButton.addEventListener('click', handleActionButtonClick);
                     checkButton.addEventListener('click', handleCheckButtonClick);
+                    updateCheckButtonState(rectangle.id, checkButton);
                 }
 
                 document.getElementById('alertMenu').style.display = 'block';
