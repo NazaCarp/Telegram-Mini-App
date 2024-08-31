@@ -1009,7 +1009,7 @@
         async function loadUserData() {
             // Obtener el estado de las recompensas diarias del usuario
             let datastored = localStorage.getItem('user_data');
-            if (1 == 1) {
+            if (datastored == null) {
                 const response = await fetch(`/get_user_data?user_id=${user_id}`);
                 userData = await response.json();
                 
@@ -1018,6 +1018,7 @@
             } else {
                 userData = JSON.parse(datastored) // Deserializar el JSON almacenado
             }
+            alert(`${userData}`)
             updateDailyRewardAmount(); // Añadir esta línea
         }
 
@@ -1025,7 +1026,7 @@
             // Obtener el estado de las tareas del usuario
             let tasksStored = localStorage.getItem('completed_tasks');
             
-            if (1 == 1) {
+            if (tasksStored == null) {
                 const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
                 const data = await response.json();
                 completedTasks = data.completed_tasks;
