@@ -402,6 +402,35 @@ def get_completed_tasks():
         logging.error(f"Error in get_completed_tasks: {e}")
         return jsonify({'error': str(e)}), 500
     
+@app.route('/claim_video_reward', methods=['POST'])
+def claim_video_reward():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    video_id = data.get('video_id')
+    reward = data.get('reward')
+
+    if not all([user_id, video_id, reward]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    try:
+        db = SessionLocal()
+        counter = db.query(Counter).filter_by(user_id=user_id).first()
+        if not counter:
+            return jsonify({'error': 'User not found'}), 404
+
+        # Actualizar el score y marcar la tarea como completada
+        counter.score += reward
+        if not counter.completed_tasks:
+            counter.completed_tasks = {}
+        counter.completed_tasks[video_id] = True
+        flag_modified(counter, "completed_tasks")
+        db.commit()
+
+        return jsonify({'status': 'success', 'new_score': counter.score})
+    except Exception as e:
+        logging.error(f"Error in claim_video_reward: {e}")
+        return jsonify({'error': str(e)}), 500
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
