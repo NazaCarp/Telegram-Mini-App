@@ -732,20 +732,19 @@
             window.open(url, '_blank');
         }
 
-        document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
-        document.querySelector('#alertMenu .close').addEventListener('click', closeAlertMenu);
+        function setupEventListeners() {
+            document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
+            document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
 
-        document.addEventListener('click', (event) => {
-            const alertMenu = document.getElementById('alertMenu');
-            const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && 
-                !dailyRewardMenu.contains(event.target) && 
-                !event.target.closest('.rectangle') && 
-                !event.target.closest('[data-close]')) {
-                closeAlertMenu();
-                closeDailyRewardMenu();
-            }
-        });
+            document.addEventListener('click', (event) => {
+                const alertMenu = document.getElementById('alertMenu');
+                const dailyRewardMenu = document.getElementById('dailyRewardMenu');
+                if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
+                    closeAlertMenu();
+                    closeDailyRewardMenu();
+                }
+            });
+        }
 
         function closeAlertMenu() {
             document.getElementById('alertMenu').style.display = 'none';
@@ -1025,21 +1024,25 @@
         }
 
         async function loadCompletedTasks() {
-            // Obtener el estado de las tareas del usuario
             let tasksStored = localStorage.getItem('completed_tasks');
             
-            if (tasksStored == null) {
-                const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
-                const data = await response.json();
-                completedTasks = data.completed_tasks;
-            
-                // Guardar datos en localStorage
-                localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
-            } else {
-                completedTasks = JSON.parse(tasksStored) // Deserializar el JSON almacenado
-            }
+            try {
+                if (tasksStored == null) {
+                    const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
+                    const data = await response.json();
+                    completedTasks = data.completed_tasks;
+                
+                    // Guardar datos en localStorage
+                    localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+                } else {
+                    completedTasks = JSON.parse(tasksStored);
+                }
 
-            updateRectanglesAppearance();
+                updateRectanglesAppearance();
+                setupEventListeners(); // Añadir esta línea
+            } catch (error) {
+                console.error('Error loading completed tasks:', error);
+            }
         }
 
         function updateRectanglesAppearance() {
