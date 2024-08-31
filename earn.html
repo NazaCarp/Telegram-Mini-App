@@ -422,7 +422,9 @@
         });
 
         document.querySelectorAll('.rectangle').forEach((rectangle, index) => {
-            rectangle.addEventListener('click', () => {
+            rectangle.addEventListener('click', (event) => {
+                event.stopPropagation(); // Evitar que el evento se propague al documento
+
                 if (rectangle.id === 'dailyRewardRectangle') {
                     openDailyRewardMenu();
                     return;
@@ -452,10 +454,7 @@
                 checkButton.dataset.url = url;
 
                 const alertMenu = document.getElementById('alertMenu');
-                const oldActionButton = alertMenu.querySelector('#actionButton');
-                const oldCheckButton = alertMenu.querySelector('#checkButton');
-                if (oldActionButton) alertMenu.removeChild(oldActionButton);
-                if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
+                alertMenu.innerHTML = ''; // Limpiar el contenido anterior
                 alertMenu.appendChild(actionButton);
                 alertMenu.appendChild(checkButton);
 
@@ -467,7 +466,7 @@
                     updateCheckButtonState(rectangle.id, checkButton);
                 }
 
-                document.getElementById('alertMenu').style.display = 'block';
+                alertMenu.style.display = 'block';
                 document.querySelector('.container').classList.add('blur-content');
                 document.querySelector('.navbar').classList.add('blur-content');
             });
@@ -706,7 +705,10 @@
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
+            if (!alertMenu.contains(event.target) && 
+                !dailyRewardMenu.contains(event.target) && 
+                !event.target.closest('.rectangle') && 
+                !event.target.closest('[data-close]')) {
                 closeAlertMenu();
                 closeDailyRewardMenu();
             }
