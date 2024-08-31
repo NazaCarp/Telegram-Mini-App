@@ -540,11 +540,6 @@
             const url = checkButton.dataset.url;
             let timerSeconds = 60;
 
-            if (checkButton.disabled) {
-                shakeButton(checkButton);
-                return;
-            }
-
             const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
             rectangle.dataset.endTime = endTime;
 
