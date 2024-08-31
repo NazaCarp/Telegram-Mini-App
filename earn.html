@@ -428,11 +428,6 @@
                     return;
                 }
 
-                if (rectangle.id.startsWith('video')) {
-                    handleVideoRectangleClick(rectangle, actionButton, checkButton);
-                    return
-                }
-
                 const icon = rectangle.querySelector('.icon iconify-icon').getAttribute('icon');
                 const text = rectangle.querySelector('.text h3, .text h4').innerText;
                 const reward = parseFloat(rectangle.getAttribute('data-reward'));
@@ -497,6 +492,13 @@
                     if (oldCheckButton) alertMenu.removeChild(oldCheckButton);
                     alertMenu.appendChild(actionButton);
                     alertMenu.appendChild(checkButton);
+                }
+
+                if (rectangle.id.startsWith('video')) {
+                    handleVideoRectangleClick(rectangle, actionButton, checkButton);
+                } else {
+                    actionButton.addEventListener('click', handleActionButtonClick);
+                    checkButton.addEventListener('click', handleCheckButtonClick);
                 }
 
                 document.getElementById('alertMenu').style.display = 'block';
