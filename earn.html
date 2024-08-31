@@ -446,9 +446,8 @@
                 actionButton.dataset.url = url;
 
                 let checkButton = document.createElement('button');
-                checkButton.className = 'action-button active';
+                checkButton.className = 'action-button';
                 checkButton.id = 'checkButton';
-                checkButton.innerText = 'Check';
                 checkButton.dataset.rectangleId = rectangle.id;
                 checkButton.dataset.url = url;
 
@@ -465,6 +464,7 @@
                 } else {
                     actionButton.addEventListener('click', handleActionButtonClick);
                     checkButton.addEventListener('click', handleCheckButtonClick);
+                    updateCheckButtonState(rectangle.id, checkButton);
                 }
 
                 document.getElementById('alertMenu').style.display = 'block';
@@ -607,40 +607,16 @@
             arrowIconElement.style.fontSize = '25px';
         }
 
-        function updateCheckButtonState(checkButton, remainingSeconds, rectangle) {
-            checkButton.classList.remove('active');
-            checkButton.classList.add('inactive');
-            checkButton.disabled = true;
-            checkButton.innerText = `${remainingSeconds}s`;
-            
-            if (timerIntervals[rectangle.id]) {
-                clearInterval(timerIntervals[rectangle.id].interval);
+        function updateCheckButtonState(rectangleId, checkButton) {
+            if (completedTasks[rectangleId]) {
+                checkButton.innerText = 'Claimed';
+                checkButton.classList.add('inactive');
+                checkButton.disabled = true;
+            } else {
+                checkButton.innerText = 'Check';
+                checkButton.classList.add('active');
+                checkButton.disabled = false;
             }
-
-            const intervalId = setInterval(() => {
-                const endTime = new Date(rectangle.dataset.endTime);
-                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
-                if (remainingSeconds <= 0) {
-                    clearInterval(intervalId);
-                    checkButton.disabled = false;
-                    checkButton.classList.remove('inactive');
-                    checkButton.classList.add('active');
-                    checkButton.innerText = 'Check';
-                    delete rectangle.dataset.endTime;
-                    delete timerIntervals[rectangle.id];
-                } else {
-                    checkButton.innerText = `${remainingSeconds}s`;
-                }
-            }, 1000);
-
-            timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
-
-            // Añadir evento mousemove para activar la animación si el botón está deshabilitado
-            checkButton.addEventListener('mousemove', () => {
-                if (checkButton.disabled) {
-                    shakeButton(checkButton);
-                }
-            });
         }
 
         function updateVideoCheckButtonState(videoId, checkButton) {
@@ -702,6 +678,7 @@
                 completedTasks[rectangleId] = true;
                 localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
                 updateRectanglesAppearance();
+                updateCheckButtonState(rectangleId, checkButton);
 
                 // Animación de monedas
                 closeAlertMenu(); // Cerrar el menú de alerta antes de la animación
@@ -714,7 +691,7 @@
                 const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
                 rectangle.dataset.endTime = endTime;
 
-                updateCheckButtonState(checkButton, timerSeconds, rectangle);
+                updateCheckButtonState(rectangleId, checkButton, timerSeconds);
             }
         }
 
