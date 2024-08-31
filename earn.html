@@ -534,13 +534,6 @@
             }, 1000);
 
             timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
-
-            // Añadir evento click para activar la animación si el botón está deshabilitado
-            checkButton.addEventListener('click', () => {
-                if (checkButton.disabled) {
-                    shakeButton(checkButton);
-                }
-            });
         }
 
         async function handleCheckButtonClick(event) {
@@ -551,7 +544,6 @@
             const reward = parseFloat(rectangle.getAttribute('data-reward'));
 
             if (checkButton.disabled) {
-                shakeButton(checkButton);
                 return;
             }
 
