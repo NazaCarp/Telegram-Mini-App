@@ -568,7 +568,8 @@
             } else if (data.status === 'already_completed') {
                 closeAlertMenu();
             } else {
-                alert('User is not in the group');
+                // El usuario no está en el grupo, iniciar temporizador
+                startCheckButtonTimer(checkButton, 60);
             }
         }
 
@@ -577,10 +578,40 @@
             window.open(url, '_blank');
         }
 
+        function startCheckButtonTimer(button, seconds) {
+            button.classList.remove('active');
+            button.classList.add('inactive');
+            button.disabled = true;
+            updateCheckButtonTimer(button, seconds);
+
+            const intervalId = setInterval(() => {
+                seconds--;
+                if (seconds <= 0) {
+                    clearInterval(intervalId);
+                    button.classList.remove('inactive');
+                    button.classList.add('active');
+                    button.disabled = false;
+                    button.textContent = 'Check';
+                } else {
+                    updateCheckButtonTimer(button, seconds);
+                }
+            }, 1000);
+
+            button.dataset.timerId = intervalId;
+        }
+
+        function updateCheckButtonTimer(button, seconds) {
+            button.textContent = `${seconds}s`;
+        }
+
         document.addEventListener('mousedown', (event) => {
             const checkButton = event.target.closest('#checkButton');
             if (checkButton && checkButton.disabled) {
                 shakeButton(checkButton);
+                const remainingSeconds = parseInt(checkButton.textContent);
+                if (!isNaN(remainingSeconds)) {
+                    updateCheckButtonTimer(checkButton, remainingSeconds);
+                }
             }
         });
 
