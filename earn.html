@@ -513,6 +513,14 @@
             checkButton.disabled = true;
             checkButton.innerText = `${remainingSeconds}s`;
             
+            // Añadir un manejador de eventos directamente al botón
+            checkButton.onclick = (event) => {
+                if (checkButton.disabled) {
+                    event.preventDefault();
+                    shakeButton(checkButton);
+                }
+            };
+            
             if (timerIntervals[rectangle.id]) {
                 clearInterval(timerIntervals[rectangle.id].interval);
             }
@@ -544,6 +552,7 @@
             const reward = parseFloat(rectangle.getAttribute('data-reward'));
 
             if (checkButton.disabled) {
+                shakeButton(checkButton);
                 return;
             }
 
@@ -589,13 +598,6 @@
             const url = event.target.dataset.url;
             window.open(url, '_blank');
         }
-
-        document.addEventListener('mousedown', (event) => {
-            const checkButton = event.target.closest('#checkButton');
-            if (checkButton && checkButton.disabled) {
-                shakeButton(checkButton);
-            }
-        });
 
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
         document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
@@ -732,21 +734,17 @@
         }
 
         function shakeButton(button) {
-            const originalPosition = button.style.transform || 'translateX(0)';
-            const shakeAnimation = [
-                { transform: originalPosition },
+            button.animate([
+                { transform: 'translateX(0px)' },
                 { transform: 'translateX(-10px)' },
                 { transform: 'translateX(10px)' },
                 { transform: 'translateX(-10px)' },
                 { transform: 'translateX(10px)' },
-                { transform: originalPosition }
-            ];
-            const shakeTiming = {
+                { transform: 'translateX(0px)' }
+            ], {
                 duration: 500,
                 iterations: 1
-            };
-
-            button.animate(shakeAnimation, shakeTiming);
+            });
         }
 
         function animateCoins(reward) {
