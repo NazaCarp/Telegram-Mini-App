@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base, Counter, Referral
+from models import Base, Counter
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
