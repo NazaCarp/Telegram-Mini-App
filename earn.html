@@ -563,9 +563,17 @@
 
         async function handleVideoCheckButtonClick(videoId, reward, checkButton) {
             const timer = videoTimers[videoId];
-            if (!timer || timer.claimed || Date.now() < timer.endTime) return;
+            if (!timer || timer.claimed) return;
 
-            // Call API to claim reward
+            const now = Date.now();
+            if (now < timer.endTime) {
+                // Si aún no ha pasado el tiempo, mostrar el tiempo restante
+                const remainingMinutes = Math.ceil((timer.endTime - now) / (60 * 1000));
+                checkButton.innerText = `${remainingMinutes}m`;
+                return;
+            }
+
+            // Si el tiempo ha pasado y no se ha reclamado, proceder con la reclamación
             const response = await fetch('/claim_video_reward', {
                 method: 'POST',
                 headers: {
