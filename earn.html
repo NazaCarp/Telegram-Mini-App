@@ -524,6 +524,13 @@
             }, 1000);
 
             timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
+
+            // Añadir evento mousemove para activar la animación si el botón está deshabilitado
+            checkButton.addEventListener('mousemove', () => {
+                if (checkButton.disabled) {
+                    shakeButton(checkButton);
+                }
+            });
         }
 
         async function handleCheckButtonClick(event) {
