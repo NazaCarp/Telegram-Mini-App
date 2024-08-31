@@ -578,7 +578,7 @@
         // Load video timers from localStorage
         function loadVideoTimers() {
             const storedTimers = localStorage.getItem('videoTimers');
-            if (storedTimers) {
+            if (!storedTimers) {
                 videoTimers = JSON.parse(storedTimers);
                 // Update timers for ongoing videos
                 Object.keys(videoTimers).forEach(videoId => {
