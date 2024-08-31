@@ -1018,7 +1018,7 @@
             } else {
                 userData = JSON.parse(datastored) // Deserializar el JSON almacenado
             }
-            alert(`${userData.dir()}`)
+            alert(JSON.stringify(userData, null, 2))
             updateDailyRewardAmount(); // Añadir esta línea
         }
 
