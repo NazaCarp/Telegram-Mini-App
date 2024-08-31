@@ -578,7 +578,7 @@
         // Load video timers from localStorage
         function loadVideoTimers() {
             const storedTimers = localStorage.getItem('videoTimers');
-            if (!storedTimers) {
+            if (storedTimers) {
                 videoTimers = JSON.parse(storedTimers);
                 // Update timers for ongoing videos
                 Object.keys(videoTimers).forEach(videoId => {
@@ -733,12 +733,15 @@
         }
 
         document.querySelector('.daily-reward-menu .close').addEventListener('click', closeDailyRewardMenu);
-        document.querySelector('[data-close="alert"]').addEventListener('click', closeAlertMenu);
+        document.querySelector('#alertMenu .close').addEventListener('click', closeAlertMenu);
 
         document.addEventListener('click', (event) => {
             const alertMenu = document.getElementById('alertMenu');
             const dailyRewardMenu = document.getElementById('dailyRewardMenu');
-            if (!alertMenu.contains(event.target) && !dailyRewardMenu.contains(event.target) && event.target.closest('.rectangle') === null && !event.target.closest('[data-close]')) {
+            if (!alertMenu.contains(event.target) && 
+                !dailyRewardMenu.contains(event.target) && 
+                !event.target.closest('.rectangle') && 
+                !event.target.closest('[data-close]')) {
                 closeAlertMenu();
                 closeDailyRewardMenu();
             }
@@ -1018,7 +1021,6 @@
             } else {
                 userData = JSON.parse(datastored) // Deserializar el JSON almacenado
             }
-            alert(JSON.stringify(userData, null, 2))
             updateDailyRewardAmount(); // Añadir esta línea
         }
 
@@ -1026,7 +1028,7 @@
             // Obtener el estado de las tareas del usuario
             let tasksStored = localStorage.getItem('completed_tasks');
             
-            if (1 == 1) {
+            if (tasksStored == null) {
                 const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
                 const data = await response.json();
                 completedTasks = data.completed_tasks;
