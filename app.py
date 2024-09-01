@@ -39,6 +39,7 @@ def get_counters():
     startParam = request.args.get('startParam')
     name = request.args.get('name')
     username = request.args.get('username')
+    is_premium = request.args.get('is_premium') == 'true'  # Add this line
     if not user_id:
         return jsonify({'error': 'user_id is required'}), 400
 
@@ -69,6 +70,11 @@ def get_counters():
                     else:
                         referrer.referrals_id = user_id
                     db.commit()
+
+                referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
+                reward = 25000 if is_premium else 5000
+                referrer_counter.score += reward
+                db.commit()
 
                 referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
                 referrer_counter.score += 5000

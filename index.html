@@ -187,6 +187,7 @@
     const tg = window.Telegram.WebApp;
     const user = tg.initDataUnsafe.user;
     const user_id = user.id;
+    const isPremium = user && user.is_premium ? 'true' : 'false';
     const name = user.first_name + ' ' + (user.last_name || '')
     const username = (user.username || '')
     let score = 0;
@@ -211,7 +212,7 @@
       let storedLastTimestamp = localStorage.getItem('lastTimestamp');
       if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
         // Primero, obtener los contadores
-        const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}`);
+        const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}&is_premium=${isPremium}`)
         const data = await response.json();
         
         // Actualizar las variables de contadores con los datos obtenidos
