@@ -426,7 +426,7 @@
             const currentTime = Date.now();
             const timeElapsed = (currentTime - lastTimestamp) / 1000; // tiempo en segundos
 
-            if (1 === 1 || storedScore === null || storedProfitPerHour === null || isNaN(parseFloat(storedScore)) || isNaN(parseFloat(storedProfitPerHour)) || timeElapsed > 300) { // 5 minutos
+            if (storedScore === null || storedProfitPerHour === null || isNaN(parseFloat(storedScore)) || isNaN(parseFloat(storedProfitPerHour)) || timeElapsed > 300) { // 5 minutos
                 try {
                     const response = await fetch(`/get_counters?user_id=${user_id}`);
                     const data = await response.json();
