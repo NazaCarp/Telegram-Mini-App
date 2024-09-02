@@ -419,8 +419,8 @@
         let currentTabIndex = 0; // Variable para mantener el índice de la pestaña activa
 
         async function loadScore() {
-            let storedScore = localStorage.getItem('score');
-            let storedProfitPerHour = localStorage.getItem('profit_per_hour');
+            let storedScore = localStorage.getItem(`score_${user_id}`);
+            let storedProfitPerHour = localStorage.getItem(`profit_per_hour_${user_id}`);
             
             if (storedScore === null || storedProfitPerHour === null){
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
@@ -437,9 +437,9 @@
             document.getElementById('scoreText').textContent = formatNumber(score);
             
             // Guardar score y profitPerHour en localStorage
-            localStorage.setItem('score', score);
-            localStorage.setItem('profit_per_hour', profitPerHour);
-            localStorage.setItem('lastTimestamp', Date.now());
+            localStorage.setItem(`score_${user_id}`, score);
+            localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
+            localStorage.setItem(`lastTimestamp_${user_id}`, Date.now());
             
             // Iniciar el intervalo para incrementar el score cada segundo
             setInterval(incrementScore, 1000);
@@ -448,8 +448,8 @@
         function incrementScore() {
             score += profitPerHour / 3600;
             document.getElementById('scoreText').textContent = formatNumber(score);
-            localStorage.setItem('score', score);
-            localStorage.setItem('lastTimestamp', Date.now());
+            localStorage.setItem(`score_${user_id}`, score);
+            localStorage.setItem(`lastTimestamp_${user_id}`, Date.now());
 
             // Actualizar el score en la base de datos
             saveCounts();
@@ -958,8 +958,8 @@
                         closeAlertMenu();
 
                         updateProfitPerHour(user_id, clubProfitPerHour) // Actualizar el profitPerHour de la cuenta actual
-                        localStorage.setItem('profit_per_hour', profitPerHour + clubProfitPerHour);
-                        profitPerHour = parseFloat(localStorage.getItem('profit_per_hour'));
+                        localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour + clubProfitPerHour);
+                        profitPerHour = parseFloat(localStorage.getItem(`profit_per_hour_${user_id}`));
                     } else {
                         alert('Error al actualizar el score');
                     }

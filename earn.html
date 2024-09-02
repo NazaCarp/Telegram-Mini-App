@@ -495,7 +495,7 @@
                     endTime: Date.now() + 60 * 60 * 1000, // 60 minutes
                     claimed: false
                 };
-                localStorage.setItem('videoTimers', JSON.stringify(videoTimers));
+                localStorage.setItem(`videoTimers_${user_id}`, JSON.stringify(videoTimers));
             }
             window.open(url, '_blank');
             updateVideoCheckButtonState(videoId, document.getElementById('checkButton'));
@@ -553,7 +553,7 @@
             const data = await response.json();
             if (data.status === 'success') {
                 videoTimers[videoId].claimed = true;
-                localStorage.setItem('videoTimers', JSON.stringify(videoTimers));
+                localStorage.setItem(`videoTimers_${user_id}`, JSON.stringify(videoTimers));
                 
                 // Update UI
                 checkButton.innerText = 'Claimed';
@@ -563,8 +563,8 @@
                 completedTasks = data.completed_tasks;
             
                 // Guardar datos en localStorage
-                localStorage.setItem('score', data.new_score);
-                localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+                localStorage.setItem(`score_${user_id}`, data.new_score);
+                localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
                 updateRectanglesAppearance();
 
                 // Close alert menu and animate coins
@@ -577,7 +577,7 @@
 
         // Load video timers from localStorage
         function loadVideoTimers() {
-            const storedTimers = localStorage.getItem('videoTimers');
+            const storedTimers = localStorage.getItem(`videoTimers_${user_id}`);
             if (storedTimers) {
                 videoTimers = JSON.parse(storedTimers);
                 // Update timers for ongoing videos
@@ -700,11 +700,11 @@
             const data = await response.json();
             if (data.status === 'success') {
                 // Actualizar el score
-                localStorage.setItem('score', data.new_score);
+                localStorage.setItem(`score_${user_id}`, data.new_score);
 
                 // Marcar la tarea como completada
                 completedTasks[rectangleId] = true;
-                localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+                localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
                 updateRectanglesAppearance();
 
                 // Actualizar el botón de verificación
@@ -858,7 +858,7 @@
                 userData.last_daily_reward_claimed = data.lastClaim
                 
                 // Guardar datos en localStorage
-                localStorage.setItem('user_data', JSON.stringify(userData));
+                localStorage.setItem(`user_data_${user_id}`, JSON.stringify(userData));
                 
                 closeDailyRewardMenu();
                 animateCoins(data.reward_amount);
@@ -1010,13 +1010,13 @@
 
         async function loadUserData() {
             // Obtener el estado de las recompensas diarias del usuario
-            let datastored = localStorage.getItem('user_data');
+            let datastored = localStorage.getItem(`user_data_${user_id}`);
             if (datastored == null) {
                 const response = await fetch(`/get_user_data?user_id=${user_id}`);
                 userData = await response.json();
                 
                 // Guardar datos en localStorage
-                localStorage.setItem('user_data', JSON.stringify(userData));
+                localStorage.setItem(`user_data_${user_id}`, JSON.stringify(userData));
             } else {
                 userData = JSON.parse(datastored) // Deserializar el JSON almacenado
             }
@@ -1024,7 +1024,7 @@
         }
 
         async function loadCompletedTasks() {
-            let tasksStored = localStorage.getItem('completed_tasks');
+            let tasksStored = localStorage.getItem(`completed_tasks_${user_id}`);
             
             try {
                 if (tasksStored == null) {
@@ -1033,7 +1033,7 @@
                     completedTasks = data.completed_tasks;
                 
                     // Guardar datos en localStorage
-                    localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+                    localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
                 } else {
                     completedTasks = JSON.parse(tasksStored);
                 }

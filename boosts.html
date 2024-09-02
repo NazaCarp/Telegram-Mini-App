@@ -444,7 +444,7 @@
 
                     // Activar la animación correspondiente
                     if (boostType === 'multitap') {
-                        localStorage.setItem('tap', tap);
+                        localStorage.setItem(`tap_${user_id}`, tap);
                         document.getElementById('multitapAnimationContainer').classList.add('active');
                         document.querySelector('.container').classList.add('blur-content');
                         setTimeout(() => {
@@ -452,7 +452,7 @@
                             document.querySelector('.container').classList.remove('blur-content');
                         }, 500);
                     } else if (boostType === 'energy_limit') {
-                        localStorage.setItem('energyLimit', energyLimit);
+                        localStorage.setItem(`energyLimit_${user_id}`, energyLimit);
                         document.getElementById('energyLimitAnimationContainer').classList.add('active');
                         document.querySelector('.container').classList.add('blur-content');
                         setTimeout(() => {
@@ -460,7 +460,7 @@
                             document.querySelector('.container').classList.remove('blur-content');
                         }, 1000);
                     } else if (boostType === 'recharge_speed') {
-                        localStorage.setItem('rechargeSpeed', rechargeSpeed);
+                        localStorage.setItem(`rechargeSpeed_${user_id}`, rechargeSpeed);
                         document.getElementById('rechargeSpeedAnimationContainer').classList.add('active');
                         document.querySelector('.container').classList.add('blur-content');
                         setTimeout(() => {
@@ -477,14 +477,14 @@
         });
         
         async function loadScore() {
-            score = localStorage.getItem('score');
+            score = localStorage.getItem(`score_${user_id}`);
             if (score === null) {
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 score = data.score
                 
                 // Guardar el score en localStorage
-                localStorage.setItem('score', data.score);
+                localStorage.setItem(`score_${user_id}`, data.score);
             }
             score = parseFloat(score);
             document.getElementById('scoreText').innerText = formatNumber(score);
@@ -514,13 +514,13 @@
             document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', rechargeSpeedCost);
 
             // Guardar los datos en localStorage
-            localStorage.setItem('multitapLevel', data.tap);
-            localStorage.setItem('energyLimitLevel', Math.floor(data.energy_limit / 500) - 1);
-            localStorage.setItem('rechargeSpeedLevel', data.recharge_speed);
-            localStorage.setItem('multitapCost', multitapCost);
-            localStorage.setItem('energyLimitCost', energyLimitCost);
-            localStorage.setItem('rechargeSpeedCost', rechargeSpeedCost);
-            localStorage.setItem('profitPerHour', profitPerHour);
+            localStorage.setItem(`multitapLevel_${user_id}`, data.tap);
+            localStorage.setItem(`energyLimitLevel_${user_id}`, Math.floor(data.energy_limit / 500) - 1);
+            localStorage.setItem(`rechargeSpeedLevel_${user_id}`, data.recharge_speed);
+            localStorage.setItem(`multitapCost_${user_id}`, multitapCost);
+            localStorage.setItem(`energyLimitCost_${user_id}`, energyLimitCost);
+            localStorage.setItem(`rechargeSpeedCost_${user_id}`, rechargeSpeedCost);
+            localStorage.setItem(`profitPerHour_${user_id}`, profitPerHour);
 
             // Iniciar el intervalo para incrementar el score cada segundo
             setInterval(incrementScore, 1000);
@@ -530,8 +530,8 @@
             const scoreElement = document.getElementById('scoreText');
             score += profitPerHour / 3600;
             scoreElement.innerHTML = formatNumber(score);
-            localStorage.setItem('score', score);
-            localStorage.setItem('lastTimestamp', Date.now());
+            localStorage.setItem(`score_${user_id}`, score);
+            localStorage.setItem(`lastTimestamp_${user_id}`, Date.now());
 
             // Actualizar el score en la base de datos
             saveCounts();

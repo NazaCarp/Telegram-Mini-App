@@ -203,13 +203,13 @@
 
     async function loadAndUpdateCounters() {
       // Cargar valores desde localStorage si están disponibles
-      let storedScore = localStorage.getItem('score');
-      let storedProfitPerHour = localStorage.getItem('profit_per_hour');
-      let storedSecondaryCount = localStorage.getItem('secondaryCount');
-      let storedTap = localStorage.getItem('tap');
-      let storedEnergyLimit = localStorage.getItem('energyLimit');
-      let storedRechargeSpeed = localStorage.getItem('rechargeSpeed');
-      let storedLastTimestamp = localStorage.getItem('lastTimestamp');
+      let storedScore = localStorage.getItem(`score_${user_id}`);
+      let storedProfitPerHour = localStorage.getItem(`profit_per_hour_${user_id}`);
+      let storedSecondaryCount = localStorage.getItem(`secondaryCount_${user_id}`);
+      let storedTap = localStorage.getItem(`tap_${user_id}`);
+      let storedEnergyLimit = localStorage.getItem(`energyLimit_${user_id}`);
+      let storedRechargeSpeed = localStorage.getItem(`rechargeSpeed_${user_id}`);
+      let storedLastTimestamp = localStorage.getItem(`lastTimestamp_${user_id}`);
       if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
         // Primero, obtener los contadores
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}&is_premium=${isPremium}`)
@@ -249,14 +249,14 @@
       document.getElementById('scoreText').textContent = formatNumber(parseFloat(score));
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
 
-      // Guardar el score en localStorage
-      localStorage.setItem('score', score);
-      localStorage.setItem('profit_per_hour', profitPerHour);
-      localStorage.setItem('secondaryCount', secondaryCount);
-      localStorage.setItem('tap', tap);
-      localStorage.setItem('energyLimit', energyLimit);
-      localStorage.setItem('rechargeSpeed', rechargeSpeed);
-      localStorage.setItem('lastTimestamp', currentTime);
+      // Guardar las variables en localStorage
+      localStorage.setItem(`score_${user_id}`, score);
+      localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
+      localStorage.setItem(`secondaryCount_${user_id}`, secondaryCount);
+      localStorage.setItem(`tap_${user_id}`, tap);
+      localStorage.setItem(`energyLimit_${user_id}`, energyLimit);
+      localStorage.setItem(`rechargeSpeed_${user_id}`, rechargeSpeed);
+      localStorage.setItem(`lastTimestamp_${user_id}`, currentTime);
 
       // Iniciar el intervalo para incrementar el contador secundario cada segundo
       setInterval(incrementSecondaryCounter, 1000);
@@ -334,9 +334,9 @@
       }
       document.getElementById('scoreText').innerHTML = formatNumber(score);
       saveCounts();
-      localStorage.setItem('score', score);
-      localStorage.setItem('secondaryCount', secondaryCount);
-      localStorage.setItem('lastTimestamp', Date.now());
+      localStorage.setItem(`score_${user_id}`, score);
+      localStorage.setItem(`secondaryCount_${user_id}`, secondaryCount);
+      localStorage.setItem(`lastTimestamp_${user_id}`, Date.now());
     }
 
     function formatNumber(num) {

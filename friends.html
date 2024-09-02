@@ -299,7 +299,7 @@
 
             let timerInterval;
             let timerSeconds = 60;
-            const timerKey = 'reloadTimer';
+            const timerKey = `reloadTimer_${user_id}`;
 
             // Recuperar el tiempo restante del temporizador desde localStorage
             const storedTimer = localStorage.getItem(timerKey);
