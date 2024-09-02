@@ -318,16 +318,20 @@
             const friendsListLabel = document.getElementById('friends-list-label');
 
             let timerInterval;
-            let timerSeconds = 60;
+            let timerEndTime;
             const timerKey = `reloadTimer_${user_id}`;
 
-            // Recuperar el tiempo restante del temporizador desde localStorage
-            const storedTimer = localStorage.getItem(timerKey);
-            if (storedTimer) {
-                timerSeconds = parseInt(storedTimer, 10);
-                if (timerSeconds > 0) {
+            // Recuperar el tiempo de finalización del temporizador desde localStorage
+            const storedTimerEnd = localStorage.getItem(timerKey);
+            if (storedTimerEnd) {
+                timerEndTime = parseInt(storedTimerEnd, 10);
+                const now = Date.now();
+                if (timerEndTime > now) {
+                    const remainingSeconds = Math.ceil((timerEndTime - now) / 1000);
                     reloadIcon.classList.add('disabled');
-                    startTimer();
+                    startTimer(remainingSeconds);
+                } else {
+                    localStorage.removeItem(timerKey);
                 }
             }
 
@@ -338,7 +342,8 @@
             });
 
             reloadIcon.addEventListener('click', function() {
-                if (timerSeconds < 60 & timerSeconds > 0) return; // Si el temporizador está activo, no hagas nada
+                const now = Date.now();
+                if (timerEndTime && timerEndTime > now) return; // Si el temporizador está activo, no hagas nada
 
                 this.classList.add('rotate', 'disabled');
                 startTimer();
@@ -348,20 +353,30 @@
                 loadReferrals(true);
             });
 
-            function startTimer() {
-                timerSeconds = 60;
-                timerElement.textContent = timerSeconds;
+            function startTimer(initialSeconds = 60) {
+                clearInterval(timerInterval);
+                timerEndTime = Date.now() + initialSeconds * 1000;
+                localStorage.setItem(timerKey, timerEndTime.toString());
+
+                updateTimerDisplay();
+
                 timerInterval = setInterval(() => {
-                    timerSeconds--;
-                    timerElement.textContent = timerSeconds;
-                    localStorage.setItem(timerKey, timerSeconds); // Guardar el tiempo restante en localStorage
-                    if (timerSeconds <= 0) {
-                        clearInterval(timerInterval);
-                        reloadIcon.classList.remove('disabled');
-                        timerElement.textContent = '';
-                        localStorage.removeItem(timerKey); // Eliminar el tiempo restante de localStorage
-                    }
+                    updateTimerDisplay();
                 }, 1000);
+            }
+
+            function updateTimerDisplay() {
+                const now = Date.now();
+                const remainingSeconds = Math.ceil((timerEndTime - now) / 1000);
+
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    reloadIcon.classList.remove('disabled');
+                    timerElement.textContent = '';
+                    localStorage.removeItem(timerKey);
+                } else {
+                    timerElement.textContent = remainingSeconds;
+                }
             }
 
             async function loadReferrals(forceReload = false) {
