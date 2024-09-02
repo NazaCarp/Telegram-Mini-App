@@ -211,8 +211,16 @@
       let storedRechargeSpeed = localStorage.getItem(`rechargeSpeed_${user_id}`);
       let storedLastTimestamp = localStorage.getItem(`lastTimestamp_${user_id}`);
       alert(storedScore)
-      if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
-        // Primero, obtener los contadores
+      // Verificar si alguno de los valores es null o NaN
+      if (!storedScore || isNaN(parseFloat(storedScore)) || 
+          !storedSecondaryCount || isNaN(parseInt(storedSecondaryCount)) || 
+          !storedLastTimestamp || isNaN(parseInt(storedLastTimestamp)) || 
+          !storedProfitPerHour || isNaN(parseFloat(storedProfitPerHour)) || 
+          !storedTap || isNaN(parseInt(storedTap)) || 
+          !storedEnergyLimit || isNaN(parseInt(storedEnergyLimit)) || 
+          !storedRechargeSpeed || isNaN(parseInt(storedRechargeSpeed))) {
+        
+        // Si alguno es null o NaN, obtener los contadores del servidor
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}&is_premium=${isPremium}`)
         const data = await response.json();
         
@@ -225,6 +233,8 @@
         storedLastTimestamp = new Date(data.timestamp).getTime();
         storedScore = data.score;
       }
+
+      // Convertir los valores a sus tipos correspondientes
       score = parseFloat(storedScore);
       profitPerHour = parseFloat(storedProfitPerHour);
       secondaryCount = parseInt(storedSecondaryCount);
