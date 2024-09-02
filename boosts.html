@@ -198,8 +198,6 @@
         }
         
         .action-button {
-            position: relative;
-            overflow: hidden;
             width: 100%;
             margin-top: 10px;
             padding: 10px 20px;
@@ -261,21 +259,6 @@
         .recharge-speed-animation-container.active {
             display: flex;
             animation: rechargeSpeedAnimation 1s ease-in-out infinite;
-        }
-
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            background-color: rgba(255, 255, 255, 0.7);
-        }
-
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
         }
 
         @keyframes multitapAnimation {
@@ -439,8 +422,7 @@
             document.querySelector('.navbar').classList.remove('blur-content');
         }
 
-        document.getElementById('actionButton').addEventListener('click', async function(event) {
-            createRipple(event);
+        document.getElementById('actionButton').addEventListener('click', async function() {
             const currentScore = score;
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
             
@@ -511,26 +493,6 @@
                 }
             } else {
                 shakeButton();
-            }
-        });
-
-        document.getElementById('actionButton').addEventListener('mousedown', function(event) {
-            createRipple(event, true);
-        });
-
-        document.getElementById('actionButton').addEventListener('mouseup', function(event) {
-            const button = event.currentTarget;
-            if (button._ripple) {
-                button._ripple.remove();
-                button._ripple = null;
-            }
-        });
-        
-        document.getElementById('actionButton').addEventListener('mouseleave', function(event) {
-            const button = event.currentTarget;
-            if (button._ripple) {
-                button._ripple.remove();
-                button._ripple = null;
             }
         });
         
@@ -667,7 +629,7 @@
             button.animate(shakeAnimation, shakeTiming);
         }
 
-        function createRipple(event, slow = false) {
+        function createRipple(event) {
             const button = event.currentTarget;
             const ripple = document.createElement('span');
             const rect = button.getBoundingClientRect();
@@ -680,19 +642,11 @@
             ripple.style.top = `${y}px`;
             ripple.classList.add('ripple');
 
-            if (slow) {
-                ripple.style.animationDuration = '2s'; // Adjust the duration as needed
-            }
-
             button.appendChild(ripple);
 
-            if (!slow) {
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            } else {
-                button._ripple = ripple; // Store the ripple element to remove it later
-            }
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
         }
 
         window.onload = function() {
