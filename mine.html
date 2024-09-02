@@ -421,12 +421,26 @@
         async function loadScore() {
             let storedScore = localStorage.getItem(`score_${user_id}`);
             let storedProfitPerHour = localStorage.getItem(`profit_per_hour_${user_id}`);
+            let lastTimestamp = localStorage.getItem(`lastTimestamp_${user_id}`);
             
-            if (storedScore === null || storedProfitPerHour === null){
-                const response = await fetch(`/get_counters?user_id=${user_id}`);
-                const data = await response.json();
-                storedScore = data.score;
-                storedProfitPerHour = data.profit_per_hour;
+            const currentTime = Date.now();
+            const timeElapsed = (currentTime - lastTimestamp) / 1000; // tiempo en segundos
+
+            if (storedScore === null || storedProfitPerHour === null || isNaN(parseFloat(storedScore)) || isNaN(parseFloat(storedProfitPerHour)) || timeElapsed > 300) { // 5 minutos
+                try {
+                    const response = await fetch(`/get_counters?user_id=${user_id}`);
+                    const data = await response.json();
+                    storedScore = data.score;
+                    storedProfitPerHour = data.profit_per_hour;
+                } catch (error) {
+                    console.error('Error fetching score data:', error);
+                    // Si hay un error, usamos los valores almacenados o 0 si no existen
+                    storedScore = storedScore || '0';
+                    storedProfitPerHour = storedProfitPerHour || '0';
+                }
+            } else {
+                // Actualizar el score basado en el tiempo transcurrido
+                storedScore = parseFloat(storedScore) + (parseFloat(storedProfitPerHour) / 3600) * timeElapsed;
             }
             
             // Convertir los valores almacenados en números
@@ -439,7 +453,7 @@
             // Guardar score y profitPerHour en localStorage
             localStorage.setItem(`score_${user_id}`, score);
             localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
-            localStorage.setItem(`lastTimestamp_${user_id}`, Date.now());
+            localStorage.setItem(`lastTimestamp_${user_id}`, currentTime);
             
             // Iniciar el intervalo para incrementar el score cada segundo
             setInterval(incrementScore, 1000);

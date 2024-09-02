@@ -1009,39 +1009,64 @@
         }
 
         async function loadUserData() {
-            // Obtener el estado de las recompensas diarias del usuario
-            let datastored = localStorage.getItem(`user_data_${user_id}`);
-            if (datastored == null) {
-                const response = await fetch(`/get_user_data?user_id=${user_id}`);
-                userData = await response.json();
-                
-                // Guardar datos en localStorage
-                localStorage.setItem(`user_data_${user_id}`, JSON.stringify(userData));
+            // Intentar cargar datos desde localStorage
+            let storedData = localStorage.getItem(`user_data_${user_id}`);
+            
+            if (!storedData || isDataInvalid(JSON.parse(storedData))) {
+                // Si no hay datos almacenados o son inválidos, obtener del servidor
+                try {
+                    const response = await fetch(`/get_user_data?user_id=${user_id}`);
+                    userData = await response.json();
+                    
+                    // Guardar datos en localStorage
+                    localStorage.setItem(`user_data_${user_id}`, JSON.stringify(userData));
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    userData = {}; // Establecer un objeto vacío en caso de error
+                }
             } else {
-                userData = JSON.parse(datastored) // Deserializar el JSON almacenado
+                userData = JSON.parse(storedData);
             }
-            updateDailyRewardAmount(); // Añadir esta línea
+
+            updateDailyRewardAmount();
+        }
+
+        function isDataInvalid(data) {
+            // Verificar si los datos son válidos
+            return !data || typeof data !== 'object' || 
+                data.daily_reward_streak === undefined || 
+                data.last_daily_reward_claimed === undefined;
         }
 
         async function loadCompletedTasks() {
             let tasksStored = localStorage.getItem(`completed_tasks_${user_id}`);
             
-            try {
-                if (tasksStored == null) {
+            if (!tasksStored || !isValidJSON(tasksStored)) {
+                try {
                     const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
                     const data = await response.json();
                     completedTasks = data.completed_tasks;
                 
                     // Guardar datos en localStorage
                     localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
-                } else {
-                    completedTasks = JSON.parse(tasksStored);
+                } catch (error) {
+                    console.error('Error loading completed tasks:', error);
+                    completedTasks = {};
                 }
+            } else {
+                completedTasks = JSON.parse(tasksStored);
+            }
 
-                updateRectanglesAppearance();
-                setupEventListeners(); // Añadir esta línea
-            } catch (error) {
-                console.error('Error loading completed tasks:', error);
+            updateRectanglesAppearance();
+            setupEventListeners();
+        }
+
+        function isValidJSON(str) {
+            try {
+                JSON.parse(str);
+                return true;
+            } catch (e) {
+                return false;
             }
         }
 
