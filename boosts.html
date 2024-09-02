@@ -198,6 +198,8 @@
         }
         
         .action-button {
+            position: relative;
+            overflow: hidden;
             width: 100%;
             margin-top: 10px;
             padding: 10px 20px;
@@ -259,6 +261,33 @@
         .recharge-speed-animation-container.active {
             display: flex;
             animation: rechargeSpeedAnimation 1s ease-in-out infinite;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+            pointer-events: none;
+        }
+
+        .ripple.hold {
+            animation: ripple-effect-hold 1s linear;
+        }
+
+        @keyframes ripple-effect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ripple-effect-hold {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
         }
 
         @keyframes multitapAnimation {
@@ -422,77 +451,92 @@
             document.querySelector('.navbar').classList.remove('blur-content');
         }
 
-        document.getElementById('actionButton').addEventListener('click', async function() {
-            const currentScore = score;
-            const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
-            
-            if (currentScore >= cost) {
-                const newScore = currentScore - cost;
-                const response = await fetch('/update_boost', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: user_id,
-                        score: newScore,
-                        boost_type: boostType
-                    })
-                });
+        document.getElementById('actionButton').addEventListener('click', async function(event) {
+            if (this.classList.contains('active')) {
+                createRipple(event);
+                const currentScore = score;
+                const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
+                
+                if (currentScore >= cost) {
+                    const newScore = currentScore - cost;
+                    const response = await fetch('/update_boost', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: user_id,
+                            score: newScore,
+                            boost_type: boostType
+                        })
+                    });
 
-                const result = await response.json();
-                if (result.status === 'success') {
-                    // Actualizar el valor de score
-                    score = newScore
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        // Actualizar el valor de score
+                        score = newScore
 
-                    // Cerrar la alerta
-                    closeAlertMenu();
+                        // Cerrar la alerta
+                        closeAlertMenu();
 
-                    // Actualizar las variables con los datos obtenidos
-                    storedTap = result.tap;
-                    storedEnergyLimit = result.energy_limit;
-                    storedRechargeSpeed = result.recharge_speed;
-                    storedProfitPerHour = result.profit_per_hour;
+                        // Actualizar las variables con los datos obtenidos
+                        storedTap = result.tap;
+                        storedEnergyLimit = result.energy_limit;
+                        storedRechargeSpeed = result.recharge_speed;
+                        storedProfitPerHour = result.profit_per_hour;
 
-                    // Guardar los datos en localStorage
-                    localStorage.setItem(`tap_${user_id}`, storedTap);
-                    localStorage.setItem(`energyLimit_${user_id}`, storedEnergyLimit);
-                    localStorage.setItem(`rechargeSpeed_${user_id}`, storedRechargeSpeed);
-                    localStorage.setItem(`profitPerHour_${user_id}`, storedProfitPerHour);
-                    
-                    loadUserData();
+                        // Guardar los datos en localStorage
+                        localStorage.setItem(`tap_${user_id}`, storedTap);
+                        localStorage.setItem(`energyLimit_${user_id}`, storedEnergyLimit);
+                        localStorage.setItem(`rechargeSpeed_${user_id}`, storedRechargeSpeed);
+                        localStorage.setItem(`profitPerHour_${user_id}`, storedProfitPerHour);
+                        
+                        loadUserData();
 
-                    // Activar la animación correspondiente
-                    if (boostType === 'multitap') {
-                        localStorage.setItem(`tap_${user_id}`, tap);
-                        document.getElementById('multitapAnimationContainer').classList.add('active');
-                        document.querySelector('.container').classList.add('blur-content');
-                        setTimeout(() => {
-                            document.getElementById('multitapAnimationContainer').classList.remove('active');
-                            document.querySelector('.container').classList.remove('blur-content');
-                        }, 500);
-                    } else if (boostType === 'energy_limit') {
-                        localStorage.setItem(`energyLimit_${user_id}`, energyLimit);
-                        document.getElementById('energyLimitAnimationContainer').classList.add('active');
-                        document.querySelector('.container').classList.add('blur-content');
-                        setTimeout(() => {
-                            document.getElementById('energyLimitAnimationContainer').classList.remove('active');
-                            document.querySelector('.container').classList.remove('blur-content');
-                        }, 1000);
-                    } else if (boostType === 'recharge_speed') {
-                        localStorage.setItem(`rechargeSpeed_${user_id}`, rechargeSpeed);
-                        document.getElementById('rechargeSpeedAnimationContainer').classList.add('active');
-                        document.querySelector('.container').classList.add('blur-content');
-                        setTimeout(() => {
-                            document.getElementById('rechargeSpeedAnimationContainer').classList.remove('active');
-                            document.querySelector('.container').classList.remove('blur-content');
-                        }, 1000);
+                        // Activar la animación correspondiente
+                        if (boostType === 'multitap') {
+                            localStorage.setItem(`tap_${user_id}`, tap);
+                            document.getElementById('multitapAnimationContainer').classList.add('active');
+                            document.querySelector('.container').classList.add('blur-content');
+                            setTimeout(() => {
+                                document.getElementById('multitapAnimationContainer').classList.remove('active');
+                                document.querySelector('.container').classList.remove('blur-content');
+                            }, 500);
+                        } else if (boostType === 'energy_limit') {
+                            localStorage.setItem(`energyLimit_${user_id}`, energyLimit);
+                            document.getElementById('energyLimitAnimationContainer').classList.add('active');
+                            document.querySelector('.container').classList.add('blur-content');
+                            setTimeout(() => {
+                                document.getElementById('energyLimitAnimationContainer').classList.remove('active');
+                                document.querySelector('.container').classList.remove('blur-content');
+                            }, 1000);
+                        } else if (boostType === 'recharge_speed') {
+                            localStorage.setItem(`rechargeSpeed_${user_id}`, rechargeSpeed);
+                            document.getElementById('rechargeSpeedAnimationContainer').classList.add('active');
+                            document.querySelector('.container').classList.add('blur-content');
+                            setTimeout(() => {
+                                document.getElementById('rechargeSpeedAnimationContainer').classList.remove('active');
+                                document.querySelector('.container').classList.remove('blur-content');
+                            }, 1000);
+                        }
+                    } else {
+                        alert('Error al actualizar el boost');
                     }
                 } else {
-                    alert('Error al actualizar el boost');
+                    shakeButton();
                 }
-            } else {
-                shakeButton();
+            }
+        });
+
+        document.getElementById('actionButton').addEventListener('mousedown', function(event) {
+            if (this.classList.contains('active')) {
+                createRipple(event, true);
+            }
+        });
+
+        document.getElementById('actionButton').addEventListener('touchstart', function(event) {
+            if (this.classList.contains('active')) {
+                createRipple(event, true);
             }
         });
         
@@ -629,7 +673,7 @@
             button.animate(shakeAnimation, shakeTiming);
         }
 
-        function createRipple(event) {
+        function createRipple(event, isHold = false) {
             const button = event.currentTarget;
             const ripple = document.createElement('span');
             const rect = button.getBoundingClientRect();
@@ -641,12 +685,15 @@
             ripple.style.left = `${x}px`;
             ripple.style.top = `${y}px`;
             ripple.classList.add('ripple');
+            if (isHold) {
+                ripple.classList.add('hold');
+            }
 
             button.appendChild(ripple);
 
             setTimeout(() => {
                 ripple.remove();
-            }, 600);
+            }, isHold ? 1000 : 600);
         }
 
         window.onload = function() {
