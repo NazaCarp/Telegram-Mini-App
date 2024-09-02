@@ -235,7 +235,9 @@
       }
 
       // Convertir los valores a sus tipos correspondientes
+      alert(storedScore)
       score = parseFloat(storedScore);
+      alert(score)
       profitPerHour = parseFloat(storedProfitPerHour);
       secondaryCount = parseInt(storedSecondaryCount);
       tap = parseInt(storedTap);
@@ -261,10 +263,7 @@
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
 
       // Guardar las variables en localStorage
-      alert(score)
       localStorage.setItem(`score_${user_id}`, score);
-      let scoreDeSupabase = localStorage.getItem(`score_${user_id}`);
-      alert(scoreDeSupabase)
       localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
       localStorage.setItem(`secondaryCount_${user_id}`, secondaryCount);
       localStorage.setItem(`tap_${user_id}`, tap);
