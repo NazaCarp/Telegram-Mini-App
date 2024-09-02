@@ -271,18 +271,7 @@
             background-color: rgba(255, 255, 255, 0.7);
         }
 
-        .ripple-slow {
-            animation: ripple-animation-slow 2s linear;
-        }
-
         @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        @keyframes ripple-animation-slow {
             to {
                 transform: scale(4);
                 opacity: 0;
@@ -389,7 +378,6 @@
     <script>
         const tg = window.Telegram.WebApp;
         const user_id = tg.initDataUnsafe.user.id;
-        const actionButton = document.getElementById('actionButton');
         let score = 0;
         let profitPerHour = 0;
         let cost;
@@ -451,8 +439,8 @@
             document.querySelector('.navbar').classList.remove('blur-content');
         }
 
-        actionButton.addEventListener('click', async function(event) {
-            createRipple(event, 'ripple');
+        document.getElementById('actionButton').addEventListener('click', async function(event) {
+            createRipple(event);
             const currentScore = score;
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
             
@@ -526,14 +514,18 @@
             }
         });
 
-        actionButton.addEventListener('mousedown', function(event) {
-            createRipple(event, 'ripple-slow');
+        document.getElementById('actionButton').addEventListener('mousedown', function(event) {
+            createRipple(event, true);
         });
 
-        actionButton.addEventListener('mouseup', function() {
-            clearRipples();
+        document.getElementById('actionButton').addEventListener('mouseup', function(event) {
+            const button = event.currentTarget;
+            if (button._ripple) {
+                button._ripple.remove();
+                button._ripple = null;
+            }
         });
-
+        
         async function loadScore() {
             score = localStorage.getItem(`score_${user_id}`);
             if (!score || isNaN(parseFloat(score))) {
@@ -667,30 +659,33 @@
             button.animate(shakeAnimation, shakeTiming);
         }
 
-        function createRipple(event, rippleClass) {
-            const button = event.currentTarget;
-            const ripple = document.createElement('span');
-            const rect = button.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = event.clientX - rect.left - size / 2;
-            const y = event.clientY - rect.top - size / 2;
+        function createRipple(event, slow = false) {
+        const button = event.currentTarget;
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
 
-            ripple.style.width = ripple.style.height = `${size}px`;
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            ripple.classList.add('ripple', rippleClass);
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        ripple.classList.add('ripple');
 
-            button.appendChild(ripple);
+        if (slow) {
+            ripple.style.animationDuration = '2s'; // Adjust the duration as needed
+        }
 
+        button.appendChild(ripple);
+
+        if (!slow) {
             setTimeout(() => {
                 ripple.remove();
-            }, rippleClass === 'ripple-slow' ? 2000 : 600);
+            }, 600);
+        } else {
+            button._ripple = ripple; // Store the ripple element to remove it later
         }
-
-        function clearRipples() {
-            const ripples = document.querySelectorAll('.ripple-slow');
-            ripples.forEach(ripple => ripple.remove());
-        }
+    }
 
         window.onload = function() {
             loadScore();
