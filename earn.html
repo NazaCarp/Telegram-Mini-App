@@ -421,8 +421,10 @@
         let videoTimers = {};
         
         tg.ready();
-        loadUserData();
-        loadCompletedTasks();
+        loadUserData().then(() => {
+            loadCompletedTasks();
+            loadSavedTimers();
+        });
         
         tg.onEvent('backButtonClicked', () => {
             window.location.href = 'index.html';
@@ -597,17 +599,17 @@
         }
 
         // Load video timers from localStorage
-        function loadVideoTimers() {
-            const storedTimers = localStorage.getItem(`videoTimers_${user_id}`);
-            if (storedTimers) {
-                videoTimers = JSON.parse(storedTimers);
-                // Update timers for ongoing videos
-                Object.keys(videoTimers).forEach(videoId => {
-                    const rectangle = document.getElementById(videoId);
-                    if (rectangle) {
-                        const checkButton = checkButtons[videoId];
-                        if (checkButton) {
-                            updateVideoCheckButton(videoId, checkButton);
+        function loadSavedTimers() {
+            const savedTimers = localStorage.getItem(`timerIntervals_${user_id}`);
+            if (savedTimers) {
+                const parsedTimers = JSON.parse(savedTimers);
+                Object.keys(parsedTimers).forEach(rectangleId => {
+                    const endTime = new Date(parsedTimers[rectangleId].endTime);
+                    if (endTime > new Date()) {
+                        const rectangle = document.getElementById(rectangleId);
+                        if (rectangle) {
+                            const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
+                            updateCheckButtonState(rectangleId, remainingSeconds, rectangle);
                         }
                     }
                 });
@@ -651,14 +653,9 @@
             arrowIconElement.style.fontSize = '25px';
         }
 
-        function updateCheckButtonState(checkButton, remainingSeconds, rectangle) {
-            checkButton.classList.remove('active');
-            checkButton.classList.add('inactive');
-            checkButton.disabled = true;
-            checkButton.innerText = `${remainingSeconds}s`;
-            
-            if (timerIntervals[rectangle.id]) {
-                clearInterval(timerIntervals[rectangle.id].interval);
+        function updateCheckButtonState(rectangleId, remainingSeconds, rectangle) {
+            if (timerIntervals[rectangleId]) {
+                clearInterval(timerIntervals[rectangleId].interval);
             }
 
             const endTime = new Date(Date.now() + remainingSeconds * 1000);
@@ -667,31 +664,36 @@
             const intervalId = setInterval(() => {
                 const now = new Date();
                 const remainingSeconds = Math.ceil((endTime - now) / 1000);
+                updateButtonDisplay(rectangleId, remainingSeconds);
                 if (remainingSeconds <= 0) {
                     clearInterval(intervalId);
+                    delete timerIntervals[rectangleId];
+                    saveTimers();
+                }
+            }, 1000);
+
+            timerIntervals[rectangleId] = { interval: intervalId, endTime: endTime.toISOString() };
+            saveTimers();
+            updateButtonDisplay(rectangleId, remainingSeconds);
+        }
+
+        function updateButtonDisplay(rectangleId, remainingSeconds) {
+            const checkButton = document.querySelector(`button[data-rectangle-id="${rectangleId}"]`);
+            if (checkButton) {
+                if (remainingSeconds > 0) {
+                    checkButton.classList.remove('active');
+                    checkButton.classList.add('inactive');
+                    checkButton.disabled = true;
+                    checkButton.innerText = `${remainingSeconds}s`;
+                } else {
                     checkButton.disabled = false;
                     checkButton.classList.remove('inactive');
                     checkButton.classList.add('active');
                     checkButton.innerText = 'Check';
-                    delete rectangle.dataset.endTime;
-                    delete timerIntervals[rectangle.id];
-                    saveTimers();
-                } else {
-                    checkButton.innerText = `${remainingSeconds}s`;
                 }
-            }, 1000);
-
-            timerIntervals[rectangle.id] = { interval: intervalId, endTime: endTime.toISOString() };
-            saveTimers();
-
-            // Añadir evento mousemove para activar la animación si el botón está deshabilitado
-            checkButton.addEventListener('mousemove', () => {
-                if (checkButton.disabled) {
-                    shakeButton(checkButton);
-                }
-            });
+            }
         }
-
+        
         function saveTimers() {
             localStorage.setItem(`timerIntervals_${user_id}`, JSON.stringify(timerIntervals));
         }
@@ -769,13 +771,9 @@
             } else {
                 // El usuario no está en el grupo, mostrar mensaje en burbuja
                 showAlertBubble("You're not a member of the group yet. Please join and try again.");
-                
-                // Iniciar el temporizador
+            
                 const timerSeconds = 60;
-                const endTime = new Date(Date.now() + timerSeconds * 1000);
-                rectangle.dataset.endTime = endTime.toISOString();
-
-                updateCheckButtonState(checkButton, timerSeconds, rectangle);
+                updateCheckButtonState(rectangleId, timerSeconds, rectangle);
             }
         }
 
