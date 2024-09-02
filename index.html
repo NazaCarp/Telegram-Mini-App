@@ -210,6 +210,7 @@
       let storedEnergyLimit = localStorage.getItem(`energyLimit_${user_id}`);
       let storedRechargeSpeed = localStorage.getItem(`rechargeSpeed_${user_id}`);
       let storedLastTimestamp = localStorage.getItem(`lastTimestamp_${user_id}`);
+      alert(storedScore)
       if (storedScore === null || storedSecondaryCount === null || storedLastTimestamp === null || storedProfitPerHour === null || storedTap === null || storedEnergyLimit === null || storedRechargeSpeed === null) {
         // Primero, obtener los contadores
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}&is_premium=${isPremium}`)
