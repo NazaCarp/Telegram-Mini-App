@@ -207,7 +207,7 @@ def update_boost():
             counter.recharge_speed = (counter.recharge_speed or 1) + 1
 
         db.commit()
-        return jsonify({'status': 'success', 'tap': counter.tap, 'energyLimit': counter.energy_limit, 'rechargeSpeed': counter.recharge_speed, 'profit_per_hour': counter.profit_per_hour})
+        return jsonify({'status': 'success', 'tap': counter.tap, 'energy_limit': counter.energy_limit, 'recharge_speed': counter.recharge_speed, 'profit_per_hour': counter.profit_per_hour})
     
     except Exception as e:
         logging.error(f"Error in update_boost: {e}")
