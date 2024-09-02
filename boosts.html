@@ -456,8 +456,24 @@
 
                 const result = await response.json();
                 if (result.status === 'success') {
+                    // Actualizar el valor de score
                     score = newScore
+                    
+                    // Cerrar la alerta
                     closeAlertMenu();
+
+                    // Actualizar las variables con los datos obtenidos
+                    storedTap = data.tap;
+                    storedEnergyLimit = data.energy_limit;
+                    storedRechargeSpeed = data.recharge_speed;
+                    storedProfitPerHour = data.profit_per_hour;
+
+                    // Guardar los datos en localStorage
+                    localStorage.setItem(`tap_${user_id}`, storedTap);
+                    localStorage.setItem(`energyLimit_${user_id}`, storedEnergyLimit);
+                    localStorage.setItem(`rechargeSpeed_${user_id}`, storedRechargeSpeed);
+                    localStorage.setItem(`profitPerHour_${user_id}`, storedProfitPerHour);
+                    
                     loadUserData();
 
                     // Activar la animación correspondiente
