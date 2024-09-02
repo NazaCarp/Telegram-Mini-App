@@ -353,22 +353,6 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .action-button::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: width 0.5s, height 0.5s, opacity 0.5s;
         }
         
         .action-button.active {
@@ -376,13 +360,6 @@
             color: white;
         }
         
-        .action-button:active::after {
-            width: 300px;
-            height: 300px;
-            opacity: 1;
-            transition: width 1s, height 1s, opacity 0.5s;
-        }
-
         .action-button.inactive {
             background-color: #808080;
             color: white;
@@ -1019,15 +996,7 @@
                 }
             };
 
-            const actionButton = document.getElementById('actionButton');
-            actionButton.addEventListener('click', currentActionButtonListener);
-
-            // Agregar efecto Ripple
-            actionButton.addEventListener('mousedown', addRippleEffect);
-            actionButton.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                addRippleEffect(e.touches[0]);
-            });
+            document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
         }
         
         function updateClubLevel(clubId, newLevel, clubs, levels) {
@@ -1090,26 +1059,6 @@
             };
 
             button.animate(shakeAnimation, shakeTiming);
-        }
-
-        function addRippleEffect(event) {
-            const button = event.currentTarget;
-            const ripple = document.createElement('span');
-            const rect = button.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = event.clientX - rect.left - size / 2;
-            const y = event.clientY - rect.top - size / 2;
-
-            ripple.style.width = ripple.style.height = `${size}px`;
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            ripple.classList.add('ripple');
-
-            button.appendChild(ripple);
-
-            ripple.addEventListener('animationend', () => {
-                ripple.remove();
-            });
         }
     </script>
 </body>
