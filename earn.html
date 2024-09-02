@@ -738,6 +738,12 @@
             } else if (data.status === 'already_completed') {
                 closeAlertMenu();
             } else {
+                if (data.status === 'failure'){
+                    showPopup('You are not in the group');
+                }
+                else {
+                    alert(data.error);
+                }
                 // El usuario no está en el grupo, iniciar el temporizador
                 const timerSeconds = 60;
                 const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
@@ -884,7 +890,7 @@
                 animateCoins(data.reward_amount);
                 updateDailyRewardAmount();
             } else {
-                alert(data.error);
+                showPopup(data.error);
             }
         }
 
