@@ -313,6 +313,7 @@
     </style>
 </head>
 <body>
+    <div id="alert-container" style="position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 10px 20px; border-radius: 50px; display: none; z-index: 1000;"></div>
     <div class="container">
         <div class="score" id="scoreContainer">
             <iconify-icon icon="twemoji:coin" style="font-size: 60px;" id="coinIcon"></iconify-icon>
@@ -738,13 +739,10 @@
             } else if (data.status === 'already_completed') {
                 closeAlertMenu();
             } else {
-                if (data.status === 'failure'){
-                    showPopup('You are not in the group');
-                }
-                else {
-                    alert(data.error);
-                }
-                // El usuario no está en el grupo, iniciar el temporizador
+                // El usuario no está en el grupo, mostrar mensaje en burbuja
+                showAlertBubble("You're not a member of the group yet. Please join and try again.");
+                
+                // Iniciar el temporizador
                 const timerSeconds = 60;
                 const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
                 rectangle.dataset.endTime = endTime;
@@ -770,6 +768,15 @@
                     closeDailyRewardMenu();
                 }
             });
+        }
+
+        function showAlertBubble(message) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.textContent = message;
+            alertContainer.style.display = 'block';
+            setTimeout(() => {
+                alertContainer.style.display = 'none';
+            }, 3000);
         }
 
         function closeAlertMenu() {
@@ -890,7 +897,7 @@
                 animateCoins(data.reward_amount);
                 updateDailyRewardAmount();
             } else {
-                showPopup(data.error);
+                alert(data.error);
             }
         }
 
