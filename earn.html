@@ -614,6 +614,25 @@
             }
         }
 
+        // Función para cargar los temporizadores guardados
+        function loadSavedTimers() {
+            const savedTimers = localStorage.getItem(`timerIntervals_${user_id}`);
+            if (savedTimers) {
+                const parsedTimers = JSON.parse(savedTimers);
+                Object.keys(parsedTimers).forEach(rectangleId => {
+                    const endTime = new Date(parsedTimers[rectangleId].endTime);
+                    if (endTime > new Date()) {
+                        const rectangle = document.getElementById(rectangleId);
+                        const checkButton = document.querySelector(`button[data-rectangle-id="${rectangleId}"]`);
+                        if (rectangle && checkButton) {
+                            const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
+                            updateCheckButtonState(checkButton, remainingSeconds, rectangle);
+                        }
+                    }
+                });
+            }
+        }
+
         loadVideoTimers();
 
         const lastClaimed = userData.last_daily_reward_claimed ? new Date(userData.last_daily_reward_claimed) : null;
@@ -642,9 +661,12 @@
                 clearInterval(timerIntervals[rectangle.id].interval);
             }
 
+            const endTime = new Date(Date.now() + remainingSeconds * 1000);
+            rectangle.dataset.endTime = endTime.toISOString();
+
             const intervalId = setInterval(() => {
-                const endTime = new Date(rectangle.dataset.endTime);
-                const remainingSeconds = Math.ceil((endTime - Date.now()) / 1000);
+                const now = new Date();
+                const remainingSeconds = Math.ceil((endTime - now) / 1000);
                 if (remainingSeconds <= 0) {
                     clearInterval(intervalId);
                     checkButton.disabled = false;
@@ -653,12 +675,14 @@
                     checkButton.innerText = 'Check';
                     delete rectangle.dataset.endTime;
                     delete timerIntervals[rectangle.id];
+                    saveTimers();
                 } else {
                     checkButton.innerText = `${remainingSeconds}s`;
                 }
             }, 1000);
 
-            timerIntervals[rectangle.id] = { interval: intervalId, endTime: rectangle.dataset.endTime };
+            timerIntervals[rectangle.id] = { interval: intervalId, endTime: endTime.toISOString() };
+            saveTimers();
 
             // Añadir evento mousemove para activar la animación si el botón está deshabilitado
             checkButton.addEventListener('mousemove', () => {
@@ -666,6 +690,10 @@
                     shakeButton(checkButton);
                 }
             });
+        }
+
+        function saveTimers() {
+            localStorage.setItem(`timerIntervals_${user_id}`, JSON.stringify(timerIntervals));
         }
 
         function updateVideoCheckButtonState(videoId, checkButton) {
