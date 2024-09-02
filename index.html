@@ -221,7 +221,6 @@
           !storedRechargeSpeed || isNaN(parseInt(storedRechargeSpeed))) {
         
         // Si alguno es null o NaN, obtener los contadores del servidor
-        alert('Entró')
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}&is_premium=${isPremium}`)
         const data = await response.json();
         
@@ -234,7 +233,6 @@
         storedLastTimestamp = new Date(data.timestamp).getTime();
         storedScore = data.score;
       }
-      alert(storedScore)
 
       // Convertir los valores a sus tipos correspondientes
       score = parseFloat(storedScore);
@@ -263,7 +261,10 @@
       document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`; // Usar energyLimit
 
       // Guardar las variables en localStorage
+      alert(score)
       localStorage.setItem(`score_${user_id}`, score);
+      let scoreDeSupabase = localStorage.getItem(`score_${user_id}`);
+      alert(scoreDeSupabase)
       localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
       localStorage.setItem(`secondaryCount_${user_id}`, secondaryCount);
       localStorage.setItem(`tap_${user_id}`, tap);
