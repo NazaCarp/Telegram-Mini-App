@@ -463,10 +463,10 @@
                     closeAlertMenu();
 
                     // Actualizar las variables con los datos obtenidos
-                    storedTap = data.tap;
-                    storedEnergyLimit = data.energy_limit;
-                    storedRechargeSpeed = data.recharge_speed;
-                    storedProfitPerHour = data.profit_per_hour;
+                    let storedTap = data.tap;
+                    let storedEnergyLimit = data.energy_limit;
+                    let storedRechargeSpeed = data.recharge_speed;
+                    let storedProfitPerHour = data.profit_per_hour;
 
                     // Guardar los datos en localStorage
                     localStorage.setItem(`tap_${user_id}`, storedTap);
