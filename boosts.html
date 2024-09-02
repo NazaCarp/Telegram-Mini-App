@@ -478,7 +478,7 @@
         
         async function loadScore() {
             score = localStorage.getItem(`score_${user_id}`);
-            if (!score || isNaN(parseFloat(storedScore))) {
+            if (!score || isNaN(parseFloat(score))) {
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 score = data.score
