@@ -500,9 +500,23 @@
         }
 
         async function loadMineLevels() {
-            const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
-            const data = await response.json();
-            return data.clubs; // Asegúrate de que estás accediendo al campo correcto
+            let storedLevels = localStorage.getItem(`mine_levels_${user_id}`);
+            
+            if (!storedLevels) {
+                try {
+                    const response = await fetch(`/get_mine_levels?user_id=${user_id}`);
+                    const data = await response.json();
+                    levels = data.clubs;
+                    localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
+                } catch (error) {
+                    console.error('Error fetching mine levels:', error);
+                    levels = {}; // Objeto vacío en caso de error
+                }
+            } else {
+                levels = JSON.parse(storedLevels);
+            }
+            
+            return levels;
         }
 
         function simpleHash(str) {
