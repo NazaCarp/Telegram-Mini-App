@@ -271,7 +271,18 @@
             background-color: rgba(255, 255, 255, 0.7);
         }
 
+        .ripple-slow {
+            animation: ripple-animation-slow 2s linear;
+        }
+
         @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ripple-animation-slow {
             to {
                 transform: scale(4);
                 opacity: 0;
@@ -378,6 +389,7 @@
     <script>
         const tg = window.Telegram.WebApp;
         const user_id = tg.initDataUnsafe.user.id;
+        const actionButton = document.getElementById('actionButton');
         let score = 0;
         let profitPerHour = 0;
         let cost;
@@ -439,8 +451,8 @@
             document.querySelector('.navbar').classList.remove('blur-content');
         }
 
-        document.getElementById('actionButton').addEventListener('click', async function() {
-            createRipple(event);
+        actionButton.addEventListener('click', async function(event) {
+            createRipple(event, 'ripple');
             const currentScore = score;
             const boostType = document.getElementById('alertText').innerText.toLowerCase().replace(' ', '_');
             
@@ -513,7 +525,15 @@
                 shakeButton();
             }
         });
-        
+
+        actionButton.addEventListener('mousedown', function(event) {
+            createRipple(event, 'ripple-slow');
+        });
+
+        actionButton.addEventListener('mouseup', function() {
+            clearRipples();
+        });
+
         async function loadScore() {
             score = localStorage.getItem(`score_${user_id}`);
             if (!score || isNaN(parseFloat(score))) {
@@ -647,7 +667,7 @@
             button.animate(shakeAnimation, shakeTiming);
         }
 
-        function createRipple(event) {
+        function createRipple(event, rippleClass) {
             const button = event.currentTarget;
             const ripple = document.createElement('span');
             const rect = button.getBoundingClientRect();
@@ -658,13 +678,18 @@
             ripple.style.width = ripple.style.height = `${size}px`;
             ripple.style.left = `${x}px`;
             ripple.style.top = `${y}px`;
-            ripple.classList.add('ripple');
+            ripple.classList.add('ripple', rippleClass);
 
             button.appendChild(ripple);
 
             setTimeout(() => {
                 ripple.remove();
-            }, 600);
+            }, rippleClass === 'ripple-slow' ? 2000 : 600);
+        }
+
+        function clearRipples() {
+            const ripples = document.querySelectorAll('.ripple-slow');
+            ripples.forEach(ripple => ripple.remove());
         }
 
         window.onload = function() {
