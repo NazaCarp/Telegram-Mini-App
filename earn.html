@@ -772,8 +772,8 @@
                 
                 // Iniciar el temporizador
                 const timerSeconds = 60;
-                const endTime = new Date(Date.now() + timerSeconds * 1000).toISOString();
-                rectangle.dataset.endTime = endTime;
+                const endTime = new Date(Date.now() + timerSeconds * 1000);
+                rectangle.dataset.endTime = endTime.toISOString();
 
                 updateCheckButtonState(checkButton, timerSeconds, rectangle);
             }
