@@ -210,7 +210,6 @@
       let storedEnergyLimit = localStorage.getItem(`energyLimit_${user_id}`);
       let storedRechargeSpeed = localStorage.getItem(`rechargeSpeed_${user_id}`);
       let storedLastTimestamp = localStorage.getItem(`lastTimestamp_${user_id}`);
-      alert(storedScore)
       // Verificar si alguno de los valores es null o NaN
       if (!storedScore || isNaN(parseFloat(storedScore)) || 
           !storedSecondaryCount || isNaN(parseInt(storedSecondaryCount)) || 
@@ -235,9 +234,7 @@
       }
 
       // Convertir los valores a sus tipos correspondientes
-      alert(storedScore)
       score = parseFloat(storedScore);
-      alert(score)
       profitPerHour = parseFloat(storedProfitPerHour);
       secondaryCount = parseInt(storedSecondaryCount);
       tap = parseInt(storedTap);
