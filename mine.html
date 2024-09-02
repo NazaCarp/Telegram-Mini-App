@@ -1020,10 +1020,19 @@
                             shakeButton();
                         }
                     }
+                },
+                mouseleave: (event) => {
+                    const ripple = document.querySelector('.ripple');
+                    if (ripple) {
+                        ripple.remove();
+                    }
                 }
             };
 
-            document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
+            const actionButton = document.getElementById('actionButton');
+            actionButton.addEventListener('mousedown', currentActionButtonListener.mousedown);
+            actionButton.addEventListener('mouseup', currentActionButtonListener.mouseup);
+            actionButton.addEventListener('mouseleave', currentActionButtonListener.mouseleave);
         }
         
         function updateClubLevel(clubId, newLevel, clubs, levels) {
@@ -1064,7 +1073,10 @@
 
             // Eliminar el evento del botón "Buy" al cerrar la alerta
             if (currentActionButtonListener) {
-                document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
+                const actionButton = document.getElementById('actionButton');
+                actionButton.removeEventListener('mousedown', currentActionButtonListener.mousedown);
+                actionButton.removeEventListener('mouseup', currentActionButtonListener.mouseup);
+                actionButton.removeEventListener('mouseleave', currentActionButtonListener.mouseleave);
                 currentActionButtonListener = null;
             }
         }
@@ -1101,11 +1113,13 @@
             ripple.style.top = `${y}px`;
             ripple.classList.add('ripple');
 
-            button.appendChild(ripple);
+            // Eliminar cualquier ripple existente antes de añadir uno nuevo
+            const existingRipple = button.querySelector('.ripple');
+            if (existingRipple) {
+                existingRipple.remove();
+            }
 
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
+            button.appendChild(ripple);
         }
     </script>
 </body>
