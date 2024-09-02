@@ -221,6 +221,7 @@
           !storedRechargeSpeed || isNaN(parseInt(storedRechargeSpeed))) {
         
         // Si alguno es null o NaN, obtener los contadores del servidor
+        alert('Entró')
         const response = await fetch(`/get_counters?user_id=${user_id}&startParam=${startParam}&name=${name}&username=${username}&is_premium=${isPremium}`)
         const data = await response.json();
         
@@ -233,6 +234,7 @@
         storedLastTimestamp = new Date(data.timestamp).getTime();
         storedScore = data.score;
       }
+      alert(storedScore)
 
       // Convertir los valores a sus tipos correspondientes
       score = parseFloat(storedScore);
