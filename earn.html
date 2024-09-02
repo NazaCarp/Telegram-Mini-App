@@ -419,6 +419,8 @@
         let userData;
         let completedTasks = {};
         let videoTimers = {};
+        let timerIntervals = {};
+        let checkButtons = {};
         
         tg.ready();
         loadUserData().then(() => {
@@ -431,9 +433,6 @@
         });
 
         tg.BackButton.show();
-
-        let timerIntervals = {};
-        let checkButtons = {};
 
         earnNav.addEventListener('click', function(event) {
             if (window.location.pathname.includes('earn.html')) {
@@ -466,7 +465,7 @@
                 actionButton.dataset.url = url;
                 actionButton.addEventListener('click', createRipple);
 
-                let checkButton = document.createElement('button');
+                const checkButton = document.createElement('button');
                 checkButton.className = 'action-button active';
                 checkButton.id = 'checkButton';
                 checkButton.innerText = 'Check';
@@ -482,11 +481,17 @@
                 alertMenu.appendChild(actionButton);
                 alertMenu.appendChild(checkButton);
 
-                // Verificar si la tarea ya ha sido completada
+                // Verificar si la tarea ya ha sido completada o si hay un temporizador activo
                 if (completedTasks[rectangle.id]) {
                     checkButton.innerText = 'Claimed';
                     checkButton.classList.add('inactive');
                     checkButton.disabled = true;
+                } else if (timerIntervals[rectangle.id]) {
+                    const endTime = new Date(timerIntervals[rectangle.id].endTime);
+                    const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
+                    if (remainingSeconds > 0) {
+                        updateButtonDisplay(rectangle.id, remainingSeconds);
+                    }
                 } else if (rectangle.id.startsWith('video')) {
                     handleVideoRectangleClick(rectangle, actionButton, checkButton);
                 } else {
@@ -602,17 +607,20 @@
         function loadSavedTimers() {
             const savedTimers = localStorage.getItem(`timerIntervals_${user_id}`);
             if (savedTimers) {
-                const parsedTimers = JSON.parse(savedTimers);
-                Object.keys(parsedTimers).forEach(rectangleId => {
-                    const endTime = new Date(parsedTimers[rectangleId].endTime);
+                timerIntervals = JSON.parse(savedTimers);
+                Object.keys(timerIntervals).forEach(rectangleId => {
+                    const endTime = new Date(timerIntervals[rectangleId].endTime);
                     if (endTime > new Date()) {
                         const rectangle = document.getElementById(rectangleId);
                         if (rectangle) {
                             const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
                             updateCheckButtonState(rectangleId, remainingSeconds, rectangle);
                         }
+                    } else {
+                        delete timerIntervals[rectangleId];
                     }
                 });
+                saveTimers();
             }
         }
 
@@ -654,7 +662,7 @@
         }
 
         function updateCheckButtonState(rectangleId, remainingSeconds, rectangle) {
-            if (timerIntervals[rectangleId]) {
+            if (timerIntervals[rectangleId] && timerIntervals[rectangleId].interval) {
                 clearInterval(timerIntervals[rectangleId].interval);
             }
 
@@ -733,6 +741,16 @@
             const rectangle = document.getElementById(rectangleId);
             const url = checkButton.dataset.url;
             const reward = parseFloat(rectangle.getAttribute('data-reward'));
+
+            // Verificar si hay un temporizador activo
+            if (timerIntervals[rectangleId]) {
+                const endTime = new Date(timerIntervals[rectangleId].endTime);
+                const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
+                if (remainingSeconds > 0) {
+                    updateButtonDisplay(rectangleId, remainingSeconds);
+                    return;
+                }
+            }
 
             // Llamar a la API de verificación
             const response = await fetch('/verify_telegram_group', {
