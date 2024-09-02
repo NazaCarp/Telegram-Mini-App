@@ -478,7 +478,7 @@
         
         async function loadScore() {
             score = localStorage.getItem(`score_${user_id}`);
-            if (score === null) {
+            if (!score || isNaN(parseFloat(storedScore))) {
                 const response = await fetch(`/get_counters?user_id=${user_id}`);
                 const data = await response.json();
                 score = data.score
@@ -491,18 +491,50 @@
         }
 
         async function loadUserData() {
-            const response = await fetch(`/get_user_data?user_id=${user_id}`);
-            const data = await response.json();
+            // Intentar cargar datos desde localStorage
+            let storedTap = localStorage.getItem(`tap_${user_id}`);
+            let storedEnergyLimit = localStorage.getItem(`energyLimit_${user_id}`);
+            let storedRechargeSpeed = localStorage.getItem(`rechargeSpeed_${user_id}`);
+            let storedProfitPerHour = localStorage.getItem(`profitPerHour_${user_id}`);
 
-            document.getElementById('multitapLevel').innerText = data.tap;
-            document.getElementById('energyLimitLevel').innerText = Math.floor(data.energy_limit / 500) - 1;
-            document.getElementById('rechargeSpeedLevel').innerText = data.recharge_speed;
+            // Verificar si alguno de los valores es null o NaN
+            if (!storedTap || isNaN(parseInt(storedTap)) || 
+                !storedEnergyLimit || isNaN(parseInt(storedEnergyLimit)) || 
+                !storedRechargeSpeed || isNaN(parseInt(storedRechargeSpeed)) || 
+                !storedProfitPerHour || isNaN(parseFloat(storedProfitPerHour))) {
+                
+                // Si alguno es null o NaN, obtener los datos del servidor
+                const response = await fetch(`/get_user_data?user_id=${user_id}`);
+                const data = await response.json();
+                
+                // Actualizar las variables con los datos obtenidos
+                storedTap = data.tap;
+                storedEnergyLimit = data.energy_limit;
+                storedRechargeSpeed = data.recharge_speed;
+                storedProfitPerHour = data.profit_per_hour;
+
+                // Guardar los datos en localStorage
+                localStorage.setItem(`tap_${user_id}`, storedTap);
+                localStorage.setItem(`energyLimit_${user_id}`, storedEnergyLimit);
+                localStorage.setItem(`rechargeSpeed_${user_id}`, storedRechargeSpeed);
+                localStorage.setItem(`profitPerHour_${user_id}`, storedProfitPerHour);
+            }
+
+            // Convertir los valores a sus tipos correspondientes
+            const tap = parseInt(storedTap);
+            const energyLimit = parseInt(storedEnergyLimit);
+            const rechargeSpeed = parseInt(storedRechargeSpeed);
+            profitPerHour = parseFloat(storedProfitPerHour);
+
+            // Actualizar la interfaz de usuario
+            document.getElementById('multitapLevel').innerText = tap;
+            document.getElementById('energyLimitLevel').innerText = Math.floor(energyLimit / 500) - 1;
+            document.getElementById('rechargeSpeedLevel').innerText = rechargeSpeed;
 
             // Calcular los costos basados en los valores de las variables
-            const multitapCost = 2000 * Math.pow(2, data.tap - 1);
-            const energyLimitCost = 2000 * Math.pow(2, Math.floor(data.energy_limit / 500) - 2);
-            const rechargeSpeedCost = 2000 * Math.pow(2, data.recharge_speed - 1);
-            profitPerHour = data.profit_per_hour
+            const multitapCost = 2000 * Math.pow(2, tap - 1);
+            const energyLimitCost = 2000 * Math.pow(2, Math.floor(energyLimit / 500) - 2);
+            const rechargeSpeedCost = 2000 * Math.pow(2, rechargeSpeed - 1);
 
             document.getElementById('multitapCost').innerText = formatNumber(multitapCost);
             document.getElementById('energyLimitCost').innerText = formatNumber(energyLimitCost);
@@ -512,15 +544,6 @@
             document.querySelector('[data-target="multitap"]').setAttribute('data-cost', multitapCost);
             document.querySelector('[data-target="energy-limit"]').setAttribute('data-cost', energyLimitCost);
             document.querySelector('[data-target="recharge-speed"]').setAttribute('data-cost', rechargeSpeedCost);
-
-            // Guardar los datos en localStorage
-            localStorage.setItem(`multitapLevel_${user_id}`, data.tap);
-            localStorage.setItem(`energyLimitLevel_${user_id}`, Math.floor(data.energy_limit / 500) - 1);
-            localStorage.setItem(`rechargeSpeedLevel_${user_id}`, data.recharge_speed);
-            localStorage.setItem(`multitapCost_${user_id}`, multitapCost);
-            localStorage.setItem(`energyLimitCost_${user_id}`, energyLimitCost);
-            localStorage.setItem(`rechargeSpeedCost_${user_id}`, rechargeSpeedCost);
-            localStorage.setItem(`profitPerHour_${user_id}`, profitPerHour);
 
             // Iniciar el intervalo para incrementar el score cada segundo
             setInterval(incrementScore, 1000);
