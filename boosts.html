@@ -381,6 +381,10 @@
         let score = 0;
         let profitPerHour = 0;
         let cost;
+        let storedTap;
+        let storedEnergyLimit;
+        let storedRechargeSpeed;
+        let storedProfitPerHour;
 
         const subtitles = {
             "multitap": "Increase the amount of coins you can earn per tap",
@@ -463,10 +467,10 @@
                     closeAlertMenu();
 
                     // Actualizar las variables con los datos obtenidos
-                    let storedTap = data.tap;
-                    let storedEnergyLimit = data.energy_limit;
-                    let storedRechargeSpeed = data.recharge_speed;
-                    let storedProfitPerHour = data.profit_per_hour;
+                    storedTap = data.tap;
+                    storedEnergyLimit = data.energy_limit;
+                    storedRechargeSpeed = data.recharge_speed;
+                    storedProfitPerHour = data.profit_per_hour;
 
                     // Guardar los datos en localStorage
                     localStorage.setItem(`tap_${user_id}`, storedTap);
@@ -526,10 +530,10 @@
 
         async function loadUserData() {
             // Intentar cargar datos desde localStorage
-            let storedTap = localStorage.getItem(`tap_${user_id}`);
-            let storedEnergyLimit = localStorage.getItem(`energyLimit_${user_id}`);
-            let storedRechargeSpeed = localStorage.getItem(`rechargeSpeed_${user_id}`);
-            let storedProfitPerHour = localStorage.getItem(`profitPerHour_${user_id}`);
+            storedTap = localStorage.getItem(`tap_${user_id}`);
+            storedEnergyLimit = localStorage.getItem(`energyLimit_${user_id}`);
+            storedRechargeSpeed = localStorage.getItem(`rechargeSpeed_${user_id}`);
+            storedProfitPerHour = localStorage.getItem(`profitPerHour_${user_id}`);
 
             // Verificar si alguno de los valores es null o NaN
             if (!storedTap || isNaN(parseInt(storedTap)) || 
