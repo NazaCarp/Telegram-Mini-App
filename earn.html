@@ -135,6 +135,8 @@
         }
 
         .action-button {
+            position: relative;
+            overflow: hidden;
             width: 100%;
             margin-top: 10px;
             padding: 10px 20px;
@@ -292,6 +294,22 @@
             visibility: visible;
             opacity: 1;
         }
+
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -443,6 +461,7 @@
                 actionButton.id = 'actionButton';
                 actionButton.innerText = action;
                 actionButton.dataset.url = url;
+                actionButton.addEventListener('click', createRipple);
 
                 let checkButton = document.createElement('button');
                 checkButton.className = 'action-button active';
@@ -450,6 +469,7 @@
                 checkButton.innerText = 'Check';
                 checkButton.dataset.rectangleId = rectangle.id;
                 checkButton.dataset.url = url;
+                checkButton.addEventListener('click', createRipple);
 
                 const alertMenu = document.getElementById('alertMenu');
                 const oldActionButton = alertMenu.querySelector('#actionButton');
@@ -1006,6 +1026,26 @@
                     coinsContainer.remove();
                 }, 1000);  // 1 segundo de espera
             }, duration + staggerDuration + 500);
+        }
+
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.classList.add('ripple');
+
+            button.appendChild(ripple);
+
+            ripple.addEventListener('animationend', () => {
+                ripple.remove();
+            });
         }
 
         async function loadUserData() {
