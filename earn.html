@@ -604,6 +604,24 @@
         }
 
         // Load video timers from localStorage
+        function loadVideoTimers() {
+            const storedTimers = localStorage.getItem(`videoTimers_${user_id}`);
+            if (storedTimers) {
+                videoTimers = JSON.parse(storedTimers);
+                // Update timers for ongoing videos
+                Object.keys(videoTimers).forEach(videoId => {
+                    const rectangle = document.getElementById(videoId);
+                    if (rectangle) {
+                        const checkButton = checkButtons[videoId];
+                        if (checkButton) {
+                            updateVideoCheckButton(videoId, checkButton);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Función para cargar los temporizadores guardados
         function loadSavedTimers() {
             const savedTimers = localStorage.getItem(`timerIntervals_${user_id}`);
             if (savedTimers) {
@@ -621,25 +639,6 @@
                     }
                 });
                 saveTimers();
-            }
-        }
-
-        // Función para cargar los temporizadores guardados
-        function loadSavedTimers() {
-            const savedTimers = localStorage.getItem(`timerIntervals_${user_id}`);
-            if (savedTimers) {
-                const parsedTimers = JSON.parse(savedTimers);
-                Object.keys(parsedTimers).forEach(rectangleId => {
-                    const endTime = new Date(parsedTimers[rectangleId].endTime);
-                    if (endTime > new Date()) {
-                        const rectangle = document.getElementById(rectangleId);
-                        const checkButton = document.querySelector(`button[data-rectangle-id="${rectangleId}"]`);
-                        if (rectangle && checkButton) {
-                            const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
-                            updateCheckButtonState(checkButton, remainingSeconds, rectangle);
-                        }
-                    }
-                });
             }
         }
 
