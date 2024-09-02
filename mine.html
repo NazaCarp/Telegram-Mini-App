@@ -982,37 +982,43 @@
             }
 
             // Asignar un nuevo evento
-            currentActionButtonListener = async (event) => {
-                if (document.getElementById('actionButton').classList.contains('active')) {
-                    createRipple(event);
-                    const club_id = club.name;
-                    if (currentScore >= cost) {
-                        let newLevel = levels[club_id] + 1 || 2;
-                        score = currentScore - cost;
-                        result = await updateMineLevel(user_id, club_id, newLevel);
-                        if (result.status === 'success') {
-                            document.getElementById('scoreText').textContent = formatNumber(score)
-                            levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
-                            updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
+            currentActionButtonListener = {
+                mousedown: (event) => {
+                    if (document.getElementById('actionButton').classList.contains('active')) {
+                        createRipple(event);
+                    }
+                },
+                mouseup: async (event) => {
+                    if (document.getElementById('actionButton').classList.contains('active')) {
+                        const club_id = club.name;
+                        if (currentScore >= cost) {
+                            let newLevel = levels[club_id] + 1 || 2;
+                            score = currentScore - cost;
+                            result = await updateMineLevel(user_id, club_id, newLevel);
+                            if (result.status === 'success') {
+                                document.getElementById('scoreText').textContent = formatNumber(score)
+                                levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
+                                updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
 
-                            // Recalcular cost y profitPerHour para la alerta
-                            const newCost = calculateCost(club.cost, newLevel);
-                            const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
+                                // Recalcular cost y profitPerHour para la alerta
+                                const newCost = calculateCost(club.cost, newLevel);
+                                const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
 
-                            // Actualizar la alerta con los nuevos valores
-                            document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(newProfitPerHour)}`;
-                            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${Math.floor(newCost)}</p>`;
+                                // Actualizar la alerta con los nuevos valores
+                                document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(newProfitPerHour)}`;
+                                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${Math.floor(newCost)}</p>`;
 
-                            closeAlertMenu();
+                                closeAlertMenu();
 
-                            updateProfitPerHour(user_id, clubProfitPerHour) // Actualizar el profitPerHour de la cuenta actual
-                            localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour + clubProfitPerHour);
-                            profitPerHour = parseFloat(localStorage.getItem(`profit_per_hour_${user_id}`));
+                                updateProfitPerHour(user_id, clubProfitPerHour) // Actualizar el profitPerHour de la cuenta actual
+                                localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour + clubProfitPerHour);
+                                profitPerHour = parseFloat(localStorage.getItem(`profit_per_hour_${user_id}`));
+                            } else {
+                                alert('Error al actualizar el score');
+                            }
                         } else {
-                            alert('Error al actualizar el score');
+                            shakeButton();
                         }
-                    } else {
-                        shakeButton();
                     }
                 }
             };
