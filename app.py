@@ -76,10 +76,6 @@ def get_counters():
                 referrer_counter.score += reward
                 db.commit()
 
-                referrer_counter = db.query(Counter).filter_by(user_id=int(startParam)).first()
-                referrer_counter.score += 5000
-                db.commit()
-
         return jsonify({
             'score': round(counter.score, 3),  # Redondear a 3 decimales
             'secondarycount': counter.secondarycount,
