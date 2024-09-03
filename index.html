@@ -541,23 +541,20 @@
         userInfo.appendChild(userPhoto);
         userInfo.appendChild(userName);
       }
+      
+      // Añade este evento al final de la función window.onload
+      document.getElementById('profitPerHourContainer').addEventListener('click', function() {
+        document.getElementById('alertMenu').style.display = 'block';
+        document.querySelector('.main-container').classList.add('blur-content');
+        document.querySelector('.navbar').classList.add('blur-content');
+      });
+
       loadAndUpdateCounters();
     };
 
-    document.getElementById('rocketIcon').addEventListener('click', function(event) {
-      event.preventDefault();
-      window.location.href = 'boosts.html'; // Redirige a la nueva página Boosts
-    });
-
-    document.getElementById('profitPerHourContainer').addEventListener('click', function() {
-      document.getElementById('alertMenu').style.display = 'block';
-      document.querySelector('.container').classList.add('blur-content');
-      document.querySelector('.navbar').classList.add('blur-content');
-    });
-
     function closeAlertMenu() {
       document.getElementById('alertMenu').style.display = 'none';
-      document.querySelector('.container').classList.remove('blur-content');
+      document.querySelector('.main-container').classList.remove('blur-content');
       document.querySelector('.navbar').classList.remove('blur-content');
     }
 
