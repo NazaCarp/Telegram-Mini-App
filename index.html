@@ -166,9 +166,11 @@
       top: 10px;
       right: 10px;
       background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
       border-radius: 10px;
       padding: 10px;
       text-align: center;
+      cursor: pointer;
     }
 
     #profitPerHourLabel {
@@ -186,6 +188,75 @@
 
     #profitPerHourValue iconify-icon {
       margin-right: 5px;
+    }
+
+    .alert-menu {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 400px;
+      background-color: #333;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+
+    .alert-menu .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .alert-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
+
+    .alert-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .alert-subtitle {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 10px;
+    }
+
+    .alert-second-subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 20px;
+    }
+
+    .alert-button {
+      background-color: #0066ff;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .alert-button iconify-icon {
+      margin-right: 5px;
+    }
+
+    .blur-content {
+      filter: blur(5px);
+      pointer-events: none;
     }
   </style>
 </head>
@@ -215,6 +286,18 @@
     <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
     <a href="earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
     <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
+  </div>
+
+  <div class="alert-menu" id="alertMenu">
+    <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+    <div class="alert-icon"><iconify-icon icon="streamline:subscription-cashflow"></iconify-icon></div>
+    <div class="alert-title">Boost your profit</div>
+    <div class="alert-subtitle">Tap the Mining menu to buy upgrades for your exchange</div>
+    <div class="alert-second-subtitle">Earn even when offline up to 3 hours</div>
+    <button class="alert-button" onclick="startMining()">
+      <iconify-icon icon="twemoji:coin"></iconify-icon>
+      Start Mining
+    </button>
   </div>
 
   <script>
@@ -462,6 +545,23 @@
       event.preventDefault();
       window.location.href = 'boosts.html'; // Redirige a la nueva página Boosts
     });
+
+    document.getElementById('profitPerHourContainer').addEventListener('click', function() {
+      document.getElementById('alertMenu').style.display = 'block';
+      document.querySelector('.container').classList.add('blur-content');
+      document.querySelector('.navbar').classList.add('blur-content');
+    });
+
+    function closeAlertMenu() {
+      document.getElementById('alertMenu').style.display = 'none';
+      document.querySelector('.container').classList.remove('blur-content');
+      document.querySelector('.navbar').classList.remove('blur-content');
+    }
+
+    function startMining() {
+      closeAlertMenu();
+      window.location.href = 'mine.html';
+    }
 
     // Ocultar el botón de retroceso en index.html
     tg.BackButton.hide();
