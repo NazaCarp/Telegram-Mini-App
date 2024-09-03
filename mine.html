@@ -1132,9 +1132,7 @@
                         setTimeout(() => {
                             button.classList.remove('action-button--done');
                             isButtonAnimating = false;
-                            if (score < currentCost) {
-                                closeAlertMenu();
-                            }
+                            closeAlertMenu();
                         }, 1000);
                     }, 2500); // Adjusted to match the fill animation duration
                 }
