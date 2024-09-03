@@ -1063,7 +1063,33 @@
                         score -= currentCost;
                         result = await updateMineLevel(user_id, club_id, newLevel);
                         if (result.status === 'success') {
-                            // ... (código existente para actualizar valores)
+                            document.getElementById('scoreText').textContent = formatNumber(score)
+                            levels = result.updated_clubs; // Actualizar el objeto levels completo
+                            localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
+                            updateClubLevel(club_id, newLevel, clubs);
+
+                            // Recalcular cost y profitPerHour para la alerta
+                            const newCost = calculateCost(club.cost, newLevel);
+                            const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
+
+                            // Actualizar la alerta con los nuevos valores
+                            document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(newProfitPerHour)}`;
+                            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(newCost)}</p>`;
+
+                            // Actualizar el costo y la clase del botón
+                            const costColor = newCost <= score ? 'yellow' : 'gray';
+                            const buttonClass = newCost <= score ? 'active' : 'inactive';
+                            document.getElementById('alertCost').classList.remove('yellow', 'gray');
+                            document.getElementById('alertCost').classList.add(costColor);
+                            document.getElementById('actionButton').classList.remove('active', 'inactive');
+                            document.getElementById('actionButton').classList.add(buttonClass);
+
+                            // Actualizar el profitPerHour global
+                            profitPerHour += newProfitPerHour - currentProfitPerHour;
+                            localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
+                            
+                            // Actualizar el profitPerHour en el servidor
+                            await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
 
                             button.classList.remove('btn--running');
                             button.classList.add('btn--done');
