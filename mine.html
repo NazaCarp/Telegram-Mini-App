@@ -987,7 +987,7 @@
                     createRipple(event);
                     const club_id = club.name;
                     if (currentScore >= cost) {
-                        alert(levels)
+                        alert(levels[club_id])
                         let newLevel = levels[club_id] + 1 || 2;
                         score = currentScore - cost;
                         result = await updateMineLevel(user_id, club_id, newLevel);
