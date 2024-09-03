@@ -56,6 +56,10 @@
       position: absolute;
       top: 10px;
       left: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      padding: 5px 15px 5px 5px;
     }
     
     .user-photo {
@@ -511,15 +515,14 @@
         userPhoto.src = `https://t.me/i/userpic/320/${username}.jpg`;
         userPhoto.classList.add('user-photo');
         userPhoto.onload = function() {
-
           // Si la imagen es muy pequeña, reemplazarla con el ícono de Iconify
           if (userPhoto.naturalWidth <= 1 || userPhoto.naturalHeight <= 1) {
             userPhoto.remove();
             const icon = document.createElement('iconify-icon');
             icon.icon = 'fluent-emoji-flat:person-zombie';
             icon.classList.add('user-photo');
-            icon.style = 'font-size: 40px'; // Ajusta el tamaño del ícono
-            icon.style.borderRadius = '50%'; // Asegura que sea circular
+            icon.style = 'font-size: 40px; background-color: #333; display: flex; justify-content: center; align-items: center;';
+            icon.style.borderRadius = '50%';
             userInfo.insertBefore(icon, userInfo.firstChild);
           }
         };
@@ -530,8 +533,8 @@
           const icon = document.createElement('iconify-icon');
           icon.icon = 'fluent-emoji-flat:person-zombie';
           icon.classList.add('user-photo');
-          icon.style = 'font-size: 40px'; // Ajusta el tamaño del ícono
-          icon.style.borderRadius = '50%'; // Asegura que sea circular
+          icon.style = 'font-size: 40px; background-color: #333; display: flex; justify-content: center; align-items: center;';
+          icon.style.borderRadius = '50%';
           userInfo.insertBefore(icon, userInfo.firstChild);
         };
 
