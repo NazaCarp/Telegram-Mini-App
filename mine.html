@@ -959,15 +959,21 @@
         let currentActionButtonListener = null;
 
         async function showAlert(club, cost, clubProfitPerHour, clubs, levels) {
-            const currentScore = score;
-            const costColor = cost <= currentScore ? 'yellow' : 'gray';
-            const buttonClass = cost <= currentScore ? 'active' : 'inactive';
+            // Obtener el nivel actual del club
+            const currentLevel = levels[club.name] || 1;
+            
+            // Calcular el costo y profit actuales basados en el nivel actual
+            const currentCost = calculateCost(club.cost, currentLevel);
+            const currentProfitPerHour = calculateProfitPerHour(club.cost, currentLevel, club.name);
+
+            const costColor = currentCost <= score ? 'yellow' : 'gray';
+            const buttonClass = currentCost <= score ? 'active' : 'inactive';
 
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
-            document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(clubProfitPerHour)}`;
-            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(cost)}</p>`;
+            document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(currentProfitPerHour)}`;
+            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(currentCost)}</p>`;
             document.getElementById('alertCost').classList.remove('yellow', 'gray');
             document.getElementById('alertCost').classList.add(costColor);
             document.getElementById('actionButton').classList.remove('active', 'inactive');
@@ -986,15 +992,15 @@
                 if (document.getElementById('actionButton').classList.contains('active')) {
                     createRipple(event);
                     const club_id = club.name;
-                    if (currentScore >= cost) {
-                        let newLevel = (levels[club_id] || 1) + 1;
-                        score = currentScore - cost;
+                    if (score >= currentCost) {
+                        let newLevel = currentLevel + 1;
+                        score -= currentCost;
                         result = await updateMineLevel(user_id, club_id, newLevel);
                         if (result.status === 'success') {
                             document.getElementById('scoreText').textContent = formatNumber(score)
                             levels = result.updated_clubs; // Actualizar el objeto levels completo
                             localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
-                            updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
+                            updateClubLevel(club_id, newLevel, clubs, levels);
 
                             // Recalcular cost y profitPerHour para la alerta
                             const newCost = calculateCost(club.cost, newLevel);
@@ -1013,11 +1019,11 @@
                             document.getElementById('actionButton').classList.add(buttonClass);
 
                             // Actualizar el profitPerHour global
-                            profitPerHour += newProfitPerHour - clubProfitPerHour;
+                            profitPerHour += newProfitPerHour - currentProfitPerHour;
                             localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
                             
                             // Actualizar el profitPerHour en el servidor
-                            await updateProfitPerHour(user_id, newProfitPerHour - clubProfitPerHour);
+                            await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
 
                             // No cerrar el menú de alerta, permitir mejoras consecutivas
                             // closeAlertMenu();
