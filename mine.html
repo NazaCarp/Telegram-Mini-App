@@ -547,7 +547,7 @@
             return Math.abs(hash);
         }
 
-        function generateRectangles(containerId, clubs, levels) {
+        function generateRectangles(containerId, clubs) {
             const rows = Math.ceil(clubs.length / 2);
 
             // Limpiar contenido anterior
@@ -659,7 +659,9 @@
 
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
-                        showAlert(club, cost, clubProfitPerHour, clubs, levels);
+                        cost = calculateCost(club.cost, levels[club.name] || 1);
+                        clubProfitPerHour = calculateProfitPerHour(club.cost, levels[club.name], club.name);
+                        showAlert(club, cost, clubProfitPerHour, clubs);
                     });
                 }
 
@@ -854,29 +856,29 @@
                     // Generar rectángulos según la pestaña activa
                     switch (tab.id.replace('Tab', 'Content')) {
                         case 'northAmericaContent':
-                            generateRectangles('northAmericaContent', northAmericaClubs, levels);
+                            generateRectangles('northAmericaContent', northAmericaClubs);
                             break;
                         case 'southAmericaContent':
-                            generateRectangles('southAmericaContent', southAmericaClubs, levels);
+                            generateRectangles('southAmericaContent', southAmericaClubs);
                             break;
                         case 'europeContent':
-                            generateRectangles('europeContent', europeClubs, levels);
+                            generateRectangles('europeContent', europeClubs);
                             break;
                         case 'asiaContent':
-                            generateRectangles('asiaContent', asiaClubs, levels);
+                            generateRectangles('asiaContent', asiaClubs);
                             break;
                         case 'africaContent':
-                            generateRectangles('africaContent', africaClubs, levels);
+                            generateRectangles('africaContent', africaClubs);
                             break;
                         case 'oceaniaContent':
-                            generateRectangles('oceaniaContent', oceaniaClubs, levels);
+                            generateRectangles('oceaniaContent', oceaniaClubs);
                             break;
                     }
                 });
             });
 
             // Generar rectángulos iniciales para la pestaña activa por defecto
-            generateRectangles('northAmericaContent', northAmericaClubs, levels);
+            generateRectangles('northAmericaContent', northAmericaClubs);
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
@@ -956,7 +958,7 @@
 
         let currentActionButtonListener = null;
 
-        async function showAlert(club, cost, clubProfitPerHour, clubs, levels) {
+        async function showAlert(club, cost, clubProfitPerHour, clubs) {
             // Obtener el nivel actual del club
             const currentLevel = levels[club.name] || 1;
             
@@ -1037,7 +1039,7 @@
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
         }
         
-        function updateClubLevel(clubId, newLevel, clubs, levels) {
+        function updateClubLevel(clubId, newLevel, clubs) {
             const rectangles = document.querySelectorAll('.rectangle');
             rectangles.forEach(rectangle => {
                 if (rectangle.getAttribute('data-club-id') === clubId) {
