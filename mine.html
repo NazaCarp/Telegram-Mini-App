@@ -1025,8 +1025,7 @@
                             // Actualizar el profitPerHour en el servidor
                             await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
 
-                            // No cerrar el menú de alerta, permitir mejoras consecutivas
-                            // closeAlertMenu();
+                            closeAlertMenu();
                         } else {
                             alert('Error al actualizar el nivel');
                         }
