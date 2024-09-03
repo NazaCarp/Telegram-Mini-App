@@ -368,6 +368,93 @@
             cursor: not-allowed;
         }
 
+        /* Estilos para el botón de progreso */
+        .action-button {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .action-button__text {
+            display: inline-block;
+            transition: color 0.15s 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        .action-button__progress {
+            overflow: visible;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            visibility: hidden;
+        }
+
+        .action-button__progress-track {
+            r: 12px;
+            stroke: #c7cad1;
+            stroke-width: 24;
+        }
+
+        .action-button__progress-fill {
+            stroke: #000000;
+            stroke-dashoffset: 125.66;
+        }
+
+        .action-button__progress-check {
+            stroke: #fff;
+            stroke-dashoffset: 34;
+        }
+
+        .action-button--running,
+        .action-button--done {
+            outline: none;
+            pointer-events: none;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .action-button--running .action-button__text,
+        .action-button--done .action-button__text {
+            color: transparent;
+            transition: color 0.3s ease-in-out, visibility 0.3s steps(1);
+        }
+
+        .action-button--running .action-button__progress,
+        .action-button--done .action-button__progress {
+            visibility: visible;
+        }
+
+        .action-button--running .action-button__progress-track {
+            r: 20px;
+            stroke-width: 8;
+            transition: r 0.3s 0.3s ease-in-out, stroke-width 0.3s 0.3s ease-in-out;
+        }
+
+        .action-button--running .action-button__progress-fill {
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 2s 0.6s linear;
+        }
+
+        .action-button--done .action-button__progress-track {
+            stroke: #0066ff;
+            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
+        }
+
+        .action-button--done .action-button__progress-check {
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.3s 0.3s ease-out;
+        }
+
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -425,7 +512,14 @@
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="second-subtitle" id="alertSecondSubtitle"></div>
         <div class="cost" id="alertCost"></div>
-        <button class="action-button" id="actionButton">Buy</button>
+        <button class="action-button" id="actionButton">
+            <span class="action-button__text">Buy</span>
+            <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
+                <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
+                <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#000000" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
+                <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
+            </svg>
+        </button>
     </div>
     <script>
         let levels;
@@ -958,7 +1052,7 @@
 
         let currentActionButtonListener = null;
 
-        async function showAlert(club, cost, clubProfitPerHour, clubs) {
+        function showAlert(club, cost, clubProfitPerHour, clubs) {
             // Obtener el nivel actual del club
             const currentLevel = levels[club.name] || 1;
             
@@ -990,6 +1084,8 @@
             // Asignar un nuevo evento
             currentActionButtonListener = async (event) => {
                 if (document.getElementById('actionButton').classList.contains('active')) {
+                    const button = event.currentTarget;
+                    button.classList.add('action-button--running');
                     createRipple(event);
                     const club_id = club.name;
                     if (score >= currentCost) {
@@ -1025,12 +1121,22 @@
                             // Actualizar el profitPerHour en el servidor
                             await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
 
-                            closeAlertMenu();
+                            setTimeout(() => {
+                                button.classList.remove('action-button--running');
+                                button.classList.add('action-button--done');
+                                
+                                setTimeout(() => {
+                                    button.classList.remove('action-button--done');
+                                    closeAlertMenu();
+                                }, 1500);
+                            }, 2600);
                         } else {
                             alert('Error al actualizar el nivel');
+                            button.classList.remove('action-button--running');
                         }
                     } else {
                         shakeButton();
+                        button.classList.remove('action-button--running');
                     }
                 }
             };
