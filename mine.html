@@ -659,8 +659,6 @@
 
                     // Añadir evento de clic para mostrar la alerta
                     rectangle.addEventListener('click', () => {
-                        cost = calculateCost(club.cost, levels[club.name] || 1);
-                        clubProfitPerHour = calculateProfitPerHour(club.cost, levels[club.name], club.name);
                         showAlert(club, cost, clubProfitPerHour, clubs, levels);
                     });
                 }
