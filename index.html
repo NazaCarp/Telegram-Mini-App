@@ -16,6 +16,8 @@
       align-items: center;
       color: white;
       transition: filter 0.3s;
+      user-select: none; /* Evita que los textos / imagen sean seleccionables */
+      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
     
     .container {
@@ -24,8 +26,6 @@
       align-items: center;
       height: 100vh;
       position: relative;
-      user-select: none; /* Evita que los textos / imagen sean seleccionables */
-      -webkit-tap-highlight-color: transparent; /* Deshabilita el resaltado en dispositivos Android */
     }
     
     .score {
@@ -570,6 +570,17 @@
           document.getElementById('alertMenu').style.display = 'block';
           document.querySelector('.main-container').classList.add('blur-content');
           document.querySelector('.navbar').classList.add('blur-content');
+        }
+      });
+
+      // Event listener para cerrar la alerta al hacer clic fuera de ella
+      document.addEventListener('click', function(event) {
+        const alertMenu = document.getElementById('alertMenu');
+        const profitPerHourContainer = document.getElementById('profitPerHourContainer');
+        if (alertMenu.style.display === 'block' && 
+            !alertMenu.contains(event.target) && 
+            !profitPerHourContainer.contains(event.target)) {
+          closeAlertMenu();
         }
       });
 
