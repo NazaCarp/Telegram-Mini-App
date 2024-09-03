@@ -1112,9 +1112,7 @@
                             button.classList.remove('action-button--done');
                             track.setAttribute('r', '20');  // Restaurar el radio original
                             isButtonAnimating = false;
-                            if (score < currentCost) {
-                                closeAlertMenu();
-                            }
+                            closeAlertMenu();
                         }, 1000);
                     }, 2600); // 2000ms for fill animation + 600ms delay
                 }
