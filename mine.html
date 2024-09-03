@@ -348,10 +348,11 @@
             position: relative;
             overflow: hidden;
             width: 100%;
+            height: 48px;
             margin-top: 10px;
-            padding: 10px 20px;
+            padding: 0;
             border: none;
-            border-radius: 20px;
+            border-radius: 24px;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease, width 0.3s ease-in-out;
@@ -369,16 +370,18 @@
         }
 
         .action-button .btn__text {
+            position: relative;
+            z-index: 1;
             display: inline-block;
             transition: color 0.15s 0.3s ease-in-out;
         }
-         
+        
         .action-button .btn__progress {
             position: absolute;
             top: 0;
             left: 0;
-            width: 48px;
-            height: 48px;
+            width: 100%;
+            height: 100%;
             visibility: hidden;
         }
         
@@ -406,6 +409,10 @@
             visibility: visible;
         }
         
+        .action-button.btn--running .btn__text {
+            opacity: 0;
+        }
+
         .action-button.btn--running .btn__progress-fill {
             transition: stroke-dashoffset 2s 0.6s linear;
             stroke-dashoffset: 0;
@@ -475,7 +482,7 @@
         <div class="cost" id="alertCost"></div>
         <button class="action-button" id="actionButton">
             <span class="btn__text">Buy</span>
-            <svg class="btn__progress" viewBox="0 0 48 48" width="48px" height="48px">
+            <svg class="btn__progress" viewBox="0 0 48 48" width="100%" height="100%">
                 <circle class="btn__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
                 <circle class="btn__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#000000" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
                 <polyline class="btn__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
@@ -1047,6 +1054,7 @@
                 if (document.getElementById('actionButton').classList.contains('active')) {
                     const button = event.currentTarget;
                     button.classList.add('btn--running');
+                    button.style.width = '48px';  // Aseguramos que el botón se haga circular
                     
                     const club_id = club.name;
                     if (score >= currentCost) {
@@ -1087,14 +1095,17 @@
                             
                             setTimeout(() => {
                                 button.classList.remove('btn--done');
+                                button.style.width = '100%';  // Devolvemos el botón a su ancho original
                             }, 1500);
                         } else {
                             alert('Error al actualizar el nivel');
                             button.classList.remove('btn--running');
+                            button.style.width = '100%';  // Devolvemos el botón a su ancho original
                         }
                     } else {
                         shakeButton();
                         button.classList.remove('btn--running');
+                        button.style.width = '100%';  // Devolvemos el botón a su ancho original
                     }
                 }
             };
