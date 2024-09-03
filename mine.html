@@ -1062,17 +1062,30 @@
                     isButtonAnimating = true;
                     const button = event.currentTarget;
                     const track = button.querySelector('.action-button__progress-track');
+                    const fill = button.querySelector('.action-button__progress-fill');
+                    const check = button.querySelector('.action-button__progress-check');
+                    
+                    // Reset animation state
+                    fill.style.transition = 'none';
+                    fill.style.strokeDashoffset = '125.66';
+                    check.style.transition = 'none';
+                    check.style.strokeDashoffset = '34';
+                    
+                    // Force reflow
+                    void button.offsetWidth;
                     
                     button.classList.add('action-button--running');
                     
-                    // Cambiar el radio del círculo
-                    setTimeout(() => {
-                        track.setAttribute('r', '12');
-                    }, 300);
+                    // Start animations
+                    fill.style.transition = 'stroke-dashoffset 2s 0.5s linear';
+                    fill.style.strokeDashoffset = '0';
                     
                     setTimeout(async () => {
                         button.classList.remove('action-button--running');
                         button.classList.add('action-button--done');
+                        
+                        check.style.transition = 'stroke-dashoffset 0.3s ease-in-out';
+                        check.style.strokeDashoffset = '0';
                         
                         const club_id = club.name;
                         if (score >= currentCost) {
@@ -1118,11 +1131,12 @@
 
                         setTimeout(() => {
                             button.classList.remove('action-button--done');
-                            track.setAttribute('r', '20');  // Restaurar el radio original
                             isButtonAnimating = false;
-                            closeAlertMenu();
+                            if (score < currentCost) {
+                                closeAlertMenu();
+                            }
                         }, 1000);
-                    }, 2600); // 2000ms for fill animation + 600ms delay
+                    }, 2500); // Adjusted to match the fill animation duration
                 }
             };
 
