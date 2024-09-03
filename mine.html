@@ -992,7 +992,7 @@
                         result = await updateMineLevel(user_id, club_id, newLevel);
                         if (result.status === 'success') {
                             document.getElementById('scoreText').textContent = formatNumber(score)
-                            levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
+                            levels = result.updated_clubs; // Actualizar el nivel en el objeto levels
                             updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
 
                             // Recalcular cost y profitPerHour para la alerta
