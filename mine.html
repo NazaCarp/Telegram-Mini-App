@@ -354,7 +354,7 @@
             border-radius: 20px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: width 0.3s ease-in-out;
         }
         
         .action-button.active {
@@ -369,19 +369,6 @@
         }
 
         /* Estilos para el botón de progreso */
-        .action-button {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: width 0.3s ease-in-out;
-        }
-
         .action-button__text {
             display: inline-block;
             transition: color 0.15s 0.3s ease-in-out;
@@ -399,9 +386,8 @@
         }
 
         .action-button__progress-track {
-            r: 12px;
             stroke: #c7cad1;
-            stroke-width: 24;
+            stroke-width: 8;
         }
 
         .action-button__progress-fill {
@@ -435,9 +421,9 @@
         }
 
         .action-button--running .action-button__progress-track {
-            r: 20px;
+            transform: scale(1.67);
             stroke-width: 8;
-            transition: r 0.3s 0.3s ease-in-out, stroke-width 0.3s 0.3s ease-in-out;
+            transition: transform 0.3s 0.3s ease-in-out, stroke-width 0.3s 0.3s ease-in-out;
         }
 
         .action-button--running .action-button__progress-fill {
@@ -447,7 +433,7 @@
 
         .action-button--done .action-button__progress-track {
             stroke: #0066ff;
-            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
         }
 
         .action-button--done .action-button__progress-check {
