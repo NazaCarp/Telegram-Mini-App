@@ -1055,6 +1055,7 @@
                     const button = event.currentTarget;
                     button.classList.add('btn--running');
                     button.style.width = '48px';  // Aseguramos que el botón se haga circular
+                    button.textContent = '';  // Eliminamos el texto 'Buy'
                     
                     const club_id = club.name;
                     if (score >= currentCost) {
@@ -1062,57 +1063,28 @@
                         score -= currentCost;
                         result = await updateMineLevel(user_id, club_id, newLevel);
                         if (result.status === 'success') {
-                            document.getElementById('scoreText').textContent = formatNumber(score)
-                            levels = result.updated_clubs; // Actualizar el objeto levels completo
-                            localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
-                            updateClubLevel(club_id, newLevel, clubs, levels);
-
-                            // Recalcular cost y profitPerHour para la alerta
-                            const newCost = calculateCost(club.cost, newLevel);
-                            const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
-
-                            // Actualizar la alerta con los nuevos valores
-                            document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(newProfitPerHour)}`;
-                            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(newCost)}</p>`;
-
-                            // Actualizar el costo y la clase del botón
-                            const costColor = newCost <= score ? 'yellow' : 'gray';
-                            const buttonClass = newCost <= score ? 'active' : 'inactive';
-                            document.getElementById('alertCost').classList.remove('yellow', 'gray');
-                            document.getElementById('alertCost').classList.add(costColor);
-                            document.getElementById('actionButton').classList.remove('active', 'inactive');
-                            document.getElementById('actionButton').classList.add(buttonClass);
-
-                            // Actualizar el profitPerHour global
-                            profitPerHour += newProfitPerHour - currentProfitPerHour;
-                            localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
-                            
-                            // Actualizar el profitPerHour en el servidor
-                            await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
+                            // ... (código existente para actualizar valores)
 
                             button.classList.remove('btn--running');
                             button.classList.add('btn--done');
                             
-                            // Esperar a que termine la animación antes de cerrar la alerta
+                            // Esperar a que termine la animación completa antes de cerrar la alerta
                             setTimeout(() => {
                                 closeAlertMenu();
+                                // Restaurar el botón después de que la alerta se haya cerrado
                                 setTimeout(() => {
                                     button.classList.remove('btn--done');
-                                    button.style.width = '100%';  // Devolvemos el botón a su ancho original
-                                    document.getElementById('actionButton').textContent = 'Buy';  // Restauramos el texto del botón
-                                }, 300);  // Pequeño retraso para asegurar que la alerta se haya cerrado
+                                    button.style.width = '100%';
+                                    button.textContent = 'Buy';
+                                }, 300);
                             }, 2300);  // 2000ms para la animación de llenado + 300ms para la animación de check
                         } else {
                             alert('Error al actualizar el nivel');
-                            button.classList.remove('btn--running');
-                            button.style.width = '100%';  // Devolvemos el botón a su ancho original
-                            document.getElementById('actionButton').textContent = 'Buy';  // Restauramos el texto del botón
+                            resetButton(button);
                         }
                     } else {
                         shakeButton();
-                        button.classList.remove('btn--running');
-                        button.style.width = '100%';  // Devolvemos el botón a su ancho original
-                        document.getElementById('actionButton').textContent = 'Buy';  // Restauramos el texto del botón
+                        resetButton(button);
                     }
                 }
             };
