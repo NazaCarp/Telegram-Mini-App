@@ -354,7 +354,7 @@
             border-radius: 20px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, width 0.3s ease-in-out;
         }
         
         .action-button.active {
@@ -368,6 +368,54 @@
             cursor: not-allowed;
         }
 
+        .action-button .btn__text {
+            display: inline-block;
+            transition: color 0.15s 0.3s ease-in-out;
+        }
+         
+        .action-button .btn__progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 48px;
+            height: 48px;
+            visibility: hidden;
+        }
+        
+        .action-button .btn__progress-track {
+            stroke: rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-button .btn__progress-fill {
+            stroke: #ffffff;
+            stroke-dashoffset: 125.66;
+        }
+        
+        .action-button .btn__progress-check {
+            stroke: #ffffff;
+            stroke-dashoffset: 34;
+        }
+        
+        .action-button.btn--running {
+            width: 48px;
+            color: transparent;
+            pointer-events: none;
+        }
+        
+        .action-button.btn--running .btn__progress {
+            visibility: visible;
+        }
+        
+        .action-button.btn--running .btn__progress-fill {
+            transition: stroke-dashoffset 2s 0.6s linear;
+            stroke-dashoffset: 0;
+        }
+        
+        .action-button.btn--done .btn__progress-check {
+            transition: stroke-dashoffset 0.3s 0.3s ease-out;
+            stroke-dashoffset: 0;
+        }
+        
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -425,7 +473,14 @@
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="second-subtitle" id="alertSecondSubtitle"></div>
         <div class="cost" id="alertCost"></div>
-        <button class="action-button" id="actionButton">Buy</button>
+        <button class="action-button" id="actionButton">
+            <span class="btn__text">Buy</span>
+            <svg class="btn__progress" viewBox="0 0 48 48" width="48px" height="48px">
+                <circle class="btn__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
+                <circle class="btn__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#000000" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
+                <polyline class="btn__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
+            </svg>
+        </button>
     </div>
     <script>
         let levels;
@@ -990,7 +1045,9 @@
             // Asignar un nuevo evento
             currentActionButtonListener = async (event) => {
                 if (document.getElementById('actionButton').classList.contains('active')) {
-                    createRipple(event);
+                    const button = event.currentTarget;
+                    button.classList.add('btn--running');
+                    
                     const club_id = club.name;
                     if (score >= currentCost) {
                         let newLevel = currentLevel + 1;
@@ -1024,14 +1081,20 @@
                             
                             // Actualizar el profitPerHour en el servidor
                             await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
-
-                            // No cerrar el menú de alerta, permitir mejoras consecutivas
-                            // closeAlertMenu();
+ 
+                            button.classList.remove('btn--running');
+                            button.classList.add('btn--done');
+                            
+                            setTimeout(() => {
+                                button.classList.remove('btn--done');
+                            }, 1500);
                         } else {
                             alert('Error al actualizar el nivel');
+                            button.classList.remove('btn--running');
                         }
                     } else {
                         shakeButton();
+                        button.classList.remove('btn--running');
                     }
                 }
             };
