@@ -354,7 +354,7 @@
             border-radius: 20px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .action-button.active {
@@ -428,6 +428,8 @@
         .action-button--running,
         .action-button--done {
             background-color: transparent !important;
+            height: 68px; /* Increased height to accommodate the full circle */
+            padding: 0;
         }
 
         .ripple {
@@ -1074,7 +1076,10 @@
                     // Force reflow
                     void button.offsetWidth;
                     
-                    button.classList.add('action-button--running');
+                    // Add a small delay before adding the running class
+                    setTimeout(() => {
+                        button.classList.add('action-button--running');
+                    }, 10);
                     
                     // Start animations
                     fill.style.transition = 'stroke-dashoffset 2s 0.5s linear';
