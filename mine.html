@@ -993,6 +993,7 @@
                         if (result.status === 'success') {
                             document.getElementById('scoreText').textContent = formatNumber(score)
                             levels = result.updated_clubs; // Actualizar el nivel en el objeto levels
+                            localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
                             updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
 
                             // Recalcular cost y profitPerHour para la alerta
