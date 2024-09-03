@@ -361,36 +361,67 @@
             background-color: #0066ff;
             color: white;
         }
-        
+
         .action-button.inactive {
             background-color: #808080;
             color: white;
             cursor: not-allowed;
         }
 
-        .action-button.processing {
-            background-color: #0066ff;
+        /* Estilos para la animación del botón */
+        .action-button__text {
+            display: inline-block;
+            transition: color 0.15s 0.3s ease-in-out;
+        }
+
+        .action-button__progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            visibility: hidden;
+        }
+
+        .action-button__progress-track {
+            r: 12px;
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 24;
+        }
+
+        .action-button__progress-fill {
+            stroke: white;
+            stroke-dashoffset: 125.66;
+        }
+
+        .action-button__progress-check {
+            stroke: white;
+            stroke-dashoffset: 34;
+        }
+
+        .action-button--running .action-button__text {
             color: transparent;
         }
 
-        .action-button.processing::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin-top: -10px;
-            margin-left: -10px;
-            border: 2px solid #ffffff;
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .action-button--running .action-button__progress,
+        .action-button--done .action-button__progress {
+            visibility: visible;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .action-button--running .action-button__progress-track {
+            r: 20px;
+            stroke-width: 8;
+            transition: r 0.3s 0.3s ease-in-out, stroke-width 0.3s 0.3s ease-in-out;
+        }
+
+        .action-button--running .action-button__progress-fill {
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 2s 0.6s linear;
+        }
+
+        .action-button--done .action-button__progress-check {
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.3s 0.3s ease-out;
         }
 
         .ripple {
@@ -450,7 +481,14 @@
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="second-subtitle" id="alertSecondSubtitle"></div>
         <div class="cost" id="alertCost"></div>
-        <button class="action-button" id="actionButton">Buy</button>
+        <button class="action-button" id="actionButton">
+            <span class="action-button__text">Buy</span>
+            <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
+                <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
+                <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
+                <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
+            </svg>
+        </button>
     </div>
     <script>
         let levels;
@@ -461,6 +499,7 @@
         let profitPerHour = 0;
         let currentTabIndex = 0; // Variable para mantener el índice de la pestaña activa
         let currentActionButtonListener = null;
+        let isButtonAnimating = false;
 
         async function loadScore() {
             let storedScore = localStorage.getItem(`score_${user_id}`);
@@ -1013,22 +1052,21 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async (event) => {
-                if (document.getElementById('actionButton').classList.contains('active')) {
-                    createRipple(event);
-                    const button = document.getElementById('actionButton');
-                    button.classList.add('processing');
-                    button.textContent = '';
-
-                    const club_id = club.name;
-                    if (score >= currentCost) {
-                        let newLevel = currentLevel + 1;
-                        score -= currentCost;
-
-                        // Simular un retraso para la animación (ajusta según sea necesario)
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-
-                        result = await updateMineLevel(user_id, club_id, newLevel);
-                        if (result.status === 'success') {
+                if (document.getElementById('actionButton').classList.contains('active') && !isButtonAnimating) {
+                    isButtonAnimating = true;
+                    const button = event.currentTarget;
+                    button.classList.add('action-button--running');
+                    
+                    setTimeout(async () => {
+                        button.classList.remove('action-button--running');
+                        button.classList.add('action-button--done');
+                        
+                        const club_id = club.name;
+                        if (score >= currentCost) {
+                            let newLevel = currentLevel + 1;
+                            score -= currentCost;
+                            result = await updateMineLevel(user_id, club_id, newLevel);
+                            if (result.status === 'success') {
                             document.getElementById('scoreText').textContent = formatNumber(score)
                             levels = result.updated_clubs; // Actualizar el objeto levels completo
                             localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
@@ -1057,19 +1095,22 @@
                             // Actualizar el profitPerHour en el servidor
                             await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
 
-                            // Esperar a que termine la animación antes de cerrar
-                            await new Promise(resolve => setTimeout(resolve, 600));
                             closeAlertMenu();
+                            } else {
+                                alert('Error al actualizar el nivel');
+                            }
                         } else {
-                            alert('Error al actualizar el nivel');
+                            shakeButton();
                         }
-                    } else {
-                        shakeButton();
-                    }
 
-                    // Restaurar el botón después de procesar
-                    button.classList.remove('processing');
-                    button.textContent = 'Buy';
+                        setTimeout(() => {
+                            button.classList.remove('action-button--done');
+                            isButtonAnimating = false;
+                            if (score < currentCost) {
+                                closeAlertMenu();
+                            }
+                        }, 1000);
+                    }, 2600); // 2000ms for fill animation + 600ms delay
                 }
             };
 
@@ -1108,14 +1149,16 @@
         }
 
         function closeAlertMenu() {
-            document.getElementById('alertMenu').style.display = 'none';
-            document.querySelector('.container').classList.remove('blur-content');
-            document.querySelector('.navbar').classList.remove('blur-content');
+            if (!isButtonAnimating) {
+                document.getElementById('alertMenu').style.display = 'none';
+                document.querySelector('.container').classList.remove('blur-content');
+                document.querySelector('.navbar').classList.remove('blur-content');
 
-            // Eliminar el evento del botón "Buy" al cerrar la alerta
-            if (currentActionButtonListener) {
-                document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
-                currentActionButtonListener = null;
+                // Eliminar el evento del botón "Buy" al cerrar la alerta
+                if (currentActionButtonListener) {
+                    document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
+                    currentActionButtonListener = null;
+                }
             }
         }
 
@@ -1141,20 +1184,21 @@
         function createRipple(event) {
             const button = event.currentTarget;
             const ripple = document.createElement('span');
-            const diameter = Math.max(button.clientWidth, button.clientHeight);
-            const radius = diameter / 2;
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
 
-            ripple.style.width = ripple.style.height = `${diameter}px`;
-            ripple.style.left = `${event.clientX - button.offsetLeft - radius}px`;
-            ripple.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
             ripple.classList.add('ripple');
 
-            const existingRipple = button.querySelector('.ripple');
-            if (existingRipple) {
-                existingRipple.remove();
-            }
-
             button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
         }
     </script>
 </body>
