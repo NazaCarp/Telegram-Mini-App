@@ -594,9 +594,13 @@
     }
 
     function startMining() {
-      closeAlertMenu();
       window.location.href = 'mine.html';
     }
+
+    document.getElementById('rocketIcon').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = 'boosts.html'; // Redirige a la nueva página Boosts
+    });
 
     // Ocultar el botón de retroceso en index.html
     tg.BackButton.hide();
