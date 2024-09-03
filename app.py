@@ -279,15 +279,15 @@ def update_profit_per_hour():
         db = SessionLocal()
         counter = db.query(Counter).filter_by(user_id=user_id).first()
         if not counter:
-            counter = Counter(user_id=user_id, profitPerHour=profitPerHour)
+            counter = Counter(user_id=user_id, profit_per_hour=profitPerHour)
             db.add(counter)
         else:
             counter.profit_per_hour += profitPerHour
         db.commit()
-        return jsonify({'status': 'success'})
+        return jsonify({'status': 'success', 'new_profit_per_hour': counter.profit_per_hour})
     
     except Exception as e:
-        logging.error(f"Error in update_counters: {e}")
+        logging.error(f"Error in update_profit_per_hour: {e}")
         return jsonify({'error': str(e)}), 500
     
 
