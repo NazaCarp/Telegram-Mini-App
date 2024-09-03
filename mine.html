@@ -1089,23 +1089,30 @@
                             
                             // Actualizar el profitPerHour en el servidor
                             await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
- 
+
                             button.classList.remove('btn--running');
                             button.classList.add('btn--done');
                             
+                            // Esperar a que termine la animación antes de cerrar la alerta
                             setTimeout(() => {
-                                button.classList.remove('btn--done');
-                                button.style.width = '100%';  // Devolvemos el botón a su ancho original
-                            }, 1500);
+                                closeAlertMenu();
+                                setTimeout(() => {
+                                    button.classList.remove('btn--done');
+                                    button.style.width = '100%';  // Devolvemos el botón a su ancho original
+                                    document.getElementById('actionButton').textContent = 'Buy';  // Restauramos el texto del botón
+                                }, 300);  // Pequeño retraso para asegurar que la alerta se haya cerrado
+                            }, 2300);  // 2000ms para la animación de llenado + 300ms para la animación de check
                         } else {
                             alert('Error al actualizar el nivel');
                             button.classList.remove('btn--running');
                             button.style.width = '100%';  // Devolvemos el botón a su ancho original
+                            document.getElementById('actionButton').textContent = 'Buy';  // Restauramos el texto del botón
                         }
                     } else {
                         shakeButton();
                         button.classList.remove('btn--running');
                         button.style.width = '100%';  // Devolvemos el botón a su ancho original
+                        document.getElementById('actionButton').textContent = 'Buy';  // Restauramos el texto del botón
                     }
                 }
             };
