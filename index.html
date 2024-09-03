@@ -174,15 +174,6 @@
       display: inline-block;
       min-width: 120px;
       z-index: 100;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-    }
-
-    #profitPerHourContainer * {
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
     }
 
     #profitPerHourLabel {
@@ -270,12 +261,6 @@
     .blur-content {
       filter: blur(5px);
       pointer-events: none;
-    }
-
-    #profitPerHourContainer:active {
-      opacity: 0.8;
-      transform: scale(0.98);
-      transition: opacity 0.1s, transform 0.1s;
     }
   </style>
 </head>
@@ -588,7 +573,7 @@
         }
       });
 
-      // Agregar este event listener para cerrar la alerta al hacer clic fuera de ella
+      // Wvent listener para cerrar la alerta al hacer clic fuera de ella
       document.addEventListener('click', function(event) {
         const alertMenu = document.getElementById('alertMenu');
         const profitPerHourContainer = document.getElementById('profitPerHourContainer');
