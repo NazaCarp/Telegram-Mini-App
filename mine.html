@@ -1091,6 +1091,12 @@
 
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
         }
+
+        function resetButton(button) {
+            button.classList.remove('btn--running', 'btn--done');
+            button.style.width = '100%';
+            button.textContent = 'Buy';
+        }
         
         function updateClubLevel(clubId, newLevel, clubs) {
             const rectangles = document.querySelectorAll('.rectangle');
