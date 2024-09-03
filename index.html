@@ -172,14 +172,13 @@
       text-align: center;
       cursor: pointer;
       display: inline-block;
-      min-width: 120px; /* Ajusta este valor según sea necesario */
+      min-width: 120px;
+      z-index: 100;
     }
 
     #profitPerHourLabel {
       font-size: 9px;
       margin-bottom: 5px;
-      /* margin-right: 20px;
-      margin-left: 20px; */
     }
 
     #profitPerHourValue {
@@ -544,11 +543,34 @@
         userInfo.appendChild(userName);
       }
       
-      document.getElementById('profitPerHourContainer').addEventListener('click', function(event) {
-        event.stopPropagation(); // Evita que el evento se propague
-        document.getElementById('alertMenu').style.display = 'block';
-        document.querySelector('.main-container').classList.add('blur-content');
-        document.querySelector('.navbar').classList.add('blur-content');
+      function addProfitPerHourClickListener() {
+        const container = document.getElementById('profitPerHourContainer');
+        if (container) {
+          container.addEventListener('click', function(event) {
+            console.log('Profit per hour container clicked');
+            event.stopPropagation();
+            document.getElementById('alertMenu').style.display = 'block';
+            document.querySelector('.main-container').classList.add('blur-content');
+            document.querySelector('.navbar').classList.add('blur-content');
+          });
+        } else {
+          console.error('Profit per hour container not found');
+        }
+      }
+
+      // Usar setTimeout para asegurarse de que el DOM esté completamente cargado
+      setTimeout(addProfitPerHourClickListener, 0);
+
+      // Delegación de eventos como respaldo
+      document.addEventListener('click', function(event) {
+        const container = document.getElementById('profitPerHourContainer');
+        if (event.target === container || container.contains(event.target)) {
+          console.log('Profit per hour container clicked (delegation)');
+          event.stopPropagation();
+          document.getElementById('alertMenu').style.display = 'block';
+          document.querySelector('.main-container').classList.add('blur-content');
+          document.querySelector('.navbar').classList.add('blur-content');
+        }
       });
 
       loadAndUpdateCounters();
