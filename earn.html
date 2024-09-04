@@ -175,23 +175,21 @@
             height: 3em;
             visibility: hidden;
         }
-
         .action-button__progress-track {
-            stroke: rgba(255, 255, 255, 0.2);
+            r: 12px;
+            stroke: var(--bg2);
             stroke-width: 24;
         }
-
         .action-button__progress-fill {
-            stroke: white;
+            stroke: var(--primary1);
             stroke-dashoffset: 125.66;
-            transition: stroke-dashoffset 2s linear;
         }
-
         .action-button__progress-check {
             stroke: hsl(0,0%,100%);
             stroke-dashoffset: 34;
         }
 
+        /* Both states */
         .action-button--running,
         .action-button--done {
             outline: none;
@@ -201,7 +199,6 @@
             -moz-user-select: none;
             -webkit-user-select: none;
         }
-
         .action-button--running .action-button__text,
         .action-button--done .action-button__text {
             color: transparent;
@@ -209,39 +206,38 @@
                 background-color 0.3s ease-in-out,
                 visibility 0.3s steps(1);
         }
-
         .action-button--running .action-button__progress,
         .action-button--done .action-button__progress {
             visibility: visible;
         }
 
+        /* Running state */
         .action-button--running .action-button__text {
             background-color: var(--bg2);
             visibility: hidden;
         }
-
         .action-button--running .action-button__progress {
             transition: visibility 0.3s 0.3s steps(1,start);
         }
-
         .action-button--running .action-button__progress-track {
+            r: 20px;
             stroke-width: 8;
             transition:
                 r 0.3s 0.3s ease-in-out,
                 stroke-width 0.3s 0.3s ease-in-out;
         }
-
         .action-button--running .action-button__progress-fill {
             stroke-dashoffset: 0;
+            transition: stroke-dashoffset 2s 0.6s linear;
         }
 
+        /* Done state */
         .action-button--done .action-button__progress-track {
             stroke: var(--primary1);
             transition:
                 r 0.3s ease-in-out,
                 stroke-width 0.3s ease-in-out;
         }
-
         .action-button--done .action-button__progress-check {
             stroke-dashoffset: 0;
             transition: stroke-dashoffset 0.3s 0.3s ease-out;
