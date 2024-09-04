@@ -1128,7 +1128,7 @@
                                 // Actualizar el profitPerHour en el servidor
                                 await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
                             } else {
-                                console.error('Error al actualizar el nivel');
+                                alert('Error al actualizar el nivel');
                             }
                         } else {
                             shakeButton();
@@ -1136,9 +1136,8 @@
 
                         // Cerrar la alerta después de 1 segundo, independientemente del resultado
                         setTimeout(() => {
-                            closeAlertMenu();
                             isButtonAnimating = false;
-                            button.classList.remove('action-button--done'); // Restablecer el estado del botón
+                            closeAlertMenu();
                         }, 1000);
                     }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
                 }
@@ -1179,14 +1178,10 @@
         }
 
         function closeAlertMenu() {
-            const alertMenu = document.getElementById('alertMenu');
-            const container = document.querySelector('.container');
-            const navbar = document.querySelector('.navbar');
-
-            if (alertMenu && container && navbar && !isButtonAnimating) {
-                alertMenu.style.display = 'none';
-                container.classList.remove('blur-content');
-                navbar.classList.remove('blur-content');
+            if (!isButtonAnimating) {
+                document.getElementById('alertMenu').style.display = 'none';
+                document.querySelector('.container').classList.remove('blur-content');
+                document.querySelector('.navbar').classList.remove('blur-content');
 
                 // Eliminar el evento del botón "Buy" al cerrar la alerta
                 if (currentActionButtonListener) {
