@@ -451,6 +451,10 @@
         }
 
         document.getElementById('actionButton').addEventListener('click', async function(event) {
+            if (currentScore < cost) {
+                shakeButton();
+                return;
+            }
             if (this.classList.contains('active')) {
                 createRipple(event);
                 const currentScore = score;
@@ -521,9 +525,6 @@
                     } else {
                         alert('Error al actualizar el boost');
                     }
-                } else {
-                    alert('Entró')
-                    shakeButton();
                 }
             }
         });
