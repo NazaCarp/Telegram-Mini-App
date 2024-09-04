@@ -835,22 +835,20 @@
             button.innerHTML = `
                 <span class="action-button__text">${text}</span>
                 <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
-                    <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
-                    <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
-                    <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
+                    <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke-width="8" />
+                    <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke-width="8" transform="rotate(-90,24,24)" />
+                    <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             `;
 
             button.classList.add('action-button', 'action-button--running');
-            button.style.width = '48px';
             button.querySelector('.action-button__text').style.opacity = '0';
             button.querySelector('.action-button__progress').style.visibility = 'visible';
             button.querySelector('.action-button__progress').style.opacity = '1';
 
             setTimeout(() => {
-                button.querySelector('.action-button__progress-fill').style.transition = 'stroke-dashoffset 2s linear';
                 button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '0';
-            }, 300);
+            }, 50);
         }
 
         async function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
