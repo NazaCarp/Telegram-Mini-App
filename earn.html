@@ -480,21 +480,20 @@
                 alertMenu.appendChild(actionButton);
                 alertMenu.appendChild(checkButton);
 
-                // Verificar si la tarea ya ha sido completada o si hay un temporizador activo
-                if (completedTasks[rectangle.id]) {
-                    checkButton.innerText = 'Claimed';
-                    checkButton.classList.add('inactive');
-                    checkButton.addEventListener('click', handleCheckButtonClick);
-                } else if (timerIntervals[rectangle.id]) {
-                    const endTime = new Date(timerIntervals[rectangle.id].endTime);
-                    const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
-                    if (remainingSeconds > 0) {
-                        updateButtonDisplay(rectangle.id, remainingSeconds);
-                    }
-                    checkButton.addEventListener('click', handleCheckButtonClick);
-                } else if (rectangle.id.startsWith('video')) {
+                if (rectangle.id.startsWith('video')) {
                     handleVideoRectangleClick(rectangle, actionButton, checkButton);
                 } else {
+                    // Verificar si la tarea ya ha sido completada o si hay un temporizador activo
+                    if (completedTasks[rectangle.id]) {
+                        checkButton.innerText = 'Claimed';
+                        checkButton.classList.add('inactive');    
+                    } else if (timerIntervals[rectangle.id]) {
+                        const endTime = new Date(timerIntervals[rectangle.id].endTime);
+                        const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
+                        if (remainingSeconds > 0) {
+                            updateButtonDisplay(rectangle.id, remainingSeconds);
+                        }
+                    }
                     actionButton.addEventListener('click', handleActionButtonClick);
                     checkButton.addEventListener('click', handleCheckButtonClick);
                 }
