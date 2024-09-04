@@ -1116,17 +1116,18 @@
                                 levels = result.updated_clubs; // Actualizar el objeto levels completo
                                 localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
                                 updateClubLevel(club_id, newLevel, clubs, levels);
-
+                                closeAlertMenu();
                                 // Recalcular cost y profitPerHour para la alerta
                                 const newCost = calculateCost(club.cost, newLevel);
                                 const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
-
+                                closeAlertMenu();
                                 // Actualizar el profitPerHour global
                                 profitPerHour += newProfitPerHour - currentProfitPerHour;
                                 localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
-                                
+                                closeAlertMenu();
                                 // Actualizar el profitPerHour en el servidor
                                 await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
+                                closeAlertMenu();
                             } else {
                                 alert('Error al actualizar el nivel');
                             }
@@ -1135,7 +1136,7 @@
                         }
 
                         // Cerrar la alerta después de 1 segundo, independientemente del resultado
-                        closeAlertMenu();
+                        
                         isButtonAnimating = false;
                     }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
                 }
