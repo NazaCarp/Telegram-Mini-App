@@ -729,7 +729,6 @@
 
         async function handleCheckButtonClick(event) {
             alert('HOLAAA')
-            shakeButton();
             const checkButton = event.target;
             const rectangleId = checkButton.dataset.rectangleId;
             const rectangle = document.getElementById(rectangleId);
@@ -738,7 +737,7 @@
 
             // Verificar si hay un temporizador activo
             if (timerIntervals[rectangleId]) {
-                await shakeButton();
+                shakeButton(checkButton);
                 const endTime = new Date(timerIntervals[rectangleId].endTime);
                 const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
                 if (remainingSeconds > 0) {
@@ -748,7 +747,7 @@
             }
 
             if (this.classList.contains('inactive')) {
-                
+                shakeButton(checkButton);
                 return;
             }
 
