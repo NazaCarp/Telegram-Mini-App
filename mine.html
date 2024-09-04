@@ -1121,39 +1121,26 @@
                                 const newCost = calculateCost(club.cost, newLevel);
                                 const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
 
-                                // Actualizar la alerta con los nuevos valores
-                                document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(newProfitPerHour)}`;
-                                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(newCost)}</p>`;
-
-                                // Actualizar el costo y la clase del botón
-                                const costColor = newCost <= score ? 'yellow' : 'gray';
-                                const buttonClass = newCost <= score ? 'active' : 'inactive';
-                                document.getElementById('alertCost').classList.remove('yellow', 'gray');
-                                document.getElementById('alertCost').classList.add(costColor);
-                                document.getElementById('actionButton').classList.remove('active', 'inactive');
-                                document.getElementById('actionButton').classList.add(buttonClass);
-
                                 // Actualizar el profitPerHour global
                                 profitPerHour += newProfitPerHour - currentProfitPerHour;
                                 localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
                                 
                                 // Actualizar el profitPerHour en el servidor
                                 await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
+
+                                // Cerrar la alerta después de 1 segundo
+                                setTimeout(() => {
+                                    closeAlertMenu();
+                                    isButtonAnimating = false;
+                                }, 1000);
                             } else {
                                 alert('Error al actualizar el nivel');
+                                isButtonAnimating = false;
                             }
                         } else {
                             shakeButton();
-                        }
-
-                        setTimeout(() => {
-                            button.classList.remove('action-button--done');
-                            button.style.width = '100%';
-                            text.style.opacity = '1';
-                            progress.style.visibility = 'hidden';
-                            progress.style.opacity = '0';
                             isButtonAnimating = false;
-                        }, 1000);
+                        }
                     }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
                 }
             };
