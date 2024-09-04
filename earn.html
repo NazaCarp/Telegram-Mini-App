@@ -553,8 +553,7 @@
         async function handleVideoCheckButtonClick(videoId, reward, checkButton) {
             const timer = videoTimers[videoId];
             if (!timer || timer.claimed) {
-                alert('HOOALSDASD')
-                shakeButton();
+                shakeButton(checkButton);
                 return;
             }
 
