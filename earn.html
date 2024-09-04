@@ -805,85 +805,112 @@
 
             if (button.classList.contains('active') && !isButtonAnimating) {
                 isButtonAnimating = true;
-                
+
                 const text = button.querySelector('.action-button__text');
                 const progress = button.querySelector('.action-button__progress');
                 const fill = button.querySelector('.action-button__progress-fill');
                 const check = button.querySelector('.action-button__progress-check');
+
+                // Verificar si los elementos existen antes de manipularlos
+                if (fill) {
+                    fill.style.transition = 'none';
+                    fill.style.strokeDashoffset = '125.66';
+                }
+                if (check) {
+                    check.style.transition = 'none';
+                    check.style.strokeDashoffset = '34';
+                }
+                
                 // Force reflow
                 void button.offsetWidth;
+
                 // Iniciar animación
                 button.style.width = '48px';
-                text.style.opacity = '0';
-                alert('Niuma')
+                if (text) {
+                    text.style.opacity = '0';
+                }
+                
                 setTimeout(() => {
                     button.classList.add('action-button--running');
-                    progress.style.visibility = 'visible';
-                    progress.style.opacity = '1';
+                    if (progress) {
+                        progress.style.visibility = 'visible';
+                        progress.style.opacity = '1';
+                    }
                     
                     // Animación de llenado
                     setTimeout(() => {
-                        fill.style.transition = 'stroke-dashoffset 2s linear';
-                        fill.style.strokeDashoffset = '0';
+                        if (fill) {
+                            fill.style.transition = 'stroke-dashoffset 2s linear';
+                            fill.style.strokeDashoffset = '0';
+                        }
                     }, 300);
                 }, 300);
-                alert('Niuma2')
+
                 // Llamar a la API de verificación
-                const response = await fetch('/verify_telegram_group', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        user_id: user_id, 
-                        url: url, 
-                        reward: reward,
-                        task_id: rectangleId
-                    })
-                });
+                try {
+                    const response = await fetch('/verify_telegram_group', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            user_id: user_id, 
+                            url: url, 
+                            reward: reward,
+                            task_id: rectangleId
+                        })
+                    });
 
-                const data = await response.json();
+                    const data = await response.json();
 
-                setTimeout(() => {
-                    button.classList.remove('action-button--running');
-                    button.classList.add('action-button--done');
-                    
-                    check.style.transition = 'stroke-dashoffset 0.3s ease-out';
-                    check.style.strokeDashoffset = '0';
+                    setTimeout(() => {
+                        button.classList.remove('action-button--running');
+                        button.classList.add('action-button--done');
+                        
+                        if (check) {
+                            check.style.transition = 'stroke-dashoffset 0.3s ease-out';
+                            check.style.strokeDashoffset = '0';
+                        }
 
-                    if (data.status === 'success') {
-                        // Actualizar el score
-                        localStorage.setItem(`score_${user_id}`, data.new_score);
+                        if (data.status === 'success') {
+                            // Actualizar el score
+                            localStorage.setItem(`score_${user_id}`, data.new_score);
 
-                        // Marcar la tarea como completada
-                        completedTasks[rectangleId] = true;
-                        localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
-                        updateRectanglesAppearance();
+                            // Marcar la tarea como completada
+                            completedTasks[rectangleId] = true;
+                            localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
+                            updateRectanglesAppearance();
 
-                        // Actualizar el botón de verificación
-                        button.classList.add('inactive');
+                            // Actualizar el botón de verificación
+                            button.classList.add('inactive');
 
-                        // Animación de monedas
-                        setTimeout(() => {
-                            closeAlertMenu();
-                            animateCoins(reward);
-                        }, 1000);
-                    } else if (data.status === 'already_completed') {
-                        setTimeout(() => {
-                            closeAlertMenu();
-                        }, 1000);
-                    } else {
-                        // El usuario no está en el grupo, mostrar mensaje en burbuja
-                        setTimeout(() => {
-                            showAlertBubble("You're not a member of the group yet. Please join and try again.");
-                            const timerSeconds = 60;
-                            updateCheckButtonState(rectangleId, timerSeconds, rectangle);
-                            closeAlertMenu();
-                        }, 1000);
-                    }
+                            // Animación de monedas
+                            setTimeout(() => {
+                                closeAlertMenu();
+                                animateCoins(reward);
+                            }, 1000);
+                        } else if (data.status === 'already_completed') {
+                            setTimeout(() => {
+                                closeAlertMenu();
+                            }, 1000);
+                        } else {
+                            // El usuario no está en el grupo, mostrar mensaje en burbuja
+                            setTimeout(() => {
+                                showAlertBubble("You're not a member of the group yet. Please join and try again.");
+                                const timerSeconds = 60;
+                                updateCheckButtonState(rectangleId, timerSeconds, rectangle);
+                                closeAlertMenu();
+                            }, 1000);
+                        }
 
+                        isButtonAnimating = false;
+                    }, 2300);
+                } catch (error) {
+                    console.error('Error during verification:', error);
                     isButtonAnimating = false;
-                }, 2300); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado - 300ms para la animación del check
+                    showAlertBubble("An error occurred. Please try again later.");
+                    closeAlertMenu();
+                }
             }
         }
 
