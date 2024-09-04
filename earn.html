@@ -486,7 +486,7 @@
                     // Verificar si la tarea ya ha sido completada o si hay un temporizador activo
                     if (completedTasks[rectangle.id]) {
                         checkButton.innerText = 'Claimed';
-                        checkButton.classList.add('inactive');    
+                        checkButton.classList.add('inactive');
                     } else if (timerIntervals[rectangle.id]) {
                         const endTime = new Date(timerIntervals[rectangle.id].endTime);
                         const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
@@ -686,7 +686,6 @@
                 if (remainingSeconds > 0) {
                     checkButton.classList.remove('active');
                     checkButton.classList.add('inactive');
-                    checkButton.disabled = true;
                     checkButton.innerText = `${remainingSeconds}s`;
                 } else {
                     checkButton.disabled = false;
