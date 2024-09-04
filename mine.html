@@ -348,92 +348,24 @@
             position: relative;
             overflow: hidden;
             width: 100%;
-            height: 48px;
             margin-top: 10px;
-            padding: 0;
+            padding: 10px 20px;
             border: none;
-            border-radius: 24px;
+            border-radius: 20px;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: background-color 0.3s ease;
         }
-
+        
         .action-button.active {
             background-color: #0066ff;
             color: white;
         }
-
+        
         .action-button.inactive {
             background-color: #808080;
             color: white;
             cursor: not-allowed;
-        }
-
-        /* Estilos para la animación del botón */
-        .action-button__text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .action-button__progress {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s, opacity 0.3s;
-        }
-
-        .action-button__progress-track {
-            stroke: rgba(255, 255, 255, 0.2);
-            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
-        }
-
-        .action-button__progress-fill {
-            stroke: white;
-            stroke-dashoffset: 125.66;
-            transition: stroke-dashoffset 2s linear;
-        }
-
-        .action-button__progress-check {
-            stroke: white;
-            stroke-dashoffset: 34;
-            transition: stroke-dashoffset 0.3s ease-out;
-        }
-
-        .action-button--running,
-        .action-button--done {
-            width: 48px;
-            background-color: transparent !important;
-        }
-
-        .action-button--running .action-button__text,
-        .action-button--done .action-button__text {
-            opacity: 0;
-        }
-
-        .action-button--running .action-button__progress,
-        .action-button--done .action-button__progress {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .action-button--running .action-button__progress-track {
-            stroke-width: 8;
-        }
-
-        .action-button--running .action-button__progress-fill {
-            stroke-dashoffset: 0;
-        }
-
-        .action-button--done .action-button__progress-check {
-            stroke-dashoffset: 0;
         }
 
         .ripple {
@@ -493,14 +425,7 @@
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="second-subtitle" id="alertSecondSubtitle"></div>
         <div class="cost" id="alertCost"></div>
-        <button class="action-button" id="actionButton">
-            <span class="action-button__text">Buy</span>
-            <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
-                <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
-                <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
-                <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
-            </svg>
-        </button>
+        <button class="action-button" id="actionButton">Buy</button>
     </div>
     <script>
         let levels;
@@ -510,8 +435,6 @@
         let score = 0;
         let profitPerHour = 0;
         let currentTabIndex = 0; // Variable para mantener el índice de la pestaña activa
-        let currentActionButtonListener = null;
-        let isButtonAnimating = false;
 
         async function loadScore() {
             let storedScore = localStorage.getItem(`score_${user_id}`);
@@ -624,7 +547,7 @@
             return Math.abs(hash);
         }
 
-        function generateRectangles(containerId, clubs) {
+        function generateRectangles(containerId, clubs, levels) {
             const rows = Math.ceil(clubs.length / 2);
 
             // Limpiar contenido anterior
@@ -738,7 +661,7 @@
                     rectangle.addEventListener('click', () => {
                         cost = calculateCost(club.cost, levels[club.name] || 1);
                         clubProfitPerHour = calculateProfitPerHour(club.cost, levels[club.name], club.name);
-                        showAlert(club, cost, clubProfitPerHour, clubs);
+                        showAlert(club, cost, clubProfitPerHour, clubs, levels);
                     });
                 }
 
@@ -933,29 +856,29 @@
                     // Generar rectángulos según la pestaña activa
                     switch (tab.id.replace('Tab', 'Content')) {
                         case 'northAmericaContent':
-                            generateRectangles('northAmericaContent', northAmericaClubs);
+                            generateRectangles('northAmericaContent', northAmericaClubs, levels);
                             break;
                         case 'southAmericaContent':
-                            generateRectangles('southAmericaContent', southAmericaClubs);
+                            generateRectangles('southAmericaContent', southAmericaClubs, levels);
                             break;
                         case 'europeContent':
-                            generateRectangles('europeContent', europeClubs);
+                            generateRectangles('europeContent', europeClubs, levels);
                             break;
                         case 'asiaContent':
-                            generateRectangles('asiaContent', asiaClubs);
+                            generateRectangles('asiaContent', asiaClubs, levels);
                             break;
                         case 'africaContent':
-                            generateRectangles('africaContent', africaClubs);
+                            generateRectangles('africaContent', africaClubs, levels);
                             break;
                         case 'oceaniaContent':
-                            generateRectangles('oceaniaContent', oceaniaClubs);
+                            generateRectangles('oceaniaContent', oceaniaClubs, levels);
                             break;
                     }
                 });
             });
 
             // Generar rectángulos iniciales para la pestaña activa por defecto
-            generateRectangles('northAmericaContent', northAmericaClubs);
+            generateRectangles('northAmericaContent', northAmericaClubs, levels);
 
             tg.onEvent('backButtonClicked', () => {
                 window.location.href = 'index.html';
@@ -1033,22 +956,18 @@
             return await response.json();
         }
 
-        async function showAlert(club, cost, clubProfitPerHour, clubs) {
-            // Obtener el nivel actual del club
-            const currentLevel = levels[club.name] || 1;
-            
-            // Calcular el costo y profit actuales basados en el nivel actual
-            const currentCost = calculateCost(club.cost, currentLevel);
-            const currentProfitPerHour = calculateProfitPerHour(club.cost, currentLevel, club.name);
+        let currentActionButtonListener = null;
 
-            const costColor = currentCost <= score ? 'yellow' : 'gray';
-            const buttonClass = currentCost <= score ? 'active' : 'inactive';
+        async function showAlert(club, cost, clubProfitPerHour, clubs, levels) {
+            const currentScore = score;
+            const costColor = cost <= currentScore ? 'yellow' : 'gray';
+            const buttonClass = cost <= currentScore ? 'active' : 'inactive';
 
             document.getElementById('alertIcon').innerHTML = `<img src="${club.image}" alt="${club.name}" style="width: 50%; height: 50%;">`;
             document.getElementById('alertText').innerText = club.name;
             document.getElementById('alertSubtitle').innerText = 'Profit per hour';
-            document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(currentProfitPerHour)}`;
-            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(currentCost)}</p>`;
+            document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(clubProfitPerHour)}`;
+            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(cost)}</p>`;
             document.getElementById('alertCost').classList.remove('yellow', 'gray');
             document.getElementById('alertCost').classList.add(costColor);
             document.getElementById('actionButton').classList.remove('active', 'inactive');
@@ -1057,16 +976,6 @@
             document.querySelector('.container').classList.add('blur-content');
             document.querySelector('.navbar').classList.add('blur-content');
 
-            // Reiniciar el estado del botón
-            const actionButton = document.getElementById('actionButton');
-            actionButton.classList.remove('action-button--running', 'action-button--done');
-            actionButton.style.width = '100%';
-            actionButton.querySelector('.action-button__text').style.opacity = '1';
-            actionButton.querySelector('.action-button__progress').style.visibility = 'hidden';
-            actionButton.querySelector('.action-button__progress').style.opacity = '0';
-            actionButton.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
-            actionButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
-
             // Eliminar el evento anterior si existe
             if (currentActionButtonListener) {
                 document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
@@ -1074,88 +983,44 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async (event) => {
-                const button = document.getElementById('actionButton');
-                if (button.classList.contains('active') && !isButtonAnimating) {
-                    isButtonAnimating = true;
-                    event.preventDefault();
+                if (document.getElementById('actionButton').classList.contains('active')) {
+                    createRipple(event);
+                    const club_id = club.name;
+                    if (currentScore >= cost) {
+                        let newLevel = levels[club_id] + 1 || 2;
+                        score = currentScore - cost;
+                        result = await updateMineLevel(user_id, club_id, newLevel);
+                        if (result.status === 'success') {
+                            document.getElementById('scoreText').textContent = formatNumber(score)
+                            levels[club_id] = newLevel; // Actualizar el nivel en el objeto levels
+                            updateClubLevel(club_id, newLevel, clubs, levels); // Actualizar el nivel en la interfaz
 
-                    const text = button.querySelector('.action-button__text');
-                    const progress = button.querySelector('.action-button__progress');
-                    const fill = button.querySelector('.action-button__progress-fill');
-                    const check = button.querySelector('.action-button__progress-check');
+                            // Recalcular cost y profitPerHour para la alerta
+                            const newCost = calculateCost(club.cost, newLevel);
+                            const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
 
-                    // Reset animation state
-                    fill.style.transition = 'none';
-                    fill.style.strokeDashoffset = '125.66';
-                    check.style.transition = 'none';
-                    check.style.strokeDashoffset = '34';
-                    
-                    // Force reflow
-                    void button.offsetWidth;
+                            // Actualizar la alerta con los nuevos valores
+                            document.getElementById('alertSecondSubtitle').innerText = `${Math.floor(newProfitPerHour)}`;
+                            document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${Math.floor(newCost)}</p>`;
 
-                    // Iniciar animación
-                    button.style.width = '48px';
-                    text.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        button.classList.add('action-button--running');
-                        progress.style.visibility = 'visible';
-                        progress.style.opacity = '1';
-                        
-                        // Animación de llenado
-                        setTimeout(() => {
-                            fill.style.transition = 'stroke-dashoffset 2s linear';
-                            fill.style.strokeDashoffset = '0';
-                        }, 300);
-                    }, 300);
+                            closeAlertMenu();
 
-                    setTimeout(async () => {
-                        button.classList.remove('action-button--running');
-                        button.classList.add('action-button--done');
-                        
-                        check.style.transition = 'stroke-dashoffset 0.3s ease-out';
-                        check.style.strokeDashoffset = '0';
-                        
-                        const club_id = club.name;
-                        if (score >= currentCost) {
-                            let newLevel = currentLevel + 1;
-                            score -= currentCost;
-                            result = await updateMineLevel(user_id, club_id, newLevel);
-                            if (result.status === 'success') {
-                                document.getElementById('scoreText').textContent = formatNumber(score)
-                                levels = result.updated_clubs; // Actualizar el objeto levels completo
-                                localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
-                                updateClubLevel(club_id, newLevel, clubs, levels);
-
-                                // Recalcular cost y profitPerHour para la alerta
-                                const newCost = calculateCost(club.cost, newLevel);
-                                const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
-
-                                // Actualizar el profitPerHour global
-                                profitPerHour += newProfitPerHour - currentProfitPerHour;
-                                localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
-                                
-                                // Actualizar el profitPerHour en el servidor
-                                await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
-                            } else {
-                                alert('Error al actualizar el nivel');
-                            }
+                            updateProfitPerHour(user_id, clubProfitPerHour) // Actualizar el profitPerHour de la cuenta actual
+                            localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour + clubProfitPerHour);
+                            profitPerHour = parseFloat(localStorage.getItem(`profit_per_hour_${user_id}`));
                         } else {
-                            shakeButton();
+                            alert('Error al actualizar el score');
                         }
-
-                        // Cerrar la alerta después de 1 segundo
-                        isButtonAnimating = false;
-                        button.classList.remove('action-button--done'); // Restablecer el estado del botón
-                        closeAlertMenu();
-                    }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
+                    } else {
+                        shakeButton();
+                    }
                 }
             };
 
             document.getElementById('actionButton').addEventListener('click', currentActionButtonListener);
         }
         
-        function updateClubLevel(clubId, newLevel, clubs) {
+        function updateClubLevel(clubId, newLevel, clubs, levels) {
             const rectangles = document.querySelectorAll('.rectangle');
             rectangles.forEach(rectangle => {
                 if (rectangle.getAttribute('data-club-id') === clubId) {
@@ -1187,26 +1052,14 @@
         }
 
         function closeAlertMenu() {
-            if (!isButtonAnimating) {
-                document.getElementById('alertMenu').style.display = 'none';
-                document.querySelector('.container').classList.remove('blur-content');
-                document.querySelector('.navbar').classList.remove('blur-content');
+            document.getElementById('alertMenu').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur-content');
+            document.querySelector('.navbar').classList.remove('blur-content');
 
-                // Eliminar el evento del botón "Buy" al cerrar la alerta
-                if (currentActionButtonListener) {
-                    document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
-                    currentActionButtonListener = null;
-                }
-
-                // Reiniciar el estado del botón
-                const actionButton = document.getElementById('actionButton');
-                actionButton.classList.remove('action-button--running', 'action-button--done');
-                actionButton.style.width = '100%';
-                actionButton.querySelector('.action-button__text').style.opacity = '1';
-                actionButton.querySelector('.action-button__progress').style.visibility = 'hidden';
-                actionButton.querySelector('.action-button__progress').style.opacity = '0';
-                actionButton.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
-                actionButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
+            // Eliminar el evento del botón "Buy" al cerrar la alerta
+            if (currentActionButtonListener) {
+                document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
+                currentActionButtonListener = null;
             }
         }
 
