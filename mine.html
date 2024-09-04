@@ -346,7 +346,7 @@
         
         .action-button {
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             width: 100%;
             margin-top: 10px;
             padding: 10px 20px;
@@ -428,8 +428,8 @@
         .action-button--running,
         .action-button--done {
             background-color: transparent !important;
-            height: 68px; /* Increased height to accommodate the full circle */
-            padding: 0;
+            border-color: transparent !important;
+            box-shadow: none !important;
         }
 
         .ripple {
@@ -1075,6 +1075,9 @@
                     
                     // Force reflow
                     void button.offsetWidth;
+                    
+                    // Remove background immediately
+                    button.style.backgroundColor = 'transparent';
                     
                     // Add a small delay before adding the running class
                     setTimeout(() => {
