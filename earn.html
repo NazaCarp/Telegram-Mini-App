@@ -552,7 +552,10 @@
 
         async function handleVideoCheckButtonClick(videoId, reward, checkButton) {
             const timer = videoTimers[videoId];
-            if (!timer || timer.claimed) checkButton.addEventListener('click', shakeButton);;
+            if (!timer || timer.claimed) {
+                checkButton.addEventListener('click', shakeButton);
+                return;
+            }
 
             const now = Date.now();
             if (now < timer.endTime) {
