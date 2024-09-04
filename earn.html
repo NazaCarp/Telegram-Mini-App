@@ -137,6 +137,7 @@
         .action-button {
             position: relative;
             overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             width: 100%;
             margin-top: 10px;
             padding: 10px 20px;
@@ -155,6 +156,72 @@
         .action-button.inactive {
             background-color: #808080;
             color: white;
+        }
+
+        .action-button__text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .action-button__progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
+
+        .action-button__progress-track {
+            stroke: rgba(255, 255, 255, 0.2);
+            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
+        }
+
+        .action-button__progress-fill {
+            stroke: white;
+            stroke-dashoffset: 125.66;
+            transition: stroke-dashoffset 2s linear;
+        }
+
+        .action-button__progress-check {
+            stroke: white;
+            stroke-dashoffset: 34;
+            transition: stroke-dashoffset 0.3s ease-out;
+        }
+
+        .action-button--running,
+        .action-button--done {
+            width: 48px;
+            background-color: transparent !important;
+        }
+
+        .action-button--running .action-button__text,
+        .action-button--done .action-button__text {
+            opacity: 0;
+        }
+
+        .action-button--running .action-button__progress,
+        .action-button--done .action-button__progress {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .action-button--running .action-button__progress-track {
+            stroke-width: 8;
+        }
+
+        .action-button--running .action-button__progress-fill {
+            stroke-dashoffset: 0;
+        }
+
+        .action-button--done .action-button__progress-check {
+            stroke-dashoffset: 0;
         }
 
         .alert-menu {
@@ -303,73 +370,6 @@
             pointer-events: none;
         }
 
-        /* Estilos para la animación del botón */
-        .action-button__text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .action-button__progress {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s, opacity 0.3s;
-        }
-
-        .action-button__progress-track {
-            stroke: rgba(255, 255, 255, 0.2);
-            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
-        }
-
-        .action-button__progress-fill {
-            stroke: white;
-            stroke-dashoffset: 125.66;
-            transition: stroke-dashoffset 2s linear;
-        }
-
-        .action-button__progress-check {
-            stroke: white;
-            stroke-dashoffset: 34;
-            transition: stroke-dashoffset 0.3s ease-out;
-        }
-
-        .action-button--running,
-        .action-button--done {
-            width: 48px;
-            background-color: transparent !important;
-        }
-
-        .action-button--running .action-button__text,
-        .action-button--done .action-button__text {
-            opacity: 0;
-        }
-
-        .action-button--running .action-button__progress,
-        .action-button--done .action-button__progress {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .action-button--running .action-button__progress-track {
-            stroke-width: 8;
-        }
-
-        .action-button--running .action-button__progress-fill {
-            stroke-dashoffset: 0;
-        }
-
-        .action-button--done .action-button__progress-check {
-            stroke-dashoffset: 0;
-        }
-
         @keyframes ripple {
             to {
                 transform: scale(4);
@@ -469,14 +469,7 @@
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="alertReward" id="alertReward"></div>
         <button class="action-button" id="actionButton">Follow</button>
-        <button class="action-button active" id="checkButton">
-            <span class="action-button__text">Check</span>
-            <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
-                <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="4" />
-                <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
-                <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
-            </svg>
-        </button>
+        <button class="action-button" id="checkButton">Check</button>
     </div>
 </div>
 <div class="daily-reward-menu" id="dailyRewardMenu">
@@ -494,7 +487,6 @@
         let videoTimers = {};
         let timerIntervals = {};
         let checkButtons = {};
-        let isButtonAnimating = false;
         
         tg.ready();
         loadUserData().then(() => {
@@ -804,122 +796,124 @@
             }
         }
 
-        async function handleCheckButtonClick(event) {
-            const button = event.currentTarget;
-            const rectangleId = button.dataset.rectangleId;
-            const url = button.dataset.url;
-            const rectangle = document.querySelector(`[id="${rectangleId}"]`);
+        function handleCheckButtonClick(event) {
+            const checkButton = event.target;
+            const rectangleId = checkButton.dataset.rectangleId;
+            const rectangle = document.getElementById(rectangleId);
+            const url = checkButton.dataset.url;
             const reward = parseFloat(rectangle.getAttribute('data-reward'));
 
-            if (button.classList.contains('active') && !isButtonAnimating) {
-                isButtonAnimating = true;
-
-                const text = button.querySelector('.action-button__text');
-                const progress = button.querySelector('.action-button__progress');
-                const fill = button.querySelector('.action-button__progress-fill');
-                const check = button.querySelector('.action-button__progress-check');
-
-                // Verificar si los elementos existen antes de manipularlos
-                if (fill) {
-                    fill.style.transition = 'none';
-                    fill.style.strokeDashoffset = '125.66';
-                }
-                if (check) {
-                    check.style.transition = 'none';
-                    check.style.strokeDashoffset = '34';
-                }
-                
-                // Force reflow
-                void button.offsetWidth;
-
-                // Iniciar animación
-                button.style.width = '48px';
-                if (text) {
-                    text.style.opacity = '0';
-                }
-                
-                setTimeout(() => {
-                    button.classList.add('action-button--running');
-                    if (progress) {
-                        progress.style.visibility = 'visible';
-                        progress.style.opacity = '1';
-                    }
-                    
-                    // Animación de llenado
-                    setTimeout(() => {
-                        if (fill) {
-                            fill.style.transition = 'stroke-dashoffset 2s linear';
-                            fill.style.strokeDashoffset = '0';
-                        }
-                    }, 300);
-                }, 300);
-
-                // Llamar a la API de verificación
-                try {
-                    const response = await fetch('/verify_telegram_group', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 
-                            user_id: user_id, 
-                            url: url, 
-                            reward: reward,
-                            task_id: rectangleId
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    setTimeout(() => {
-                        button.classList.remove('action-button--running');
-                        button.classList.add('action-button--done');
-                        
-                        if (check) {
-                            check.style.transition = 'stroke-dashoffset 0.3s ease-out';
-                            check.style.strokeDashoffset = '0';
-                        }
-
-                        if (data.status === 'success') {
-                            // Actualizar el score
-                            localStorage.setItem(`score_${user_id}`, data.new_score);
-
-                            // Marcar la tarea como completada
-                            completedTasks[rectangleId] = true;
-                            localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
-                            updateRectanglesAppearance();
-
-                            // Actualizar el botón de verificación
-                            button.classList.add('inactive');
-
-                            // Animación de monedas
-                            setTimeout(() => {
-                                closeAlertMenu();
-                                animateCoins(reward);
-                            }, 1000);
-                        } else if (data.status === 'already_completed') {
-                            setTimeout(() => {
-                                closeAlertMenu();
-                            }, 1000);
-                        } else {
-                            // El usuario no está en el grupo, mostrar mensaje en burbuja
-                            setTimeout(() => {
-                                showAlertBubble("You're not a member of the group yet. Please join and try again.");
-                                const timerSeconds = 60;
-                                updateCheckButtonState(rectangleId, timerSeconds, rectangle);
-                                closeAlertMenu();
-                            }, 1000);
-                        }
-
-                        isButtonAnimating = false;
-                    }, 2300);
-                } catch (error) {
-                    console.error('Error during verification:', error);
-                    isButtonAnimating = false;
-                    showAlertBubble("An error occurred. Please try again later.");
-                    closeAlertMenu();
+            // Verificar si hay un temporizador activo
+            if (timerIntervals[rectangleId]) {
+                shakeButton(checkButton);
+                const endTime = new Date(timerIntervals[rectangleId].endTime);
+                const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
+                if (remainingSeconds > 0) {
+                    updateButtonDisplay(rectangleId, remainingSeconds);
+                    return;
                 }
             }
+
+            if (checkButton.classList.contains('inactive')) {
+                shakeButton(checkButton);
+                return;
+            }
+
+            // Iniciar animación del botón
+            startButtonAnimation(checkButton);
+
+            // Llamar a la API de verificación
+            verifyTelegramGroup(checkButton, rectangleId, url, reward);
+        }
+
+        function startButtonAnimation(button) {
+            const text = button.textContent;
+            button.innerHTML = `
+                <span class="action-button__text">${text}</span>
+                <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
+                    <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
+                    <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
+                    <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
+                </svg>
+            `;
+
+            button.classList.add('action-button', 'action-button--running');
+            button.style.width = '48px';
+            button.querySelector('.action-button__text').style.opacity = '0';
+            button.querySelector('.action-button__progress').style.visibility = 'visible';
+            button.querySelector('.action-button__progress').style.opacity = '1';
+
+            setTimeout(() => {
+                button.querySelector('.action-button__progress-fill').style.transition = 'stroke-dashoffset 2s linear';
+                button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '0';
+            }, 300);
+        }
+
+        async function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
+            const response = await fetch('/verify_telegram_group', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    user_id: user_id, 
+                    url: url, 
+                    reward: reward,
+                    task_id: rectangleId
+                })
+            });
+
+            const data = await response.json();
+            
+            setTimeout(() => {
+                checkButton.classList.remove('action-button--running');
+                checkButton.classList.add('action-button--done');
+                
+                checkButton.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
+                checkButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
+
+                setTimeout(() => {
+                    if (data.status === 'success') {
+                        handleSuccessfulVerification(checkButton, rectangleId, reward);
+                    } else if (data.status === 'already_completed') {
+                        closeAlertMenu();
+                    } else {
+                        handleFailedVerification(checkButton, rectangleId);
+                    }
+                }, 1000);
+            }, 2000);
+        }
+
+        function handleSuccessfulVerification(checkButton, rectangleId, reward) {
+            // Actualizar el score
+            localStorage.setItem(`score_${user_id}`, data.new_score);
+
+            // Marcar la tarea como completada
+            completedTasks[rectangleId] = true;
+            localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
+            updateRectanglesAppearance();
+
+            // Actualizar el botón de verificación
+            checkButton.textContent = 'Claimed';
+            checkButton.classList.remove('action-button', 'action-button--done');
+            checkButton.classList.add('inactive');
+
+            // Animación de monedas
+            closeAlertMenu();
+            animateCoins(reward);
+        }
+
+        function handleFailedVerification(checkButton, rectangleId) {
+            // El usuario no está en el grupo, mostrar mensaje en burbuja
+            showAlertBubble("You're not a member of the group yet. Please join and try again.");
+
+            const timerSeconds = 60;
+            updateCheckButtonState(rectangleId, timerSeconds, document.getElementById(rectangleId));
+
+            // Restaurar el botón a su estado original
+            checkButton.textContent = 'Check';
+            checkButton.classList.remove('action-button', 'action-button--done');
+            checkButton.classList.add('active');
         }
 
         function handleActionButtonClick(event) {
