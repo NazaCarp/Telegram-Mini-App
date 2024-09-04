@@ -1057,6 +1057,16 @@
             document.querySelector('.container').classList.add('blur-content');
             document.querySelector('.navbar').classList.add('blur-content');
 
+            // Reiniciar el estado del botón
+            const actionButton = document.getElementById('actionButton');
+            actionButton.classList.remove('action-button--running', 'action-button--done');
+            actionButton.style.width = '100%';
+            actionButton.querySelector('.action-button__text').style.opacity = '1';
+            actionButton.querySelector('.action-button__progress').style.visibility = 'hidden';
+            actionButton.querySelector('.action-button__progress').style.opacity = '0';
+            actionButton.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
+            actionButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
+
             // Eliminar el evento anterior si existe
             if (currentActionButtonListener) {
                 document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
@@ -1134,12 +1144,10 @@
                             shakeButton();
                         }
 
-                        // Cerrar la alerta después de 1 segundo, independientemente del resultado
-                        setTimeout(() => {
-                            isButtonAnimating = false;
-                            button.classList.remove('action-button--done'); // Restablecer el estado del botón
-                            closeAlertMenu();
-                        }, 1000);
+                        // Cerrar la alerta después de 1 segundo
+                        isButtonAnimating = false;
+                        button.classList.remove('action-button--done'); // Restablecer el estado del botón
+                        closeAlertMenu();
                     }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
                 }
             };
@@ -1189,6 +1197,16 @@
                     document.getElementById('actionButton').removeEventListener('click', currentActionButtonListener);
                     currentActionButtonListener = null;
                 }
+
+                // Reiniciar el estado del botón
+                const actionButton = document.getElementById('actionButton');
+                actionButton.classList.remove('action-button--running', 'action-button--done');
+                actionButton.style.width = '100%';
+                actionButton.querySelector('.action-button__text').style.opacity = '1';
+                actionButton.querySelector('.action-button__progress').style.visibility = 'hidden';
+                actionButton.querySelector('.action-button__progress').style.opacity = '0';
+                actionButton.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
+                actionButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
             }
         }
 
