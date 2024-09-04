@@ -1061,13 +1061,16 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async (event) => {
-                if (document.getElementById('actionButton').classList.contains('active') && !isButtonAnimating) {
+                const button = document.getElementById('actionButton');
+                if (button.classList.contains('active') && !isButtonAnimating) {
                     isButtonAnimating = true;
-                    const button = event.currentTarget;
-                    const track = button.querySelector('.action-button__progress-track');
+                    event.preventDefault();
+
+                    const text = button.querySelector('.action-button__text');
+                    const progress = button.querySelector('.action-button__progress');
                     const fill = button.querySelector('.action-button__progress-fill');
                     const check = button.querySelector('.action-button__progress-check');
-                    
+
                     // Reset animation state
                     fill.style.transition = 'none';
                     fill.style.strokeDashoffset = '125.66';
@@ -1076,71 +1079,69 @@
                     
                     // Force reflow
                     void button.offsetWidth;
-                    
-                    // Add a small delay before adding the running class
-                    setTimeout(() => {
-                        button.classList.add('action-button--running');
-                    }, 10);
-                    
-                    // Start animations
-                    fill.style.transition = 'stroke-dashoffset 2s 0.5s linear';
-                    fill.style.strokeDashoffset = '0';
+
+                    // Iniciar animación
+                    button.classList.add('action-button--running');
                     
                     setTimeout(async () => {
-                        button.classList.remove('action-button--running');
-                        button.classList.add('action-button--done');
+                        // Animación de llenado
+                        fill.style.transition = 'stroke-dashoffset 2s linear';
+                        fill.style.strokeDashoffset = '0';
                         
-                        check.style.transition = 'stroke-dashoffset 0.3s ease-in-out';
-                        check.style.strokeDashoffset = '0';
-                        
-                        const club_id = club.name;
-                        if (score >= currentCost) {
-                            let newLevel = currentLevel + 1;
-                            score -= currentCost;
-                            result = await updateMineLevel(user_id, club_id, newLevel);
-                            if (result.status === 'success') {
-                                document.getElementById('scoreText').textContent = formatNumber(score)
-                                levels = result.updated_clubs; // Actualizar el objeto levels completo
-                                localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
-                                updateClubLevel(club_id, newLevel, clubs, levels);
+                        setTimeout(async () => {
+                            button.classList.remove('action-button--running');
+                            button.classList.add('action-button--done');
+                            
+                            check.style.transition = 'stroke-dashoffset 0.3s ease-out';
+                            check.style.strokeDashoffset = '0';
+                            
+                            const club_id = club.name;
+                            if (score >= currentCost) {
+                                let newLevel = currentLevel + 1;
+                                score -= currentCost;
+                                result = await updateMineLevel(user_id, club_id, newLevel);
+                                if (result.status === 'success') {
+                                    document.getElementById('scoreText').textContent = formatNumber(score)
+                                    levels = result.updated_clubs; // Actualizar el objeto levels completo
+                                    localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
+                                    updateClubLevel(club_id, newLevel, clubs, levels);
 
-                                // Recalcular cost y profitPerHour para la alerta
-                                const newCost = calculateCost(club.cost, newLevel);
-                                const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
+                                    // Recalcular cost y profitPerHour para la alerta
+                                    const newCost = calculateCost(club.cost, newLevel);
+                                    const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
 
-                                // Actualizar la alerta con los nuevos valores
-                                document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(newProfitPerHour)}`;
-                                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(newCost)}</p>`;
+                                    // Actualizar la alerta con los nuevos valores
+                                    document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(newProfitPerHour)}`;
+                                    document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(newCost)}</p>`;
 
-                                // Actualizar el costo y la clase del botón
-                                const costColor = newCost <= score ? 'yellow' : 'gray';
-                                const buttonClass = newCost <= score ? 'active' : 'inactive';
-                                document.getElementById('alertCost').classList.remove('yellow', 'gray');
-                                document.getElementById('alertCost').classList.add(costColor);
-                                document.getElementById('actionButton').classList.remove('active', 'inactive');
-                                document.getElementById('actionButton').classList.add(buttonClass);
+                                    // Actualizar el costo y la clase del botón
+                                    const costColor = newCost <= score ? 'yellow' : 'gray';
+                                    const buttonClass = newCost <= score ? 'active' : 'inactive';
+                                    document.getElementById('alertCost').classList.remove('yellow', 'gray');
+                                    document.getElementById('alertCost').classList.add(costColor);
+                                    document.getElementById('actionButton').classList.remove('active', 'inactive');
+                                    document.getElementById('actionButton').classList.add(buttonClass);
 
-                                // Actualizar el profitPerHour global
-                                profitPerHour += newProfitPerHour - currentProfitPerHour;
-                                localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
-                                
-                                // Actualizar el profitPerHour en el servidor
-                                await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
-
-                                closeAlertMenu();
+                                    // Actualizar el profitPerHour global
+                                    profitPerHour += newProfitPerHour - currentProfitPerHour;
+                                    localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
+                                    
+                                    // Actualizar el profitPerHour en el servidor
+                                    await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
+                                } else {
+                                    alert('Error al actualizar el nivel');
+                                }
                             } else {
-                                alert('Error al actualizar el nivel');
+                                shakeButton();
                             }
-                        } else {
-                            shakeButton();
-                        }
 
-                        setTimeout(() => {
-                            button.classList.remove('action-button--done');
-                            isButtonAnimating = false;
-                            closeAlertMenu();
-                        }, 1000);
-                    }, 2500); // Adjusted to match the fill animation duration
+                            setTimeout(() => {
+                                button.classList.remove('action-button--done');
+                                isButtonAnimating = false;
+                                closeAlertMenu();
+                            }, 1000);
+                        }, 2000); // Ajustado para coincidir con la duración de la animación de llenado
+                    }, 300); // Pequeño retraso para permitir que la animación de transformación comience
                 }
             };
 
