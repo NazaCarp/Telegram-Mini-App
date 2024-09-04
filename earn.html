@@ -820,27 +820,37 @@
                 const check = button.querySelector('.action-button__progress-check');
 
                 // Verificar si los elementos existen antes de manipularlos
-                fill.style.transition = 'none';
-                fill.style.strokeDashoffset = '125.66';
-                check.style.transition = 'none';
-                check.style.strokeDashoffset = '34';
+                if (fill) {
+                    fill.style.transition = 'none';
+                    fill.style.strokeDashoffset = '125.66';
+                }
+                if (check) {
+                    check.style.transition = 'none';
+                    check.style.strokeDashoffset = '34';
+                }
                 
                 // Force reflow
                 void button.offsetWidth;
 
                 // Iniciar animación
                 button.style.width = '48px';
-                text.style.opacity = '0';
+                if (text) {
+                    text.style.opacity = '0';
+                }
                 
                 setTimeout(() => {
                     button.classList.add('action-button--running');
-                    progress.style.visibility = 'visible';
-                    progress.style.opacity = '1';
+                    if (progress) {
+                        progress.style.visibility = 'visible';
+                        progress.style.opacity = '1';
+                    }
                     
                     // Animación de llenado
                     setTimeout(() => {
-                        fill.style.transition = 'stroke-dashoffset 2s linear';
-                        fill.style.strokeDashoffset = '0';
+                        if (fill) {
+                            fill.style.transition = 'stroke-dashoffset 2s linear';
+                            fill.style.strokeDashoffset = '0';
+                        }
                     }, 300);
                 }, 300);
 
