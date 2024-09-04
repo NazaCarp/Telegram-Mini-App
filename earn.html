@@ -179,12 +179,12 @@
         }
 
         .action-button__progress-track {
-            stroke: rgba(1, 1, 255);
+            stroke: rgba(255, 255, 255, 0.2);
             transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
         }
 
         .action-button__progress-fill {
-            stroke: rgba(255, 0, 0, 0.5);
+            stroke: white;
             stroke-dashoffset: 125.66;
             transition: stroke-dashoffset 2s linear;
         }
@@ -849,39 +849,48 @@
             }, 300);
         }
 
-        async function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
-            const response = await fetch('/verify_telegram_group', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    user_id: user_id, 
-                    url: url, 
-                    reward: reward,
-                    task_id: rectangleId
-                })
-            });
+        function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
+            // Iniciar animación del botón
+            startButtonAnimation(checkButton);
 
-            const data = await response.json();
-            
-            setTimeout(() => {
-                checkButton.classList.remove('action-button--running');
-                checkButton.classList.add('action-button--done');
+            // Llamar a la API de verificación después de un retraso
+            setTimeout(async () => {
+                const response = await fetch('/verify_telegram_group', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        user_id: user_id, 
+                        url: url, 
+                        reward: reward,
+                        task_id: rectangleId
+                    })
+                });
+
+                const data = await response.json();
                 
-                checkButton.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
-                checkButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
+                // Finalizar animación y manejar la respuesta
+                finishButtonAnimation(checkButton, data, rectangleId, reward);
+            }, 2000); // Retraso de 2 segundos para simular la verificación
+        }
 
-                setTimeout(() => {
-                    if (data.status === 'success') {
-                        handleSuccessfulVerification(checkButton, rectangleId, reward);
-                    } else if (data.status === 'already_completed') {
-                        closeAlertMenu();
-                    } else {
-                        handleFailedVerification(checkButton, rectangleId);
-                    }
-                }, 1000);
-            }, 2000);
+        function finishButtonAnimation(button, data, rectangleId, reward) {
+            button.classList.remove('action-button--running');
+            button.classList.add('action-button--done');
+            
+            button.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
+            button.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
+
+            setTimeout(() => {
+                if (data.status === 'success') {
+                    handleSuccessfulVerification(button, rectangleId, reward);
+                } else if (data.status === 'already_completed') {
+                    closeAlertMenu();
+                } else {
+                    handleFailedVerification(button, rectangleId);
+                }
+            }, 1000);
         }
 
         function handleSuccessfulVerification(checkButton, rectangleId, reward) {
