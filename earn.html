@@ -179,26 +179,30 @@
         }
 
         .action-button__progress-track {
-            stroke: rgba(255, 255, 255, 1);
-            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
+            stroke: rgba(255, 255, 255, 0.2);
         }
 
         .action-button__progress-fill {
             stroke: white;
+            stroke-dasharray: 125.66;
             stroke-dashoffset: 125.66;
             transition: stroke-dashoffset 2s linear;
         }
 
         .action-button__progress-check {
             stroke: white;
+            stroke-dasharray: 34;
             stroke-dashoffset: 34;
             transition: stroke-dashoffset 0.3s ease-out;
         }
 
         .action-button--running,
         .action-button--done {
-            width: 48px;
+            width: 48px !important;
+            height: 48px !important;
+            padding: 0 !important;
             background-color: transparent !important;
+            border: none !important;
         }
 
         .action-button--running .action-button__text,
