@@ -354,7 +354,7 @@
             border-radius: 20px;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease-in-out;
         }
 
         .action-button.active {
@@ -372,6 +372,7 @@
         .action-button__text {
             position: relative;
             z-index: 1;
+            transition: color 0.3s ease-in-out;
         }
 
         .action-button__progress {
@@ -386,22 +387,33 @@
 
         .action-button__progress-track {
             stroke: rgba(255, 255, 255, 0.2);
+            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
         }
 
         .action-button__progress-fill {
             stroke: white;
             stroke-dashoffset: 125.66;
+            transition: stroke-dashoffset 2s linear;
         }
 
         .action-button__progress-check {
             stroke: white;
             stroke-dashoffset: 34;
+            transition: stroke-dashoffset 0.3s ease-out;
+        }
+
+        .action-button--running,
+        .action-button--done {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border-radius: 50%;
+            background-color: transparent !important;
         }
 
         .action-button--running .action-button__text,
         .action-button--done .action-button__text {
-            opacity: 0;
-            transition: opacity 0.15s ease-in-out;
+            color: transparent;
         }
 
         .action-button--running .action-button__progress,
@@ -411,24 +423,14 @@
 
         .action-button--running .action-button__progress-track {
             stroke-width: 8;
-            transition: stroke-width 0.3s 0.3s ease-in-out;
         }
 
         .action-button--running .action-button__progress-fill {
             stroke-dashoffset: 0;
-            transition: stroke-dashoffset 2s 0.6s linear;
         }
 
         .action-button--done .action-button__progress-check {
             stroke-dashoffset: 0;
-            transition: stroke-dashoffset 0.3s 0.3s ease-out;
-        }
-
-        .action-button--running,
-        .action-button--done {
-            background-color: transparent !important;
-            height: 68px; /* Increased height to accommodate the full circle */
-            padding: 0;
         }
 
         .ripple {
