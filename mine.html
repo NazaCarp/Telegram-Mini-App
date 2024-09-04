@@ -348,10 +348,11 @@
             position: relative;
             overflow: hidden;
             width: 100%;
+            height: 48px; /* Altura fija para mantener consistencia */
             margin-top: 10px;
-            padding: 10px 20px;
+            padding: 0;
             border: none;
-            border-radius: 20px;
+            border-radius: 24px; /* La mitad de la altura para un círculo perfecto */
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease-in-out;
@@ -370,19 +371,23 @@
 
         /* Estilos para la animación del botón */
         .action-button__text {
-            position: relative;
-            z-index: 1;
-            transition: color 0.3s ease-in-out;
-        }
-
-        .action-button__progress {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
+            width: 100%;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .action-button__progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
         }
 
         .action-button__progress-track {
@@ -405,20 +410,18 @@
         .action-button--running,
         .action-button--done {
             width: 48px;
-            height: 48px;
-            padding: 0;
-            border-radius: 50%;
             background-color: transparent !important;
         }
 
         .action-button--running .action-button__text,
         .action-button--done .action-button__text {
-            color: transparent;
+            opacity: 0;
         }
 
         .action-button--running .action-button__progress,
         .action-button--done .action-button__progress {
             visibility: visible;
+            opacity: 1;
         }
 
         .action-button--running .action-button__progress-track {
@@ -1083,65 +1086,65 @@
                     // Iniciar animación
                     button.classList.add('action-button--running');
                     
-                    setTimeout(async () => {
-                        // Animación de llenado
+                    // Animación de llenado
+                    setTimeout(() => {
                         fill.style.transition = 'stroke-dashoffset 2s linear';
                         fill.style.strokeDashoffset = '0';
+                    }, 300);
+
+                    setTimeout(async () => {
+                        button.classList.remove('action-button--running');
+                        button.classList.add('action-button--done');
                         
-                        setTimeout(async () => {
-                            button.classList.remove('action-button--running');
-                            button.classList.add('action-button--done');
-                            
-                            check.style.transition = 'stroke-dashoffset 0.3s ease-out';
-                            check.style.strokeDashoffset = '0';
-                            
-                            const club_id = club.name;
-                            if (score >= currentCost) {
-                                let newLevel = currentLevel + 1;
-                                score -= currentCost;
-                                result = await updateMineLevel(user_id, club_id, newLevel);
-                                if (result.status === 'success') {
-                                    document.getElementById('scoreText').textContent = formatNumber(score)
-                                    levels = result.updated_clubs; // Actualizar el objeto levels completo
-                                    localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
-                                    updateClubLevel(club_id, newLevel, clubs, levels);
+                        check.style.transition = 'stroke-dashoffset 0.3s ease-out';
+                        check.style.strokeDashoffset = '0';
+                        
+                        const club_id = club.name;
+                        if (score >= currentCost) {
+                            let newLevel = currentLevel + 1;
+                            score -= currentCost;
+                            result = await updateMineLevel(user_id, club_id, newLevel);
+                            if (result.status === 'success') {
+                                document.getElementById('scoreText').textContent = formatNumber(score)
+                                levels = result.updated_clubs; // Actualizar el objeto levels completo
+                                localStorage.setItem(`mine_levels_${user_id}`, JSON.stringify(levels));
+                                updateClubLevel(club_id, newLevel, clubs, levels);
 
-                                    // Recalcular cost y profitPerHour para la alerta
-                                    const newCost = calculateCost(club.cost, newLevel);
-                                    const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
+                                // Recalcular cost y profitPerHour para la alerta
+                                const newCost = calculateCost(club.cost, newLevel);
+                                const newProfitPerHour = calculateProfitPerHour(club.cost, newLevel, club.name);
 
-                                    // Actualizar la alerta con los nuevos valores
-                                    document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(newProfitPerHour)}`;
-                                    document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(newCost)}</p>`;
+                                // Actualizar la alerta con los nuevos valores
+                                document.getElementById('alertSecondSubtitle').innerText = `${formatNumber(newProfitPerHour)}`;
+                                document.getElementById('alertCost').innerHTML = `<p><iconify-icon icon="twemoji:coin" style="font-size: 35px;"></iconify-icon> ${formatNumber(newCost)}</p>`;
 
-                                    // Actualizar el costo y la clase del botón
-                                    const costColor = newCost <= score ? 'yellow' : 'gray';
-                                    const buttonClass = newCost <= score ? 'active' : 'inactive';
-                                    document.getElementById('alertCost').classList.remove('yellow', 'gray');
-                                    document.getElementById('alertCost').classList.add(costColor);
-                                    document.getElementById('actionButton').classList.remove('active', 'inactive');
-                                    document.getElementById('actionButton').classList.add(buttonClass);
+                                // Actualizar el costo y la clase del botón
+                                const costColor = newCost <= score ? 'yellow' : 'gray';
+                                const buttonClass = newCost <= score ? 'active' : 'inactive';
+                                document.getElementById('alertCost').classList.remove('yellow', 'gray');
+                                document.getElementById('alertCost').classList.add(costColor);
+                                document.getElementById('actionButton').classList.remove('active', 'inactive');
+                                document.getElementById('actionButton').classList.add(buttonClass);
 
-                                    // Actualizar el profitPerHour global
-                                    profitPerHour += newProfitPerHour - currentProfitPerHour;
-                                    localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
-                                    
-                                    // Actualizar el profitPerHour en el servidor
-                                    await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
-                                } else {
-                                    alert('Error al actualizar el nivel');
-                                }
+                                // Actualizar el profitPerHour global
+                                profitPerHour += newProfitPerHour - currentProfitPerHour;
+                                localStorage.setItem(`profit_per_hour_${user_id}`, profitPerHour);
+                                
+                                // Actualizar el profitPerHour en el servidor
+                                await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
                             } else {
-                                shakeButton();
+                                alert('Error al actualizar el nivel');
                             }
+                        } else {
+                            shakeButton();
+                        }
 
-                            setTimeout(() => {
-                                button.classList.remove('action-button--done');
-                                isButtonAnimating = false;
-                                closeAlertMenu();
-                            }, 1000);
-                        }, 2000); // Ajustado para coincidir con la duración de la animación de llenado
-                    }, 300); // Pequeño retraso para permitir que la animación de transformación comience
+                        setTimeout(() => {
+                            button.classList.remove('action-button--done');
+                            isButtonAnimating = false;
+                            // No cerramos el menú de alerta aquí para permitir compras múltiples
+                        }, 1000);
+                    }, 2300); // 2000ms para el llenado + 300ms de delay inicial
                 }
             };
 
