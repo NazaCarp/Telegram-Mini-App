@@ -1135,10 +1135,8 @@
                         }
 
                         // Cerrar la alerta después de 1 segundo, independientemente del resultado
-                        setTimeout(() => {
-                            closeAlertMenu();
-                            isButtonAnimating = false;
-                        }, 1000);
+                        closeAlertMenu();
+                        isButtonAnimating = false;
                     }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
                 }
             };
