@@ -1079,6 +1079,12 @@
                     isButtonAnimating = true;
                     event.preventDefault();
 
+                    if (score < currentCost) {
+                        shakeButton();
+                        isButtonAnimating = false;
+                        return;
+                    }
+
                     const text = button.querySelector('.action-button__text');
                     const progress = button.querySelector('.action-button__progress');
                     const fill = button.querySelector('.action-button__progress-fill');
