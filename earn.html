@@ -737,7 +737,7 @@
 
             // Verificar si hay un temporizador activo
             if (timerIntervals[rectangleId]) {
-                shakeButton();
+                await shakeButton();
                 const endTime = new Date(timerIntervals[rectangleId].endTime);
                 const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
                 if (remainingSeconds > 0) {
