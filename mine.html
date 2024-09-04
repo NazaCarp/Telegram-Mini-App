@@ -1127,20 +1127,18 @@
                                 
                                 // Actualizar el profitPerHour en el servidor
                                 await updateProfitPerHour(user_id, newProfitPerHour - currentProfitPerHour);
-
-                                // Cerrar la alerta después de 1 segundo
-                                setTimeout(() => {
-                                    closeAlertMenu();
-                                    isButtonAnimating = false;
-                                }, 1000);
                             } else {
                                 alert('Error al actualizar el nivel');
-                                isButtonAnimating = false;
                             }
                         } else {
                             shakeButton();
-                            isButtonAnimating = false;
                         }
+
+                        // Cerrar la alerta después de 1 segundo, independientemente del resultado
+                        setTimeout(() => {
+                            closeAlertMenu();
+                            isButtonAnimating = false;
+                        }, 1000);
                     }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
                 }
             };
