@@ -1073,16 +1073,14 @@
 
             // Asignar un nuevo evento
             currentActionButtonListener = async (event) => {
+                if (score < currentCost) {
+                    shakeButton();
+                    return;
+                }
                 const button = document.getElementById('actionButton');
                 if (button.classList.contains('active') && !isButtonAnimating) {
                     isButtonAnimating = true;
                     event.preventDefault();
-
-                    if (score < currentCost) {
-                        shakeButton();
-                        isButtonAnimating = false;
-                        return;
-                    }
 
                     const text = button.querySelector('.action-button__text');
                     const progress = button.querySelector('.action-button__progress');
