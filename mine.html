@@ -1137,6 +1137,7 @@
                         // Cerrar la alerta después de 1 segundo, independientemente del resultado
                         setTimeout(() => {
                             isButtonAnimating = false;
+                            button.classList.remove('action-button--done'); // Restablecer el estado del botón
                             closeAlertMenu();
                         }, 1000);
                     }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
