@@ -805,6 +805,7 @@
 
             if (button.classList.contains('active') && !isButtonAnimating) {
                 isButtonAnimating = true;
+                alert('Holaza')
 
                 const text = button.querySelector('.action-button__text');
                 const progress = button.querySelector('.action-button__progress');
@@ -823,7 +824,7 @@
                 // Iniciar animación
                 button.style.width = '48px';
                 text.style.opacity = '0';
-                
+                alert('Niuma')
                 setTimeout(() => {
                     button.classList.add('action-button--running');
                     progress.style.visibility = 'visible';
@@ -835,8 +836,6 @@
                         fill.style.strokeDashoffset = '0';
                     }, 300);
                 }, 300);
-
-                alert('Holaza')
 
                 // Llamar a la API de verificación
                 const response = await fetch('/verify_telegram_group', {
