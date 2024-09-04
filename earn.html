@@ -820,14 +820,10 @@
                 const check = button.querySelector('.action-button__progress-check');
 
                 // Verificar si los elementos existen antes de manipularlos
-                if (fill) {
-                    fill.style.transition = 'none';
-                    fill.style.strokeDashoffset = '125.66';
-                }
-                if (check) {
-                    check.style.transition = 'none';
-                    check.style.strokeDashoffset = '34';
-                }
+                fill.style.transition = 'none';
+                fill.style.strokeDashoffset = '125.66';
+                check.style.transition = 'none';
+                check.style.strokeDashoffset = '34';
                 
                 // Force reflow
                 void button.offsetWidth;
