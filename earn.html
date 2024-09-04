@@ -484,7 +484,6 @@
                 if (completedTasks[rectangle.id]) {
                     checkButton.innerText = 'Claimed';
                     checkButton.classList.add('inactive');
-                    checkButton.disabled = true;
                 } else if (timerIntervals[rectangle.id]) {
                     const endTime = new Date(timerIntervals[rectangle.id].endTime);
                     const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
@@ -537,7 +536,6 @@
                 const remainingMinutes = Math.ceil((timer.endTime - now) / (60 * 1000));
                 checkButton.innerText = `${remainingMinutes}m`;
                 checkButton.classList.add('inactive');
-                checkButton.disabled = true;
 
                 setTimeout(() => updateVideoCheckButton(videoId, checkButton), 60 * 1000); // Update every minute
             } else if (!timer.claimed) {
@@ -548,7 +546,6 @@
             } else {
                 checkButton.innerText = 'Claimed';
                 checkButton.classList.add('inactive');
-                checkButton.disabled = true;
             }
         }
 
@@ -585,7 +582,6 @@
                 // Update UI
                 checkButton.innerText = 'Claimed';
                 checkButton.classList.add('inactive');
-                checkButton.disabled = true;
 
                 completedTasks = data.completed_tasks;
             
@@ -718,7 +714,6 @@
                 const remainingMinutes = Math.ceil((timer.endTime - now) / (60 * 1000));
                 checkButton.innerText = `${remainingMinutes}m`;
                 checkButton.classList.add('inactive');
-                checkButton.disabled = true;
 
                 setTimeout(() => updateVideoCheckButtonState(videoId, checkButton), 60 * 1000); // Update every minute
             } else if (!timer.claimed) {
@@ -729,7 +724,6 @@
             } else {
                 checkButton.innerText = 'Claimed';
                 checkButton.classList.add('inactive');
-                checkButton.disabled = true;
             }
         }
 
@@ -742,12 +736,18 @@
 
             // Verificar si hay un temporizador activo
             if (timerIntervals[rectangleId]) {
+                shakeButton();
                 const endTime = new Date(timerIntervals[rectangleId].endTime);
                 const remainingSeconds = Math.ceil((endTime - new Date()) / 1000);
                 if (remainingSeconds > 0) {
                     updateButtonDisplay(rectangleId, remainingSeconds);
                     return;
                 }
+            }
+
+            if (this.classList.contains('inactive')) {
+                shakeButton();
+                return;
             }
 
             // Llamar a la API de verificación
@@ -777,10 +777,9 @@
                 // Actualizar el botón de verificación
                 checkButton.innerText = 'Claimed';
                 checkButton.classList.add('inactive');
-                checkButton.disabled = true;
 
                 // Animación de monedas
-                closeAlertMenu(); // Cerrar el menú de alerta antes de la animación
+                closeAlertMenu();
                 animateCoins(reward);
             } else if (data.status === 'already_completed') {
                 closeAlertMenu();
