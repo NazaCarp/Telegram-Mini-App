@@ -830,23 +830,17 @@
 
                 // Iniciar animación
                 button.style.width = '48px';
-                if (text) {
-                    text.style.opacity = '0';
-                }
+                text.style.opacity = '0';
                 
                 setTimeout(() => {
                     button.classList.add('action-button--running');
-                    if (progress) {
-                        progress.style.visibility = 'visible';
-                        progress.style.opacity = '1';
-                    }
+                    progress.style.visibility = 'visible';
+                    progress.style.opacity = '1';
                     
                     // Animación de llenado
                     setTimeout(() => {
-                        if (fill) {
-                            fill.style.transition = 'stroke-dashoffset 2s linear';
-                            fill.style.strokeDashoffset = '0';
-                        }
+                        fill.style.transition = 'stroke-dashoffset 2s linear';
+                        fill.style.strokeDashoffset = '0';
                     }, 300);
                 }, 300);
 
