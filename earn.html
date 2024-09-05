@@ -658,13 +658,6 @@
                     
                     // Update UI
                     checkButton.innerText = 'Claimed';
-                    checkButton.classList.add('inactive');
-
-                    completedTasks = data.completed_tasks;
-                
-                    // Guardar datos en localStorage
-                    localStorage.setItem(`score_${user_id}`, data.new_score);
-                    localStorage.setItem(`completed_tasks_${user_id}`, JSON.stringify(completedTasks));
                     
                     // Finalizar animación y manejar la respuesta
                     finishButtonAnimation(checkButton, data, videoId, reward);
