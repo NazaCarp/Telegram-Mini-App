@@ -149,7 +149,6 @@
         }
 
         .action-button.active {
-            transform: translateY(0.1em);
             background-color: #0066ff;
             color: white;
         }
@@ -856,37 +855,28 @@
                 </svg>
             `;
 
-            event.preventDefault();
+            button.classList.remove('action-button--running', 'action-button--done');
+            button.style.width = '100%';
+            button.querySelector('.action-button__text').style.opacity = '1';
+            button.querySelector('.action-button__progress').style.visibility = 'hidden';
+            button.querySelector('.action-button__progress').style.opacity = '0';
+            button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
+            button.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
 
-            const text2 = button.querySelector('.action-button__text');
-            const progress = button.querySelector('.action-button__progress');
-            const fill = button.querySelector('.action-button__progress-fill');
-            const check = button.querySelector('.action-button__progress-check');
+            button.classList.add('action-button', 'action-button--running');
+            button.style.width = '48px';
+            button.querySelector('.action-button__text').style.opacity = '0';
+            button.querySelector('.action-button__progress').style.visibility = 'visible';
+            button.querySelector('.action-button__progress').style.opacity = '1';
 
-            // Reset animation state
-            fill.style.transition = 'none';
-            fill.style.strokeDashoffset = '125.66';
-            check.style.transition = 'none';
-            check.style.strokeDashoffset = '34';
-            
-            // Force reflow
+            // Forzar un reflow antes de iniciar la animación
             void button.offsetWidth;
 
-            // Iniciar animación
-            button.style.width = '48px';
-            text2.style.opacity = '0';
-            
             setTimeout(() => {
-                button.classList.add('action-button--running');
-                progress.style.visibility = 'visible';
-                progress.style.opacity = '1';
-                
-                // Animación de llenado
-                setTimeout(() => {
-                    fill.style.transition = 'stroke-dashoffset 2s linear';
-                    fill.style.strokeDashoffset = '0';
-                }, 300);
-            }, 300);
+                const fill = button.querySelector('.action-button__progress-fill');
+                fill.style.transition = 'stroke-dashoffset 2s linear';
+                fill.style.strokeDashoffset = '0';
+            }, 100);
         }
 
         function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
