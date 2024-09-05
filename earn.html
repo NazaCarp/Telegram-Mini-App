@@ -469,14 +469,7 @@
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="alertReward" id="alertReward"></div>
         <button class="action-button" id="actionButton">Follow</button>
-        <button class="action-button" id="actionButton">
-            <span class="action-button__text">Check</span>
-            <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
-                <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
-                <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
-                <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
-            </svg>
-        </button>
+        <button class="action-button" id="checkButton">Check</button>
     </div>
 </div>
 <div class="daily-reward-menu" id="dailyRewardMenu">
@@ -835,15 +828,14 @@
 
         function startButtonAnimation(button) {
             const text = button.textContent;
-
-            button = document.getElementById('actionButton');
-            button.classList.remove('action-button--running', 'action-button--done');
-            button.style.width = '100%';
-            button.querySelector('.action-button__text').style.opacity = '1';
-            button.querySelector('.action-button__progress').style.visibility = 'hidden';
-            button.querySelector('.action-button__progress').style.opacity = '0';
-            button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
-            button.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
+            button.innerHTML = `
+                <span class="action-button__text">${text}</span>
+                <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
+                    <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
+                    <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
+                    <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
+                </svg>
+            `;
 
             button.classList.add('action-button', 'action-button--running');
             button.style.width = '48px';
