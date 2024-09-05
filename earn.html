@@ -856,28 +856,29 @@
                 </svg>
             `;
 
-            button.classList.remove('action-button--running', 'action-button--done');
-            button.style.width = '100%';
-            button.querySelector('.action-button__text').style.opacity = '1';
-            button.querySelector('.action-button__progress').style.visibility = 'hidden';
-            button.querySelector('.action-button__progress').style.opacity = '0';
+            button.querySelector('.action-button__progress-fill').style.transition = 'none';
             button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
+            button.querySelector('.action-button__progress-check').style.transition = 'none';
             button.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
-
-            button.classList.add('action-button', 'action-button--running');
-            button.style.width = '48px';
-            button.querySelector('.action-button__text').style.opacity = '0';
-            button.querySelector('.action-button__progress').style.visibility = 'visible';
-            button.querySelector('.action-button__progress').style.opacity = '1';
 
             // Forzar un reflow antes de iniciar la animación
             void button.offsetWidth;
 
+            button.style.width = '48px';
+            button.querySelector('.action-button__text').style.opacity = '0';
+            
             setTimeout(() => {
-                const fill = button.querySelector('.action-button__progress-fill');
-                fill.style.transition = 'stroke-dashoffset 2s linear';
-                fill.style.strokeDashoffset = '0';
-            }, 100);
+                const progress = button.querySelector('.action-button__progress');
+                button.classList.add('action-button--running');
+                progress.style.visibility = 'visible';
+                progress.style.opacity = '1';
+                
+                // Animación de llenado
+                setTimeout(() => {
+                    fill.style.transition = 'stroke-dashoffset 2s linear';
+                    fill.style.strokeDashoffset = '0';
+                }, 300);
+            }, 300);
         }
 
         function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
