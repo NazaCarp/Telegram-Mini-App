@@ -866,6 +866,16 @@
                     fill.style.strokeDashoffset = '0';
                 }, 300);
             }, 300);
+
+            setTimeout(async () => {
+                button.classList.remove('action-button--running');
+                button.classList.add('action-button--done');
+                        
+                check.style.transition = 'stroke-dashoffset 0.3s ease-out';
+                check.style.strokeDashoffset = '0';
+
+                button.classList.remove('action-button--done'); // Restablecer el estado del botón
+            }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
         }
 
         function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
