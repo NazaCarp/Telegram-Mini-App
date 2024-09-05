@@ -866,16 +866,6 @@
                     fill.style.strokeDashoffset = '0';
                 }, 300);
             }, 300);
-
-            setTimeout(async () => {
-                button.classList.remove('action-button--running');
-                button.classList.add('action-button--done');
-                        
-                check.style.transition = 'stroke-dashoffset 0.3s ease-out';
-                check.style.strokeDashoffset = '0';
-
-                button.classList.remove('action-button--done'); // Restablecer el estado del botón
-            }, 2600); // 300ms inicial + 300ms para comenzar + 2000ms para el llenado
         }
 
         function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
@@ -898,6 +888,9 @@
                 });
 
                 const data = await response.json();
+                
+                // Finalizar animación y manejar la respuesta
+                finishButtonAnimation(checkButton, data, rectangleId, reward);
             }, 2300); // Retraso de 2.3 segundos para simular la verificación
         }
 
@@ -947,7 +940,7 @@
 
             // Restaurar el botón a su estado original
             checkButton.textContent = 'Check';
-            checkButton.classList.remove('action-button', 'action-button--done');
+            checkButton.classList.remove('action-button--done');
             checkButton.classList.add('active');
         }
 
