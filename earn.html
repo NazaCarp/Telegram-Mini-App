@@ -165,11 +165,6 @@
                 color 0.15s 0.3s ease-in-out;
             width: 100%;
         }
-
-        .action-button:not(:disabled):focus .action-button__text,
-        .action-button:not(:disabled):hover .action-button__text {
-            background-color: var(--primary2);
-        }
         .action-button__progress {
             overflow: visible;
             position: absolute;
@@ -180,12 +175,11 @@
             visibility: hidden;
         }
         .action-button__progress-track {
-            r: 12px;
-            stroke: var(--bg2);
+            stroke: rgba(255, 255, 255, 0.2);
             stroke-width: 24;
         }
         .action-button__progress-fill {
-            stroke: var(--primary1);
+            stroke: white;
             stroke-dashoffset: 125.66;
         }
         .action-button__progress-check {
@@ -217,14 +211,13 @@
 
         /* Running state */
         .action-button--running .action-button__text {
-            background-color: var(--bg2);
+            background-color: red;
             visibility: hidden;
         }
         .action-button--running .action-button__progress {
             transition: visibility 0.3s 0.3s steps(1,start);
         }
         .action-button--running .action-button__progress-track {
-            r: 20px;
             stroke-width: 8;
             transition:
                 r 0.3s 0.3s ease-in-out,
@@ -237,7 +230,7 @@
 
         /* Done state */
         .action-button--done .action-button__progress-track {
-            stroke: var(--primary1);
+            stroke: blue;
             transition:
                 r 0.3s ease-in-out,
                 stroke-width 0.3s ease-in-out;
