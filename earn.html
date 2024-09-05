@@ -668,11 +668,11 @@
                     updateRectanglesAppearance();
 
                     // Finalizar animación y manejar la respuesta
-                    button.classList.remove('action-button--running');
-                    button.classList.add('action-button--done');
+                    checkButton.classList.remove('action-button--running');
+                    checkButton.classList.add('action-button--done');
                     
-                    button.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
-                    button.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
+                    checkButton.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
+                    checkButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
 
                     // Animación de monedas
                     closeAlertMenu();
