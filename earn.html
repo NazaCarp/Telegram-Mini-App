@@ -158,91 +158,71 @@
             color: white;
         }
 
+        /* Estilos para la animación del botón */
         .action-button__text {
-            background-color: black;
-            border-radius: inherit;
-            color: hsl(0,0%,100%);
-            display: inline-block;
-            padding: 0.75em 1.5em;
-            transition:
-                background-color 0.15s linear,
-                color 0.15s 0.3s ease-in-out;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 100%;
+            transition: opacity 0.3s ease-in-out;
         }
 
         .action-button__progress {
-            overflow: visible;
             position: absolute;
             top: 0;
             left: 0;
-            width: 3em;
-            height: 3em;
+            width: 100%;
+            height: 100%;
             visibility: hidden;
-        }
-        .action-button__progress-track {
-            stroke: rgba(255, 255, 255, 0.2);
-            stroke-width: 24;
-        }
-        .action-button__progress-fill {
-            stroke: rgba(1, 1, 1, 0.2);
-            stroke-dashoffset: 125.66;
-        }
-        .action-button__progress-check {
-            stroke: hsl(0,0%,100%);
-            stroke-dashoffset: 34;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
         }
 
-        /* Both states */
+        .action-button__progress-track {
+            stroke: rgba(255, 255, 255, 0.2);
+            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
+        }
+
+        .action-button__progress-fill {
+            stroke: white;
+            stroke-dashoffset: 125.66;
+            transition: stroke-dashoffset 2s linear;
+        }
+
+        .action-button__progress-check {
+            stroke: white;
+            stroke-dashoffset: 34;
+            transition: stroke-dashoffset 0.3s ease-out;
+        }
+
         .action-button--running,
         .action-button--done {
-            outline: none;
-            pointer-events: none;
-            width: 3em;
-            user-select: none;
-            -moz-user-select: none;
-            -webkit-user-select: none;
+            width: 48px;
+            background-color: transparent !important;
         }
+
         .action-button--running .action-button__text,
         .action-button--done .action-button__text {
-            color: transparent;
-            transition:
-                background-color 0.3s ease-in-out,
-                visibility 0.3s steps(1);
+            opacity: 0;
         }
+
         .action-button--running .action-button__progress,
         .action-button--done .action-button__progress {
             visibility: visible;
+            opacity: 1;
         }
 
-        /* Running state */
-        .action-button--running .action-button__text {
-            background-color: red;
-            visibility: hidden;
-        }
-        .action-button--running .action-button__progress {
-            transition: visibility 0.3s 0.3s steps(1,start);
-        }
         .action-button--running .action-button__progress-track {
             stroke-width: 8;
-            transition:
-                r 0.3s 0.3s ease-in-out,
-                stroke-width 0.3s 0.3s ease-in-out;
-        }
-        .action-button--running .action-button__progress-fill {
-            stroke-dashoffset: 0;
-            transition: stroke-dashoffset 2s 0.6s linear;
         }
 
-        /* Done state */
-        .action-button--done .action-button__progress-track {
-            stroke: blue;
-            transition:
-                r 0.3s ease-in-out,
-                stroke-width 0.3s ease-in-out;
+        .action-button--running .action-button__progress-fill {
+            stroke-dashoffset: 0;
         }
+
         .action-button--done .action-button__progress-check {
             stroke-dashoffset: 0;
-            transition: stroke-dashoffset 0.3s 0.3s ease-out;
         }
 
         .alert-menu {
@@ -855,28 +835,37 @@
                 </svg>
             `;
 
-            button.classList.remove('action-button--running', 'action-button--done');
-            button.style.width = '100%';
-            button.querySelector('.action-button__text').style.opacity = '1';
-            button.querySelector('.action-button__progress').style.visibility = 'hidden';
-            button.querySelector('.action-button__progress').style.opacity = '0';
-            button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
-            button.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
+            event.preventDefault();
 
-            button.classList.add('action-button', 'action-button--running');
-            button.style.width = '48px';
-            button.querySelector('.action-button__text').style.opacity = '0';
-            button.querySelector('.action-button__progress').style.visibility = 'visible';
-            button.querySelector('.action-button__progress').style.opacity = '1';
+            const text2 = button.querySelector('.action-button__text');
+            const progress = button.querySelector('.action-button__progress');
+            const fill = button.querySelector('.action-button__progress-fill');
+            const check = button.querySelector('.action-button__progress-check');
 
-            // Forzar un reflow antes de iniciar la animación
+            // Reset animation state
+            fill.style.transition = 'none';
+            fill.style.strokeDashoffset = '125.66';
+            check.style.transition = 'none';
+            check.style.strokeDashoffset = '34';
+            
+            // Force reflow
             void button.offsetWidth;
 
+            // Iniciar animación
+            button.style.width = '48px';
+            text2.style.opacity = '0';
+            
             setTimeout(() => {
-                const fill = button.querySelector('.action-button__progress-fill');
-                fill.style.transition = 'stroke-dashoffset 2s linear';
-                fill.style.strokeDashoffset = '0';
-            }, 100);
+                button.classList.add('action-button--running');
+                progress.style.visibility = 'visible';
+                progress.style.opacity = '1';
+                
+                // Animación de llenado
+                setTimeout(() => {
+                    fill.style.transition = 'stroke-dashoffset 2s linear';
+                    fill.style.strokeDashoffset = '0';
+                }, 300);
+            }, 300);
         }
 
         function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
