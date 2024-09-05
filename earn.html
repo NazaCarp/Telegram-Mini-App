@@ -1271,7 +1271,7 @@
             // Intentar cargar datos desde localStorage
             let storedData = localStorage.getItem(`user_data_${user_id}`);
             
-            if (1 === 1 || !storedData || isDataInvalid(JSON.parse(storedData))) {
+            if (!storedData || isDataInvalid(JSON.parse(storedData))) {
                 // Si no hay datos almacenados o son inválidos, obtener del servidor
                 try {
                     const response = await fetch(`/get_user_data?user_id=${user_id}`);
@@ -1300,7 +1300,7 @@
         async function loadCompletedTasks() {
             let tasksStored = localStorage.getItem(`completed_tasks_${user_id}`);
             
-            if (1 === 1 || !tasksStored || !isValidJSON(tasksStored)) {
+            if (!tasksStored || !isValidJSON(tasksStored)) {
                 try {
                     const response = await fetch(`/get_completed_tasks?user_id=${user_id}`);
                     const data = await response.json();
