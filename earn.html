@@ -909,6 +909,11 @@
                 } else {
                     handleFailedVerification(button, rectangleId);
                 }
+                 
+                // Restaurar el ancho original del botón
+                button.style.width = '100%';
+                button.classList.remove('action-button--done');
+                button.innerHTML = button.textContent;
             }, 1000);
         }
 
