@@ -155,69 +155,96 @@
         }
 
         .action-button__text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            background-color: var(--primary1);
+            border-radius: inherit;
+            color: hsl(0,0%,100%);
+            display: inline-block;
+            padding: 0.75em 1.5em;
+            transition:
+                background-color 0.15s linear,
+                color 0.15s 0.3s ease-in-out;
             width: 100%;
-            transition: opacity 0.3s ease-in-out;
         }
 
+        .action-button:not(:disabled):focus .action-button__text,
+        .action-button:not(:disabled):hover .action-button__text {
+            background-color: var(--primary2);
+        }
         .action-button__progress {
+            overflow: visible;
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 3em;
+            height: 3em;
             visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s, opacity 0.3s;
         }
-
         .action-button__progress-track {
-            stroke: rgba(255, 255, 255, 0.2);
-            transition: r 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
+            r: 12px;
+            stroke: var(--bg2);
+            stroke-width: 24;
         }
-
         .action-button__progress-fill {
-            stroke: white;
+            stroke: var(--primary1);
             stroke-dashoffset: 125.66;
-            transition: stroke-dashoffset 2s linear;
         }
-
         .action-button__progress-check {
-            stroke: white;
+            stroke: hsl(0,0%,100%);
             stroke-dashoffset: 34;
-            transition: stroke-dashoffset 0.3s ease-out;
         }
 
+        /* Both states */
         .action-button--running,
         .action-button--done {
-            width: 48px;
-            background-color: transparent !important;
+            outline: none;
+            pointer-events: none;
+            width: 3em;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
         }
-
         .action-button--running .action-button__text,
         .action-button--done .action-button__text {
-            opacity: 0;
+            color: transparent;
+            transition:
+                background-color 0.3s ease-in-out,
+                visibility 0.3s steps(1);
         }
-
         .action-button--running .action-button__progress,
         .action-button--done .action-button__progress {
             visibility: visible;
-            opacity: 1;
         }
 
+        /* Running state */
+        .action-button--running .action-button__text {
+            background-color: var(--bg2);
+            visibility: hidden;
+        }
+        .action-button--running .action-button__progress {
+            transition: visibility 0.3s 0.3s steps(1,start);
+        }
         .action-button--running .action-button__progress-track {
+            r: 20px;
             stroke-width: 8;
+            transition:
+                r 0.3s 0.3s ease-in-out,
+                stroke-width 0.3s 0.3s ease-in-out;
         }
-
         .action-button--running .action-button__progress-fill {
             stroke-dashoffset: 0;
+            transition: stroke-dashoffset 2s 0.6s linear;
         }
 
+        /* Done state */
+        .action-button--done .action-button__progress-track {
+            stroke: var(--primary1);
+            transition:
+                r 0.3s ease-in-out,
+                stroke-width 0.3s ease-in-out;
+        }
         .action-button--done .action-button__progress-check {
             stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.3s 0.3s ease-out;
         }
 
         .alert-menu {
