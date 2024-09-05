@@ -630,6 +630,7 @@
                 // Si aún no ha pasado el tiempo, mostrar el tiempo restante
                 const remainingMinutes = Math.ceil((timer.endTime - now) / (60 * 1000));
                 checkButton.innerText = `${remainingMinutes}m`;
+                shakeButton(checkButton);
                 return;
             }
 
