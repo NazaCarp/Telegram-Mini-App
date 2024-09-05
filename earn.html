@@ -667,7 +667,7 @@
                     checkButton.classList.remove('action-button--running');
                     checkButton.classList.add('action-button--done');
                     
-                    let progressCheck = checkButton.querySelector('.action-button__progress-check');
+                    /* let progressCheck = checkButton.querySelector('.action-button__progress-check');
                     if (!progressCheck) {
                         // Crear un elemento de fallback si no existe
                         progressCheck = document.createElement('div');
@@ -675,7 +675,13 @@
                         checkButton.appendChild(progressCheck);
                     }
                     progressCheck.style.transition = 'stroke-dashoffset 0.3s ease-out';
-                    progressCheck.style.strokeDashoffset = '0';
+                    progressCheck.style.strokeDashoffset = '0'; */
+
+                    const progressCheck = checkButton.querySelector('.action-button__progress-check');
+                    if (progressCheck) {
+                        progressCheck.style.transition = 'stroke-dashoffset 0.3s ease-out';
+                        progressCheck.style.strokeDashoffset = '0';
+                    }
 
                     closeAlertMenu();
                     animateCoins(reward);
