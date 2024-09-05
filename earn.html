@@ -658,7 +658,8 @@
                     
                     // Update UI
                     checkButton.innerText = 'Claimed';
-                    
+                    checkButton.classList.add('inactive');
+
                     completedTasks = data.completed_tasks;
                 
                     // Guardar datos en localStorage
@@ -667,15 +668,22 @@
                     updateRectanglesAppearance();
 
                     // Finalizar animación
+                    alert('Hola')
                     checkButton.classList.remove('action-button--running');
+                    alert('HOLA')
                     checkButton.classList.add('action-button--done');
+                    alert('cómo')
                     
                     checkButton.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
+                    alert('CÓMO')
                     checkButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
+                    alert('estás')
 
                     // Animación de monedas
                     closeAlertMenu();
+                    alert('ESTÁS')
                     animateCoins(reward);
+                    alert('?')
                 } else {
                     alert(data.error);
                 }
