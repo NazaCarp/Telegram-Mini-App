@@ -155,7 +155,7 @@
         }
 
         .action-button__text {
-            background-color: var(--primary1);
+            background-color: black;
             border-radius: inherit;
             color: hsl(0,0%,100%);
             display: inline-block;
@@ -177,11 +177,11 @@
         }
         .action-button__progress-track {
             r: 12px;
-            stroke: var(--bg2);
+            stroke: white;
             stroke-width: 24;
         }
         .action-button__progress-fill {
-            stroke: var(--primary1);
+            stroke: white;
             stroke-dashoffset: 125.66;
         }
         .action-button__progress-check {
@@ -213,7 +213,7 @@
 
         /* Running state */
         .action-button--running .action-button__text {
-            background-color: var(--bg2);
+            background-color: red;
             visibility: hidden;
         }
         .action-button--running .action-button__progress {
@@ -233,7 +233,7 @@
 
         /* Done state */
         .action-button--done .action-button__progress-track {
-            stroke: var(--primary1);
+            stroke: blue;
             transition:
                 r 0.3s ease-in-out,
                 stroke-width 0.3s ease-in-out;
