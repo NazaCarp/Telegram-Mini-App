@@ -856,19 +856,27 @@
                 </svg>
             `;
 
-            button.querySelector('.action-button__progress-fill').style.transition = 'none';
-            button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '125.66';
-            button.querySelector('.action-button__progress-check').style.transition = 'none';
-            button.querySelector('.action-button__progress-check').style.strokeDashoffset = '34';
+            event.preventDefault();
 
-            // Forzar un reflow antes de iniciar la animación
+            const text2 = button.querySelector('.action-button__text');
+            const progress = button.querySelector('.action-button__progress');
+            const fill = button.querySelector('.action-button__progress-fill');
+            const check = button.querySelector('.action-button__progress-check');
+
+            // Reset animation state
+            fill.style.transition = 'none';
+            fill.style.strokeDashoffset = '125.66';
+            check.style.transition = 'none';
+            check.style.strokeDashoffset = '34';
+            
+            // Force reflow
             void button.offsetWidth;
 
+            // Iniciar animación
             button.style.width = '48px';
-            button.querySelector('.action-button__text').style.opacity = '0';
+            text2.style.opacity = '0';
             
             setTimeout(() => {
-                const progress = button.querySelector('.action-button__progress');
                 button.classList.add('action-button--running');
                 progress.style.visibility = 'visible';
                 progress.style.opacity = '1';
