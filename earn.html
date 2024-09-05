@@ -155,7 +155,7 @@
         }
 
         .action-button__text {
-            background-color: var(--primary1);
+            background-color: black;
             border-radius: inherit;
             color: hsl(0,0%,100%);
             display: inline-block;
@@ -165,6 +165,7 @@
                 color 0.15s 0.3s ease-in-out;
             width: 100%;
         }
+
         .action-button__progress {
             overflow: visible;
             position: absolute;
@@ -179,7 +180,7 @@
             stroke-width: 24;
         }
         .action-button__progress-fill {
-            stroke: white;
+            stroke: rgba(1, 1, 1, 0.2);
             stroke-dashoffset: 125.66;
         }
         .action-button__progress-check {
@@ -485,14 +486,7 @@
         <div class="subtitle" id="alertSubtitle"></div>
         <div class="alertReward" id="alertReward"></div>
         <button class="action-button" id="actionButton">Follow</button>
-        <button class="action-button" id="checkButton">
-            <span class="action-button__text">Check</span>
-            <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
-                <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
-                <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#ffffff" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
-                <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
-            </svg>
-        </button>
+        <button class="action-button" id="checkButton">Check</button>
     </div>
 </div>
 <div class="daily-reward-menu" id="dailyRewardMenu">
@@ -842,15 +836,20 @@
                 return;
             }
 
-            // Iniciar animación del botón
-            startButtonAnimation(checkButton);
-
             // Llamar a la API de verificación
             verifyTelegramGroup(checkButton, rectangleId, url, reward);
         }
 
         function startButtonAnimation(button) {
             const text = button.textContent;
+            button.innerHTML = `
+                <span class="action-button__text">${text}</span>
+                <svg class="action-button__progress" viewBox="0 0 48 48" width="48px" height="48px">
+                    <circle class="action-button__progress-track" r="20" cx="24" cy="24" fill="none" stroke="#c7cad1" stroke-width="8" />
+                    <circle class="action-button__progress-fill" r="20" cx="24" cy="24" fill="none" stroke="#000000" stroke-width="8" transform="rotate(-90,24,24)" stroke-dasharray="125.66 125.66" stroke-dashoffset="125.66" />
+                    <polyline class="action-button__progress-check" points="12,24 20,32 36,16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34 34" stroke-dashoffset="34" />
+                </svg>
+            `;
 
             button.classList.remove('action-button--running', 'action-button--done');
             button.style.width = '100%';
@@ -866,45 +865,58 @@
             button.querySelector('.action-button__progress').style.visibility = 'visible';
             button.querySelector('.action-button__progress').style.opacity = '1';
 
+            // Forzar un reflow antes de iniciar la animación
+            void button.offsetWidth;
+
             setTimeout(() => {
-                button.querySelector('.action-button__progress-fill').style.transition = 'stroke-dashoffset 2s linear';
-                button.querySelector('.action-button__progress-fill').style.strokeDashoffset = '0';
-            }, 300);
+                const fill = button.querySelector('.action-button__progress-fill');
+                fill.style.transition = 'stroke-dashoffset 2s linear';
+                fill.style.strokeDashoffset = '0';
+            }, 100);
         }
 
-        async function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
-            const response = await fetch('/verify_telegram_group', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    user_id: user_id, 
-                    url: url, 
-                    reward: reward,
-                    task_id: rectangleId
-                })
-            });
+        function verifyTelegramGroup(checkButton, rectangleId, url, reward) {
+            // Iniciar animación del botón
+            startButtonAnimation(checkButton);
 
-            const data = await response.json();
-            
-            setTimeout(() => {
-                checkButton.classList.remove('action-button--running');
-                checkButton.classList.add('action-button--done');
+            // Llamar a la API de verificación después de un retraso
+            setTimeout(async () => {
+                const response = await fetch('/verify_telegram_group', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        user_id: user_id, 
+                        url: url, 
+                        reward: reward,
+                        task_id: rectangleId
+                    })
+                });
+
+                const data = await response.json();
                 
-                checkButton.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
-                checkButton.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
+                // Finalizar animación y manejar la respuesta
+                finishButtonAnimation(checkButton, data, rectangleId, reward);
+            }, 2300); // Retraso de 2.3 segundos para simular la verificación
+        }
 
-                setTimeout(() => {
-                    if (data.status === 'success') {
-                        handleSuccessfulVerification(checkButton, rectangleId, reward);
-                    } else if (data.status === 'already_completed') {
-                        closeAlertMenu();
-                    } else {
-                        handleFailedVerification(checkButton, rectangleId);
-                    }
-                }, 1000);
-            }, 2000);
+        function finishButtonAnimation(button, data, rectangleId, reward) {
+            button.classList.remove('action-button--running');
+            button.classList.add('action-button--done');
+            
+            button.querySelector('.action-button__progress-check').style.transition = 'stroke-dashoffset 0.3s ease-out';
+            button.querySelector('.action-button__progress-check').style.strokeDashoffset = '0';
+
+            setTimeout(() => {
+                if (data.status === 'success') {
+                    handleSuccessfulVerification(button, rectangleId, reward);
+                } else if (data.status === 'already_completed') {
+                    closeAlertMenu();
+                } else {
+                    handleFailedVerification(button, rectangleId);
+                }
+            }, 1000);
         }
 
         function handleSuccessfulVerification(checkButton, rectangleId, reward) {
