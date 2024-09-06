@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +7,7 @@
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
   <style>
     body {
-      background: radial-gradient(circle, #0047ab, #093981, #002357);
+      background: radial-gradient(circle, #0047ab, #093981, #001738);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -502,16 +497,6 @@
         setTimeout(() => {
           plusTap.remove();
         }, 1000);
-
-        // Cambiar el tamaño de la imagen
-        let image = document.getElementById('coinImage');
-        image.style.transition = 'transform 0.5s';
-        image.style.transform = 'scale(0.8)';
-
-        // Volver al tamaño original después de 0.5 segundos
-        setTimeout(() => {
-          image.style.transform = 'scale(1)';
-        }, 500);
       }
     }
 
