@@ -69,11 +69,52 @@
       margin-right: 10px;
     }
     
-    .coin-image {
+    .coin-container {
       width: 350px;
-      height: auto;
-      cursor: pointer;
+      height: 350px;
+      background: radial-gradient(circle, #2a4a8a 0%, #0f1c3f 70%);
+      border-radius: 50%;
+      margin: 50px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: relative;
+      border: 10px solid transparent;
+      background-clip: padding-box;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out;
+      transform-style: preserve-3d;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+    
+    .coin-container::before {
+      content: '';
+      position: absolute;
+      top: -10px; 
+      left: -10px;
+      right: -10px; 
+      bottom: -10px;
+      z-index: -1;
+      background: linear-gradient(45deg, #1e3a8a, #0f1c3f);
+      border-radius: 50%;
+    }
+    
+    .coin-container::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #0f1c3f, #1e3a8a);
+      z-index: -2;
+    }
+    
+    .coin-image {
+      width: 300px;
+      height: 300px;
+      object-fit: contain;
+      border-radius: 50%;
     }
     
     .plus-one {
@@ -280,7 +321,9 @@
   </div>
   <div class="main-container">
     <div class="container">
-      <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="coin Image" class="coin-image" id="coinImage">
+      <div class="coin-container" id="coinContainer">
+        <img src="https://telegra.ph/file/cc8605664aebf577d717d.png" alt="coin Image" class="coin-image" id="coinImage">
+      </div>
     </div>
     <div class="score" id="scoreContainer">
       <iconify-icon icon="twemoji:coin" style="font-size: 50px;" id="coinIcon"></iconify-icon>
@@ -496,10 +539,39 @@
       return num.toFixed(2) + generateUnit(unitIndex);
     }
 
-    document.getElementById('coinImage').addEventListener('touchstart', handleTouch, { passive: false });
-    document.getElementById('coinImage').addEventListener('click', handleClick);
-    
-    // Mostrar el nombre del usuario
+    // Add this new function for the tilt effect
+    function addTiltEffect() {
+      const coinContainer = document.getElementById('coinContainer');
+      const coinImage = document.getElementById('coinImage');
+
+      coinContainer.addEventListener('mousedown', handleTilt);
+      coinContainer.addEventListener('touchstart', handleTilt, { passive: false });
+
+      function handleTilt(e) {
+        e.preventDefault();
+        const rect = coinContainer.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left - rect.width / 2;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top - rect.height / 2;
+        
+        const tiltX = -y / 10;
+        const tiltY = x / 10;
+        
+        coinContainer.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(0.95)`;
+        coinContainer.style.boxShadow = `
+          ${-tiltY * 2}px ${-tiltX * 2}px 20px rgba(0,0,0,0.3),
+          0 10px 20px rgba(0,0,0,0.3)
+        `;
+        
+        setTimeout(() => {
+          coinContainer.style.transform = 'none';
+          coinContainer.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
+        }, 100);
+
+        handleClick(e);
+      }
+    }
+
+    // Modify the window.onload function
     window.onload = function() {
       indexNav.addEventListener('click', function(event) {
         if (window.location.pathname.includes('index.html')) {
@@ -588,6 +660,7 @@
         }
       });
 
+      addTiltEffect();
       loadAndUpdateCounters();
     };
 
