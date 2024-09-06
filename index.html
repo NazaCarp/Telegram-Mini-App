@@ -1,3 +1,8 @@
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +12,7 @@
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
   <style>
     body {
-      background: radial-gradient(circle, #0047ab, #002357, #000000);
+      background: radial-gradient(circle, #0047ab, #093981, #002357);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -467,12 +472,30 @@
         document.getElementById('scoreText').textContent = formatNumber(parseFloat(score));
         document.getElementById('secondaryCounterValue').textContent = `${secondaryCount} / ${energyLimit}`;
 
-        // Mostrar "+amountToAdd" en el lugar del clic
+        // Mostrar "+amountToAdd" en el lugar del clic o toque
         let plusTap = document.createElement('div');
         plusTap.className = 'plus-one';
         plusTap.textContent = `+${amountToAdd}`;
-        plusTap.style.left = `${event.clientX - 10}px`;
-        plusTap.style.top = `${event.clientY - 20}px`;
+        
+        // Obtener las coordenadas del clic o toque
+        let x, y;
+        if (event.clientX) {
+          // Evento de mouse
+          x = event.clientX;
+          y = event.clientY;
+        } else if (event.touches) {
+          // Evento táctil
+          x = event.touches[0].clientX;
+          y = event.touches[0].clientY;
+        } else {
+          // Si no hay coordenadas disponibles, usar el centro del contenedor de la moneda
+          const rect = document.getElementById('coinContainer').getBoundingClientRect();
+          x = rect.left + rect.width / 2;
+          y = rect.top + rect.height / 2;
+        }
+        
+        plusTap.style.left = `${x - 10}px`;
+        plusTap.style.top = `${y - 20}px`;
         document.body.appendChild(plusTap);
 
         // Ocultar el "+amountToAdd" después de 1 segundo
