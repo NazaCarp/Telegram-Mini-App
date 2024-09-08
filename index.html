@@ -160,8 +160,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 80px; /* Espacio para la barra de navegación */
-  }
+      padding-bottom: 75px; /* Reducido ligeramente */
+    }
     
     .navbar a {
       color: gray;
@@ -196,7 +196,7 @@
     #secondaryCounter {
       font-size: 20px;
       position: absolute;
-      bottom: 85px; /* Ajustado de 75px a 85px */
+      bottom: 80px; /* Ajustado ligeramente */
       left: 10px;
       display: flex;
       align-items: center;
@@ -210,7 +210,7 @@
 
     #rocketIcon {
       position: absolute;
-      bottom: 85px;
+      bottom: 80px; /* Ajustado ligeramente */
       right: 3%;
       font-size: 50px;
       color: white;
@@ -379,13 +379,14 @@
       <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
       <iconify-icon id="rocketIcon" icon="openmoji:rocket"></iconify-icon>
     </div>
-    <div class="navbar">
-      <a href="index.html" id="indexNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-      <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
-      <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-      <a href="earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
-      <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
-    </div>
+  </div>
+
+  <div class="navbar">
+    <a href="index.html" id="indexNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+    <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+    <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+    <a href="earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+    <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
   </div>
 
   <div class="alert-menu" id="alertMenu">
