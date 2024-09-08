@@ -345,45 +345,48 @@
   <div id="loading-screen">
     <div class="loader"></div>
   </div>
-  <div class="user-info" id="user-info"></div>
-  <div id="profitPerHourContainer">
-    <div id="profitPerHourLabel">Profit per hour</div>
-    <div id="profitPerHourValue">
-      <iconify-icon icon="twemoji:coin"></iconify-icon>
-      <span id="profitPerHourText">+0</span>
-    </div>
-  </div>
-  <div class="main-container">
-    <div class="container">
-      <div class="coin-container" id="coinContainer">
-        <img src="/static/images/3D-GoldCoin.png" alt="coin Image" class="coin-image" id="coinImage">
+
+  <div id="content" style="display: none;">
+    <div class="user-info" id="user-info"></div>
+    <div id="profitPerHourContainer">
+      <div id="profitPerHourLabel">Profit per hour</div>
+      <div id="profitPerHourValue">
+        <iconify-icon icon="twemoji:coin"></iconify-icon>
+        <span id="profitPerHourText">+0</span>
       </div>
     </div>
-    <div class="score" id="scoreContainer">
-      <iconify-icon icon="twemoji:coin" style="font-size: 50px;" id="coinIcon"></iconify-icon>
-      <span id="scoreText">0</span>
+    <div class="main-container">
+      <div class="container">
+        <div class="coin-container" id="coinContainer">
+          <img src="/static/images/3D-GoldCoin.png" alt="coin Image" class="coin-image" id="coinImage">
+        </div>
+      </div>
+      <div class="score" id="scoreContainer">
+        <iconify-icon icon="twemoji:coin" style="font-size: 50px;" id="coinIcon"></iconify-icon>
+        <span id="scoreText">0</span>
+      </div>
+      <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
+      <iconify-icon id="rocketIcon" icon="openmoji:rocket"></iconify-icon>
     </div>
-    <div class="score" id="secondaryCounter"><iconify-icon icon="mdi:lightning-bolt"></iconify-icon><span id="secondaryCounterValue">0 / 1000</span></div>
-    <iconify-icon id="rocketIcon" icon="openmoji:rocket"></iconify-icon>
-  </div>
-  <div class="navbar">
-    <a href="index.html" id="indexNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
-    <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
-    <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
-    <a href="earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
-    <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
-  </div>
+    <div class="navbar">
+      <a href="index.html" id="indexNav" class="active"><iconify-icon icon="simple-icons:binance"></iconify-icon><span>Exchange</span></a>
+      <a href="mine.html" id="mineNav"><iconify-icon icon="mdi:pickaxe"></iconify-icon><span>Mine</span></a>
+      <a href="friends.html" id="friendsNav"><iconify-icon icon="clarity:group-solid"></iconify-icon><span>Friends</span></a>
+      <a href="earn.html" id="earnNav"><iconify-icon icon="fa6-solid:coins"></iconify-icon><span>Earn</span></a>
+      <a href="index.html#airdrop" id="airdropNav"><iconify-icon icon="et:wallet"></iconify-icon><span>Airdrop</span></a>
+    </div>
 
-  <div class="alert-menu" id="alertMenu">
-    <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
-    <div class="alert-icon"><iconify-icon icon="streamline:subscription-cashflow"></iconify-icon></div>
-    <div class="alert-title">Boost your profit</div>
-    <div class="alert-subtitle">Tap the Mining menu to buy upgrades for your exchange</div>
-    <div class="alert-second-subtitle">Earn even when offline up to 3 hours</div>
-    <button class="alert-button" onclick="startMining()">
-      <iconify-icon icon="twemoji:coin"></iconify-icon>
-      Start Mining
-    </button>
+    <div class="alert-menu" id="alertMenu">
+      <div class="close" onclick="closeAlertMenu()"><iconify-icon icon="ph:x-circle-duotone"></iconify-icon></div>
+      <div class="alert-icon"><iconify-icon icon="streamline:subscription-cashflow"></iconify-icon></div>
+      <div class="alert-title">Boost your profit</div>
+      <div class="alert-subtitle">Tap the Mining menu to buy upgrades for your exchange</div>
+      <div class="alert-second-subtitle">Earn even when offline up to 3 hours</div>
+      <button class="alert-button" onclick="startMining()">
+        <iconify-icon icon="twemoji:coin"></iconify-icon>
+        Start Mining
+      </button>
+    </div>
   </div>
 
   <script>
@@ -405,8 +408,9 @@
     const startParam = tg.initDataUnsafe.start_param;
 
     async function loadAndUpdateCounters() {
-      // Mostrar la pantalla de carga
+      // Mostrar la pantalla de carga (ya debería estar visible)
       document.getElementById('loading-screen').style.display = 'flex';
+      document.getElementById('content').style.display = 'none';
 
       // Cargar valores desde localStorage si están disponibles
       let storedScore = localStorage.getItem(`score_${user_id}`);
@@ -478,8 +482,9 @@
       // Iniciar el intervalo para incrementar el contador secundario cada segundo
       setInterval(incrementSecondaryCounter, 1000);
 
-      // Ocultar la pantalla de carga cuando todo esté listo
+      // Ocultar la pantalla de carga y mostrar el contenido cuando todo esté listo
       document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
     }
 
     function handleTouch(event) {
@@ -620,8 +625,9 @@
     }
 
     window.onload = function() {
-      // Mostrar la pantalla de carga
+      // Asegurarse de que la pantalla de carga esté visible y el contenido oculto
       document.getElementById('loading-screen').style.display = 'flex';
+      document.getElementById('content').style.display = 'none';
 
       indexNav.addEventListener('click', function(event) {
         if (window.location.pathname.includes('index.html')) {
